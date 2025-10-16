@@ -7,7 +7,7 @@ AnnotationLineItem::AnnotationLineItem(qreal x1, qreal y1, qreal x2, qreal y2, Q
     // 1. 设置画笔样式，使其在医学图像上更显眼
     // 通常使用黄色或亮绿色
     QPen pen;
-    pen.setColor(Qt::yellow); // 设置颜色为黄色
+    pen.setColor(Qt::red); // 设置颜色为黄色
     pen.setWidth(2);          // 设置线宽为2像素
     setPen(pen);
 
