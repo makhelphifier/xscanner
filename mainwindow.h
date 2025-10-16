@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 #include <QGraphicsView>
 #include <QAction>
+#include <QObject>
+#include <QEvent>
 
 #include <QMainWindow>
 class QGraphicsScene;
@@ -15,18 +17,31 @@ public:
     ~MainWindow();
 protected:
     void resizeEvent(QResizeEvent *event) override;
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
     QGraphicsScene *scene;
     QGraphicsView *view;
     QGraphicsPixmapItem *pixmapItem;
     QAction *lineAction;
-    QAction *rectAction;    // 新增：用于“矩形”的Action
-    QAction *ellipseAction; // 新增：用于“椭圆”的Action
+    QAction *rectAction;
+    QAction *ellipseAction;
+    QAction *pointAction;
+    enum DrawMode {
+        Mode_None,
+        Mode_Point,
+        Mode_Line,
+        Mode_Rect,
+        Mode_Ellipse
+    };
+    DrawMode m_currentMode = Mode_None;
+    QImage m_image;
 
 private slots:
     void drawLine();
-    void drawRect();    // 新增：响应矩形Action的槽函数
-    void drawEllipse(); // 新增：响应椭圆Action的槽函数
+    void drawRect();
+    void drawEllipse();
+    void drawPoint();
+
 };
 #endif // MAINWINDOW_H

@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     annotationellipseitem.cpp \
     annotationlineitem.cpp \
+    annotationpointitem.cpp \
     annotationrectitem.cpp \
     main.cpp \
     mainwindow.cpp
@@ -18,6 +19,7 @@ SOURCES += \
 HEADERS += \
     annotationellipseitem.h \
     annotationlineitem.h \
+    annotationpointitem.h \
     annotationrectitem.h \
     mainwindow.h
 
