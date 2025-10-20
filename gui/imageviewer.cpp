@@ -40,9 +40,8 @@ void ImageViewer::loadImage(const QString &filePath)
 
     // --- 添加边框 ---
     m_borderItem = new QGraphicsRectItem(m_pixmapItem); // <-- 将 pixmapItem 作为父项
-    m_borderItem->setPen(QPen(Qt::red, 1)); // <-- 设置边框为2像素宽的白线
+    m_borderItem->setPen(QPen(Qt::red, 1.5)); // <-- 设置边框为2像素宽的白线
     m_borderItem->setRect(m_pixmapItem->boundingRect());
-    // -----------------
 
 
     // 计算自适应缩放
@@ -64,6 +63,7 @@ void ImageViewer::fitToView()
     // 3. 重新计算并保存初始缩放因子，用于后续的缩放限制。
     // transform().m11() 是当前的 X 轴缩放因子
     m_initialScale = transform().m11();
+    emit scaleChanged(1.0); // <-- 添加此行: fit 时比例为 1.0X
 }
 
 void ImageViewer::resetView()
@@ -87,9 +87,12 @@ void ImageViewer::wheelEvent(QWheelEvent *event)
     qreal factor = (event->angleDelta().y() > 0) ? 1.05 : 0.95;
     scale(factor, factor);
 
+
+
     // 可选：限制缩放范围
     qreal currentScale = transform().m11(); // 当前变换矩阵的 m11 元素即为 x 轴缩放因子
     qreal relativeScale = currentScale / m_initialScale; // 相对初始自适应缩放
+    emit scaleChanged(relativeScale);
 
     // 最小 0.1 倍，最大 10 倍
     if (relativeScale < 0.1) {
@@ -115,5 +118,21 @@ void ImageViewer::resizeEvent(QResizeEvent *event)
     QGraphicsView::resizeEvent(event);
     // 窗口大小变化时，重新计算自适应缩放并重置
     fitToView();
+}
+
+void ImageViewer::setScale(qreal scale) // <-- 添加整个函数
+{
+    if (!m_pixmapItem || m_initialScale <= 0) return;
+
+    // 计算目标 m11 值
+    qreal targetM11 = scale * m_initialScale;
+
+    // 获取当前 m11 值
+    qreal currentM11 = transform().m11();
+    if (qFuzzyCompare(currentM11, targetM11)) return; // 如果值相同，则不执行任何操作
+
+    // 重置变换并应用新的缩放
+    resetTransform(); // 先回到初始状态
+    QGraphicsView::scale(targetM11, targetM11); // 再应用绝对缩放值
 }
 

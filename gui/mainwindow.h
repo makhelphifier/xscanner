@@ -13,6 +13,10 @@
 
 class QGraphicsScene;
 class QGraphicsPixmapItem;
+class QLabel;
+class TopRightInfoWidget; // <-- 添加此行
+
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -51,6 +55,9 @@ private:
     QGraphicsLineItem *m_previewLine = nullptr;
     QAction *selectAction;
     QActionGroup *toolGroup;
+    QLabel *sizeLabel;
+    QLabel *infoLabel; // <-- 添加此行
+    TopRightInfoWidget *infoWidget; // <-- 添加此行
 
 private slots:
     void drawLine();
@@ -59,5 +66,8 @@ private slots:
     void drawPoint();
     void openImage();
     void selectMode();
+    void updateScale(qreal scale); // <-- 添加此行
+    void onScaleFromWidget(double scale); // <-- 添加此行
+
 };
 #endif // MAINWINDOW_H

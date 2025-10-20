@@ -21,6 +21,10 @@ public:
 
 public slots:
     void resetView();
+    void setScale(qreal scale); // <-- 添加此行
+
+signals:
+    void scaleChanged(qreal scale); // <-- 添加此行
 
 protected:
     void wheelEvent(QWheelEvent *event) override;

@@ -12,7 +12,8 @@ SOURCES += \
     gui/annotationpointitem.cpp \
     gui/annotationrectitem.cpp \
     gui/imageviewer.cpp \
-    gui/mainwindow.cpp
+    gui/mainwindow.cpp \
+    gui/toprightinfowidget.cpp
 
 HEADERS += \
     gui/annotationellipseitem.h \
@@ -20,7 +21,8 @@ HEADERS += \
     gui/annotationpointitem.h \
     gui/annotationrectitem.h \
     gui/imageviewer.h \
-    gui/mainwindow.h
+    gui/mainwindow.h \
+    gui/toprightinfowidget.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
