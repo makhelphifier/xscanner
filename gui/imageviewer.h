@@ -8,6 +8,8 @@
 #include <QWheelEvent>
 #include <QKeyEvent>
 #include <QResizeEvent>
+class QGraphicsRectItem;
+
 class ImageViewer : public QGraphicsView
 {
     Q_OBJECT
@@ -24,14 +26,14 @@ protected:
     void wheelEvent(QWheelEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
-    void mouseMoveEvent(QMouseEvent *event) override;
+    // void mouseMoveEvent(QMouseEvent *event) override;
 
 
 private:
     QGraphicsScene *m_scene;
     QGraphicsPixmapItem *m_pixmapItem;
     qreal m_initialScale;
-
+    QGraphicsRectItem *m_borderItem;
     void fitToView();
 };
 

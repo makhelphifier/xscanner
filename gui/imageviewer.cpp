@@ -9,10 +9,9 @@ ImageViewer::ImageViewer(QWidget *parent)
     m_scene = new QGraphicsScene(this);
     setScene(m_scene);
     setRenderHint(QPainter::Antialiasing);
+    setRenderHint(QPainter::HighQualityAntialiasing);
     // 配置视图
-    // setMouseTracking(true);
-    // viewport()->setMouseTracking(true);
-    // setDragMode(QGraphicsView::ScrollHandDrag);  // 启用拖动（平移）
+    setDragMode(QGraphicsView::ScrollHandDrag);  // 启用拖动（平移）
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);  // 缩放锚点为鼠标位置
     setRenderHint(QPainter::SmoothPixmapTransform, true);  // 平滑缩放
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);  // 隐藏滚动条
@@ -38,6 +37,13 @@ void ImageViewer::loadImage(const QString &filePath)
     m_pixmapItem->setTransformationMode(Qt::SmoothTransformation);  // 图片项平滑变换
     m_scene->addItem(m_pixmapItem);
     m_scene->setSceneRect(m_pixmapItem->boundingRect()); // 设置场景范围为图片大小
+
+    // --- 添加边框 ---
+    m_borderItem = new QGraphicsRectItem(m_pixmapItem); // <-- 将 pixmapItem 作为父项
+    m_borderItem->setPen(QPen(Qt::red, 1)); // <-- 设置边框为2像素宽的白线
+    m_borderItem->setRect(m_pixmapItem->boundingRect());
+    // -----------------
+
 
     // 计算自适应缩放
     fitToView();
@@ -111,9 +117,3 @@ void ImageViewer::resizeEvent(QResizeEvent *event)
     fitToView();
 }
 
-
-void ImageViewer::mouseMoveEvent(QMouseEvent *event)
-{
-    qDebug() << "ImageViewer mouseMoveEvent at:" << event->pos();
-    QGraphicsView::mouseMoveEvent(event); // 传递给基类
-}

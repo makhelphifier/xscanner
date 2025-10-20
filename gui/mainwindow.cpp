@@ -22,16 +22,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setCentralWidget(viewer);
 
     // 安装事件过滤器
-    viewer->installEventFilter(this);
+    viewer->viewport()->installEventFilter(this);
     qDebug() << "Event filter installed on viewer:" << viewer;
-
     // 启用鼠标跟踪
     viewer->setMouseTracking(true);
     viewer->viewport()->setMouseTracking(true);
 
     // 设置交互模式
     viewer->setInteractive(true);
-    viewer->setDragMode(QGraphicsView::NoDrag);
+    viewer->setDragMode(QGraphicsView::ScrollHandDrag);
 
     // 添加菜单
     QMenu *fileMenu = menuBar()->addMenu("文件");
@@ -40,21 +39,38 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     QToolBar *toolBar = new QToolBar("测量工具", this);
     addToolBar(Qt::LeftToolBarArea, toolBar);
+    toolGroup = new QActionGroup(this); // <-- 添加此行
+
+    // 添加选择工具
+    selectAction = new QAction(QIcon(":/Resources/img/arrow_tool.png"), "选择/拖动", this);
+    selectAction->setCheckable(true); // <-- 添加此行
+    toolBar->addAction(selectAction);
+    toolGroup->addAction(selectAction); // <-- 添加此行
+    connect(selectAction, &QAction::triggered, this, &MainWindow::selectMode);
 
     lineAction = new QAction(QIcon(":/Resources/img/line_tool.png"), "直线", this);
+    lineAction->setCheckable(true); // <-- 添加此行
     toolBar->addAction(lineAction);
+    toolGroup->addAction(lineAction); // <-- 添加此行
     connect(lineAction, &QAction::triggered, this, &MainWindow::drawLine);
 
     rectAction = new QAction(QIcon(":/Resources/img/rect_tool.png"), "矩形", this);
+    rectAction->setCheckable(true); // <-- 添加此行
     toolBar->addAction(rectAction);
+    toolGroup->addAction(rectAction); // <-- 添加此行
     connect(rectAction, &QAction::triggered, this, &MainWindow::drawRect);
 
     ellipseAction = new QAction(QIcon(":/Resources/img/ellipse_tool.png"), "椭圆", this);
+    ellipseAction->setCheckable(true); // <-- 添加此行
     toolBar->addAction(ellipseAction);
+    toolGroup->addAction(ellipseAction); // <-- 添加此行
     connect(ellipseAction, &QAction::triggered, this, &MainWindow::drawEllipse);
 
     QString defaultImagePath = ":/Resources/img/aaa.jpg";
     viewer->loadImage(defaultImagePath);
+
+    selectAction->setChecked(true); // <-- 添加此行, 默认选中
+    selectMode(); // <-- 添加此行, 初始化模式
 }
 
 
@@ -117,7 +133,7 @@ void MainWindow::drawPoint()
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
-    if (watched == viewer) {
+    if (watched == viewer->viewport()) {
         qDebug() << "Viewer event:" << event->type();
         if (event->type() == QEvent::MouseMove) {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
@@ -164,7 +180,9 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
                         );
                     viewer->scene()->addItem(line);
                     m_isDrawing = false;
-                    m_currentMode = Mode_None;
+                    // 完成后自动切回选择模式
+                    selectAction->setChecked(true); // <-- 添加此行
+                    selectMode();                   // <-- 添加此行
                     viewer->viewport()->setCursor(Qt::ArrowCursor);
                     qDebug() << "Line completed from" << m_startPoint << "to" << scenePos;
                 }
@@ -173,4 +191,13 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
         }
     }
     return QMainWindow::eventFilter(watched, event);
+}
+
+
+void MainWindow::selectMode() // <-- 添加整个函数
+{
+    m_currentMode = Mode_Select;
+    m_isDrawing = false;
+    viewer->setDragMode(QGraphicsView::ScrollHandDrag);
+    viewer->viewport()->setCursor(Qt::OpenHandCursor);
 }

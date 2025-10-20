@@ -25,9 +25,6 @@ AnnotationPointItem::AnnotationPointItem(qreal x, qreal y, QGraphicsPixmapItem *
 
 }
 
-
-
-
 void AnnotationPointItem::setMeasurement(const QPointF &pos, int grayValue)
 {
     // 格式化要显示的字符串

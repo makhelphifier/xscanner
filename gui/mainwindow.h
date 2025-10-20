@@ -1,5 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+
 #include <QGraphicsView>
 #include <QAction>
 #include <QObject>
@@ -7,6 +8,9 @@
 #include "gui/imageviewer.h"
 #include <QAction>
 #include <QMainWindow>
+#include <QActionGroup>
+
+
 class QGraphicsScene;
 class QGraphicsPixmapItem;
 class MainWindow : public QMainWindow
@@ -30,6 +34,7 @@ private:
     QAction *pointAction;
     enum DrawMode {
         Mode_None,
+        Mode_Select,
         Mode_Point,
         Mode_Line,
         Mode_Rect,
@@ -44,6 +49,8 @@ private:
     bool m_isDrawing = false;
     QPointF m_startPoint;
     QGraphicsLineItem *m_previewLine = nullptr;
+    QAction *selectAction;
+    QActionGroup *toolGroup;
 
 private slots:
     void drawLine();
@@ -51,6 +58,6 @@ private slots:
     void drawEllipse();
     void drawPoint();
     void openImage();
-
+    void selectMode();
 };
 #endif // MAINWINDOW_H
