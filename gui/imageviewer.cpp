@@ -8,9 +8,11 @@ ImageViewer::ImageViewer(QWidget *parent)
 {
     m_scene = new QGraphicsScene(this);
     setScene(m_scene);
-
+    setRenderHint(QPainter::Antialiasing);
     // 配置视图
-    setDragMode(QGraphicsView::ScrollHandDrag);  // 启用拖动（平移）
+    // setMouseTracking(true);
+    // viewport()->setMouseTracking(true);
+    // setDragMode(QGraphicsView::ScrollHandDrag);  // 启用拖动（平移）
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);  // 缩放锚点为鼠标位置
     setRenderHint(QPainter::SmoothPixmapTransform, true);  // 平滑缩放
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);  // 隐藏滚动条
@@ -107,4 +109,11 @@ void ImageViewer::resizeEvent(QResizeEvent *event)
     QGraphicsView::resizeEvent(event);
     // 窗口大小变化时，重新计算自适应缩放并重置
     fitToView();
+}
+
+
+void ImageViewer::mouseMoveEvent(QMouseEvent *event)
+{
+    qDebug() << "ImageViewer mouseMoveEvent at:" << event->pos();
+    QGraphicsView::mouseMoveEvent(event); // 传递给基类
 }

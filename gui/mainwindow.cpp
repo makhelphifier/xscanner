@@ -15,15 +15,24 @@
 #include <QFileDialog>
 #include <QMenuBar>
 #include "gui/imageviewer.h"
-
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
-
-    resize(800,600);
+    resize(800, 600);
     viewer = new ImageViewer(this);
     setCentralWidget(viewer);
+
+    // 安装事件过滤器
     viewer->installEventFilter(this);
+    qDebug() << "Event filter installed on viewer:" << viewer;
+
+    // 启用鼠标跟踪
+    viewer->setMouseTracking(true);
+    viewer->viewport()->setMouseTracking(true);
+
+    // 设置交互模式
+    viewer->setInteractive(true);
+    viewer->setDragMode(QGraphicsView::NoDrag);
+
     // 添加菜单
     QMenu *fileMenu = menuBar()->addMenu("文件");
     openAction = fileMenu->addAction("打开");
@@ -32,20 +41,19 @@ MainWindow::MainWindow(QWidget *parent)
     QToolBar *toolBar = new QToolBar("测量工具", this);
     addToolBar(Qt::LeftToolBarArea, toolBar);
 
-
-    lineAction = new QAction(QIcon(":/Resources/img/line_tool.png"),"直线", this);
+    lineAction = new QAction(QIcon(":/Resources/img/line_tool.png"), "直线", this);
     toolBar->addAction(lineAction);
     connect(lineAction, &QAction::triggered, this, &MainWindow::drawLine);
 
-    rectAction = new QAction(QIcon(":/Resources/img/rect_tool.png"),"矩形", this);
+    rectAction = new QAction(QIcon(":/Resources/img/rect_tool.png"), "矩形", this);
     toolBar->addAction(rectAction);
     connect(rectAction, &QAction::triggered, this, &MainWindow::drawRect);
 
-    ellipseAction = new QAction(QIcon(":/Resources/img/ellipse_tool.png"),"椭圆", this);
+    ellipseAction = new QAction(QIcon(":/Resources/img/ellipse_tool.png"), "椭圆", this);
     toolBar->addAction(ellipseAction);
     connect(ellipseAction, &QAction::triggered, this, &MainWindow::drawEllipse);
-    // QString defaultImagePath = QCoreApplication::applicationDirPath() + "/image/aaa.jpg";
-    QString defaultImagePath =  ":/Resources/img/bbb.jpg";
+
+    QString defaultImagePath = ":/Resources/img/aaa.jpg";
     viewer->loadImage(defaultImagePath);
 }
 
@@ -77,70 +85,92 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 void MainWindow::drawLine()
 {
     m_currentMode = Mode_Line;
-    viewer->setCursor(Qt::CrossCursor);
-    qDebug()<<"drawLine";
+    m_isDrawing = false;
+    qDebug() << "drawLine called, mode:" << m_currentMode << "drawing:" << m_isDrawing;
+    viewer->setDragMode(QGraphicsView::NoDrag);
+    viewer->viewport()->setCursor(Qt::CrossCursor);
 }
 
 void MainWindow::drawRect()
 {
     m_currentMode = Mode_Rect;
-    viewer->setCursor(Qt::CrossCursor);
+    viewer->setDragMode(QGraphicsView::NoDrag);
+    viewer->viewport()->setCursor(Qt::CrossCursor);
+
 }
 
 void MainWindow::drawEllipse()
 {
     m_currentMode = Mode_Ellipse;
-    viewer->setCursor(Qt::CrossCursor);
+    viewer->setDragMode(QGraphicsView::NoDrag);
+    viewer->viewport()->setCursor(Qt::CrossCursor);
+
 }
 
 void MainWindow::drawPoint()
 {
     m_currentMode = Mode_Point;
-    viewer->setCursor(Qt::CrossCursor);
+    viewer->setDragMode(QGraphicsView::NoDrag);
+    viewer->viewport()->setCursor(Qt::CrossCursor);
+
 }
-
-
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
     if (watched == viewer) {
-        if (event->type() == QEvent::MouseButtonPress) {
+        qDebug() << "Viewer event:" << event->type();
+        if (event->type() == QEvent::MouseMove) {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-            if (mouseEvent->button() == Qt::LeftButton) {
-
-                QPointF scenePos = viewer->mapToScene(mouseEvent->pos());
-                // 获取 QGraphicsPixmapItem
-                QGraphicsPixmapItem *pixmapItem = viewer->pixmapItem();
-
-                if (m_currentMode == Mode_Point) {
-                    if (pixmapItem && pixmapItem->contains(scenePos) && !m_image.isNull()) {
-                        QPointF imagePos = pixmapItem->mapFromScene(scenePos);
-                        int x = qRound(imagePos.x());
-                        int y = qRound(imagePos.y());
-
-                        // 像素值读取逻辑
-                        if (m_image.valid(x, y)) {
-                            QColor color = m_image.pixelColor(x, y);
-                            int grayValue = qGray(color.rgb());
-
-                            AnnotationPointItem *point = new AnnotationPointItem(scenePos.x(), scenePos.y(), pixmapItem, m_image);
-                            point->setMeasurement(imagePos, grayValue);
-                            viewer->scene()->addItem(point);
-
-                            m_currentMode = Mode_None;
-                            viewer->setCursor(Qt::ArrowCursor);
-                        }
+            QPointF scenePos = viewer->mapToScene(mouseEvent->pos());
+            qDebug() << "MouseMove - mode:" << m_currentMode
+                     << "drawing:" << m_isDrawing
+                     << "previewLine:" << (m_previewLine != nullptr)
+                     << "scenePos:" << scenePos;
+            if (m_currentMode == Mode_Line && m_isDrawing && m_previewLine) {
+                m_previewLine->setLine(QLineF(m_startPoint, scenePos));
+                return true;
+            }
+        } else if (event->type() == QEvent::MouseButtonPress) {
+            QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+            QPointF scenePos = viewer->mapToScene(mouseEvent->pos());
+            if (mouseEvent->button() == Qt::LeftButton && m_currentMode == Mode_Line) {
+                if (!m_isDrawing) {
+                    m_startPoint = scenePos;
+                    m_isDrawing = true;
+                    if (m_previewLine) {
+                        viewer->scene()->removeItem(m_previewLine);
+                        delete m_previewLine;
                     }
-                    return true; // 绘制模式下，消费事件
+                    m_previewLine = new QGraphicsLineItem(QLineF(m_startPoint, m_startPoint));
+                    QPen pen(Qt::yellow);
+                    pen.setStyle(Qt::DashLine);
+                    pen.setWidthF(2.0);
+                    m_previewLine->setPen(pen);
+                    m_previewLine->setZValue(1000);
+                    m_previewLine->setFlag(QGraphicsItem::ItemIsSelectable, false);
+                    m_previewLine->setFlag(QGraphicsItem::ItemIsMovable, false);
+                    m_previewLine->setAcceptHoverEvents(false);
+                    viewer->scene()->addItem(m_previewLine);
+                    qDebug() << "Started drawing line at:" << m_startPoint;
+                } else {
+                    if (m_previewLine) {
+                        viewer->scene()->removeItem(m_previewLine);
+                        delete m_previewLine;
+                        m_previewLine = nullptr;
+                    }
+                    AnnotationLineItem *line = new AnnotationLineItem(
+                        m_startPoint.x(), m_startPoint.y(),
+                        scenePos.x(), scenePos.y()
+                        );
+                    viewer->scene()->addItem(line);
+                    m_isDrawing = false;
+                    m_currentMode = Mode_None;
+                    viewer->viewport()->setCursor(Qt::ArrowCursor);
+                    qDebug() << "Line completed from" << m_startPoint << "to" << scenePos;
                 }
+                return true;
             }
         }
-
-        // 非绘图模式下（Mode_None）或其他鼠标事件，让 QGraphicsView 的默认行为（如拖动平移）生效
-        if (m_currentMode == Mode_None || event->type() == QEvent::MouseButtonRelease || event->type() == QEvent::MouseMove) {
-            return QMainWindow::eventFilter(watched, event);
-        }
     }
-
     return QMainWindow::eventFilter(watched, event);
 }

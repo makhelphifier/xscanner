@@ -8,7 +8,6 @@
 #include <QWheelEvent>
 #include <QKeyEvent>
 #include <QResizeEvent>
-
 class ImageViewer : public QGraphicsView
 {
     Q_OBJECT
@@ -25,6 +24,8 @@ protected:
     void wheelEvent(QWheelEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+
 
 private:
     QGraphicsScene *m_scene;

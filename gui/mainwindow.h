@@ -41,6 +41,10 @@ private:
     QPoint m_lastPanPoint;
     ImageViewer *viewer;
     QAction *openAction;
+    bool m_isDrawing = false;
+    QPointF m_startPoint;
+    QGraphicsLineItem *m_previewLine = nullptr;
+
 private slots:
     void drawLine();
     void drawRect();
