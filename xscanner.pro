@@ -4,6 +4,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
 INCLUDEPATH += gui app # 添加 gui 和 app 目录，以便互相查找头文件
+INCLUDEPATH += $$PWD/../sdk/opencv/include
+
+LIBS += -L$$PWD/../sdk/opencv/lib/ -lopencv_world470
 
 SOURCES += \
     app/main.cpp \

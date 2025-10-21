@@ -3,14 +3,85 @@
 #include "imageprocessor.h"
 #include <QVector>
 #include <QtMath>
-#include <QFile>     // <-- 添加此行
-#include <QDebug>    // <-- 添加此行
-#include <QtEndian> // 添加此头文件
-#include <QDataStream> // <-- 添加此行
-
+#include <QFile>
+#include <QDebug>
+#include <QtEndian>
+#include <QDataStream>
+#include <string>
+#include <windows.h> // 确保包含Windows头文件
+#include <cstdio>  // 包含 fopen, fclose 等函数
+#include <cwchar>  // 包含 _wfopen_s
+#include <fstream>
+#include <iostream>
 
 ImageProcessor::ImageProcessor() {}
 
+
+
+
+QImage ImageProcessor::readRawImg_qImage(const QString imgPath, const int width, const int height)
+{
+    const std::string filename = imgPath.toStdString();
+    cv::Mat image(height, width, CV_16UC1);// 创建一个空的Mat对象，用于存储16位无符号整数数据
+
+    std::ifstream file(filename, std::ios::binary);
+    if (!file.is_open()) {
+        std::cerr << "Error opening file" << std::endl;
+        return QImage();
+    }
+
+    // 读取数据到Mat对象
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            uint16_t pixelValue;
+            file.read(reinterpret_cast<char*>(&pixelValue), sizeof(pixelValue));
+            image.at<uint16_t>(y, x) = pixelValue;
+        }
+    }
+    file.close();
+
+
+    return cvMat2QImage(image);
+}
+
+
+QImage ImageProcessor::cvMat2QImage(const cv::Mat& mat)
+{
+    switch(mat.type())
+    {
+    // 8位无符号，单通道
+    case CV_8UC1:
+    {
+        QImage image(mat.data, mat.cols, mat.rows, mat.step, QImage::Format_Grayscale8);
+        return image.copy();
+    }
+    break;
+    // 8位无符号，3通道
+    case CV_8UC3:
+    {
+        QImage image(mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888);
+        return image.rgbSwapped();
+    }
+    break;
+    // 8位无符号，4通道
+    case CV_8UC4:
+    {
+        QImage image(mat.data, mat.cols, mat.rows, mat.step, QImage::Format_ARGB32);
+        return image.copy();
+    }
+    break;
+    case CV_16UC1:
+    {
+        QImage image(reinterpret_cast<const uchar*>(mat.data), mat.cols, mat.rows, mat.step, QImage::Format_Grayscale16);
+        return image.copy();
+    }
+    break;
+    default:
+        break;
+    }
+
+    return QImage();
+}
 
 
 QImage ImageProcessor::loadRaw16bitImage(const QString &filePath, int width, int height)
@@ -26,35 +97,34 @@ QImage ImageProcessor::loadRaw16bitImage(const QString &filePath, int width, int
     }
     qDebug() << "File opened successfully.";
 
-    // 使用 QDataStream 以确保安全读取
-    QDataStream in(&file);
-    in.setByteOrder(QDataStream::LittleEndian); // 设置为小端字节序
-    qDebug() << "QDataStream created, byte order set to LittleEndian.";
+    // 一次性读取所有原始二进制数据
+    QByteArray buffer = file.readAll();
+    file.close();
+    qDebug() << "Read" << buffer.size() << "bytes from file. File closed.";
+
+    // 校验文件大小是否符合预期
+    const qint64 expectedSize = static_cast<qint64>(width) * height * sizeof(quint16);
+    if (buffer.size() != expectedSize) {
+        qDebug() << "!!!!!! CRITICAL: File size mismatch! Expected:" << expectedSize << "Got:" << buffer.size() << "!!!!!!";
+        return QImage();
+    }
+
+    // 将字节数组的指针重新解释为 16 位无符号整数指针
+    // 这是一种高效的方式，避免了逐个像素的读取和数据拷贝
+    const quint16* pixelData = reinterpret_cast<const quint16*>(buffer.constData());
 
     const int numPixels = width * height;
-    qDebug() << "Total number of pixels to read:" << numPixels;
-
-    // 创建一个 QVector 来存储16位像素数据
-    QVector<quint16> pixelData(numPixels);
-    qDebug() << "Allocated QVector for pixel data with size:" << numPixels;
+    qDebug() << "Total number of pixels to process:" << numPixels;
 
     quint16 minVal = 65535;
     quint16 maxVal = 0;
 
-    qDebug() << "Starting to read pixel data and find min/max values...";
-    // 逐个像素读取数据并找到最大最小值
+    qDebug() << "Starting to find min/max values...";
+    // 遍历数据以找到最大值和最小值
     for (int i = 0; i < numPixels; ++i) {
-        if (in.atEnd()) {
-            qDebug() << "!!!!!! CRITICAL: Unexpected end of file at pixel" << i << "!!!!!!";
-            file.close();
-            return QImage();
-        }
-        in >> pixelData[i]; // 读取一个16位无符号整数
         if (pixelData[i] < minVal) minVal = pixelData[i];
         if (pixelData[i] > maxVal) maxVal = pixelData[i];
     }
-    file.close();
-    qDebug() << "Finished reading pixel data. File closed.";
     qDebug() << "Min value found:" << minVal << ", Max value found:" << maxVal;
 
     // 创建8位灰度图用于显示
@@ -77,12 +147,10 @@ QImage ImageProcessor::loadRaw16bitImage(const QString &filePath, int width, int
     }
     qDebug() << "Normalization finished.";
 
-    // 返回图像的深拷贝，确保数据所有权
-    qDebug() << "--- [loadRaw16bitImage] Function finished, returning image copy. ---";
-    return image.copy();
+    qDebug() << "--- [loadRaw16bitImage] Function finished, returning image. ---";
+    // QImage 是隐式共享的，直接返回即可，无需 copy()
+    return image;
 }
-
-
 
 void ImageProcessor::calculateAutoWindowLevel(const QImage &image, int &min, int &max, double saturatedRatio)
 {

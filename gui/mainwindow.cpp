@@ -137,7 +137,7 @@ void MainWindow::openImage()
     QImage loadedImage;
     if (filePath.endsWith(".raw", Qt::CaseInsensitive) || filePath.endsWith(".bin", Qt::CaseInsensitive)) {
         // 修改下面这行来加载16位图像
-        loadedImage = ImageProcessor::loadRaw16bitImage(filePath, 2882, 2340);
+        loadedImage = ImageProcessor::readRawImg_qImage(filePath, 2882, 2340);
     } else {
         // 加载标准图像文件
         loadedImage.load(filePath);
