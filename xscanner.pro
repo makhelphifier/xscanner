@@ -11,6 +11,7 @@ SOURCES += \
     gui/annotationlineitem.cpp \
     gui/annotationpointitem.cpp \
     gui/annotationrectitem.cpp \
+    service/imageprocessor.cpp \
     gui/imageviewer.cpp \
     gui/mainwindow.cpp \
     gui/toprightinfowidget.cpp
@@ -20,6 +21,7 @@ HEADERS += \
     gui/annotationlineitem.h \
     gui/annotationpointitem.h \
     gui/annotationrectitem.h \
+    service/imageprocessor.h \
     gui/imageviewer.h \
     gui/mainwindow.h \
     gui/toprightinfowidget.h

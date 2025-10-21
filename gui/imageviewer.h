@@ -21,10 +21,11 @@ public:
 
 public slots:
     void resetView();
-    void setScale(qreal scale); // <-- 添加此行
-
+    void setScale(qreal scale);
+    void updatePixmap(const QPixmap &pixmap);
+    void setImage(const QImage &image); // <-- 添加此行
 signals:
-    void scaleChanged(qreal scale); // <-- 添加此行
+    void scaleChanged(qreal scale);
 
 protected:
     void wheelEvent(QWheelEvent *event) override;

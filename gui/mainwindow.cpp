@@ -16,9 +16,10 @@
 #include <QMenuBar>
 #include "gui/imageviewer.h"
 #include <QLabel>
-#include "gui/toprightinfowidget.h" // <-- 添加此行
-
-
+#include "gui/toprightinfowidget.h"
+#include "service/imageprocessor.h"
+#include <QActionGroup>
+#include <QFileDialog> // 确保这个 include 存在
 
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
@@ -28,16 +29,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setCentralWidget(viewer);
 
     // --- 添加尺寸标签 ---
-    sizeLabel = new QLabel(viewer); // <-- 将 viewer 作为父控件
+    sizeLabel = new QLabel(viewer);
     sizeLabel->setStyleSheet(
         "background-color: rgba(0, 0, 0, 150);"
         "color: white;"
         "padding: 4px;"
         "border-radius: 4px;"
         );
-    sizeLabel->move(10, 10); // <-- 设置初始位置
-    sizeLabel->setVisible(false); // <-- 初始时隐藏
-    // --------------------
+    sizeLabel->move(10, 10);
+    sizeLabel->setVisible(false);
 
     // --- 添加坐标和灰度值标签 ---
     infoLabel = new QLabel(viewer);
@@ -111,7 +111,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // --- 为默认图片更新尺寸 ---
     QPixmap pixmap(defaultImagePath);
     if (!pixmap.isNull()) {
-        m_image = pixmap.toImage().convertToFormat(QImage::Format_ARGB32);
+        m_originalImage = pixmap.toImage().convertToFormat(QImage::Format_ARGB32);
         sizeLabel->setText(QString("size: %1x%2").arg(pixmap.width()).arg(pixmap.height()));
         sizeLabel->adjustSize(); // 根据内容调整大小
         sizeLabel->setVisible(true);
@@ -121,8 +121,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // --- 连接信号和槽 ---
     connect(viewer, &ImageViewer::scaleChanged, this, &MainWindow::updateScale);
     connect(infoWidget, &TopRightInfoWidget::scaleEdited, this, &MainWindow::onScaleFromWidget);
-    // -------------------
-
+    connect(infoWidget, &TopRightInfoWidget::autoWindowingToggled, this, &MainWindow::onAutoWindowingToggled);
+    connect(infoWidget, &TopRightInfoWidget::windowChanged, this, &MainWindow::onWindowChanged); // <-- 添加此行
+    connect(infoWidget, &TopRightInfoWidget::levelChanged, this, &MainWindow::onLevelChanged);   // <-- 添加此行
 
     selectAction->setChecked(true);
     selectMode();
@@ -133,32 +134,47 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     });
 }
 
-
 MainWindow::~MainWindow() {}
 
 void MainWindow::openImage()
 {
-    QString filePath = QFileDialog::getOpenFileName(this, "打开图片", "", "Images (*.png *.jpg *.bmp)");
-    if (!filePath.isEmpty()) {
-        qDebug() << "Selected image path:" << filePath;
-        viewer->loadImage(filePath);
-        QPixmap pixmap(filePath);
-        if (!pixmap.isNull()) {
-            m_image = pixmap.toImage().convertToFormat(QImage::Format_ARGB32);
-            // --- 更新尺寸标签 ---
-            sizeLabel->setText(QString("size: %1x%2").arg(pixmap.width()).arg(pixmap.height()));
-            sizeLabel->adjustSize(); // 根据内容调整大小
-            sizeLabel->setVisible(true);
-            infoWidget->setVisible(true); // <-- 添加此行
-            // ---------------------
-        } else {
-            m_image = QImage();
-            sizeLabel->setVisible(false); // 加载失败则隐藏
-            infoWidget->setVisible(false); // <-- 添加此行
-        }
-    } else {
-        qDebug() << "No image file selected.";
+    QString filePath = QFileDialog::getOpenFileName(this, "打开图片", "", "Images (*.png *.jpg *.bmp);;Raw Binary (*.raw *.bin)");
+
+    if (filePath.isEmpty()) {
+        return;
     }
+
+    qDebug() << "Selected file path:" << filePath;
+
+    QImage loadedImage;
+    if (filePath.endsWith(".raw", Qt::CaseInsensitive) || filePath.endsWith(".bin", Qt::CaseInsensitive)) {
+        // 加载 raw/bin 文件，暂时假设尺寸为 512x512
+        loadedImage = ImageProcessor::loadRawImage(filePath, 512, 512);
+    } else {
+        // 加载标准图像文件
+        loadedImage.load(filePath);
+    }
+
+    if (loadedImage.isNull()) {
+        qDebug() << "Failed to process image from path:" << filePath;
+        m_originalImage = QImage();
+        viewer->setImage(QImage()); // 清空视图
+        sizeLabel->setVisible(false);
+        infoWidget->setVisible(false);
+        return;
+    }
+
+    // 统一处理加载成功的图像
+    m_originalImage = loadedImage.convertToFormat(QImage::Format_Grayscale8);
+    viewer->setImage(m_originalImage);
+
+    sizeLabel->setText(QString("size: %1x%2").arg(m_originalImage.width()).arg(m_originalImage.height()));
+    sizeLabel->adjustSize();
+    sizeLabel->setVisible(true);
+
+    infoWidget->setVisible(true);
+    // 重置窗宽窗位设置
+    onAutoWindowingToggled(false);
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
@@ -196,7 +212,6 @@ void MainWindow::drawEllipse()
     m_currentMode = Mode_Ellipse;
     viewer->setDragMode(QGraphicsView::NoDrag);
     viewer->viewport()->setCursor(Qt::CrossCursor);
-
 }
 
 void MainWindow::drawPoint()
@@ -204,7 +219,6 @@ void MainWindow::drawPoint()
     m_currentMode = Mode_Point;
     viewer->setDragMode(QGraphicsView::NoDrag);
     viewer->viewport()->setCursor(Qt::CrossCursor);
-
 }
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
@@ -213,6 +227,9 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
         // qDebug() << "Viewer event:" << event->type();
         if (event->type() == QEvent::MouseMove) {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+
+
+
             QPointF scenePos = viewer->mapToScene(mouseEvent->pos());
 
             // --- 更新坐标和灰度值 ---
@@ -221,8 +238,8 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
             if (viewer->pixmapItem() && viewer->pixmapItem()->boundingRect().contains(scenePos)) {
                 int x = qRound(scenePos.x());
                 int y = qRound(scenePos.y());
-                if (m_image.valid(x, y)) {
-                    int grayValue = qGray(m_image.pixel(x, y));
+                if (m_originalImage.valid(x, y)) {
+                    int grayValue = qGray(m_originalImage.pixel(x, y));
                     infoText = QString("X: %1, Y: %2, value: %3")
                                    .arg(x)
                                    .arg(y)
@@ -239,7 +256,6 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
             }
             infoLabel->setText(infoText);
             infoLabel->adjustSize();
-            // -------------------------
 
             // qDebug() << "MouseMove - mode:" << m_currentMode
             //          << "drawing:" << m_isDrawing
@@ -291,7 +307,15 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
                 }
                 return true;
             }
+            else if (event->type() == QEvent::MouseButtonRelease) {
+                if (mouseEvent->button() == Qt::LeftButton) {
+                    if (m_currentMode == Mode_Select) {
+                        viewer->viewport()->setCursor(Qt::OpenHandCursor);
+                    }
+                }
+            }
         }
+
     }
     return QMainWindow::eventFilter(watched, event);
 }
@@ -306,16 +330,77 @@ void MainWindow::selectMode()
 }
 
 
-void MainWindow::updateScale(qreal scale) // <-- 添加整个函数
+void MainWindow::updateScale(qreal scale)
 {
     if (infoWidget) {
         infoWidget->setScale(scale);
     }
 }
 
-void MainWindow::onScaleFromWidget(double scale) // <-- 添加整个函数
+void MainWindow::onScaleFromWidget(double scale)
 {
     if (viewer) {
         viewer->setScale(scale);
     }
 }
+
+void MainWindow::onAutoWindowingToggled(bool checked)
+{
+    if (m_originalImage.isNull()) return;
+
+    if (checked) {
+        int min, max;
+        ImageProcessor::calculateAutoWindowLevel(m_originalImage, min, max);
+
+        // 更新成员变量
+        m_windowWidth = max - min;
+        m_windowLevel = min + m_windowWidth / 2;
+
+        applyAndDisplayWl();
+    } else {
+        // 恢复到完整的范围
+        m_windowWidth = 256;
+        m_windowLevel = 128;
+        applyAndDisplayWl();
+    }
+
+    // 更新滑动条位置和图像
+    infoWidget->setWindowValue(m_windowWidth);
+    infoWidget->setLevelValue(m_windowLevel);
+    applyAndDisplayWl();
+}
+
+
+
+void MainWindow::onWindowChanged(int value)
+{
+    m_windowWidth = value;
+    infoWidget->uncheckAutoWindowing(); // 手动调整时取消自动模式
+    applyAndDisplayWl();
+}
+
+void MainWindow::onLevelChanged(int value)
+{
+    m_windowLevel = value;
+    infoWidget->uncheckAutoWindowing(); // 手动调整时取消自动模式
+    applyAndDisplayWl();
+}
+
+
+// 辅助函数，用于应用当前的窗宽窗位并更新显示
+void MainWindow::applyAndDisplayWl()
+{
+    if (m_originalImage.isNull()) return;
+
+    // 根据窗宽窗位计算 min 和 max
+    int min = m_windowLevel - m_windowWidth / 2;
+    int max = m_windowLevel + m_windowWidth / 2;
+
+    // 应用并获取新图像
+    QImage adjustedImage = ImageProcessor::applyWindowLevel(m_originalImage, min, max);
+
+    // 更新显示
+    viewer->updatePixmap(QPixmap::fromImage(adjustedImage));
+    infoWidget->setWindowLevelText(QString("window/level: %1/%2").arg(m_windowWidth).arg(m_windowLevel));
+}
+

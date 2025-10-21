@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QDoubleSpinBox>
 #include <QFormLayout>
+#include <QSlider>
 
 TopRightInfoWidget::TopRightInfoWidget(QWidget *parent) : QWidget(parent)
 {
@@ -19,7 +20,20 @@ TopRightInfoWidget::TopRightInfoWidget(QWidget *parent) : QWidget(parent)
         );
 
     autoWindowingCheckBox = new QCheckBox("自动窗宽窗位");
+    connect(autoWindowingCheckBox, &QCheckBox::toggled, this, &TopRightInfoWidget::autoWindowingToggled);
     windowLevelLabel = new QLabel("window/level: 120.5/231");
+
+    // --- Window Slider ---
+    windowSlider = new QSlider(Qt::Horizontal);
+    windowSlider->setRange(1, 512); // 设置一个合理的范围
+    windowSlider->setValue(256);
+    connect(windowSlider, &QSlider::valueChanged, this, &TopRightInfoWidget::windowChanged);
+
+    // --- Level Slider ---
+    levelSlider = new QSlider(Qt::Horizontal);
+    levelSlider->setRange(0, 255);
+    levelSlider->setValue(128);
+    connect(levelSlider, &QSlider::valueChanged, this, &TopRightInfoWidget::levelChanged);
 
     // --- Scale SpinBox ---
     scaleSpinBox = new QDoubleSpinBox;
@@ -50,10 +64,31 @@ TopRightInfoWidget::TopRightInfoWidget(QWidget *parent) : QWidget(parent)
     scaleLayout->addWidget(new QLabel("scale:"));
     scaleLayout->addWidget(scaleSpinBox);
 
-    mainLayout->addLayout(scaleLayout);
+    // 添加滑动条到布局
+    QFormLayout *wlLayout = new QFormLayout;
+    wlLayout->addRow("W:", windowSlider);
+    wlLayout->addRow("L:", levelSlider);
+    mainLayout->addLayout(wlLayout);
 
+    mainLayout->addLayout(scaleLayout);
     setLayout(mainLayout);
 }
+
+
+void TopRightInfoWidget::setWindowValue(int value)
+{
+    bool oldSignalsState = windowSlider->blockSignals(true);
+    windowSlider->setValue(value);
+    windowSlider->blockSignals(oldSignalsState);
+}
+
+void TopRightInfoWidget::setLevelValue(int value)
+{
+    bool oldSignalsState = levelSlider->blockSignals(true);
+    levelSlider->setValue(value);
+    levelSlider->blockSignals(oldSignalsState);
+}
+
 
 void TopRightInfoWidget::setScale(qreal scale)
 {
@@ -61,4 +96,18 @@ void TopRightInfoWidget::setScale(qreal scale)
     bool oldSignalsState = scaleSpinBox->blockSignals(true);
     scaleSpinBox->setValue(scale);
     scaleSpinBox->blockSignals(oldSignalsState);
+}
+
+
+void TopRightInfoWidget::setWindowLevelText(const QString &text)
+{
+    windowLevelLabel->setText(text);
+}
+
+void TopRightInfoWidget::uncheckAutoWindowing()
+{
+    // 阻止信号循环
+    bool oldSignalsState = autoWindowingCheckBox->blockSignals(true);
+    autoWindowingCheckBox->setChecked(false);
+    autoWindowingCheckBox->blockSignals(oldSignalsState);
 }

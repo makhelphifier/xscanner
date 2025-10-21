@@ -14,7 +14,7 @@
 class QGraphicsScene;
 class QGraphicsPixmapItem;
 class QLabel;
-class TopRightInfoWidget; // <-- 添加此行
+class TopRightInfoWidget;
 
 
 class MainWindow : public QMainWindow
@@ -24,6 +24,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void applyAndDisplayWl();
 protected:
     void resizeEvent(QResizeEvent *event) override;
     bool eventFilter(QObject *watched, QEvent *event) override;
@@ -45,7 +46,7 @@ private:
         Mode_Ellipse
     };
     DrawMode m_currentMode = Mode_None;
-    QImage m_image;
+    QImage m_originalImage;
     bool m_isPanning = false;
     QPoint m_lastPanPoint;
     ImageViewer *viewer;
@@ -56,8 +57,10 @@ private:
     QAction *selectAction;
     QActionGroup *toolGroup;
     QLabel *sizeLabel;
-    QLabel *infoLabel; // <-- 添加此行
-    TopRightInfoWidget *infoWidget; // <-- 添加此行
+    QLabel *infoLabel;
+    TopRightInfoWidget *infoWidget;
+    int m_windowWidth;
+    int m_windowLevel;
 
 private slots:
     void drawLine();
@@ -66,8 +69,10 @@ private slots:
     void drawPoint();
     void openImage();
     void selectMode();
-    void updateScale(qreal scale); // <-- 添加此行
-    void onScaleFromWidget(double scale); // <-- 添加此行
-
+    void updateScale(qreal scale);
+    void onScaleFromWidget(double scale);
+    void onAutoWindowingToggled(bool checked);
+    void onWindowChanged(int value); // <-- 添加此行
+    void onLevelChanged(int value);
 };
 #endif // MAINWINDOW_H

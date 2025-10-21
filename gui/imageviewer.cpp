@@ -18,34 +18,15 @@ ImageViewer::ImageViewer(QWidget *parent)
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setFrameStyle(QFrame::NoFrame);  // 无边框
 }
-
 void ImageViewer::loadImage(const QString &filePath)
 {
-    QPixmap pixmap(filePath);
-    if (pixmap.isNull()) {
-        // 改进的失败日志，提示检查文件和插件
-        qDebug() << "Failed to load image at path:" << filePath << ". Check if the file exists and Qt image plugins (e.g., qjpeg.dll, qpng.dll) are properly deployed with the executable."; // <--- MODIFIED
+    QImage image(filePath);
+    if (image.isNull()) {
+        qDebug() << "Failed to load image at path:" << filePath << ". Check if the file exists and Qt image plugins are properly deployed.";
+        setImage(QImage()); // 传递一个空图像来清空视图
         return;
     }
-
-    qDebug() << "Image loaded successfully:" << filePath << " | Size:" << pixmap.size(); // <--- ADDED success log
-
-
-    // 清空场景
-    m_scene->clear();
-    m_pixmapItem = new QGraphicsPixmapItem(pixmap);
-    m_pixmapItem->setTransformationMode(Qt::SmoothTransformation);  // 图片项平滑变换
-    m_scene->addItem(m_pixmapItem);
-    m_scene->setSceneRect(m_pixmapItem->boundingRect()); // 设置场景范围为图片大小
-
-    // --- 添加边框 ---
-    m_borderItem = new QGraphicsRectItem(m_pixmapItem); // <-- 将 pixmapItem 作为父项
-    m_borderItem->setPen(QPen(Qt::red, 1.5)); // <-- 设置边框为2像素宽的白线
-    m_borderItem->setRect(m_pixmapItem->boundingRect());
-
-
-    // 计算自适应缩放
-    fitToView();
+    setImage(image);
 }
 void ImageViewer::fitToView()
 {
@@ -120,7 +101,7 @@ void ImageViewer::resizeEvent(QResizeEvent *event)
     fitToView();
 }
 
-void ImageViewer::setScale(qreal scale) // <-- 添加整个函数
+void ImageViewer::setScale(qreal scale)
 {
     if (!m_pixmapItem || m_initialScale <= 0) return;
 
@@ -136,3 +117,41 @@ void ImageViewer::setScale(qreal scale) // <-- 添加整个函数
     QGraphicsView::scale(targetM11, targetM11); // 再应用绝对缩放值
 }
 
+
+void ImageViewer::updatePixmap(const QPixmap &pixmap)
+{
+    if (m_pixmapItem) {
+        m_pixmapItem->setPixmap(pixmap);
+    }
+}
+
+
+void ImageViewer::setImage(const QImage &image)
+{
+    if (image.isNull()) {
+        // 如果图像为空，则清空场景
+        if (m_pixmapItem) m_pixmapItem->setPixmap(QPixmap());
+        if (m_borderItem) m_borderItem->setRect(QRectF());
+        return;
+    }
+
+    QPixmap pixmap = QPixmap::fromImage(image);
+    qDebug() << "Image set successfully | Size:" << pixmap.size();
+
+    if (!m_pixmapItem) {
+        m_pixmapItem = new QGraphicsPixmapItem();
+        m_pixmapItem->setTransformationMode(Qt::SmoothTransformation);
+        m_scene->addItem(m_pixmapItem);
+    }
+    m_pixmapItem->setPixmap(pixmap);
+
+    if (!m_borderItem) {
+        m_borderItem = new QGraphicsRectItem(m_pixmapItem);
+        m_borderItem->setPen(QPen(Qt::white, 2));
+    }
+    m_borderItem->setRect(m_pixmapItem->boundingRect());
+
+    m_scene->setSceneRect(m_pixmapItem->boundingRect());
+
+    fitToView();
+}
