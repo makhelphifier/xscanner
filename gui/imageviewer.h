@@ -8,6 +8,8 @@
 #include <QWheelEvent>
 #include <QKeyEvent>
 #include <QResizeEvent>
+#include <QTimer> // <-- 添加此行
+
 class QGraphicsRectItem;
 
 class ImageViewer : public QGraphicsView

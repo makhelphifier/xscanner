@@ -20,7 +20,7 @@ protected:
 private:
     QGraphicsTextItem *m_textItem;
     QGraphicsPixmapItem *m_imageItem;
-    const QImage &m_image;
+    const QImage m_image;
 };
 
 #endif // ANNOTATIONPOINTITEM_H

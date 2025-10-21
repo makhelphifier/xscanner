@@ -18,6 +18,7 @@ public:
     static QImage applyWindowLevel(const QImage &originalImage, int min, int max);
 
     static QImage loadRawImage(const QString &filePath, int width, int height);
+    static QImage loadRaw16bitImage(const QString &filePath, int width, int height); // 添加此行
 };
 
 #endif // IMAGEPROCESSOR_H

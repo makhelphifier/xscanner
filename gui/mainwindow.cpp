@@ -105,19 +105,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     toolGroup->addAction(ellipseAction);
     connect(ellipseAction, &QAction::triggered, this, &MainWindow::drawEllipse);
 
-    QString defaultImagePath = ":/Resources/img/aaa.jpg";
-    viewer->loadImage(defaultImagePath);
-
-    // --- 为默认图片更新尺寸 ---
-    QPixmap pixmap(defaultImagePath);
-    if (!pixmap.isNull()) {
-        m_originalImage = pixmap.toImage().convertToFormat(QImage::Format_ARGB32);
-        sizeLabel->setText(QString("size: %1x%2").arg(pixmap.width()).arg(pixmap.height()));
-        sizeLabel->adjustSize(); // 根据内容调整大小
-        sizeLabel->setVisible(true);
-        infoWidget->setVisible(true); // 加载成功后显示
-    }
-
     // --- 连接信号和槽 ---
     connect(viewer, &ImageViewer::scaleChanged, this, &MainWindow::updateScale);
     connect(infoWidget, &TopRightInfoWidget::scaleEdited, this, &MainWindow::onScaleFromWidget);
@@ -136,9 +123,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 MainWindow::~MainWindow() {}
 
+
 void MainWindow::openImage()
 {
-    QString filePath = QFileDialog::getOpenFileName(this, "打开图片", "", "Images (*.png *.jpg *.bmp);;Raw Binary (*.raw *.bin)");
+    QString filePath = QFileDialog::getOpenFileName(this, "打开图片", "", "Raw Binary (*.raw *.bin);;Images (*.png *.jpg *.bmp)");
 
     if (filePath.isEmpty()) {
         return;
@@ -148,8 +136,8 @@ void MainWindow::openImage()
 
     QImage loadedImage;
     if (filePath.endsWith(".raw", Qt::CaseInsensitive) || filePath.endsWith(".bin", Qt::CaseInsensitive)) {
-        // 加载 raw/bin 文件，暂时假设尺寸为 512x512
-        loadedImage = ImageProcessor::loadRawImage(filePath, 512, 512);
+        // 修改下面这行来加载16位图像
+        loadedImage = ImageProcessor::loadRaw16bitImage(filePath, 2882, 2340);
     } else {
         // 加载标准图像文件
         loadedImage.load(filePath);

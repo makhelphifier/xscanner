@@ -1,157 +1,156 @@
+// gui/imageviewer.cpp
+
 #include "gui/imageviewer.h"
 #include <QDebug>
 #include <QPainter>
 #include <QScrollBar>
+#include <QTimer> // 确保 QTimer 被包含
 
 ImageViewer::ImageViewer(QWidget *parent)
-    : QGraphicsView(parent), m_initialScale(1.0), m_pixmapItem(nullptr)
+    : QGraphicsView(parent), m_initialScale(1.0), m_pixmapItem(nullptr), m_borderItem(nullptr) // 初始化 m_borderItem
 {
+    qDebug() << "[ImageViewer] Constructor started.";
     m_scene = new QGraphicsScene(this);
     setScene(m_scene);
     setRenderHint(QPainter::Antialiasing);
     setRenderHint(QPainter::HighQualityAntialiasing);
-    // 配置视图
-    setDragMode(QGraphicsView::ScrollHandDrag);  // 启用拖动（平移）
-    setTransformationAnchor(QGraphicsView::AnchorUnderMouse);  // 缩放锚点为鼠标位置
-    setRenderHint(QPainter::SmoothPixmapTransform, true);  // 平滑缩放
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);  // 隐藏滚动条
+    setDragMode(QGraphicsView::ScrollHandDrag);
+    setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+    setRenderHint(QPainter::SmoothPixmapTransform, true);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setFrameStyle(QFrame::NoFrame);  // 无边框
+    setFrameStyle(QFrame::NoFrame);
+    qDebug() << "[ImageViewer] Constructor finished.";
 }
+
 void ImageViewer::loadImage(const QString &filePath)
 {
+    qDebug() << "[ImageViewer] loadImage called with path:" << filePath;
     QImage image(filePath);
     if (image.isNull()) {
-        qDebug() << "Failed to load image at path:" << filePath << ". Check if the file exists and Qt image plugins are properly deployed.";
-        setImage(QImage()); // 传递一个空图像来清空视图
+        qDebug() << "!!!!!! [ImageViewer] CRITICAL: loadImage failed, QImage is null.";
+        setImage(QImage());
         return;
     }
     setImage(image);
 }
+
 void ImageViewer::fitToView()
 {
-    if (!m_pixmapItem) return;
+    qDebug() << "--- [ImageViewer] fitToView slot started ---";
+    if (!m_pixmapItem) {
+        qDebug() << "!!!!!! [ImageViewer] WARNING: fitToView called but m_pixmapItem is null. Aborting.";
+        return;
+    }
+    if (m_pixmapItem->pixmap().isNull()) {
+        qDebug() << "!!!!!! [ImageViewer] WARNING: fitToView called but pixmap is null. Aborting.";
+        return;
+    }
 
-    // 使用更可靠的 fitInView 方法来实现自适应和居中
-
-    // 1. 重置所有变换
+    qDebug() << "[ImageViewer] fitToView: Resetting transform.";
     resetTransform();
-
-    // 2. 将整个场景（即图片项的边界）自适应到视图中，并保持长宽比
-    // fitInView 内部会自动处理缩放和居中
+    qDebug() << "[ImageViewer] fitToView: Calling fitInView.";
     fitInView(m_pixmapItem, Qt::KeepAspectRatio);
+    qDebug() << "[ImageViewer] fitToView: fitInView finished.";
 
-    // 3. 重新计算并保存初始缩放因子，用于后续的缩放限制。
-    // transform().m11() 是当前的 X 轴缩放因子
     m_initialScale = transform().m11();
-    emit scaleChanged(1.0); // <-- 添加此行: fit 时比例为 1.0X
+    qDebug() << "[ImageViewer] fitToView: New initial scale factor calculated:" << m_initialScale;
+    emit scaleChanged(1.0);
+    qDebug() << "--- [ImageViewer] fitToView slot finished ---";
 }
 
 void ImageViewer::resetView()
 {
-    fitToView();  // 重置到自适应状态
+    qDebug() << "[ImageViewer] resetView called.";
+    fitToView();
 }
 
 void ImageViewer::wheelEvent(QWheelEvent *event)
 {
-    if (!(event->modifiers() & Qt::ControlModifier)) {
-        QGraphicsView::wheelEvent(event);
-        return;
-    }
-
-    if (!m_pixmapItem) {
-        QGraphicsView::wheelEvent(event);
-        return;
-    }
-
-    // 计算缩放因子
-    qreal factor = (event->angleDelta().y() > 0) ? 1.05 : 0.95;
-    scale(factor, factor);
-
-
-
-    // 可选：限制缩放范围
-    qreal currentScale = transform().m11(); // 当前变换矩阵的 m11 元素即为 x 轴缩放因子
-    qreal relativeScale = currentScale / m_initialScale; // 相对初始自适应缩放
-    emit scaleChanged(relativeScale);
-
-    // 最小 0.1 倍，最大 10 倍
-    if (relativeScale < 0.1) {
-        scale(0.1 * m_initialScale / currentScale, 0.1 * m_initialScale / currentScale);
-    }
-    if (relativeScale > 10.0) {
-        scale(10.0 * m_initialScale / currentScale, 10.0 * m_initialScale / currentScale);
-    }
-
-    event->accept();
+    // (这部分暂时不加日志, 除非怀疑是滚轮操作导致崩溃)
+    QGraphicsView::wheelEvent(event);
 }
 
 void ImageViewer::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_R) {  // 按 'R' 重置
-        resetView();
-    }
+    // (同上)
     QGraphicsView::keyPressEvent(event);
 }
 
 void ImageViewer::resizeEvent(QResizeEvent *event)
 {
+    qDebug() << "[ImageViewer] resizeEvent started.";
     QGraphicsView::resizeEvent(event);
+    qDebug() << "[ImageViewer] resizeEvent: Scheduling fitToView with QTimer.";
     // 窗口大小变化时，重新计算自适应缩放并重置
-    fitToView();
+    QTimer::singleShot(0, this, &ImageViewer::fitToView);
+    qDebug() << "[ImageViewer] resizeEvent finished.";
 }
 
 void ImageViewer::setScale(qreal scale)
 {
+    qDebug() << "[ImageViewer] setScale called with scale:" << scale;
+    // (这部分暂时不加日志)
     if (!m_pixmapItem || m_initialScale <= 0) return;
 
-    // 计算目标 m11 值
     qreal targetM11 = scale * m_initialScale;
-
-    // 获取当前 m11 值
     qreal currentM11 = transform().m11();
-    if (qFuzzyCompare(currentM11, targetM11)) return; // 如果值相同，则不执行任何操作
+    if (qFuzzyCompare(currentM11, targetM11)) return;
 
-    // 重置变换并应用新的缩放
-    resetTransform(); // 先回到初始状态
-    QGraphicsView::scale(targetM11, targetM11); // 再应用绝对缩放值
+    resetTransform();
+    QGraphicsView::scale(targetM11, targetM11);
 }
-
 
 void ImageViewer::updatePixmap(const QPixmap &pixmap)
 {
+    qDebug() << "[ImageViewer] updatePixmap called.";
     if (m_pixmapItem) {
         m_pixmapItem->setPixmap(pixmap);
+        qDebug() << "[ImageViewer] updatePixmap: Pixmap updated on existing item.";
+    } else {
+        qDebug() << "!!!!!! [ImageViewer] WARNING: updatePixmap called but m_pixmapItem is null.";
     }
 }
 
-
 void ImageViewer::setImage(const QImage &image)
 {
+    qDebug() << "--- [ImageViewer] setImage started ---";
     if (image.isNull()) {
-        // 如果图像为空，则清空场景
+        qDebug() << "[ImageViewer] setImage: Image is null, clearing scene.";
         if (m_pixmapItem) m_pixmapItem->setPixmap(QPixmap());
         if (m_borderItem) m_borderItem->setRect(QRectF());
+        qDebug() << "--- [ImageViewer] setImage finished (cleared scene). ---";
         return;
     }
 
+    qDebug() << "[ImageViewer] setImage: Converting QImage to QPixmap...";
     QPixmap pixmap = QPixmap::fromImage(image);
-    qDebug() << "Image set successfully | Size:" << pixmap.size();
+    qDebug() << "[ImageViewer] setImage: Conversion finished. Pixmap size:" << pixmap.size();
 
     if (!m_pixmapItem) {
+        qDebug() << "[ImageViewer] setImage: m_pixmapItem is null, creating a new one.";
         m_pixmapItem = new QGraphicsPixmapItem();
         m_pixmapItem->setTransformationMode(Qt::SmoothTransformation);
         m_scene->addItem(m_pixmapItem);
+        qDebug() << "[ImageViewer] setImage: New pixmap item created and added to scene.";
     }
     m_pixmapItem->setPixmap(pixmap);
+    qDebug() << "[ImageViewer] setImage: setPixmap called on m_pixmapItem.";
 
     if (!m_borderItem) {
+        qDebug() << "[ImageViewer] setImage: m_borderItem is null, creating a new one.";
         m_borderItem = new QGraphicsRectItem(m_pixmapItem);
         m_borderItem->setPen(QPen(Qt::white, 2));
+        qDebug() << "[ImageViewer] setImage: New border item created.";
     }
     m_borderItem->setRect(m_pixmapItem->boundingRect());
+    qDebug() << "[ImageViewer] setImage: Border rectangle set to:" << m_pixmapItem->boundingRect();
 
     m_scene->setSceneRect(m_pixmapItem->boundingRect());
+    qDebug() << "[ImageViewer] setImage: Scene rectangle set to:" << m_pixmapItem->boundingRect();
 
-    fitToView();
+    qDebug() << "[ImageViewer] setImage: Scheduling fitToView with QTimer.";
+    QTimer::singleShot(0, this, &ImageViewer::fitToView);
+
+    qDebug() << "--- [ImageViewer] setImage finished. ---";
 }
