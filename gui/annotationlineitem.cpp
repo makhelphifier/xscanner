@@ -7,7 +7,7 @@
 void AnnotationLineItem::setupPen()
 {
     QPen pen;
-    pen.setColor(Qt::red);
+    pen.setColor(Qt::yellow);
     pen.setWidth(2);
     setPen(pen);
 }

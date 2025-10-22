@@ -39,6 +39,7 @@ private:
     QAction *rectAction;
     QAction *ellipseAction;
     QAction *wlAction;
+    QAction *pointAction;
     QActionGroup *toolGroup;
     QLabel *sizeLabel;
     QLabel *infoLabel;

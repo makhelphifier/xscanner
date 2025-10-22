@@ -8,9 +8,13 @@
 #include "service/imageprocessor.h"
 #include "annotationlineitem.h"
 #include "annotationrectitem.h"
+#include "annotationellipseitem.h"
+#include "annotationpointitem.h"
+#include "annotationpointitem.h"
+#include <QList>
 
 ImageViewer::ImageViewer(QWidget *parent)
-    : QGraphicsView(parent), m_initialScale(1.0), m_pixmapItem(nullptr), m_borderItem(nullptr)
+    : QGraphicsView(parent), m_initialScale(1.0), m_pixmapItem(nullptr), m_borderItem(nullptr), m_previewEllipse(nullptr)
 {
     m_scene = new QGraphicsScene(this);
     setScene(m_scene);
@@ -29,6 +33,8 @@ ImageViewer::ImageViewer(QWidget *parent)
 
     // 默认选择模式
     m_currentMode = Mode_Select;
+    m_pointItems.clear();  // 初始化
+
 }
 
 void ImageViewer::loadImage(const QString &filePath)
@@ -131,6 +137,19 @@ void ImageViewer::setScale(qreal scale)
     resetTransform();
     QGraphicsView::scale(targetM11, targetM11);
     emit scaleChanged(scale);
+    // 响应 scale 变化，更新点项
+    onScaleChanged(scale);
+}
+
+// 新增槽：scale 变化时更新所有点项
+void ImageViewer::onScaleChanged(qreal scale)
+{
+    for (AnnotationPointItem* pointItem : m_pointItems) {
+        if (pointItem) {
+            pointItem->updateFontSize(scale);
+        }
+    }
+    qDebug() << "Updated" << m_pointItems.size() << "point items for scale" << scale;
 }
 
 void ImageViewer::updatePixmap(const QPixmap &pixmap)
@@ -178,6 +197,16 @@ void ImageViewer::setImage(const QImage &image)
     applyWindowLevel();  // 应用初始窗宽窗位
 
     QTimer::singleShot(0, this, &ImageViewer::fitToView);
+
+    // 清空旧点项（重新加载图像时）
+    for (AnnotationPointItem* item : m_pointItems) {
+        if (item) {
+            m_scene->removeItem(item);
+            delete item;
+        }
+    }
+    m_pointItems.clear();
+
 }
 
 // 公共接口 - 窗宽窗位
@@ -243,6 +272,7 @@ void ImageViewer::setDrawMode(DrawMode mode)
     case Mode_Rect:
     case Mode_Ellipse:
     case Mode_Point:
+
     case Mode_WindowLevel:
         setDragMode(QGraphicsView::NoDrag);
         viewport()->setCursor(Qt::CrossCursor);
@@ -273,7 +303,12 @@ void ImageViewer::onLevelChanged(int value)
 // 鼠标事件重写（处理绘制逻辑）
 void ImageViewer::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() != Qt::LeftButton || m_originalImage.isNull()) {
+    if (event->button() != Qt::LeftButton) {
+        QGraphicsView::mousePressEvent(event);
+        return;
+    }
+
+    if (m_originalImage.isNull()) {
         QGraphicsView::mousePressEvent(event);
         return;
     }
@@ -281,6 +316,10 @@ void ImageViewer::mousePressEvent(QMouseEvent *event)
     QPointF scenePos = mapToScene(event->pos());
     m_startPoint = scenePos;
     m_isDrawing = true;
+
+    // 在 switch 外预计算当前 scale 和图像宽度（用于 Mode_Point，避免 switch 作用域问题）
+    qreal currentScale = (m_initialScale > 0) ? (transform().m11() / m_initialScale) : 1.0;
+    int imageWidth = m_originalImage.width();
 
     switch (m_currentMode) {
     case Mode_Line:
@@ -290,17 +329,17 @@ void ImageViewer::mousePressEvent(QMouseEvent *event)
         m_previewRect = createPreviewRect(m_startPoint);
         break;
     case Mode_Rect:
-        // TODO: 实现矩形绘制（类似 WindowLevel，但添加 AnnotationRectItem）
         m_previewRect = createPreviewRect(m_startPoint);
         qDebug() << "Rect drawing started";
         break;
     case Mode_Ellipse:
-        // TODO: 实现椭圆绘制（需 AnnotationEllipseItem）
-        qDebug() << "Ellipse drawing started (placeholder)";
+        m_previewEllipse = createPreviewEllipse(m_startPoint);
+        qDebug() << "Ellipse drawing started";
         break;
     case Mode_Point:
-        // TODO: 实现点绘制（需 AnnotationPointItem）
-        qDebug() << "Point drawing started (placeholder)";
+        // 使用预计算的 currentScale 和 imageWidth
+        finishDrawingPoint(scenePos, currentScale, imageWidth);
+        m_isDrawing = false;  // 点测量不持续绘制
         break;
     case Mode_Select:
     default:
@@ -336,7 +375,13 @@ void ImageViewer::mouseMoveEvent(QMouseEvent *event)
             m_previewRect->setRect(QRectF(m_startPoint, scenePos).normalized());
         }
         break;
-    // TODO: Ellipse/Point 预览更新
+    case Mode_Ellipse:  // 更新椭圆预览
+        if (m_previewEllipse) {
+            QRectF ellipseRect = QRectF(m_startPoint, scenePos).normalized();
+            m_previewEllipse->setRect(ellipseRect);
+        }
+        break;
+    // Mode_Point 无预览
     default:
         break;
     }
@@ -383,10 +428,16 @@ void ImageViewer::mouseReleaseEvent(QMouseEvent *event)
             qDebug() << "Rect completed:" << rect;
         }
         break;
-    // TODO: Ellipse/Point 完成逻辑
-    case Mode_Ellipse:
+    case Mode_Ellipse:  // 完成椭圆
+        if (m_previewEllipse) {
+            QRectF ellipseRect = m_previewEllipse->rect();
+            m_scene->removeItem(m_previewEllipse);
+            delete m_previewEllipse;
+            m_previewEllipse = nullptr;
+            finishDrawingEllipse(ellipseRect);
+        }
+        break;
     case Mode_Point:
-        qDebug() << "Ellipse/Point completed (placeholder)";
         break;
     default:
         break;
@@ -397,6 +448,34 @@ void ImageViewer::mouseReleaseEvent(QMouseEvent *event)
     updatePixelInfo(scenePos);
     event->accept();
 }
+// 私有方法：创建椭圆预览
+QGraphicsEllipseItem* ImageViewer::createPreviewEllipse(const QPointF &start)
+{
+    QGraphicsEllipseItem* preview = new QGraphicsEllipseItem(QRectF(start, start));
+    QPen pen(Qt::yellow, 1, Qt::DashLine);
+    preview->setPen(pen);
+    preview->setBrush(Qt::transparent);
+    preview->setZValue(1000);
+    preview->setFlag(QGraphicsItem::ItemIsSelectable, false);
+    preview->setFlag(QGraphicsItem::ItemIsMovable, false);
+    m_scene->addItem(preview);
+    return preview;
+}
+
+// 私有方法：完成椭圆绘制
+void ImageViewer::finishDrawingEllipse(const QRectF &ellipseRect)
+{
+    if (!ellipseRect.isValid() || ellipseRect.width() < 1 || ellipseRect.height() < 1) {
+        return;
+    }
+    AnnotationEllipseItem *ellipseItem = new AnnotationEllipseItem(
+        ellipseRect.x(), ellipseRect.y(), ellipseRect.width(), ellipseRect.height()
+        );
+    m_scene->addItem(ellipseItem);
+    qDebug() << "Ellipse completed:" << ellipseRect;
+}
+
+
 
 // 私有方法 - 像素信息更新
 void ImageViewer::updatePixelInfo(const QPointF &scenePos)
@@ -518,4 +597,21 @@ int ImageViewer::currentWindowWidth() const
 int ImageViewer::currentWindowLevel() const
 {
     return m_windowLevel;
+}
+
+
+// 修改 finishDrawingPoint：传递当前 scale 和图像宽度
+void ImageViewer::finishDrawingPoint(const QPointF &pointPos, qreal currentScale, int imageWidth)
+{
+    int x = qRound(pointPos.x());
+    int y = qRound(pointPos.y());
+    if (!m_originalImage.valid(x, y)) {
+        qDebug() << "Point out of bounds";
+        return;
+    }
+    int value = getPixelValue(x, y);
+    AnnotationPointItem *pointItem = new AnnotationPointItem(x, y, value, currentScale, imageWidth);
+    m_scene->addItem(pointItem);
+    m_pointItems.append(pointItem);  // 跟踪
+    qDebug() << "Point measured at" << x << y << "value:" << value << "scale:" << currentScale;
 }

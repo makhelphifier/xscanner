@@ -8,7 +8,6 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QMenuBar>
-#include "service/imageprocessor.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -88,9 +87,24 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     toolGroup->addAction(ellipseAction);
     connect(ellipseAction, &QAction::triggered, [this]() { viewer->setDrawMode(ImageViewer::Mode_Ellipse); });
 
+    // 点测量工具
+    pointAction = new QAction(QIcon(":/Resources/img/masure.png"), "", this);
+    pointAction->setCheckable(true);
+    toolBar->addAction(pointAction);
+    toolGroup->addAction(pointAction);
+    connect(pointAction, &QAction::triggered, [this]() { viewer->setDrawMode(ImageViewer::Mode_Point); });
+
+    // 在连接信号部分添加（其他保持原样）
+    connect(ellipseAction, &QAction::triggered, [this]() { viewer->setDrawMode(ImageViewer::Mode_Ellipse); });
+
+    // 默认选择模式（确保 pointAction 未选中）
+    selectAction->setChecked(true);
+    selectMode();
+
     // --- 连接信号和槽 ---
     // 缩放相关
     connect(viewer, &ImageViewer::scaleChanged, this, &MainWindow::updateScale);
+    connect(viewer, &ImageViewer::scaleChanged, viewer, &ImageViewer::onScaleChanged);
     connect(infoWidget, QOverload<double>::of(&TopRightInfoWidget::scaleEdited), this, &MainWindow::onScaleFromWidget);
 
     // 像素信息
