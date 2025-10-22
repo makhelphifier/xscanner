@@ -1,9 +1,8 @@
-// gui/imageviewer.cpp
-
 #include "gui/imageviewer.h"
 #include <QPainter>
 #include <QScrollBar>
-#include <QTimer> // 确保 QTimer 被包含
+#include <QTimer>
+#include <cmath>
 
 ImageViewer::ImageViewer(QWidget *parent)
     : QGraphicsView(parent), m_initialScale(1.0), m_pixmapItem(nullptr), m_borderItem(nullptr) // 初始化 m_borderItem
@@ -53,7 +52,44 @@ void ImageViewer::resetView()
 
 void ImageViewer::wheelEvent(QWheelEvent *event)
 {
-    QGraphicsView::wheelEvent(event);
+    if (event->modifiers().testFlag(Qt::ControlModifier)) {
+        // Ctrl + 滚轮缩放，中心为鼠标位置
+        if (!m_pixmapItem || m_initialScale <= 0) {
+            event->ignore();
+            return;
+        }
+
+        qreal currentScale = transform().m11() / m_initialScale;
+        int numSteps = event->angleDelta().y() / 120;
+        qreal factor = std::pow(1.05, numSteps); // 缩放因子
+
+        // 应用相对缩放（使用 AnchorUnderMouse 确保以鼠标位置为中心）
+        scale(factor, factor);
+
+        // 计算新相对缩放比例并发出信号
+        qreal newScale = currentScale * factor;
+
+        // 可选：限制缩放范围（最小 0.1，最大 10）
+        if (newScale < 0.1) {
+            newScale = 0.1;
+            // 如果超出范围，重置到限制值（这里简化处理，可进一步调整）
+            qreal adjustFactor = 0.1 / currentScale;
+            resetTransform();
+            scale(0.1 * m_initialScale, 0.1 * m_initialScale);
+        } else if (newScale > 10) {
+            newScale = 10;
+            qreal adjustFactor = 10 / currentScale;
+            resetTransform();
+            scale(10 * m_initialScale, 10 * m_initialScale);
+        } else {
+            emit scaleChanged(newScale);
+        }
+
+        event->accept();
+    } else {
+        // 无 Ctrl 时，正常滚轮滚动
+        QGraphicsView::wheelEvent(event);
+    }
 }
 
 void ImageViewer::keyPressEvent(QKeyEvent *event)
@@ -78,6 +114,7 @@ void ImageViewer::setScale(qreal scale)
 
     resetTransform();
     QGraphicsView::scale(targetM11, targetM11);
+    emit scaleChanged(scale);
 }
 
 void ImageViewer::updatePixmap(const QPixmap &pixmap)
