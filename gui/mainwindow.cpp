@@ -19,7 +19,7 @@
 #include "gui/toprightinfowidget.h"
 #include "service/imageprocessor.h"
 #include <QActionGroup>
-#include <QFileDialog> // 确保这个 include 存在
+#include <QFileDialog>
 
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
@@ -87,6 +87,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     toolGroup->addAction(selectAction);
     connect(selectAction, &QAction::triggered, this, &MainWindow::selectMode);
 
+    // 添加窗宽窗位工具
+    wlAction = new QAction(QIcon(":/Resources/img/u27.png"), "窗宽窗位", this); // 使用一个图标
+    wlAction->setCheckable(true);
+    toolBar->addAction(wlAction);
+    toolGroup->addAction(wlAction);
+    connect(wlAction, &QAction::triggered, this, &MainWindow::selectWindowLevel);
+
+
     lineAction = new QAction(QIcon(":/Resources/img/line_tool.png"), "直线", this);
     lineAction->setCheckable(true);
     toolBar->addAction(lineAction);
@@ -114,6 +122,51 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     selectAction->setChecked(true);
     selectMode();
+
+    // 默认加载图像
+    QString defaultPath = ":/Resources/img/000006.raw";
+    QImage loadedImage;
+    if (defaultPath.endsWith(".raw", Qt::CaseInsensitive) || defaultPath.endsWith(".bin", Qt::CaseInsensitive)) {
+        // 加载16位RAW图像（不归一化），假设尺寸为 2882x2340（根据文件调整如果需要）
+        loadedImage = ImageProcessor::readRawImg_qImage(defaultPath, 2882, 2340);
+    } else {
+        // 加载标准图像文件
+        loadedImage.load(defaultPath);
+    }
+
+    if (!loadedImage.isNull()) {
+        // 检测位深
+        m_bitDepth = (loadedImage.format() == QImage::Format_Grayscale16) ? 16 : 8;
+
+        // 如果是RGB图像，转换为灰度（假设为8位）
+        if (!loadedImage.isGrayscale()) {
+            loadedImage = loadedImage.convertToFormat(QImage::Format_Grayscale8);
+            m_bitDepth = 8;
+        }
+
+        // 统一处理加载成功的图像
+        m_originalImage = loadedImage;
+        viewer->setImage(m_originalImage);
+
+        sizeLabel->setText(QString("size: %1x%2").arg(m_originalImage.width()).arg(m_originalImage.height()));
+        sizeLabel->adjustSize();
+        sizeLabel->setVisible(true);
+
+        infoWidget->setVisible(true);
+        // 根据位深设置窗宽窗位滑动条范围
+        int maxVal = (m_bitDepth == 16) ? 65535 : 255;
+        infoWidget->setWindowRange(1, maxVal + 1);  // 窗宽范围：1 到 maxVal+1
+        infoWidget->setLevelRange(0, maxVal);       // 窗位范围：0 到 maxVal
+
+        // 初始化为全范围（手动调节默认值）
+        m_windowWidth = maxVal + 1;
+        m_windowLevel = maxVal / 2;
+        infoWidget->setWindowValue(m_windowWidth);
+        infoWidget->setLevelValue(m_windowLevel);
+        applyAndDisplayWl();  // 应用初始窗位窗宽
+        infoWidget->setAutoWindowingChecked(true);
+
+    }
 
     // 手动调用一次 resizeEvent 来正确设置初始位置
     QTimer::singleShot(0, this, [this](){
@@ -181,6 +234,12 @@ void MainWindow::openImage()
     infoWidget->setWindowValue(m_windowWidth);
     infoWidget->setLevelValue(m_windowLevel);
     applyAndDisplayWl();  // 应用初始窗位窗宽
+    infoWidget->setAutoWindowingChecked(true);
+
+    // 默认执行一次自动窗宽窗位
+    onAutoWindowingToggled(true);
+    infoWidget->checkAutoWindowing(); // 确保UI同步
+
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
@@ -229,108 +288,231 @@ void MainWindow::drawPoint()
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
-    if (watched == viewer->viewport()) {
-        // qDebug() << "Viewer event:" << event->type();
-        if (event->type() == QEvent::MouseMove) {
-            QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+    if (watched != viewer->viewport() || m_originalImage.isNull()) {
+        return QObject::eventFilter(watched, event);  // 基类处理（QMainWindow 继承自 QObject）
+    }
 
+    switch (event->type()) {
+    case QEvent::MouseMove:
+        return handleMouseMove(static_cast<QMouseEvent*>(event));
+    case QEvent::MouseButtonPress:
+        return handleMousePress(static_cast<QMouseEvent*>(event));
+    case QEvent::MouseButtonRelease:
+        return handleMouseRelease(static_cast<QMouseEvent*>(event));
+    default:
+        break;
+    }
 
+    return QObject::eventFilter(watched, event);
+}
 
-            QPointF scenePos = viewer->mapToScene(mouseEvent->pos());
+// 处理鼠标移动：更新标签和预览
+bool MainWindow::handleMouseMove(QMouseEvent* mouseEvent)
+{
+    QPointF scenePos = viewer->mapToScene(mouseEvent->pos());
+    updateInfoLabel(scenePos);
 
-            // --- 更新坐标和灰度值 ---
-            QString infoText;
-            // 检查鼠标是否在图片范围内
-            if (viewer->pixmapItem() && viewer->pixmapItem()->boundingRect().contains(scenePos)) {
-                int x = qRound(scenePos.x());
-                int y = qRound(scenePos.y());
-                if (m_originalImage.valid(x, y)) {
-                    int grayValue;
-                    if (m_bitDepth == 16) {
-                        const quint16 *scanLine = reinterpret_cast<const quint16*>(m_originalImage.constScanLine(y));
-                        grayValue = scanLine[x];
-                    } else {
-                        grayValue = qGray(m_originalImage.pixel(x, y));
-                    }
-                    infoText = QString("X: %1, Y: %2, value: %3")
-                                   .arg(x)
-                                   .arg(y)
-                                   .arg(grayValue);
-                } else {
-                    infoText = QString("X: %1, Y: %2, value: N/A")
-                                   .arg(x)
-                                   .arg(y);
-                }
-            } else {
-                infoText = QString("X: %1, Y: %2, value: N/A")
-                               .arg(qRound(scenePos.x()))
-                               .arg(qRound(scenePos.y()));
-            }
-            infoLabel->setText(infoText);
-            infoLabel->adjustSize();
+    // 更新预览（仅在绘制中）
+    if (m_currentMode == Mode_Line && m_isDrawing && m_previewLine) {
+        m_previewLine->setLine(QLineF(m_startPoint, scenePos));
+        return true;
+    } else if (m_currentMode == Mode_WindowLevel && m_isDrawing && m_previewRect) {
+        m_previewRect->setRect(QRectF(m_startPoint, scenePos).normalized());
+        return true;
+    }
 
-            // qDebug() << "MouseMove - mode:" << m_currentMode
-            //          << "drawing:" << m_isDrawing
-            //          << "previewLine:" << (m_previewLine != nullptr)
-            //          << "scenePos:" << scenePos;
+    return false;  // 未消费事件
+}
 
-            if (m_currentMode == Mode_Line && m_isDrawing && m_previewLine) {
-                m_previewLine->setLine(QLineF(m_startPoint, scenePos));
-                return true;
-            }
-        } else if (event->type() == QEvent::MouseButtonPress) {
-            QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-            QPointF scenePos = viewer->mapToScene(mouseEvent->pos());
-            if (mouseEvent->button() == Qt::LeftButton && m_currentMode == Mode_Line) {
-                if (!m_isDrawing) {
-                    m_startPoint = scenePos;
-                    m_isDrawing = true;
-                    if (m_previewLine) {
-                        viewer->scene()->removeItem(m_previewLine);
-                        delete m_previewLine;
-                    }
-                    m_previewLine = new QGraphicsLineItem(QLineF(m_startPoint, m_startPoint));
-                    QPen pen(Qt::yellow);
-                    pen.setStyle(Qt::DashLine);
-                    pen.setWidthF(2.0);
-                    m_previewLine->setPen(pen);
-                    m_previewLine->setZValue(1000);
-                    m_previewLine->setFlag(QGraphicsItem::ItemIsSelectable, false);
-                    m_previewLine->setFlag(QGraphicsItem::ItemIsMovable, false);
-                    m_previewLine->setAcceptHoverEvents(false);
-                    viewer->scene()->addItem(m_previewLine);
-                    qDebug() << "Started drawing line at:" << m_startPoint;
-                } else {
-                    if (m_previewLine) {
-                        viewer->scene()->removeItem(m_previewLine);
-                        delete m_previewLine;
-                        m_previewLine = nullptr;
-                    }
-                    AnnotationLineItem *line = new AnnotationLineItem(
-                        m_startPoint.x(), m_startPoint.y(),
-                        scenePos.x(), scenePos.y()
-                        );
-                    viewer->scene()->addItem(line);
-                    m_isDrawing = false;
-                    // 完成后自动切回选择模式
-                    selectAction->setChecked(true);
-                    selectMode();
-                    qDebug() << "Line completed from" << m_startPoint << "to" << scenePos;
-                }
-                return true;
-            }
-            else if (event->type() == QEvent::MouseButtonRelease) {
-                if (mouseEvent->button() == Qt::LeftButton) {
-                    if (m_currentMode == Mode_Select) {
-                        viewer->viewport()->setCursor(Qt::OpenHandCursor);
-                    }
-                }
+// 处理鼠标按下：开始绘制
+bool MainWindow::handleMousePress(QMouseEvent* mouseEvent)
+{
+    if (mouseEvent->button() != Qt::LeftButton) {
+        return false;
+    }
+
+    QPointF scenePos = viewer->mapToScene(mouseEvent->pos());
+
+    switch (m_currentMode) {
+    case Mode_Line:
+        if (!m_isDrawing) {
+            m_startPoint = scenePos;
+            m_isDrawing = true;
+            m_previewLine = createPreviewLine(m_startPoint);
+            qDebug() << "Started drawing line at:" << m_startPoint;
+        }
+        return true;
+
+    case Mode_WindowLevel:
+        m_startPoint = scenePos;
+        m_isDrawing = true;
+        m_previewRect = createPreviewRect(m_startPoint);
+        return true;
+
+        // TODO: 如果需要，为 Mode_Rect, Mode_Ellipse, Mode_Point 添加类似逻辑
+    default:
+        return false;
+    }
+}
+
+// 处理鼠标释放：完成绘制
+bool MainWindow::handleMouseRelease(QMouseEvent* mouseEvent)
+{
+    if (mouseEvent->button() != Qt::LeftButton || !m_isDrawing) {
+        return false;
+    }
+
+    QPointF scenePos = viewer->mapToScene(mouseEvent->pos());
+
+    switch (m_currentMode) {
+    case Mode_Line:
+        if (m_previewLine) {
+            // 移除预览
+            viewer->scene()->removeItem(m_previewLine);
+            delete m_previewLine;
+            m_previewLine = nullptr;
+        }
+        finishDrawingLine(scenePos);
+        return true;
+
+    case Mode_WindowLevel:
+        if (m_previewRect) {
+            QRectF rect = m_previewRect->rect();
+            viewer->scene()->removeItem(m_previewRect);
+            delete m_previewRect;
+            m_previewRect = nullptr;
+            finishWindowLevelRect(rect);
+        }
+        return true;
+
+        // TODO: 如果需要，为其他模式添加释放逻辑
+    default:
+        return false;
+    }
+}
+
+// 更新坐标和灰度值标签
+void MainWindow::updateInfoLabel(const QPointF& scenePos)
+{
+    QString infoText;
+    if (viewer->pixmapItem() && viewer->pixmapItem()->boundingRect().contains(scenePos)) {
+        int x = qRound(scenePos.x());
+        int y = qRound(scenePos.y());
+        if (m_originalImage.valid(x, y)) {
+            int grayValue = getPixelValue(x, y);
+            infoText = QString("X: %1, Y: %2, value: %3").arg(x).arg(y).arg(grayValue);
+        } else {
+            infoText = QString("X: %1, Y: %2, value: N/A").arg(x).arg(y);
+        }
+    } else {
+        infoText = QString("X: %1, Y: %2, value: N/A")
+                       .arg(qRound(scenePos.x()))
+                       .arg(qRound(scenePos.y()));
+    }
+    infoLabel->setText(infoText);
+    infoLabel->adjustSize();
+}
+
+// 获取像素值（提取重复逻辑）
+int MainWindow::getPixelValue(int x, int y) const
+{
+    if (m_bitDepth == 16) {
+        const quint16* scanLine = reinterpret_cast<const quint16*>(m_originalImage.constScanLine(y));
+        return scanLine[x];
+    } else {
+        return qGray(m_originalImage.pixel(x, y));
+    }
+}
+
+// 创建线预览项（提取公共代码）
+QGraphicsLineItem* MainWindow::createPreviewLine(const QPointF& start)
+{
+    QGraphicsLineItem* preview = new QGraphicsLineItem(QLineF(start, start));
+    QPen pen(Qt::yellow);
+    pen.setStyle(Qt::DashLine);
+    pen.setWidthF(2.0);
+    preview->setPen(pen);
+    preview->setZValue(1000);
+    preview->setFlag(QGraphicsItem::ItemIsSelectable, false);
+    preview->setFlag(QGraphicsItem::ItemIsMovable, false);
+    preview->setAcceptHoverEvents(false);
+    viewer->scene()->addItem(preview);
+    return preview;
+}
+
+// 创建矩形预览项（提取公共代码）
+QGraphicsRectItem* MainWindow::createPreviewRect(const QPointF& start)
+{
+    QGraphicsRectItem* preview = new QGraphicsRectItem(QRectF(start, start));
+    QPen pen(Qt::yellow, 1, Qt::DashLine);
+    preview->setPen(pen);
+    viewer->scene()->addItem(preview);
+    return preview;
+}
+
+// 完成线绘制
+void MainWindow::finishDrawingLine(const QPointF& endPoint)
+{
+    AnnotationLineItem* line = new AnnotationLineItem(
+        m_startPoint.x(), m_startPoint.y(),
+        endPoint.x(), endPoint.y()
+        );
+    viewer->scene()->addItem(line);
+    m_isDrawing = false;
+    switchToSelectMode();
+    qDebug() << "Line completed from" << m_startPoint << "to" << endPoint;
+}
+
+// 完成窗宽窗位矩形（优化 min/max 计算）
+void MainWindow::finishWindowLevelRect(const QRectF& rect)
+{
+    if (!rect.isValid()) {
+        m_isDrawing = false;
+        switchToSelectMode();
+        return;
+    }
+
+    // 计算区域 min/max（优化：使用边界整数化，避免浮点）
+    int left = qMax(0, qRound(rect.left()));
+    int right = qMin(m_originalImage.width(), qRound(rect.right()));
+    int top = qMax(0, qRound(rect.top()));
+    int bottom = qMin(m_originalImage.height(), qRound(rect.bottom()));
+
+    int minVal = (m_bitDepth == 16) ? 65535 : 255;
+    int maxVal = 0;
+    bool foundPixel = false;
+
+    for (int y = top; y < bottom; ++y) {
+        for (int x = left; x < right; ++x) {
+            if (m_originalImage.valid(x, y)) {
+                foundPixel = true;
+                int grayValue = getPixelValue(x, y);  // 重用方法
+                minVal = qMin(minVal, grayValue);
+                maxVal = qMax(maxVal, grayValue);
             }
         }
-
     }
-    return QMainWindow::eventFilter(watched, event);
+
+    if (foundPixel && minVal < maxVal) {
+        m_windowWidth = maxVal - minVal;
+        m_windowLevel = minVal + m_windowWidth / 2;
+        infoWidget->setWindowValue(m_windowWidth);
+        infoWidget->setLevelValue(m_windowLevel);
+        infoWidget->uncheckAutoWindowing();
+        applyAndDisplayWl();
+    }
+
+    m_isDrawing = false;
+    switchToSelectMode();
 }
+
+// 切换回选择模式（提取公共代码）
+void MainWindow::switchToSelectMode()
+{
+    selectAction->setChecked(true);
+    selectMode();
+}
+
 
 
 void MainWindow::selectMode()
@@ -423,3 +605,14 @@ void MainWindow::applyAndDisplayWl()
     viewer->updatePixmap(QPixmap::fromImage(adjustedImage));
     infoWidget->setWindowLevelText(QString("window/level: %1/%2").arg(m_windowWidth).arg(m_windowLevel));
 }
+
+
+void MainWindow::selectWindowLevel()
+{
+    m_currentMode = Mode_WindowLevel;
+    m_isDrawing = false;
+    viewer->setDragMode(QGraphicsView::NoDrag);
+    viewer->viewport()->setCursor(Qt::CrossCursor);
+}
+
+

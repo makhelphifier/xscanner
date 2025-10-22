@@ -44,5 +44,6 @@
         <file>Resources/icon.ico</file>
         <file>Resources/img/aaa.jpg</file>
         <file>Resources/img/bbb.jpg</file>
+        <file>Resources/img/000006.raw</file>
     </qresource>
 </RCC>

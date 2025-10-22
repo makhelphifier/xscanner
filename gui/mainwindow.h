@@ -15,7 +15,7 @@ class QGraphicsScene;
 class QGraphicsPixmapItem;
 class QLabel;
 class TopRightInfoWidget;
-
+class QGraphicsRectItem;
 
 class MainWindow : public QMainWindow
 {
@@ -37,13 +37,15 @@ private:
     QAction *rectAction;
     QAction *ellipseAction;
     QAction *pointAction;
+    QAction *wlAction;
     enum DrawMode {
         Mode_None,
         Mode_Select,
         Mode_Point,
         Mode_Line,
         Mode_Rect,
-        Mode_Ellipse
+        Mode_Ellipse,
+        Mode_WindowLevel
     };
     DrawMode m_currentMode = Mode_None;
     QImage m_originalImage;
@@ -62,6 +64,18 @@ private:
     int m_windowWidth;
     int m_windowLevel;
     int m_bitDepth;
+    QGraphicsRectItem *m_previewRect = nullptr;
+
+    bool handleMouseMove(QMouseEvent* mouseEvent);
+    bool handleMousePress(QMouseEvent* mouseEvent);
+    bool handleMouseRelease(QMouseEvent* mouseEvent);
+    void updateInfoLabel(const QPointF& scenePos);
+    int getPixelValue(int x, int y) const;
+    QGraphicsLineItem* createPreviewLine(const QPointF& start);
+    QGraphicsRectItem* createPreviewRect(const QPointF& start);
+    void finishDrawingLine(const QPointF& endPoint);
+    void finishWindowLevelRect(const QRectF& rect);
+    void switchToSelectMode();
 
 private slots:
     void drawLine();
@@ -75,5 +89,6 @@ private slots:
     void onAutoWindowingToggled(bool checked);
     void onWindowChanged(int value);
     void onLevelChanged(int value);
+    void selectWindowLevel();
 };
 #endif // MAINWINDOW_H

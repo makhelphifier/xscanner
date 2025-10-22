@@ -19,6 +19,7 @@ TopRightInfoWidget::TopRightInfoWidget(QWidget *parent) : QWidget(parent)
 
     autoWindowingCheckBox = new QCheckBox("自动窗宽窗位");
     connect(autoWindowingCheckBox, &QCheckBox::toggled, this, &TopRightInfoWidget::autoWindowingToggled);
+
     windowLevelLabel = new QLabel("window/level: 120.5/231");
 
     // --- Window Slider ---
@@ -67,7 +68,6 @@ TopRightInfoWidget::TopRightInfoWidget(QWidget *parent) : QWidget(parent)
     wlLayout->addRow("W:", windowSlider);
     wlLayout->addRow("L:", levelSlider);
     mainLayout->addLayout(wlLayout);
-
     mainLayout->addLayout(scaleLayout);
     setLayout(mainLayout);
 }
@@ -116,5 +116,26 @@ void TopRightInfoWidget::uncheckAutoWindowing()
     // 阻止信号循环
     bool oldSignalsState = autoWindowingCheckBox->blockSignals(true);
     autoWindowingCheckBox->setChecked(false);
+    autoWindowingCheckBox->blockSignals(oldSignalsState);
+}
+
+void TopRightInfoWidget::setAutoWindowingChecked(bool checked)
+{
+    // 阻止信号循环：在以编程方式设置值时暂时断开连接
+    bool oldSignalsState = autoWindowingCheckBox->blockSignals(true);
+    autoWindowingCheckBox->setChecked(checked);
+    autoWindowingCheckBox->blockSignals(oldSignalsState);
+
+    // 如果勾选，立即触发 toggled 信号以应用自动窗位窗宽
+    if (checked) {
+        emit autoWindowingToggled(true);
+    }
+}
+
+void TopRightInfoWidget::checkAutoWindowing()
+{
+    // 阻止信号循环
+    bool oldSignalsState = autoWindowingCheckBox->blockSignals(true);
+    autoWindowingCheckBox->setChecked(true);
     autoWindowingCheckBox->blockSignals(oldSignalsState);
 }

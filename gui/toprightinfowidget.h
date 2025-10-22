@@ -24,6 +24,9 @@ public slots:
     void setLevelValue(int value);
     void setWindowRange(int min, int max);
     void setLevelRange(int min, int max);
+    void setAutoWindowingChecked(bool checked);
+    void checkAutoWindowing();
+
 signals:
     void scaleEdited(double scale);
     void autoWindowingToggled(bool checked);

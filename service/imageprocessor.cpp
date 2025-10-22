@@ -12,21 +12,32 @@
 
 ImageProcessor::ImageProcessor() {}
 
+
 QImage ImageProcessor::readRawImg_qImage(const QString imgPath, const int width, const int height)
 {
-    const std::string filename = imgPath.toStdString();
     // 创建一个Mat对象，用于存储16位无符号整数数据
     cv::Mat image(height, width, CV_16UC1);
 
-    std::ifstream file(filename, std::ios::binary);
-    if (!file.is_open()) {
-        std::cerr << "Error opening file" << std::endl;
+    // 使用 QFile 处理 Qt 资源路径（支持 ":/" 前缀）或普通文件路径
+    QFile file(imgPath);
+    if (!file.open(QIODevice::ReadOnly)) {
+        std::cerr << "Error opening file: " << imgPath.toStdString() << std::endl;
         return QImage();
     }
 
-    // 为提高效率，一次性将数据块读入Mat对象
-    file.read(reinterpret_cast<char*>(image.data), static_cast<std::streamsize>(width) * height * sizeof(uint16_t));
+    // 读取所有数据
+    QByteArray data = file.readAll();
     file.close();
+
+    // 检查数据长度是否匹配预期
+    qint64 expectedSize = static_cast<qint64>(width) * height * sizeof(uint16_t);
+    if (data.size() != expectedSize) {
+        std::cerr << "File size mismatch: expected " << expectedSize << ", got " << data.size() << std::endl;
+        return QImage();
+    }
+
+    // 将 QByteArray 数据复制到 cv::Mat
+    memcpy(image.data, data.constData(), data.size());
 
     // 直接返回16位QImage，而不进行归一化（用于后续窗位窗宽处理）
     return cvMat2QImage(image);
