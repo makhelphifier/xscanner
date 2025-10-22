@@ -1,5 +1,3 @@
-// service/imageprocessor.cpp
-
 #include "imageprocessor.h"
 #include <QVector>
 #include <QtMath>
@@ -17,7 +15,8 @@ ImageProcessor::ImageProcessor() {}
 QImage ImageProcessor::readRawImg_qImage(const QString imgPath, const int width, const int height)
 {
     const std::string filename = imgPath.toStdString();
-    cv::Mat image(height, width, CV_16UC1);// 创建一个空的Mat对象，用于存储16位无符号整数数据
+    // 创建一个Mat对象，用于存储16位无符号整数数据
+    cv::Mat image(height, width, CV_16UC1);
 
     std::ifstream file(filename, std::ios::binary);
     if (!file.is_open()) {
@@ -25,18 +24,19 @@ QImage ImageProcessor::readRawImg_qImage(const QString imgPath, const int width,
         return QImage();
     }
 
-    // 读取数据到Mat对象
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
-            uint16_t pixelValue;
-            file.read(reinterpret_cast<char*>(&pixelValue), sizeof(pixelValue));
-            image.at<uint16_t>(y, x) = pixelValue;
-        }
-    }
+    // 为提高效率，一次性将数据块读入Mat对象
+    file.read(reinterpret_cast<char*>(image.data), static_cast<std::streamsize>(width) * height * sizeof(uint16_t));
     file.close();
 
+    // --- 将图像归一化以用于显示 ---
+    // 创建一个新的Mat对象用于存放8位图像
+    cv::Mat normalizedImage;
+    // 将16位图像的灰度范围（从实际最小值到最大值）拉伸到0-255，并转换为8位图像
+    // 这会让图像使用完整的灰度范围进行显示
+    cv::normalize(image, normalizedImage, 0, 255, cv::NORM_MINMAX, CV_8UC1);
 
-    return cvMat2QImage(image);
+    // 将归一化后的8位Mat转换为QImage并返回
+    return cvMat2QImage(normalizedImage);
 }
 
 
