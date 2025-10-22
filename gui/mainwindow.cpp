@@ -153,7 +153,7 @@ void MainWindow::openImage()
     }
 
     // 统一处理加载成功的图像
-    m_originalImage = loadedImage.convertToFormat(QImage::Format_Grayscale8);
+    m_originalImage = loadedImage;
     viewer->setImage(m_originalImage);
 
     sizeLabel->setText(QString("size: %1x%2").arg(m_originalImage.width()).arg(m_originalImage.height()));
@@ -162,7 +162,7 @@ void MainWindow::openImage()
 
     infoWidget->setVisible(true);
     // 重置窗宽窗位设置
-    onAutoWindowingToggled(false);
+    // onAutoWindowingToggled(false);
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)

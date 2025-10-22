@@ -1,5 +1,3 @@
-// gui/toprightinfowidget.h
-
 #ifndef TOPRIGHTINFOWIDGET_H
 #define TOPRIGHTINFOWIDGET_H
 
@@ -22,20 +20,20 @@ public slots:
     void setScale(qreal scale);
     void setWindowLevelText(const QString &text);
     void uncheckAutoWindowing();
-    void setWindowValue(int value); // <-- 添加此行
-    void setLevelValue(int value);  // <-- 添加此行
+    void setWindowValue(int value);
+    void setLevelValue(int value);
 signals:
     void scaleEdited(double scale);
     void autoWindowingToggled(bool checked);
-    void windowChanged(int value); // <-- 添加此行
-    void levelChanged(int value);  // <-- 添加此行
+    void windowChanged(int value);
+    void levelChanged(int value);
 
 private:
     QCheckBox *autoWindowingCheckBox;
     QLabel *windowLevelLabel;
     QDoubleSpinBox *scaleSpinBox;
-    QSlider *windowSlider; // <-- 添加此行
-    QSlider *levelSlider;  // <-- 添加此行
+    QSlider *windowSlider;
+    QSlider *levelSlider;
 };
 
 #endif // TOPRIGHTINFOWIDGET_H

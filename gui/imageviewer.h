@@ -8,7 +8,7 @@
 #include <QWheelEvent>
 #include <QKeyEvent>
 #include <QResizeEvent>
-#include <QTimer> // <-- 添加此行
+#include <QTimer>
 
 class QGraphicsRectItem;
 
@@ -25,7 +25,7 @@ public slots:
     void resetView();
     void setScale(qreal scale);
     void updatePixmap(const QPixmap &pixmap);
-    void setImage(const QImage &image); // <-- 添加此行
+    void setImage(const QImage &image);
 signals:
     void scaleChanged(qreal scale);
 

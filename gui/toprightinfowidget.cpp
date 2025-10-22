@@ -1,5 +1,3 @@
-// gui/toprightinfowidget.cpp
-
 #include "toprightinfowidget.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>

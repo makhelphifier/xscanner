@@ -38,10 +38,7 @@ void AnnotationPointItem::setMeasurement(const QPointF &pos, int grayValue)
 QVariant AnnotationPointItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     if (change == QGraphicsItem::ItemPositionChange && scene()) {
-        QPointF newScenePos = value.toPointF();
-
         QPointF newCenterPos = value.toPointF() + rect().center();
-
         if (m_imageItem->contains(newCenterPos)) {
             QPointF imagePos = m_imageItem->mapFromScene(newCenterPos);
             int x = qRound(imagePos.x());
@@ -53,7 +50,5 @@ QVariant AnnotationPointItem::itemChange(GraphicsItemChange change, const QVaria
             }
         }
     }
-
     return QGraphicsEllipseItem::itemChange(change, value);
 }
-

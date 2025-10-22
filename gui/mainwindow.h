@@ -72,7 +72,7 @@ private slots:
     void updateScale(qreal scale);
     void onScaleFromWidget(double scale);
     void onAutoWindowingToggled(bool checked);
-    void onWindowChanged(int value); // <-- 添加此行
+    void onWindowChanged(int value);
     void onLevelChanged(int value);
 };
 #endif // MAINWINDOW_H
