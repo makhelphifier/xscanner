@@ -81,3 +81,8 @@ CMakeLists.txt.user*
 .rcc/
 .uic/
 /build*/
+
+# 资源文件（不纳入 Git）
+resources/
+*.png
+*.jpg

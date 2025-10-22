@@ -1,21 +1,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QGraphicsView>
-#include <QAction>
-#include <QObject>
-#include <QEvent>
-#include "gui/imageviewer.h"
-#include <QAction>
 #include <QMainWindow>
+#include <QAction>
 #include <QActionGroup>
-
-
-class QGraphicsScene;
-class QGraphicsPixmapItem;
-class QLabel;
-class TopRightInfoWidget;
-class QGraphicsRectItem;
+#include "gui/imageviewer.h"
+#include "gui/toprightinfowidget.h"
+#include <QLabel>
 
 class MainWindow : public QMainWindow
 {
@@ -24,71 +15,34 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void applyAndDisplayWl();
+
 protected:
     void resizeEvent(QResizeEvent *event) override;
-    bool eventFilter(QObject *watched, QEvent *event) override;
+
+private slots:
+
+    void openImage();
+    void selectMode();
+
+    void onPixelInfoChanged(int x, int y, int value);
+    void onWindowLevelChanged(int width, int level);
+    void onAutoWindowingToggled(bool enabled);
+
+    void updateScale(qreal scale);
+    void onScaleFromWidget(double scale);
 
 private:
-    QGraphicsScene *scene;
-    QGraphicsView *view;
-    QGraphicsPixmapItem *pixmapItem;
+    ImageViewer *viewer;
+    QAction *openAction;
+    QAction *selectAction;
     QAction *lineAction;
     QAction *rectAction;
     QAction *ellipseAction;
-    QAction *pointAction;
     QAction *wlAction;
-    enum DrawMode {
-        Mode_None,
-        Mode_Select,
-        Mode_Point,
-        Mode_Line,
-        Mode_Rect,
-        Mode_Ellipse,
-        Mode_WindowLevel
-    };
-    DrawMode m_currentMode = Mode_None;
-    QImage m_originalImage;
-    bool m_isPanning = false;
-    QPoint m_lastPanPoint;
-    ImageViewer *viewer;
-    QAction *openAction;
-    bool m_isDrawing = false;
-    QPointF m_startPoint;
-    QGraphicsLineItem *m_previewLine = nullptr;
-    QAction *selectAction;
     QActionGroup *toolGroup;
     QLabel *sizeLabel;
     QLabel *infoLabel;
     TopRightInfoWidget *infoWidget;
-    int m_windowWidth;
-    int m_windowLevel;
-    int m_bitDepth;
-    QGraphicsRectItem *m_previewRect = nullptr;
-
-    bool handleMouseMove(QMouseEvent* mouseEvent);
-    bool handleMousePress(QMouseEvent* mouseEvent);
-    bool handleMouseRelease(QMouseEvent* mouseEvent);
-    void updateInfoLabel(const QPointF& scenePos);
-    int getPixelValue(int x, int y) const;
-    QGraphicsLineItem* createPreviewLine(const QPointF& start);
-    QGraphicsRectItem* createPreviewRect(const QPointF& start);
-    void finishDrawingLine(const QPointF& endPoint);
-    void finishWindowLevelRect(const QRectF& rect);
-    void switchToSelectMode();
-
-private slots:
-    void drawLine();
-    void drawRect();
-    void drawEllipse();
-    void drawPoint();
-    void openImage();
-    void selectMode();
-    void updateScale(qreal scale);
-    void onScaleFromWidget(double scale);
-    void onAutoWindowingToggled(bool checked);
-    void onWindowChanged(int value);
-    void onLevelChanged(int value);
-    void selectWindowLevel();
 };
+
 #endif // MAINWINDOW_H
