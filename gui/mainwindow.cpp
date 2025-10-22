@@ -136,10 +136,10 @@ void MainWindow::openImage()
 
     QImage loadedImage;
     if (filePath.endsWith(".raw", Qt::CaseInsensitive) || filePath.endsWith(".bin", Qt::CaseInsensitive)) {
-        // 修改下面这行来加载16位图像
+        // 加载16位RAW图像（不归一化）
         loadedImage = ImageProcessor::readRawImg_qImage(filePath, 2882, 2340);
     } else {
-        // 加载标准图像文件
+        // 加载标准图像文件（可能为8位或16位，取决于文件）
         loadedImage.load(filePath);
     }
 
@@ -152,6 +152,15 @@ void MainWindow::openImage()
         return;
     }
 
+    // 检测位深
+    m_bitDepth = (loadedImage.format() == QImage::Format_Grayscale16) ? 16 : 8;
+
+    // 如果是RGB图像，转换为灰度（假设为8位）
+    if (!loadedImage.isGrayscale()) {
+        loadedImage = loadedImage.convertToFormat(QImage::Format_Grayscale8);
+        m_bitDepth = 8;
+    }
+
     // 统一处理加载成功的图像
     m_originalImage = loadedImage;
     viewer->setImage(m_originalImage);
@@ -161,8 +170,17 @@ void MainWindow::openImage()
     sizeLabel->setVisible(true);
 
     infoWidget->setVisible(true);
-    // 重置窗宽窗位设置
-    // onAutoWindowingToggled(false);
+    // 根据位深设置窗宽窗位滑动条范围
+    int maxVal = (m_bitDepth == 16) ? 65535 : 255;
+    infoWidget->setWindowRange(1, maxVal + 1);  // 窗宽范围：1 到 maxVal+1
+    infoWidget->setLevelRange(0, maxVal);       // 窗位范围：0 到 maxVal
+
+    // 初始化为全范围（手动调节默认值）
+    m_windowWidth = maxVal + 1;
+    m_windowLevel = maxVal / 2;
+    infoWidget->setWindowValue(m_windowWidth);
+    infoWidget->setLevelValue(m_windowLevel);
+    applyAndDisplayWl();  // 应用初始窗位窗宽
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
@@ -227,7 +245,13 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
                 int x = qRound(scenePos.x());
                 int y = qRound(scenePos.y());
                 if (m_originalImage.valid(x, y)) {
-                    int grayValue = qGray(m_originalImage.pixel(x, y));
+                    int grayValue;
+                    if (m_bitDepth == 16) {
+                        const quint16 *scanLine = reinterpret_cast<const quint16*>(m_originalImage.constScanLine(y));
+                        grayValue = scanLine[x];
+                    } else {
+                        grayValue = qGray(m_originalImage.pixel(x, y));
+                    }
                     infoText = QString("X: %1, Y: %2, value: %3")
                                    .arg(x)
                                    .arg(y)
@@ -336,6 +360,8 @@ void MainWindow::onAutoWindowingToggled(bool checked)
 {
     if (m_originalImage.isNull()) return;
 
+    int maxVal = (m_bitDepth == 16) ? 65535 : 255;
+
     if (checked) {
         int min, max;
         ImageProcessor::calculateAutoWindowLevel(m_originalImage, min, max);
@@ -347,8 +373,8 @@ void MainWindow::onAutoWindowingToggled(bool checked)
         applyAndDisplayWl();
     } else {
         // 恢复到完整的范围
-        m_windowWidth = 256;
-        m_windowLevel = 128;
+        m_windowWidth = maxVal + 1;
+        m_windowLevel = maxVal / 2;
         applyAndDisplayWl();
     }
 
@@ -359,23 +385,23 @@ void MainWindow::onAutoWindowingToggled(bool checked)
 }
 
 
-
 void MainWindow::onWindowChanged(int value)
 {
-    m_windowWidth = value;
-    infoWidget->uncheckAutoWindowing(); // 手动调整时取消自动模式
+    int maxVal = (m_bitDepth == 16) ? 65535 : 255;
+    m_windowWidth = qBound(1, value, maxVal + 1);  // 夹紧窗宽到有效范围
+    infoWidget->uncheckAutoWindowing();  // 手动调整时取消自动模式
     applyAndDisplayWl();
 }
 
 void MainWindow::onLevelChanged(int value)
 {
-    m_windowLevel = value;
-    infoWidget->uncheckAutoWindowing(); // 手动调整时取消自动模式
+    int maxVal = (m_bitDepth == 16) ? 65535 : 255;
+    m_windowLevel = qBound(0, value, maxVal);  // 夹紧窗位到有效范围
+    infoWidget->uncheckAutoWindowing();  // 手动调整时取消自动模式
     applyAndDisplayWl();
 }
 
 
-// 辅助函数，用于应用当前的窗宽窗位并更新显示
 void MainWindow::applyAndDisplayWl()
 {
     if (m_originalImage.isNull()) return;
@@ -384,6 +410,12 @@ void MainWindow::applyAndDisplayWl()
     int min = m_windowLevel - m_windowWidth / 2;
     int max = m_windowLevel + m_windowWidth / 2;
 
+    // 夹紧 min 和 max 到图像值范围
+    int maxVal = (m_bitDepth == 16) ? 65535 : 255;
+    min = qBound(0, min, maxVal);
+    max = qBound(0, max, maxVal);
+    if (min > max) std::swap(min, max);
+
     // 应用并获取新图像
     QImage adjustedImage = ImageProcessor::applyWindowLevel(m_originalImage, min, max);
 
@@ -391,4 +423,3 @@ void MainWindow::applyAndDisplayWl()
     viewer->updatePixmap(QPixmap::fromImage(adjustedImage));
     infoWidget->setWindowLevelText(QString("window/level: %1/%2").arg(m_windowWidth).arg(m_windowLevel));
 }
-

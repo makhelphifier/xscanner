@@ -61,6 +61,7 @@ private:
     TopRightInfoWidget *infoWidget;
     int m_windowWidth;
     int m_windowLevel;
+    int m_bitDepth;
 
 private slots:
     void drawLine();

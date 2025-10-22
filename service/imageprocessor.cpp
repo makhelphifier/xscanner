@@ -28,15 +28,8 @@ QImage ImageProcessor::readRawImg_qImage(const QString imgPath, const int width,
     file.read(reinterpret_cast<char*>(image.data), static_cast<std::streamsize>(width) * height * sizeof(uint16_t));
     file.close();
 
-    // --- 将图像归一化以用于显示 ---
-    // 创建一个新的Mat对象用于存放8位图像
-    cv::Mat normalizedImage;
-    // 将16位图像的灰度范围（从实际最小值到最大值）拉伸到0-255，并转换为8位图像
-    // 这会让图像使用完整的灰度范围进行显示
-    cv::normalize(image, normalizedImage, 0, 255, cv::NORM_MINMAX, CV_8UC1);
-
-    // 将归一化后的8位Mat转换为QImage并返回
-    return cvMat2QImage(normalizedImage);
+    // 直接返回16位QImage，而不进行归一化（用于后续窗位窗宽处理）
+    return cvMat2QImage(image);
 }
 
 
@@ -85,14 +78,28 @@ void ImageProcessor::calculateAutoWindowLevel(const QImage &image, int &min, int
         return;
     }
 
-    QVector<int> histogram(256, 0);
-    long pixelCount = 0;
+    bool is16Bit = (image.format() == QImage::Format_Grayscale16);
+    int maxVal = is16Bit ? 65535 : 255;
+    QVector<int> histogram(maxVal + 1, 0);
+    long long pixelCount = 0;
 
     for (int y = 0; y < image.height(); ++y) {
-        const uchar *scanLine = image.constScanLine(y);
-        for (int x = 0; x < image.width(); ++x) {
-            histogram[scanLine[x]]++;
-            pixelCount++;
+        if (is16Bit) {
+            const quint16 *scanLine = reinterpret_cast<const quint16*>(image.constScanLine(y));
+            for (int x = 0; x < image.width(); ++x) {
+                int val = scanLine[x];
+                if (val >= 0 && val <= maxVal) {
+                    histogram[val]++;
+                }
+                pixelCount++;
+            }
+        } else {
+            const uchar *scanLine = image.constScanLine(y);
+            for (int x = 0; x < image.width(); ++x) {
+                int val = scanLine[x];
+                histogram[val]++;
+                pixelCount++;
+            }
         }
     }
 
@@ -101,7 +108,7 @@ void ImageProcessor::calculateAutoWindowLevel(const QImage &image, int &min, int
 
     // 找到 min
     min = 0;
-    for (int i = 0; i < 256; ++i) {
+    for (int i = 0; i <= maxVal; ++i) {
         cumulativeCount += histogram[i];
         if (cumulativeCount >= saturatedPixels) {
             min = i;
@@ -111,8 +118,8 @@ void ImageProcessor::calculateAutoWindowLevel(const QImage &image, int &min, int
 
     // 找到 max
     cumulativeCount = 0;
-    max = 255;
-    for (int i = 255; i >= 0; --i) {
+    max = maxVal;
+    for (int i = maxVal; i >= 0; --i) {
         cumulativeCount += histogram[i];
         if (cumulativeCount >= saturatedPixels) {
             max = i;
@@ -122,7 +129,7 @@ void ImageProcessor::calculateAutoWindowLevel(const QImage &image, int &min, int
 
     if (min >= max) {
         min = 0;
-        max = 255;
+        max = maxVal;
     }
 }
 
@@ -132,23 +139,46 @@ QImage ImageProcessor::applyWindowLevel(const QImage &originalImage, int min, in
         return originalImage;
     }
 
-    QImage newImage = originalImage.copy();
-    QVector<QRgb> lut(256);
-    double range = max - min;
+    bool is16Bit = (originalImage.format() == QImage::Format_Grayscale16);
+    int imageWidth = originalImage.width();
+    int imageHeight = originalImage.height();
+    QImage adjustedImage(imageWidth, imageHeight, QImage::Format_Grayscale8);
+
+    double range = static_cast<double>(max - min);
     if (range <= 0) range = 1.0;
 
-    for (int i = 0; i < 256; ++i) {
-        int value;
-        if (i <= min) {
-            value = 0;
-        } else if (i >= max) {
-            value = 255;
+    for (int y = 0; y < imageHeight; ++y) {
+        uchar *destLine = adjustedImage.scanLine(y);
+        if (is16Bit) {
+            const quint16 *srcLine = reinterpret_cast<const quint16*>(originalImage.constScanLine(y));
+            for (int x = 0; x < imageWidth; ++x) {
+                int val = srcLine[x];
+                int newVal;
+                if (val <= min) {
+                    newVal = 0;
+                } else if (val >= max) {
+                    newVal = 255;
+                } else {
+                    newVal = qRound(((val - min) / range) * 255.0);
+                }
+                destLine[x] = static_cast<uchar>(newVal);
+            }
         } else {
-            value = qRound(((i - min) / range) * 255.0);
+            const uchar *srcLine = originalImage.constScanLine(y);
+            for (int x = 0; x < imageWidth; ++x) {
+                int val = srcLine[x];
+                int newVal;
+                if (val <= min) {
+                    newVal = 0;
+                } else if (val >= max) {
+                    newVal = 255;
+                } else {
+                    newVal = qRound(((val - min) / range) * 255.0);
+                }
+                destLine[x] = static_cast<uchar>(newVal);
+            }
         }
-        lut[i] = qRgb(value, value, value);
     }
 
-    newImage.setColorTable(lut);
-    return newImage;
+    return adjustedImage;
 }

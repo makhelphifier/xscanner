@@ -87,6 +87,14 @@ void TopRightInfoWidget::setLevelValue(int value)
     levelSlider->blockSignals(oldSignalsState);
 }
 
+void TopRightInfoWidget::setWindowRange(int min, int max) {
+    windowSlider->setRange(min, max);
+}
+
+void TopRightInfoWidget::setLevelRange(int min, int max) {
+    levelSlider->setRange(min, max);
+}
+
 
 void TopRightInfoWidget::setScale(qreal scale)
 {
@@ -101,6 +109,7 @@ void TopRightInfoWidget::setWindowLevelText(const QString &text)
 {
     windowLevelLabel->setText(text);
 }
+
 
 void TopRightInfoWidget::uncheckAutoWindowing()
 {
