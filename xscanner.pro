@@ -11,9 +11,11 @@ LIBS += -L$$PWD/../sdk/opencv/lib/ -lopencv_world470
 SOURCES += \
     app/main.cpp \
     gui/annotationellipseitem.cpp \
+    gui/annotationhorizontallineitem.cpp \
     gui/annotationlineitem.cpp \
     gui/annotationpointitem.cpp \
     gui/annotationrectitem.cpp \
+    gui/annotationverticallineitem.cpp \
     service/imageprocessor.cpp \
     gui/imageviewer.cpp \
     gui/mainwindow.cpp \
@@ -21,9 +23,11 @@ SOURCES += \
 
 HEADERS += \
     gui/annotationellipseitem.h \
+    gui/annotationhorizontallineitem.h \
     gui/annotationlineitem.h \
     gui/annotationpointitem.h \
     gui/annotationrectitem.h \
+    gui/annotationverticallineitem.h \
     service/imageprocessor.h \
     gui/imageviewer.h \
     gui/mainwindow.h \

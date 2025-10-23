@@ -12,6 +12,9 @@
 #include "annotationpointitem.h"
 #include "annotationpointitem.h"
 #include <QList>
+#include "annotationhorizontallineitem.h"
+#include "annotationverticallineitem.h"
+
 
 ImageViewer::ImageViewer(QWidget *parent)
     : QGraphicsView(parent), m_initialScale(1.0), m_pixmapItem(nullptr), m_borderItem(nullptr), m_previewEllipse(nullptr)
@@ -141,15 +144,19 @@ void ImageViewer::setScale(qreal scale)
     onScaleChanged(scale);
 }
 
-// 新增槽：scale 变化时更新所有点项
 void ImageViewer::onScaleChanged(qreal scale)
 {
-    for (AnnotationPointItem* pointItem : m_pointItems) {
-        if (pointItem) {
-            pointItem->updateFontSize(scale);
+    // 遍历场景中的所有 Item
+    for (QGraphicsItem* item : m_scene->items()) {
+        // 根据 Item 的类型调用相应的更新方法
+        if (auto pointItem = dynamic_cast<AnnotationPointItem*>(item)) {
+            pointItem->updateFontSize(scale); // 点测量
+        } else if (auto hLineItem = dynamic_cast<AnnotationHorizontalLineItem*>(item)) {
+            hLineItem->updateScale(scale);    // 水平线
+        } else if (auto vLineItem = dynamic_cast<AnnotationVerticalLineItem*>(item)) {
+            vLineItem->updateScale(scale);    // 垂直线
         }
     }
-    qDebug() << "Updated" << m_pointItems.size() << "point items for scale" << scale;
 }
 
 void ImageViewer::updatePixmap(const QPixmap &pixmap)
@@ -272,7 +279,8 @@ void ImageViewer::setDrawMode(DrawMode mode)
     case Mode_Rect:
     case Mode_Ellipse:
     case Mode_Point:
-
+    case Mode_HorizontalLine:
+    case Mode_VerticalLine:
     case Mode_WindowLevel:
         setDragMode(QGraphicsView::NoDrag);
         viewport()->setCursor(Qt::CrossCursor);
@@ -318,7 +326,7 @@ void ImageViewer::mousePressEvent(QMouseEvent *event)
     m_isDrawing = true;
 
     // 在 switch 外预计算当前 scale 和图像宽度（用于 Mode_Point，避免 switch 作用域问题）
-    qreal currentScale = (m_initialScale > 0) ? (transform().m11() / m_initialScale) : 1.0;
+    qreal currentAbsoluteScale = (m_initialScale > 0) ? (transform().m11() / m_initialScale) : 1.0;
     int imageWidth = m_originalImage.width();
 
     switch (m_currentMode) {
@@ -338,9 +346,31 @@ void ImageViewer::mousePressEvent(QMouseEvent *event)
         break;
     case Mode_Point:
         // 使用预计算的 currentScale 和 imageWidth
-        finishDrawingPoint(scenePos, currentScale, imageWidth);
+        finishDrawingPoint(scenePos, currentAbsoluteScale, imageWidth);
         m_isDrawing = false;  // 点测量不持续绘制
         break;
+    case Mode_HorizontalLine:
+    {
+        if (m_pixmapItem && !m_pixmapItem->pixmap().isNull()) {
+            qreal sceneWidth = m_pixmapItem->boundingRect().width();
+            // 将 currentAbsoluteScale 传递给构造函数
+            AnnotationHorizontalLineItem *hLine = new AnnotationHorizontalLineItem(scenePos.y(), sceneWidth, currentAbsoluteScale);
+            m_scene->addItem(hLine);
+        }
+        m_isDrawing = false;
+    }
+    break;
+    case Mode_VerticalLine:
+    {
+        if (m_pixmapItem && !m_pixmapItem->pixmap().isNull()) {
+            qreal sceneHeight = m_pixmapItem->boundingRect().height();
+            // 将 currentAbsoluteScale 传递给构造函数
+            AnnotationVerticalLineItem *vLine = new AnnotationVerticalLineItem(scenePos.x(), sceneHeight, currentAbsoluteScale);
+            m_scene->addItem(vLine);
+        }
+        m_isDrawing = false;
+    }
+    break;
     case Mode_Select:
     default:
         QGraphicsView::mousePressEvent(event);  // 正常拖动
@@ -351,7 +381,6 @@ void ImageViewer::mousePressEvent(QMouseEvent *event)
     updatePixelInfo(scenePos);
     event->accept();
 }
-
 void ImageViewer::mouseMoveEvent(QMouseEvent *event)
 {
     QPointF scenePos = mapToScene(event->pos());
@@ -422,7 +451,6 @@ void ImageViewer::mouseReleaseEvent(QMouseEvent *event)
             m_scene->removeItem(m_previewRect);
             delete m_previewRect;
             m_previewRect = nullptr;
-            // TODO: 添加 AnnotationRectItem
             AnnotationRectItem *rectItem = new AnnotationRectItem(rect.x(), rect.y(), rect.width(), rect.height());
             m_scene->addItem(rectItem);
             qDebug() << "Rect completed:" << rect;
@@ -444,7 +472,7 @@ void ImageViewer::mouseReleaseEvent(QMouseEvent *event)
     }
 
     m_isDrawing = false;
-    switchToSelectMode();  // 绘制完成后切换回选择模式
+    // switchToSelectMode();  // 绘制完成后切换回选择模式
     updatePixelInfo(scenePos);
     event->accept();
 }
@@ -614,4 +642,33 @@ void ImageViewer::finishDrawingPoint(const QPointF &pointPos, qreal currentScale
     m_scene->addItem(pointItem);
     m_pointItems.append(pointItem);  // 跟踪
     qDebug() << "Point measured at" << x << y << "value:" << value << "scale:" << currentScale;
+}
+
+
+
+void ImageViewer::clearAllAnnotations()
+{
+    // --- 关键修复：只删除顶层图元 ---
+
+    // 1. 创建一个列表，用来存放所有需要被删除的顶层图元
+    QList<QGraphicsItem*> topLevelItemsToRemove;
+    for (QGraphicsItem* item : m_scene->items()) {
+        // 一个图元是我们自己添加的顶层标注，需要满足以下条件：
+        // a) 它没有父级 (item->parentItem() == nullptr)
+        // b) 它不是图像本身 (item != m_pixmapItem)
+        // c) 它不是图像的边框 (item != m_borderItem)
+        if (!item->parentItem() && item != m_pixmapItem && item != m_borderItem) {
+            topLevelItemsToRemove.append(item);
+        }
+    }
+
+    // 2. 遍历这个安全的顶层图元列表，进行删除
+    // 这样做可以保证每个图元只被删除一次，并且由 Qt 安全地处理其子图元的销毁
+    for (QGraphicsItem* item : topLevelItemsToRemove) {
+        m_scene->removeItem(item);
+        delete item;
+    }
+
+    // 3. 清空我们自己维护的跟踪列表
+    m_pointItems.clear();
 }

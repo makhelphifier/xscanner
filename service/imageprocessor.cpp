@@ -5,9 +5,7 @@
 #include <QDebug>
 #include <QtEndian>
 #include <QDataStream>
-#include <string>
 #include <windows.h>
-#include <fstream>
 #include <iostream>
 
 ImageProcessor::ImageProcessor() {}

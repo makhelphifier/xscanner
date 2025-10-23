@@ -4,7 +4,7 @@
 #include <QGraphicsItem>
 #include <QPainter>
 #include <QFont>
-#include <QFontMetrics>  // 用于动态计算文本大小
+#include <QFontMetrics>
 
 class AnnotationPointItem : public QGraphicsItem
 {

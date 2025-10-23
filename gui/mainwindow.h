@@ -40,6 +40,9 @@ private:
     QAction *ellipseAction;
     QAction *wlAction;
     QAction *pointAction;
+    QAction *hLineAction;
+    QAction *vLineAction;
+    QAction *clearAction;
     QActionGroup *toolGroup;
     QLabel *sizeLabel;
     QLabel *infoLabel;

@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     wlAction->setCheckable(true);
     toolBar->addAction(wlAction);
     toolGroup->addAction(wlAction);
-    connect(wlAction, &QAction::triggered, [this]() { viewer->setDrawMode(ImageViewer::Mode_WindowLevel); viewer->setAutoWindowing(false); });
+    connect(wlAction, &QAction::triggered, [this]() { viewer->setDrawMode(ImageViewer::Mode_WindowLevel); /*viewer->setAutoWindowing(false);*/ });
 
     // 直线工具
     lineAction = new QAction(QIcon(":/Resources/img/line_tool.png"), "直线", this);
@@ -94,7 +94,29 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     toolGroup->addAction(pointAction);
     connect(pointAction, &QAction::triggered, [this]() { viewer->setDrawMode(ImageViewer::Mode_Point); });
 
-    // 在连接信号部分添加（其他保持原样）
+    // 水平线工具
+    hLineAction = new QAction(QIcon(":/Resources/img/u26.png"), "", this);
+    hLineAction->setCheckable(true);
+    toolBar->addAction(hLineAction);
+    toolGroup->addAction(hLineAction);
+    connect(hLineAction, &QAction::triggered, [this]() { viewer->setDrawMode(ImageViewer::Mode_HorizontalLine); });
+
+    // 垂直线工具
+    vLineAction = new QAction(QIcon(":/Resources/img/u25.png"), "", this);
+    vLineAction->setCheckable(true);
+    toolBar->addAction(vLineAction);
+    toolGroup->addAction(vLineAction);
+    connect(vLineAction, &QAction::triggered, [this]() { viewer->setDrawMode(ImageViewer::Mode_VerticalLine); });
+
+    // 添加分隔符
+    toolBar->addSeparator();
+
+    // 清除所有图元工具
+    clearAction = new QAction(QIcon(":/Resources/img/empty_trash.png"), "", this);
+    toolBar->addAction(clearAction);
+    connect(clearAction, &QAction::triggered, viewer, &ImageViewer::clearAllAnnotations);
+
+    // 在连接信号部分添加
     connect(ellipseAction, &QAction::triggered, [this]() { viewer->setDrawMode(ImageViewer::Mode_Ellipse); });
 
     // 默认选择模式（确保 pointAction 未选中）

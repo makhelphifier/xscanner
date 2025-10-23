@@ -2,7 +2,7 @@
 #include <QPen>
 #include <QBrush>
 #include <QRect>
-#include <QDebug>  // 可选，用于调试
+#include <QDebug>
 
 AnnotationPointItem::AnnotationPointItem(int x, int y, int value, qreal baseScale, int imageWidth, QGraphicsItem *parent)
     : QGraphicsItem(parent), m_x(x), m_y(y), m_value(value), m_currentScale(baseScale), m_baseFontSize(0)
@@ -29,7 +29,6 @@ QRectF AnnotationPointItem::boundingRect() const
 
     return QRectF(left, top, right - left, bottom - top).adjusted(-3, -3, 3, 3);  // 优化：更大 padding
 }
-
 void AnnotationPointItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(option);
@@ -46,25 +45,22 @@ void AnnotationPointItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
     painter->setBrush(Qt::red);
     painter->drawEllipse(QPointF(m_x, m_y), pointRadius, pointRadius);
 
-    // 文本（优化：同步动态padding）
+    // 准备绘制文本
     QString text = getInfoText();
     QFont font("Arial", static_cast<int>(fontSize));
-    // font.setBold(true);  // 同步注释：移除加粗（可选）
     painter->setFont(font);
-    QFontMetrics fm(font);
     QRectF textRect = calculateTextRect();  // 动态 rect
 
-    // 绘制半透明黑背景（优化：动态adjusted，避免高scale下空太多）
-    qreal bgPaddingX = qMax(2.0, fontSize * 0.15);  // 动态左右padding
-    qreal bgPaddingY = qMax(1.0, fontSize * 0.1);   // 动态上下padding
-    painter->setBrush(QColor(0, 0, 0, 220));  // 保持深背景
-    painter->setPen(Qt::NoPen);
-    painter->drawRect(textRect.adjusted(-bgPaddingX, -bgPaddingY, bgPaddingX, bgPaddingY));  // 优化：动态调整
-
-    // 绘制白色文本
-    painter->setPen(Qt::white);
+    // 移除背景绘制，直接绘制红色文本
+    painter->setPen(Qt::red);
     painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, text);
 
+
+    // 绘制 boundingRect 以可视化边界（调试用） ---
+    // 设置青色边框（不填充），宽度1px
+    painter->setPen(QPen(Qt::cyan, 1.0));
+    painter->setBrush(Qt::NoBrush);  // 无填充
+    painter->drawRect(boundingRect());  // 绘制边界矩形
 }
 
 void AnnotationPointItem::updateFontSize(qreal currentScale)
@@ -84,16 +80,18 @@ QString AnnotationPointItem::getInfoText() const
         return QString("X:%1 Y:%2 value:N/A").arg(m_x).arg(m_y);
     }
 }
+
 QRectF AnnotationPointItem::calculateTextRect() const
 {
     qreal fontSize = m_baseFontSize * m_currentScale;
-    if (fontSize < 12.0) fontSize = 12.0;  // 保持最小（从上个优化）
+    if (fontSize < 12.0) fontSize = 12.0;  // 保持最小
     QFont font("Arial", static_cast<int>(fontSize));
-    // font.setBold(true);  // 注释掉：移除加粗，减少宽度膨胀（可选，如果想保持bold，保留但padding再小点）
+    // font.setBold(true);
     QFontMetrics fm(font);
     QString text = getInfoText();
-    int textWidth = fm.horizontalAdvance(text) + static_cast<int>(qMax(6.0, fontSize * 0.4));  // 优化：动态padding（高scale下适中）
-    int textHeight = fm.height() + static_cast<int>(qMax(4.0, fontSize * 0.3));  // 优化：动态高度padding
+    // 修正：移除此处多余的内边距计算，只获取文本的实际宽度和高度
+    int textWidth = fm.horizontalAdvance(text);
+    int textHeight = fm.height();
 
     // 位置：点右侧上方，动态间距
     qreal pointRadius = qMax(4.0, BASE_POINT_RADIUS * m_currentScale * 2.0);  // 保持上个优化
@@ -102,4 +100,3 @@ QRectF AnnotationPointItem::calculateTextRect() const
 
     return QRectF(textX, textY, textWidth, textHeight);
 }
-

@@ -49,7 +49,9 @@ public:
         Mode_Rect,        // 矩形绘制
         Mode_Ellipse,     // 椭圆绘制
         Mode_Point,       // 点绘制
-        Mode_WindowLevel  // 窗宽窗位矩形选择
+        Mode_WindowLevel,  // 窗宽窗位矩形选择
+        Mode_HorizontalLine, //水平线绘制
+        Mode_VerticalLine,   //垂直线绘制
     };
     void setDrawMode(DrawMode mode);  // 设置当前绘制模式
     DrawMode currentMode() const { return m_currentMode; }
@@ -66,7 +68,7 @@ public slots:
     void onWindowChanged(int value);  // 从 UI 滑动条接收窗宽变化
     void onLevelChanged(int value);   // 从 UI 滑动条接收窗位变化
     void onScaleChanged(qreal scale);  // 响应 scale 变化，更新点项大小
-
+    void clearAllAnnotations();
 protected:
     // 原有：事件重写
     void wheelEvent(QWheelEvent *event) override;

@@ -7,7 +7,7 @@
 class AnnotationLineItem : public QGraphicsLineItem
 {
 public:
-    // 构造函数1: 绘制完成的线段 (保持原有功能)
+    // 构造函数1: 绘制完成的线段
     AnnotationLineItem(qreal x1, qreal y1, qreal x2, qreal y2, QGraphicsItem *parent = nullptr);
 
     // 构造函数2: 用于开始绘制的新线段（只给定起点）
