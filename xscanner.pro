@@ -10,28 +10,42 @@ LIBS += -L$$PWD/../sdk/opencv/lib/ -lopencv_world470
 
 SOURCES += \
     app/main.cpp \
-    gui/annotationellipseitem.cpp \
-    gui/annotationhorizontallineitem.cpp \
-    gui/annotationlineitem.cpp \
-    gui/annotationpointitem.cpp \
-    gui/annotationrectitem.cpp \
-    gui/annotationverticallineitem.cpp \
     service/imageprocessor.cpp \
-    gui/imageviewer.cpp \
-    gui/mainwindow.cpp \
-    gui/toprightinfowidget.cpp
+    # GUI - Views
+    gui/views/imageviewer.cpp \
+    gui/views/mainwindow.cpp \
+    # GUI - Widgets
+    gui/widgets/toprightinfowidget.cpp \
+    # GUI - Items
+    gui/items/annotationellipseitem.cpp \
+    gui/items/annotationhorizontallineitem.cpp \
+    gui/items/annotationlineitem.cpp \
+    gui/items/annotationpointitem.cpp \
+    gui/items/annotationrectitem.cpp \
+    gui/items/annotationverticallineitem.cpp \
+    # GUI - States
+    gui/states/drawingstate.cpp \
+    gui/states/rectdrawingstate.cpp \
+    gui/states/drawingstatemachine.cpp
 
 HEADERS += \
-    gui/annotationellipseitem.h \
-    gui/annotationhorizontallineitem.h \
-    gui/annotationlineitem.h \
-    gui/annotationpointitem.h \
-    gui/annotationrectitem.h \
-    gui/annotationverticallineitem.h \
     service/imageprocessor.h \
-    gui/imageviewer.h \
-    gui/mainwindow.h \
-    gui/toprightinfowidget.h
+    # GUI - Views
+    gui/views/imageviewer.h \
+    gui/views/mainwindow.h \
+    # GUI - Widgets
+    gui/widgets/toprightinfowidget.h \
+    # GUI - Items
+    gui/items/annotationellipseitem.h \
+    gui/items/annotationhorizontallineitem.h \
+    gui/items/annotationlineitem.h \
+    gui/items/annotationpointitem.h \
+    gui/items/annotationrectitem.h \
+    gui/items/annotationverticallineitem.h \
+    # GUI - States
+    gui/states/drawingstate.h \
+    gui/states/rectdrawingstate.h \
+    gui/states/drawingstatemachine.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

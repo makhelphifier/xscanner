@@ -1,4 +1,4 @@
-#include "gui/imageviewer.h"
+#include "gui/views/imageviewer.h"
 #include <QPainter>
 #include <QScrollBar>
 #include <QTimer>
@@ -6,14 +6,13 @@
 #include <QDebug>
 #include <QImage>
 #include "service/imageprocessor.h"
-#include "annotationlineitem.h"
-#include "annotationrectitem.h"
-#include "annotationellipseitem.h"
-#include "annotationpointitem.h"
-#include "annotationpointitem.h"
+#include "gui/items/annotationlineitem.h"
+#include "gui/items/annotationellipseitem.h"
+#include "gui/items/annotationpointitem.h"
+#include "gui/items/annotationpointitem.h"
 #include <QList>
-#include "annotationhorizontallineitem.h"
-#include "annotationverticallineitem.h"
+#include "gui/items/annotationhorizontallineitem.h"
+#include "gui/items/annotationverticallineitem.h"
 
 
 ImageViewer::ImageViewer(QWidget *parent)
@@ -37,6 +36,9 @@ ImageViewer::ImageViewer(QWidget *parent)
     // 默认选择模式
     m_currentMode = Mode_Select;
     m_pointItems.clear();  // 初始化
+
+    // 初始化状态机
+    m_drawingStateMachine = new DrawingStateMachine(this, this);
 
 }
 
@@ -264,11 +266,9 @@ void ImageViewer::applyWindowLevel()
     updatePixmap(QPixmap::fromImage(adjustedImage));
 }
 
-// 公共接口 - 绘制模式
 void ImageViewer::setDrawMode(DrawMode mode)
 {
     m_currentMode = mode;
-    m_isDrawing = false;
 
     switch (mode) {
     case Mode_Select:
@@ -293,6 +293,7 @@ void ImageViewer::setDrawMode(DrawMode mode)
     qDebug() << "Draw mode set to:" << mode;
 }
 
+
 // 槽 - 从 UI 接收窗宽/窗位变化
 void ImageViewer::onWindowChanged(int value)
 {
@@ -308,7 +309,7 @@ void ImageViewer::onLevelChanged(int value)
     emit autoWindowingToggled(false);
 }
 
-// 鼠标事件重写（处理绘制逻辑）
+// 替换旧的 mousePressEvent
 void ImageViewer::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() != Qt::LeftButton) {
@@ -321,142 +322,103 @@ void ImageViewer::mousePressEvent(QMouseEvent *event)
         return;
     }
 
-    QPointF scenePos = mapToScene(event->pos());
-    m_startPoint = scenePos;
-    m_isDrawing = true;
+    // 将事件传递给状态机
+    m_drawingStateMachine->handleMousePress(event);
+    if (event->isAccepted()) {
+        return; // 如果状态机处理了事件，则直接返回
+    }
 
-    // 在 switch 外预计算当前 scale 和图像宽度（用于 Mode_Point，避免 switch 作用域问题）
+    // --- 如果状态机未处理，则执行旧逻辑（除矩形外） ---
+    QPointF scenePos = mapToScene(event->pos());
     qreal currentAbsoluteScale = (m_initialScale > 0) ? (transform().m11() / m_initialScale) : 1.0;
     int imageWidth = m_originalImage.width();
 
     switch (m_currentMode) {
     case Mode_Line:
-        m_previewLine = createPreviewLine(m_startPoint);
-        break;
-    case Mode_WindowLevel:
-        m_previewRect = createPreviewRect(m_startPoint);
-        break;
-    case Mode_Rect:
-        m_previewRect = createPreviewRect(m_startPoint);
-        qDebug() << "Rect drawing started";
+        // m_previewLine = createPreviewLine(scenePos); // (为后续步骤保留)
         break;
     case Mode_Ellipse:
-        m_previewEllipse = createPreviewEllipse(m_startPoint);
+        m_previewEllipse = createPreviewEllipse(scenePos);
         qDebug() << "Ellipse drawing started";
         break;
     case Mode_Point:
-        // 使用预计算的 currentScale 和 imageWidth
         finishDrawingPoint(scenePos, currentAbsoluteScale, imageWidth);
-        m_isDrawing = false;  // 点测量不持续绘制
         break;
     case Mode_HorizontalLine:
     {
         if (m_pixmapItem && !m_pixmapItem->pixmap().isNull()) {
             qreal sceneWidth = m_pixmapItem->boundingRect().width();
-            // 将 currentAbsoluteScale 传递给构造函数
             AnnotationHorizontalLineItem *hLine = new AnnotationHorizontalLineItem(scenePos.y(), sceneWidth, currentAbsoluteScale);
             m_scene->addItem(hLine);
         }
-        m_isDrawing = false;
     }
     break;
     case Mode_VerticalLine:
     {
         if (m_pixmapItem && !m_pixmapItem->pixmap().isNull()) {
             qreal sceneHeight = m_pixmapItem->boundingRect().height();
-            // 将 currentAbsoluteScale 传递给构造函数
             AnnotationVerticalLineItem *vLine = new AnnotationVerticalLineItem(scenePos.x(), sceneHeight, currentAbsoluteScale);
             m_scene->addItem(vLine);
         }
-        m_isDrawing = false;
     }
     break;
     case Mode_Select:
     default:
-        QGraphicsView::mousePressEvent(event);  // 正常拖动
-        m_isDrawing = false;
+        QGraphicsView::mousePressEvent(event);
         break;
     }
-
     updatePixelInfo(scenePos);
-    event->accept();
 }
+
+
+// 替换旧的 mouseMoveEvent
 void ImageViewer::mouseMoveEvent(QMouseEvent *event)
 {
     QPointF scenePos = mapToScene(event->pos());
     updatePixelInfo(scenePos);  // 始终更新像素信息
 
-    if (!m_isDrawing) {
+    // 将事件传递给状态机
+    m_drawingStateMachine->handleMouseMove(event);
+    if (event->isAccepted()) {
+        return;
+    }
+
+    // 如果是选择模式，则执行默认拖动
+    if (m_currentMode == Mode_Select) {
         QGraphicsView::mouseMoveEvent(event);
         return;
     }
 
-    // 更新预览
     switch (m_currentMode) {
-    case Mode_Line:
-        if (m_previewLine) {
-            m_previewLine->setLine(QLineF(m_startPoint, scenePos));
-        }
-        break;
-    case Mode_WindowLevel:
-    case Mode_Rect:
-        if (m_previewRect) {
-            m_previewRect->setRect(QRectF(m_startPoint, scenePos).normalized());
-        }
-        break;
-    case Mode_Ellipse:  // 更新椭圆预览
+    case Mode_Ellipse:
         if (m_previewEllipse) {
             QRectF ellipseRect = QRectF(m_startPoint, scenePos).normalized();
             m_previewEllipse->setRect(ellipseRect);
         }
         break;
-    // Mode_Point 无预览
     default:
         break;
     }
-
-    event->accept();
 }
 
 void ImageViewer::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (event->button() != Qt::LeftButton || !m_isDrawing || m_originalImage.isNull()) {
+    if (event->button() != Qt::LeftButton || m_originalImage.isNull()) {
         QGraphicsView::mouseReleaseEvent(event);
+        return;
+    }
+
+    // 将事件传递给状态机
+    m_drawingStateMachine->handleMouseRelease(event);
+    if (event->isAccepted()) {
         return;
     }
 
     QPointF scenePos = mapToScene(event->pos());
 
+    // --- 其他模式的完成逻辑（除矩形外） ---
     switch (m_currentMode) {
-    case Mode_Line:
-        if (m_previewLine) {
-            m_scene->removeItem(m_previewLine);
-            delete m_previewLine;
-            m_previewLine = nullptr;
-        }
-        finishDrawingLine(scenePos);
-        break;
-    case Mode_WindowLevel:
-        if (m_previewRect) {
-            QRectF rect = m_previewRect->rect();
-            m_scene->removeItem(m_previewRect);
-            delete m_previewRect;
-            m_previewRect = nullptr;
-            finishWindowLevelRect(rect);
-        }
-        break;
-    case Mode_Rect:
-        if (m_previewRect) {
-            QRectF rect = m_previewRect->rect();
-            m_scene->removeItem(m_previewRect);
-            delete m_previewRect;
-            m_previewRect = nullptr;
-            AnnotationRectItem *rectItem = new AnnotationRectItem(rect.x(), rect.y(), rect.width(), rect.height());
-            m_scene->addItem(rectItem);
-            qDebug() << "Rect completed:" << rect;
-        }
-        break;
-    case Mode_Ellipse:  // 完成椭圆
+    case Mode_Ellipse:
         if (m_previewEllipse) {
             QRectF ellipseRect = m_previewEllipse->rect();
             m_scene->removeItem(m_previewEllipse);
@@ -465,17 +427,17 @@ void ImageViewer::mouseReleaseEvent(QMouseEvent *event)
             finishDrawingEllipse(ellipseRect);
         }
         break;
-    case Mode_Point:
-        break;
     default:
         break;
     }
 
-    m_isDrawing = false;
-    // switchToSelectMode();  // 绘制完成后切换回选择模式
     updatePixelInfo(scenePos);
-    event->accept();
 }
+
+
+
+
+
 // 私有方法：创建椭圆预览
 QGraphicsEllipseItem* ImageViewer::createPreviewEllipse(const QPointF &start)
 {
@@ -671,4 +633,9 @@ void ImageViewer::clearAllAnnotations()
 
     // 3. 清空我们自己维护的跟踪列表
     m_pointItems.clear();
+}
+
+void ImageViewer::setDrawingState(DrawingState *state)
+{
+    m_drawingStateMachine->setState(state);
 }

@@ -8,6 +8,8 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QMenuBar>
+#include "gui/states/rectdrawingstate.h"
+
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -57,7 +59,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     selectAction->setCheckable(true);
     toolBar->addAction(selectAction);
     toolGroup->addAction(selectAction);
-    connect(selectAction, &QAction::triggered, this, &MainWindow::selectMode);
+    connect(selectAction, &QAction::triggered, this, [this]() {
+        viewer->setDrawMode(ImageViewer::Mode_Select);
+        viewer->setDrawingState(nullptr); // 清除任何绘图状态
+    });
 
     // 窗宽窗位工具
     wlAction = new QAction(QIcon(":/Resources/img/u27.png"), "窗宽窗位", this);
@@ -78,7 +83,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     rectAction->setCheckable(true);
     toolBar->addAction(rectAction);
     toolGroup->addAction(rectAction);
-    connect(rectAction, &QAction::triggered, [this]() { viewer->setDrawMode(ImageViewer::Mode_Rect); });
+    connect(rectAction, &QAction::triggered, [this]() {
+        viewer->setDrawMode(ImageViewer::Mode_Rect);
+        viewer->setDrawingState(new RectDrawingState(viewer));
+    });
 
     // 椭圆工具
     ellipseAction = new QAction(QIcon(":/Resources/img/ellipse_tool.png"), "椭圆", this);

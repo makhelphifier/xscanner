@@ -14,6 +14,8 @@
 #include <QGraphicsRectItem> // 用于预览矩形
 #include <QGraphicsLineItem> // 用于预览线条
 #include <QGraphicsEllipseItem>
+#include "gui/states/drawingstatemachine.h"
+
 
 class QGraphicsRectItem;
 class QGraphicsLineItem;
@@ -28,13 +30,13 @@ public:
     void loadImage(const QString &filePath);  // 原有：加载图像
     QGraphicsPixmapItem *pixmapItem() const { return m_pixmapItem; }  // 原有
 
-    // 原有公共接口（保留，不重复）
     void setImage(const QImage &image);
     void updatePixmap(const QPixmap &pixmap);
     void setScale(qreal scale);
     void resetView();
+    void setDrawingState(DrawingState* state);
 
-    // 窗宽窗位相关接口（公共方法，便于 MainWindow 调用）
+    // 窗宽窗位相关接口
     void setWindowLevel(int width, int level);
     void setAutoWindowing(bool enabled);
     void applyWindowLevel();  // 应用当前窗宽窗位并更新显示
@@ -87,6 +89,7 @@ private:
     qreal m_initialScale;
     QGraphicsRectItem *m_borderItem;
     void fitToView();  // 原有私有方法
+    DrawingStateMachine* m_drawingStateMachine;
 
     // 图像数据和处理状态（迁移自 MainWindow）
     QImage m_originalImage;  // 原始图像

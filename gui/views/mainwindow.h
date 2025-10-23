@@ -4,8 +4,8 @@
 #include <QMainWindow>
 #include <QAction>
 #include <QActionGroup>
-#include "gui/imageviewer.h"
-#include "gui/toprightinfowidget.h"
+#include "gui/views/imageviewer.h"
+#include "gui/widgets/toprightinfowidget.h"
 #include <QLabel>
 
 class MainWindow : public QMainWindow
