@@ -113,10 +113,7 @@ private:
     void finishWindowLevelRect(const QRectF &rect);              // 完成窗宽矩形
     void switchToSelectMode();                                   // 切换回选择模式
     void calculateAutoWindowLevel(int &min, int &max);           // 计算自动窗宽窗位
-    QGraphicsEllipseItem *m_previewEllipse = nullptr;
-    void finishDrawingEllipse(const QRectF &ellipseRect);  // 完成椭圆绘制
     void finishDrawingPoint(const QPointF &pointPos);  // 完成点测量
-    QGraphicsEllipseItem* createPreviewEllipse(const QPointF &start);  // 创建椭圆预览
     QList<AnnotationPointItem*> m_pointItems;  // 跟踪所有点项，便于遍历更新（避免全场景遍历）
     void finishDrawingPoint(const QPointF &pointPos, qreal currentScale, int imageWidth);
 

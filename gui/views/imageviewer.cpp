@@ -16,7 +16,7 @@
 
 
 ImageViewer::ImageViewer(QWidget *parent)
-    : QGraphicsView(parent), m_initialScale(1.0), m_pixmapItem(nullptr), m_borderItem(nullptr), m_previewEllipse(nullptr)
+    : QGraphicsView(parent), m_initialScale(1.0), m_pixmapItem(nullptr), m_borderItem(nullptr)
 {
     m_scene = new QGraphicsScene(this);
     setScene(m_scene);
@@ -309,7 +309,6 @@ void ImageViewer::onLevelChanged(int value)
     emit autoWindowingToggled(false);
 }
 
-// 替换旧的 mousePressEvent
 void ImageViewer::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() != Qt::LeftButton) {
@@ -328,7 +327,7 @@ void ImageViewer::mousePressEvent(QMouseEvent *event)
         return; // 如果状态机处理了事件，则直接返回
     }
 
-    // --- 如果状态机未处理，则执行旧逻辑（除矩形外） ---
+    // --- 如果状态机未处理，则执行旧逻辑 ---
     QPointF scenePos = mapToScene(event->pos());
     qreal currentAbsoluteScale = (m_initialScale > 0) ? (transform().m11() / m_initialScale) : 1.0;
     int imageWidth = m_originalImage.width();
@@ -337,10 +336,7 @@ void ImageViewer::mousePressEvent(QMouseEvent *event)
     case Mode_Line:
         // m_previewLine = createPreviewLine(scenePos); // (为后续步骤保留)
         break;
-    case Mode_Ellipse:
-        m_previewEllipse = createPreviewEllipse(scenePos);
-        qDebug() << "Ellipse drawing started";
-        break;
+
     case Mode_Point:
         finishDrawingPoint(scenePos, currentAbsoluteScale, imageWidth);
         break;
@@ -371,7 +367,6 @@ void ImageViewer::mousePressEvent(QMouseEvent *event)
 }
 
 
-// 替换旧的 mouseMoveEvent
 void ImageViewer::mouseMoveEvent(QMouseEvent *event)
 {
     QPointF scenePos = mapToScene(event->pos());
@@ -390,12 +385,7 @@ void ImageViewer::mouseMoveEvent(QMouseEvent *event)
     }
 
     switch (m_currentMode) {
-    case Mode_Ellipse:
-        if (m_previewEllipse) {
-            QRectF ellipseRect = QRectF(m_startPoint, scenePos).normalized();
-            m_previewEllipse->setRect(ellipseRect);
-        }
-        break;
+
     default:
         break;
     }
@@ -418,53 +408,13 @@ void ImageViewer::mouseReleaseEvent(QMouseEvent *event)
 
     // --- 其他模式的完成逻辑（除矩形外） ---
     switch (m_currentMode) {
-    case Mode_Ellipse:
-        if (m_previewEllipse) {
-            QRectF ellipseRect = m_previewEllipse->rect();
-            m_scene->removeItem(m_previewEllipse);
-            delete m_previewEllipse;
-            m_previewEllipse = nullptr;
-            finishDrawingEllipse(ellipseRect);
-        }
-        break;
+
     default:
         break;
     }
 
     updatePixelInfo(scenePos);
 }
-
-
-
-
-
-// 私有方法：创建椭圆预览
-QGraphicsEllipseItem* ImageViewer::createPreviewEllipse(const QPointF &start)
-{
-    QGraphicsEllipseItem* preview = new QGraphicsEllipseItem(QRectF(start, start));
-    QPen pen(Qt::yellow, 1, Qt::DashLine);
-    preview->setPen(pen);
-    preview->setBrush(Qt::transparent);
-    preview->setZValue(1000);
-    preview->setFlag(QGraphicsItem::ItemIsSelectable, false);
-    preview->setFlag(QGraphicsItem::ItemIsMovable, false);
-    m_scene->addItem(preview);
-    return preview;
-}
-
-// 私有方法：完成椭圆绘制
-void ImageViewer::finishDrawingEllipse(const QRectF &ellipseRect)
-{
-    if (!ellipseRect.isValid() || ellipseRect.width() < 1 || ellipseRect.height() < 1) {
-        return;
-    }
-    AnnotationEllipseItem *ellipseItem = new AnnotationEllipseItem(
-        ellipseRect.x(), ellipseRect.y(), ellipseRect.width(), ellipseRect.height()
-        );
-    m_scene->addItem(ellipseItem);
-    qDebug() << "Ellipse completed:" << ellipseRect;
-}
-
 
 
 // 私有方法 - 像素信息更新

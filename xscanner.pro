@@ -25,10 +25,10 @@ SOURCES += \
     gui/items/annotationverticallineitem.cpp \
     # GUI - States
     gui/states/drawingstate.cpp \
-    gui/states/rectdrawingstate.cpp \
     gui/states/drawingstatemachine.cpp
 
 HEADERS += \
+    gui/states/genericdrawingstate.h \
     service/imageprocessor.h \
     # GUI - Views
     gui/views/imageviewer.h \
@@ -44,7 +44,6 @@ HEADERS += \
     gui/items/annotationverticallineitem.h \
     # GUI - States
     gui/states/drawingstate.h \
-    gui/states/rectdrawingstate.h \
     gui/states/drawingstatemachine.h
 
 # Default rules for deployment.

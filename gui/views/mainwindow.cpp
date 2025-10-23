@@ -8,8 +8,9 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QMenuBar>
-#include "gui/states/rectdrawingstate.h"
-
+#include "gui/states/genericdrawingstate.h"
+#include "gui/items/annotationrectitem.h"
+#include "gui/items/annotationellipseitem.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -85,7 +86,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     toolGroup->addAction(rectAction);
     connect(rectAction, &QAction::triggered, [this]() {
         viewer->setDrawMode(ImageViewer::Mode_Rect);
-        viewer->setDrawingState(new RectDrawingState(viewer));
+        viewer->setDrawingState(new GenericDrawingState<AnnotationRectItem>(viewer));
     });
 
     // 椭圆工具
@@ -93,7 +94,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     ellipseAction->setCheckable(true);
     toolBar->addAction(ellipseAction);
     toolGroup->addAction(ellipseAction);
-    connect(ellipseAction, &QAction::triggered, [this]() { viewer->setDrawMode(ImageViewer::Mode_Ellipse); });
+    connect(ellipseAction, &QAction::triggered, [this]() {
+        viewer->setDrawMode(ImageViewer::Mode_Ellipse);
+        viewer->setDrawingState(new GenericDrawingState<AnnotationEllipseItem>(viewer));
+    });
 
     // 点测量工具
     pointAction = new QAction(QIcon(":/Resources/img/masure.png"), "", this);

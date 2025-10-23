@@ -12,3 +12,17 @@ AnnotationRectItem::AnnotationRectItem(qreal x, qreal y, qreal width, qreal heig
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemIsMovable, true);
 }
+
+// 添加新的构造函数实现
+AnnotationRectItem::AnnotationRectItem(const QPointF &startPoint, const QPointF &endPoint, QGraphicsItem *parent)
+    : QGraphicsRectItem(QRectF(startPoint, endPoint).normalized(), parent)
+{
+    // 复用现有设置
+    QPen pen;
+    pen.setColor(Qt::yellow);
+    pen.setWidth(2);
+    setPen(pen);
+    setBrush(Qt::transparent);
+    setFlag(QGraphicsItem::ItemIsSelectable, true);
+    setFlag(QGraphicsItem::ItemIsMovable, true);
+}
