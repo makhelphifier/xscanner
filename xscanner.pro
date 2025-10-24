@@ -10,6 +10,7 @@ LIBS += -L$$PWD/../sdk/opencv/lib/ -lopencv_world470
 LIBS += -L$$PWD/../sdk/log4qt/lib/ -llog4qt
 SOURCES += \
     app/main.cpp \
+    gui/widgets/logwidget.cpp \
     service/imageprocessor.cpp \
     # GUI - Views
     gui/views/imageviewer.cpp \
@@ -26,10 +27,12 @@ SOURCES += \
     # GUI - States
     gui/states/drawingstate.cpp \
     gui/states/drawingstatemachine.cpp \
-    util/logger/logger.cpp
+    util/logger/logger.cpp \
+    util/logger/qtwidgetappender.cpp
 
 HEADERS += \
     gui/states/genericdrawingstate.h \
+    gui/widgets/logwidget.h \
     service/imageprocessor.h \
     # GUI - Views
     gui/views/imageviewer.h \
@@ -46,7 +49,8 @@ HEADERS += \
     # GUI - States
     gui/states/drawingstate.h \
     gui/states/drawingstatemachine.h \
-    util/logger/logger.h
+    util/logger/logger.h \
+    util/logger/qtwidgetappender.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

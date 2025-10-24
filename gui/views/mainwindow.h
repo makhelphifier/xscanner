@@ -7,6 +7,11 @@
 #include "gui/views/imageviewer.h"
 #include "gui/widgets/toprightinfowidget.h"
 #include <QLabel>
+#include "log4qt/level.h"
+
+class TopRightInfoWidget;
+class LogWidget;
+
 
 class MainWindow : public QMainWindow
 {
@@ -30,6 +35,7 @@ private slots:
 
     void updateScale(qreal scale);
     void onScaleFromWidget(double scale);
+    void onLogLevelChanged(Log4Qt::Level level);
 
 private:
     ImageViewer *viewer;
@@ -47,6 +53,7 @@ private:
     QLabel *sizeLabel;
     QLabel *infoLabel;
     TopRightInfoWidget *infoWidget;
+    LogWidget *m_logWidget;
 };
 
 #endif // MAINWINDOW_H
