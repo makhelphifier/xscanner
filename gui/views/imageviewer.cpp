@@ -13,6 +13,7 @@
 #include <QList>
 #include "gui/items/annotationhorizontallineitem.h"
 #include "gui/items/annotationverticallineitem.h"
+#include "util/logger/logger.h"
 
 
 ImageViewer::ImageViewer(QWidget *parent)
@@ -290,7 +291,7 @@ void ImageViewer::setDrawMode(DrawMode mode)
         viewport()->setCursor(Qt::ArrowCursor);
         break;
     }
-    qDebug() << "Draw mode set to:" << mode;
+    LogInfo(QString("Draw mode set to: %1").arg(static_cast<int>(mode)));
 }
 
 
