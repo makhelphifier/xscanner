@@ -27,7 +27,6 @@ protected:
 private slots:
 
     void openImage();
-    void selectMode();
 
     void onPixelInfoChanged(int x, int y, int value);
     void onWindowLevelChanged(int width, int level);

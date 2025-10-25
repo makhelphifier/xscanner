@@ -44,20 +44,6 @@ public:
     int currentWindowWidth() const ;  // 获取当前窗宽
     int currentWindowLevel() const ;  // 获取当前窗位
 
-    // 绘制模式接口
-    enum DrawMode {
-        Mode_Select,      // 选择/拖动模式
-        Mode_Line,        // 直线绘制
-        Mode_Rect,        // 矩形绘制
-        Mode_Ellipse,     // 椭圆绘制
-        Mode_Point,       // 点绘制
-        Mode_WindowLevel,  // 窗宽窗位矩形选择
-        Mode_HorizontalLine, //水平线绘制
-        Mode_VerticalLine,   //垂直线绘制
-    };
-    void setDrawMode(DrawMode mode);  // 设置当前绘制模式
-    DrawMode currentMode() const { return m_currentMode; }
-
 Q_SIGNALS:
     void scaleChanged(qreal scale);  // 原有：缩放变化信号
 
@@ -69,10 +55,7 @@ Q_SIGNALS:
 public slots:
     void onWindowChanged(int value);  // 从 UI 滑动条接收窗宽变化
     void onLevelChanged(int value);   // 从 UI 滑动条接收窗位变化
-    void onScaleChanged(qreal scale);  // 响应 scale 变化，更新点项大小
-    void clearAllAnnotations();
 protected:
-    // 原有：事件重写
     void wheelEvent(QWheelEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
@@ -83,12 +66,11 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
 
 private:
-    // 原有私有成员
     QGraphicsScene *m_scene;
     QGraphicsPixmapItem *m_pixmapItem;
     qreal m_initialScale;
     QGraphicsRectItem *m_borderItem;
-    void fitToView();  // 原有私有方法
+    void fitToView();
     DrawingStateMachine* m_drawingStateMachine;
 
     // 图像数据和处理状态（迁移自 MainWindow）
@@ -98,24 +80,10 @@ private:
     int m_windowLevel = 128; // 当前窗位（默认值）
     bool m_autoWindowing = false;  // 自动窗宽窗位状态
 
-    // 绘制状态（迁移自 MainWindow）
-    DrawMode m_currentMode = Mode_Select;
-    bool m_isDrawing = false;
-    QPointF m_startPoint;  // 绘制起点
-    QGraphicsLineItem *m_previewLine = nullptr;  // 线条预览
-    QGraphicsRectItem *m_previewRect = nullptr;  // 矩形/窗宽预览
 
     void updatePixelInfo(const QPointF &scenePos);  // 更新像素信息（发射信号）
     int getPixelValue(int x, int y) const;          // 获取像素灰度值
-    QGraphicsLineItem* createPreviewLine(const QPointF &start);  // 创建线预览
-    QGraphicsRectItem* createPreviewRect(const QPointF &start);  // 创建矩形预览
-    void finishDrawingLine(const QPointF &endPoint);             // 完成线绘制
-    void finishWindowLevelRect(const QRectF &rect);              // 完成窗宽矩形
-    void switchToSelectMode();                                   // 切换回选择模式
     void calculateAutoWindowLevel(int &min, int &max);           // 计算自动窗宽窗位
-    void finishDrawingPoint(const QPointF &pointPos);  // 完成点测量
-    QList<AnnotationPointItem*> m_pointItems;  // 跟踪所有点项，便于遍历更新（避免全场景遍历）
-    void finishDrawingPoint(const QPointF &pointPos, qreal currentScale, int imageWidth);
 
 };
 

@@ -17,7 +17,7 @@
 #include <QDockWidget>
 #include "gui/widgets/toprightinfowidget.h"
 #include "util/logger/logger.h"
-#include "gui/items/rectroi.h" // <<<--- 添加这一行
+#include "gui/items/rectroi.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -89,23 +89,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     toolBar->addAction(selectAction);
     toolGroup->addAction(selectAction);
     connect(selectAction, &QAction::triggered, this, [this]() {
-        viewer->setDrawMode(ImageViewer::Mode_Select);
         viewer->setDrawingState(nullptr); // 清除任何绘图状态
     });
 
     // 窗宽窗位工具
     wlAction = new QAction(QIcon(":/Resources/img/u27.png"), "窗宽窗位", this);
     wlAction->setCheckable(true);
-    toolBar->addAction(wlAction);
+    // toolBar->addAction(wlAction);
     toolGroup->addAction(wlAction);
-    connect(wlAction, &QAction::triggered, [this]() { viewer->setDrawMode(ImageViewer::Mode_WindowLevel); /*viewer->setAutoWindowing(false);*/ });
+    connect(wlAction, &QAction::triggered, [this]() {});
 
     // 直线工具
     lineAction = new QAction(QIcon(":/Resources/img/line_tool.png"), "直线", this);
     lineAction->setCheckable(true);
-    toolBar->addAction(lineAction);
+    // toolBar->addAction(lineAction);
     toolGroup->addAction(lineAction);
-    connect(lineAction, &QAction::triggered, [this]() { viewer->setDrawMode(ImageViewer::Mode_Line); });
+    connect(lineAction, &QAction::triggered, [this]() { });
 
     // 矩形工具
     rectAction = new QAction(QIcon(":/Resources/img/rect_tool.png"), "矩形", this);
@@ -113,60 +112,58 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     toolBar->addAction(rectAction);
     toolGroup->addAction(rectAction);
     connect(rectAction, &QAction::triggered, [this]() {
-        viewer->setDrawMode(ImageViewer::Mode_Rect);
+
         viewer->setDrawingState(new GenericDrawingState<RectROI>(viewer)); // <<<--- 将 AnnotationRectItem 替换为 RectROI
     });
 
     // 椭圆工具
     ellipseAction = new QAction(QIcon(":/Resources/img/ellipse_tool.png"), "椭圆", this);
     ellipseAction->setCheckable(true);
-    toolBar->addAction(ellipseAction);
+    // toolBar->addAction(ellipseAction);
     toolGroup->addAction(ellipseAction);
     connect(ellipseAction, &QAction::triggered, [this]() {
-        viewer->setDrawMode(ImageViewer::Mode_Ellipse);
         viewer->setDrawingState(new GenericDrawingState<AnnotationEllipseItem>(viewer));
     });
 
     // 点测量工具
     pointAction = new QAction(QIcon(":/Resources/img/masure.png"), "", this);
     pointAction->setCheckable(true);
-    toolBar->addAction(pointAction);
+    // toolBar->addAction(pointAction);
     toolGroup->addAction(pointAction);
-    connect(pointAction, &QAction::triggered, [this]() { viewer->setDrawMode(ImageViewer::Mode_Point); });
+    connect(pointAction, &QAction::triggered, [this]() { });
 
     // 水平线工具
     hLineAction = new QAction(QIcon(":/Resources/img/u26.png"), "", this);
     hLineAction->setCheckable(true);
-    toolBar->addAction(hLineAction);
+    // toolBar->addAction(hLineAction);
     toolGroup->addAction(hLineAction);
-    connect(hLineAction, &QAction::triggered, [this]() { viewer->setDrawMode(ImageViewer::Mode_HorizontalLine); });
+    connect(hLineAction, &QAction::triggered, [this]() {  });
 
     // 垂直线工具
     vLineAction = new QAction(QIcon(":/Resources/img/u25.png"), "", this);
     vLineAction->setCheckable(true);
-    toolBar->addAction(vLineAction);
+    // toolBar->addAction(vLineAction);
     toolGroup->addAction(vLineAction);
-    connect(vLineAction, &QAction::triggered, [this]() { viewer->setDrawMode(ImageViewer::Mode_VerticalLine); });
+    connect(vLineAction, &QAction::triggered, [this]() { });
 
     // 添加分隔符
     toolBar->addSeparator();
 
     // 清除所有图元工具
     clearAction = new QAction(QIcon(":/Resources/img/empty_trash.png"), "", this);
-    toolBar->addAction(clearAction);
-    connect(clearAction, &QAction::triggered, viewer, &ImageViewer::clearAllAnnotations);
+    // toolBar->addAction(clearAction);
+    // connect(clearAction, &QAction::triggered, viewer, &ImageViewer::clearAllAnnotations);
 
     // 在连接信号部分添加
-    connect(ellipseAction, &QAction::triggered, [this]() { viewer->setDrawMode(ImageViewer::Mode_Ellipse); });
+    connect(ellipseAction, &QAction::triggered, [this]() {  });
 
     // 默认选择模式（确保 pointAction 未选中）
     selectAction->setChecked(true);
-    selectMode();
 
     // --- 连接信号和槽 ---
     // 缩放相关
     connect(viewer, &ImageViewer::scaleChanged, this, &MainWindow::updateScale);
-    connect(viewer, &ImageViewer::scaleChanged, viewer, &ImageViewer::onScaleChanged);
+    // connect(viewer, &ImageViewer::scaleChanged, viewer, &ImageViewer::onScaleChanged);
     connect(infoWidget, QOverload<double>::of(&TopRightInfoWidget::scaleEdited), this, &MainWindow::onScaleFromWidget);
 
     // 像素信息
@@ -182,7 +179,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     // 默认选择模式
     selectAction->setChecked(true);
-    selectMode();
 
     // 默认加载图像（委托给 viewer）
     QString defaultPath = ":/Resources/img/000006.raw";
@@ -283,10 +279,6 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     }
 }
 
-void MainWindow::selectMode()
-{
-    viewer->setDrawMode(ImageViewer::Mode_Select);
-}
 
 void MainWindow::onPixelInfoChanged(int x, int y, int value)
 {
