@@ -17,6 +17,7 @@
 #include <QDockWidget>
 #include "gui/widgets/toprightinfowidget.h"
 #include "util/logger/logger.h"
+#include "gui/items/rectroi.h" // <<<--- 添加这一行
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -66,13 +67,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(m_logWidget, &LogWidget::logLevelChanged, this, &MainWindow::onLogLevelChanged);
 
     LogInfo("MainWindow UI initialized.");
-    // --- 在这里添加以下测试日志 ---
+    // --- 添加以下测试日志 ---
     LogDebug("This is a debug message.");
     LogWarn("This is a warning message.");
     LogInfo("This is a info message.");
     LogError("This is an error message.");
     LogFatal("This is a fatal message.");
-    // ----------------------------
 
     // --- 菜单和工具栏 ---
     QMenu *fileMenu = menuBar()->addMenu("文件");
@@ -114,7 +114,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     toolGroup->addAction(rectAction);
     connect(rectAction, &QAction::triggered, [this]() {
         viewer->setDrawMode(ImageViewer::Mode_Rect);
-        viewer->setDrawingState(new GenericDrawingState<AnnotationRectItem>(viewer));
+        viewer->setDrawingState(new GenericDrawingState<RectROI>(viewer)); // <<<--- 将 AnnotationRectItem 替换为 RectROI
     });
 
     // 椭圆工具

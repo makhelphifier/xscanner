@@ -33,7 +33,7 @@ LogWidget::LogWidget(QWidget *parent) : QWidget(parent)
 void LogWidget::appendLogMessage(const QString &text, int level)
 {
     // 过滤：如果传入 level < 当前过滤级别，则不显示
-    if (level < m_currentLogLevel.toInt()) {  // 假设 Log4Qt::Level 有 toInt() 或直接用 int(level)
+    if (level < m_currentLogLevel.toInt()) {
         return;  // 跳过低级别日志
     }
 
@@ -94,7 +94,6 @@ void LogWidget::createLogLevelMenu()
     connect(levelGroup, &QActionGroup::triggered, this, [this](QAction *action){
         Log4Qt::Level selectedLevel = action->data().value<Log4Qt::Level>();
         m_currentLogLevel = selectedLevel;  // 添加成员变量存储当前级别：
-
         emit logLevelChanged(selectedLevel);
     });
 

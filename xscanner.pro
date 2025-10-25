@@ -10,6 +10,9 @@ LIBS += -L$$PWD/../sdk/opencv/lib/ -lopencv_world470
 LIBS += -L$$PWD/../sdk/log4qt/lib/ -llog4qt
 SOURCES += \
     app/main.cpp \
+    gui/items/ROI.cpp \
+    gui/items/handle.cpp \
+    gui/items/rectroi.cpp \
     gui/widgets/logwidget.cpp \
     service/imageprocessor.cpp \
     # GUI - Views
@@ -31,6 +34,9 @@ SOURCES += \
     util/logger/qtwidgetappender.cpp
 
 HEADERS += \
+    gui/items/ROI.h \
+    gui/items/handle.h \
+    gui/items/rectroi.h \
     gui/states/genericdrawingstate.h \
     gui/widgets/logwidget.h \
     service/imageprocessor.h \
