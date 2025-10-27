@@ -19,7 +19,7 @@ Handle::Handle(HandleType type, QGraphicsItem* parent)
     // !!! 关键：设置此标志可使句柄忽略场景的缩放和旋转变换，保持固定的屏幕像素大小
     setFlag(QGraphicsItem::ItemIgnoresTransformations);
     setAcceptHoverEvents(true);
-
+    setFlag(QGraphicsItem::ItemIsSelectable);
     buildPath();
 }
 

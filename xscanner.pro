@@ -1,9 +1,10 @@
-QT       += core gui
+QT       += core gui serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
 INCLUDEPATH += gui app # 添加 gui 和 app 目录，以便互相查找头文件
+INCLUDEPATH += device
 INCLUDEPATH += $$PWD/../sdk/opencv/include
 INCLUDEPATH += $$PWD/../sdk/log4qt/include
 LIBS += -L$$PWD/../sdk/opencv/lib/ -lopencv_world470
@@ -31,8 +32,11 @@ SOURCES += \
     gui/states/drawingstate.cpp \
     gui/states/drawingstatemachine.cpp \
     util/logger/logger.cpp \
-    util/logger/qtwidgetappender.cpp
-
+    util/logger/qtwidgetappender.cpp \
+    device/gongy.cpp \
+    # device/gongyu.cpp \
+    device/serialcomunicator.cpp \
+    device/xraysource.cpp
 HEADERS += \
     gui/items/ROI.h \
     gui/items/handle.h \
@@ -56,8 +60,11 @@ HEADERS += \
     gui/states/drawingstate.h \
     gui/states/drawingstatemachine.h \
     util/logger/logger.h \
-    util/logger/qtwidgetappender.h
-
+    util/logger/qtwidgetappender.h \
+    device/gongy.h \
+    # device/gongyu.h \
+    device/serialcomunicator.h \
+    device/xraysource.h
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

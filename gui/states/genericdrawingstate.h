@@ -7,6 +7,7 @@
 #include <QGraphicsScene>
 #include <QPointF>
 #include <QDebug>
+#include <QGraphicsItem>
 
 template<class FinalItem>
 class GenericDrawingState : public DrawingState
@@ -24,6 +25,7 @@ public:
 
     void mousePressEvent(QMouseEvent *event) override
     {
+
         if (event->button() == Qt::LeftButton) {
             m_startPoint = m_viewer->mapToScene(event->pos());
             m_isDrawing = true;

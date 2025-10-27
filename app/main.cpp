@@ -10,6 +10,8 @@
 #include <QDir>
 #include <QThread>
 
+#include "device/gongy.h"
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -33,5 +35,10 @@ int main(int argc, char *argv[])
 
     MainWindow w;
     w.show();
+
+    GongYTabWidget *colleagueWindow = new GongYTabWidget();
+    colleagueWindow->setWindowTitle("扫描设备控制"); // (可选)给个标题
+    colleagueWindow->show();
+
     return a.exec();
 }
