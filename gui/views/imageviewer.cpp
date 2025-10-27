@@ -7,7 +7,7 @@
 #include <QImage>
 #include "service/imageprocessor.h"
 #include <QList>
-#include "util/logger/logger.h"
+// #include "util/logger/logger.h"
 
 
 ImageViewer::ImageViewer(QWidget *parent)

@@ -4,8 +4,12 @@ project(MyProject)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# 查找Qt5（包括Core、Gui、Widgets）
-find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets)
+# 启用 AUTOMOC 和 AUTORCC
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
+# 查找Qt5（包括Core、Gui、Widgets 和 SerialPort）
+find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets SerialPort)
 
 # 定义源文件
 set(SOURCES
@@ -30,8 +34,12 @@ set(SOURCES
     # GUI - States
     gui/states/drawingstate.cpp
     gui/states/drawingstatemachine.cpp
-    util/logger/logger.cpp
-    util/logger/qtwidgetappender.cpp
+
+
+    # device
+    device/gongy.cpp
+    device/serialcomunicator.cpp
+    device/xraysource.cpp
 )
 
 # 定义头文件
@@ -57,11 +65,15 @@ set(HEADERS
     # GUI - States
     gui/states/drawingstate.h
     gui/states/drawingstatemachine.h
-    util/logger/logger.h
-    util/logger/qtwidgetappender.h
+
+
+    # device
+    device/gongy.h
+    device/serialcomunicator.h
+    device/xraysource.h
 )
 
-# 添加可执行文件目标（启用AUTOMOC和AUTORCC）
+# 添加可执行文件目标
 add_executable(${PROJECT_NAME}
     ${SOURCES}
     ${HEADERS}
@@ -73,26 +85,35 @@ target_link_libraries(${PROJECT_NAME}
     Qt5::Core
     Qt5::Gui
     Qt5::Widgets
+    Qt5::SerialPort
+)
+
+# -------------------------------------------------------------------
+# 关键修改：添加编译定义
+# 解决 log4qt 与 windows.h (由OpenCV引入) 的宏冲突 (如 LogError, min/max)
+# -------------------------------------------------------------------
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    WIN32_LEAN_AND_MEAN
+    NOMINMAX
 )
 
 # 添加包含目录
 target_include_directories(${PROJECT_NAME} PRIVATE
-    gui
-    app
+    ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/../sdk/opencv/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../sdk/log4qt/include
 )
 
 # 链接外部库（OpenCV和log4qt，使用完整路径）
 target_link_libraries(${PROJECT_NAME}
-    "${CMAKE_CURRENT_SOURCE_DIR}/../sdk/opencv/lib/opencv_world470.lib"  # 假设Windows .lib
-    "${CMAKE_CURRENT_SOURCE_DIR}/../sdk/log4qt/lib/log4qt.lib"           # Release版本
+    "${CMAKE_CURRENT_SOURCE_DIR}/../sdk/opencv/lib/opencv_world470.lib"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../sdk/log4qt/lib/log4qt.lib"
 )
 
-# 处理Debug版本的log4qt库（如果需要不同库文件）
+# 处理Debug版本的log4qt库
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_CONFIGURATION_TYPES MATCHES "Debug")
     target_link_libraries(${PROJECT_NAME}
-        "${CMAKE_CURRENT_SOURCE_DIR}/../sdk/log4qt/lib/log4qt_d.lib"  # Debug版本库（如果存在）
+        "${CMAKE_CURRENT_SOURCE_DIR}/../sdk/log4qt/lib/log4qt_d.lib"
     )
 endif()
 
@@ -115,6 +136,7 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
             "${OPENCV_DLL}"
             "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            # 使用生成器表达式选择 Debug 或 Release 的 DLL
             "$<IF:$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>,$<IF:$<BOOL:${LOG4QT_DLL_DEBUG}>,${LOG4QT_DLL_DEBUG},${LOG4QT_DLL_RELEASE}>,${LOG4QT_DLL_RELEASE}>"
             "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
     COMMENT "Copying config and DLLs to output directory"
