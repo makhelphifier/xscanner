@@ -7,8 +7,8 @@
 #include <QImage>
 #include "service/imageprocessor.h"
 #include <QList>
-#include "util/logger/logger.h"
-
+// #include "util/logger/logger.h"
+#include "gui/states/drawingstatemachine.h"
 
 ImageViewer::ImageViewer(QWidget *parent)
     : QGraphicsView(parent), m_initialScale(1.0), m_pixmapItem(nullptr), m_borderItem(nullptr), m_drawingEnabled(true)

@@ -14,12 +14,13 @@
 #include <QGraphicsRectItem> // 用于预览矩形
 #include <QGraphicsLineItem> // 用于预览线条
 #include <QGraphicsEllipseItem>
-#include "gui/states/drawingstatemachine.h"
+// #include "gui/states/drawingstatemachine.h"
 
 
 class QGraphicsRectItem;
 class QGraphicsLineItem;
 class AnnotationPointItem;
+class DrawingStateMachine;
 
 class ImageViewer : public QGraphicsView
 {

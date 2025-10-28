@@ -23,6 +23,7 @@ Handle::Handle(HandleType type, QGraphicsItem* parent)
     m_pen = QPen(Qt::cyan);        // 设置默认画笔
     m_hoverPen = QPen(Qt::yellow); // 设置默认悬停画笔
     m_currentPen = m_pen;          // 初始画笔
+    setFlag(QGraphicsItem::ItemIsSelectable);
     buildPath();
     setZValue(10); // 确保 Handle 在 ROI 之上
 }

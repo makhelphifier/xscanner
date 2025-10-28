@@ -2,17 +2,26 @@
 #define GENERICDRAWINGSTATE_H
 
 #include "drawingstate.h"
-// #include "../views/imageviewer.h" // 不需要直接包含，通过 machine()->viewer() 访问
-#include "gui/items/rectroi.h" // 假设 FinalItem 可能是 RectROI，需要包含
+#include "gui/items/rectroi.h"
 #include <QMouseEvent>
-#include <QWheelEvent> // ++ 包含 QWheelEvent ++
+#include <QWheelEvent>
 #include <QGraphicsScene>
 #include <QPointF>
 #include <QDebug>
-
+#include <QGraphicsItem>
+#include "gui/states/drawingstatemachine.h"
+#include "gui/views/imageviewer.h"
 // 前向声明 ImageViewer
 class ImageViewer;
 class DrawingStateMachine; // 需要包含或前向声明状态机
+template <typename T>
+struct has_preview_item_type {
+    template <typename U>
+    static auto test(int) -> decltype(typename U::PreviewItemType{ }, std::true_type{ });
+    template <typename>
+    static std::false_type test(...);
+    static constexpr bool value = decltype(test<T>(0))::value;
+};
 
 template<class FinalItem>
 class GenericDrawingState : public DrawingState
@@ -37,15 +46,12 @@ public:
 
         if (event->button() == Qt::LeftButton) { // Qt::LeftButton 而非 Qt::MouseButton::LeftButton
             m_startPoint = viewer->mapToScene(event->pos());
+
             m_isDrawing = true;
 
             // 创建预览项 - 假设 FinalItem 有 PreviewItemType 定义和静态方法
             // 你需要确保 FinalItem 确实有这些
-            if constexpr (requires { typename FinalItem::PreviewItemType; }) { // C++17 if constexpr
-                // m_previewItem = new typename FinalItem::PreviewItemType(); // 创建方式可能需要调整
-                // 示例：假设预览项构造需要父项
-                // m_previewItem = new typename FinalItem::PreviewItemType(/* 可能需要父项 */);
-
+            if constexpr (has_preview_item_type<FinalItem>::value) { // C++17 if constexpr + SFINAE
                 // 假设 FinalItem 定义了 createPreview 和 initPreview
                 m_previewItem = FinalItem::createPreview(); // 静态方法创建
                 if (m_previewItem) {
