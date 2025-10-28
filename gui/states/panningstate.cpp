@@ -5,13 +5,14 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QDebug>
-
+#include "util/logger/logger.h"
 
 PanningState::PanningState(DrawingStateMachine* machine, QObject *parent)
     : DrawingState(machine, parent) {}
 
 bool PanningState::handleMousePressEvent(QMouseEvent *event)
 {
+    log_("bbb");
     // 在平移状态下再次按下鼠标通常不做任何事
     return true; // 消耗事件
 }

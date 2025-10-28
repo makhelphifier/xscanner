@@ -11,12 +11,12 @@
 #include "gui/states/genericdrawingstate.h"
 #include "gui/items/annotationrectitem.h"
 #include "gui/items/annotationellipseitem.h"
-// #include "gui/widgets/logwidget.h"
-// #include "util/logger/qtwidgetappender.h"
+#include "gui/widgets/logwidget.h"
+#include "util/logger/qtwidgetappender.h"
 #include "log4qt/logger.h"
 #include <QDockWidget>
 #include "gui/widgets/toprightinfowidget.h"
- // #include "util/logger/logger.h"
+#include "util/logger/logger.h"
 #include "gui/items/rectroi.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
@@ -53,26 +53,20 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     infoWidget = new TopRightInfoWidget(viewer);
     infoWidget->setVisible(false);
 
-    // // --- 添加日志控件 ---
-    // QDockWidget *logDockWidget = new QDockWidget("日志", this);
-    // m_logWidget = new LogWidget(this);
-    // logDockWidget->setWidget(m_logWidget);
-    // addDockWidget(Qt::BottomDockWidgetArea, logDockWidget);
+    // --- 添加日志控件 ---
+    QDockWidget *logDockWidget = new QDockWidget("日志", this);
+    m_logWidget = new LogWidget(this);
+    logDockWidget->setWidget(m_logWidget);
+    addDockWidget(Qt::BottomDockWidgetArea, logDockWidget);
 
     // 将 Appender 的信号连接到 LogWidget 的槽 ---
-    // connect(QtWidgetAppender::instance(), &QtWidgetAppender::messageAppended,
-    //         m_logWidget, &LogWidget::appendLogMessage, Qt::QueuedConnection);
-
+    connect(QtWidgetAppender::instance(), &QtWidgetAppender::messageAppended,
+            m_logWidget, QOverload<const QString &, int>::of(&LogWidget::appendLogMessage),
+            Qt::QueuedConnection);
     // 将 LogWidget 的级别更改信号连接到 MainWindow 的槽 ---
-    // connect(m_logWidget, &LogWidget::logLevelChanged, this, &MainWindow::onLogLevelChanged);
+    connect(m_logWidget, &LogWidget::logLevelChanged, this, &MainWindow::onLogLevelChanged);
 
-    // LogInfo("MainWindow UI initialized.");
-    // // --- 添加以下测试日志 ---
-    // LogDebug("This is a debug message.");
-    // LogWarn("This is a warning message.");
-    // LogInfo("This is a info message.");
-    // LogError("This is an error message.");
-    // LogFatal("This is a fatal message.");
+
 
     // --- 菜单和工具栏 ---
     QMenu *fileMenu = menuBar()->addMenu("文件");
@@ -212,6 +206,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
         // 启用自动窗宽
         infoWidget->setAutoWindowingChecked(true);
         viewer->setAutoWindowing(true);  // 确保 viewer 同步
+        // LogDebug("This is a debug message.");
+        // LogWarn("This is a warning message.");
+        // LogInfo("This is a info message.");
+        // LogError_("This is an error message.");
+        // LogFatal("This is a fatal message.");
     });
 
     // 手动调用 resizeEvent

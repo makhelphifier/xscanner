@@ -17,47 +17,20 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     QThread::currentThread()->setObjectName("MainThread");
-
     Logger::init("log4qt.properties");
-
-    LogInfo("====================================");
-    LogInfo(QString("Application starting... Logger initialized from properties."));
-    LogDebug("This is a DEBUG message.");
-    LogInfo("This is an INFO message.");
-    LogWarn("This is a WARN message.");
-    LogError("This is an ERROR message.");
-    LogFatal("This is a FATAL message.");
 
     MainWindow w;
     w.show();
 
     GongYTabWidget *colleagueWindow = new GongYTabWidget();
     colleagueWindow->setWindowTitle("扫描设备控制");
-    colleagueWindow->show();
+    // colleagueWindow->show();
 
-
-    // 创建 LogWidget 实例
-    LogWidget *logWindow = new LogWidget();
-    logWindow->setWindowTitle("实时日志窗口");
-    logWindow->show();
-
-    // 创建 QtWidgetAppender 实例
-    QtWidgetAppender *widgetAppender = new QtWidgetAppender(&a); // 'a' 作为父对象
-
-    // 创建一个布局 (格式)
-    Log4Qt::PatternLayout *layout = new Log4Qt::PatternLayout(Log4Qt::PatternLayout::TTCC_CONVERSION_PATTERN, widgetAppender);
-    layout->activateOptions();
-    widgetAppender->setLayout(layout);
-    widgetAppender->activateOptions();
-
-    // 关键：将 Appender (发射塔) 添加到 root logger
-    Log4Qt::Logger::rootLogger()->addAppender(widgetAppender);
-
-
-
-
-    LogInfo("Windows shown. Application entering event loop.");
-    LogInfo("LogWidget should now be receiving messages.");
+    Log4Qt::PatternLayout *pLayout = new Log4Qt::PatternLayout(&a); // 传递父对象
+    pLayout->setConversionPattern(QStringLiteral("[%d{yyyy-MM-dd HH:mm:ss.zzz}][%-20t][%l][%-5p] --> %m %n"));
+    pLayout->activateOptions();
+    QtWidgetAppender::instance()->setLayout(pLayout);
+    Log4Qt::Logger::rootLogger()->addAppender(QtWidgetAppender::instance());
 
     return a.exec();
 }

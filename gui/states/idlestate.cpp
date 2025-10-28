@@ -8,52 +8,104 @@
 #include <QWheelEvent>
 #include <QGraphicsItem>
 #include <QDebug>
+#include <QGraphicsLineItem>
+#include "util/logger/logger.h"
 
 IdleState::IdleState(DrawingStateMachine* machine, QObject *parent)
     : DrawingState(machine, parent) {}
 
 bool IdleState::handleMousePressEvent(QMouseEvent *event)
 {
+    log_("AAA --- IdleState::handleMousePressEvent ---");
+
     ImageViewer* viewer = machine()->viewer();
-    if (!viewer) return false;
+    if (!viewer) {
+        log_("ERROR: viewer() is null.");
+        return false;
+    }
+
+    // --- 诊断日志 1: 检查鼠标按键 ---
+    if (event->button() == Qt::LeftButton) {
+        log_("DIAG: Mouse button is Qt::LeftButton.");
+    } else if (event->button() == Qt::RightButton) {
+        log_("DIAG: Mouse button is Qt::RightButton.");
+    } else if (event->button() == Qt::MiddleButton) {
+        log_("DIAG: Mouse button is Qt::MiddleButton.");
+    } else {
+        log_("DIAG: Mouse button is OTHER.");
+    }
 
     QPointF scenePos = viewer->mapToScene(event->pos());
-    machine()->setLastMousePos(event->pos()); // 记录视图坐标用于可能的平移
-    machine()->setStartDragPos(scenePos);     // 记录场景坐标用于可能的绘制/拖动
+    machine()->setLastMousePos(event->pos());
+    machine()->setStartDragPos(scenePos);
 
+    // --- 诊断日志 2: 检查 itemAt ---
     QGraphicsItem* item = viewer->itemAt(event->pos());
+    if (item == nullptr) {
+        log_("DIAG: itemAt(pos) returned nullptr (clicked empty space).");
+    } else {
+        // 尝试获取 item 的类名
+        log_(QString("DIAG: itemAt(pos) returned an item. Type: %1").arg(item->type()));
+        log_(QString("DIAG: itemAt(pos) returned an item. Type QGraphicsRectItem: %1").arg(QGraphicsRectItem::Type));
+        log_(QString("DIAG: itemAt(pos) returned an item. Type Handle: %1").arg(Handle::Type));
+        // log_(QGraphicsLineItem::type());
+    }
+
     Handle* handle = qgraphicsitem_cast<Handle*>(item);
+    if(handle){
+        log_(QString("11111111111DIAG: qgraphicsitem_cast<Handle*>(item) is %1.")     .arg(handle ? "NOT null" : "null"));
+
+    }
+    log_(QString("DIAG: qgraphicsitem_cast<Handle*>(item) is %1.")
+             .arg(handle ? "NOT null" : "null"));
+
+    // --- 诊断日志 3: 检查 ROI 循环 ---
     ROI* roi = nullptr;
     QGraphicsItem* currentItem = item;
+    int loopCount = 0;
     while (currentItem && !roi) {
+        log_(QString("DIAG: Loop %1: Checking item of type %2 for ROI.")
+                 .arg(loopCount)
+                 .arg(currentItem->type()));
         roi = qgraphicsitem_cast<ROI*>(currentItem);
+        if (roi) {
+            log_("DIAG: Found ROI!");
+        }
         currentItem = currentItem->parentItem();
+        loopCount++;
     }
+    log_(QString("DIAG: After loop, roi variable is %1.")
+             .arg(roi ? "NOT null" : "null"));
+
+
+    // --- 检查逻辑分支 ---
 
     if (handle && event->button() == Qt::LeftButton) {
-        machine()->startDraggingHandle(handle, scenePos); // 通知状态机开始拖动句柄的数据记录
-        machine()->setState(DrawingStateMachine::DraggingHandle); // 切换状态
-        return true; // 事件已处理
-    } else if (roi && event->button() == Qt::LeftButton && item == roi) { // 点击ROI本体
-        qDebug() << "IdleState: Clicked on ROI Body, letting ROI handle drag.";
-        // ROI 自己处理拖动，状态机不介入，事件向下传递
-        return false;
-    } else if (event->button() == Qt::LeftButton) {
-        // 点击背景 -> 准备平移
-        machine()->setState(DrawingStateMachine::Panning); // 切换状态
-        qDebug() << "IdleState: Left click on background, entering Panning state.";
-        // 返回 false，让 QGraphicsView 的默认或自定义平移逻辑启动
-        return false;
-    } else if (event->button() == Qt::RightButton && viewer->isDrawingEnabled()) {
-        // 右键点击背景 -> 开始绘制矩形
-        machine()->startDrawingRect(scenePos); // 通知状态机创建ROI
-        machine()->setState(DrawingStateMachine::DrawingRect); // 切换状态
-        qDebug() << "IdleState: Right click, entering DrawingRect state.";
-        return true; // 事件已处理
+        log_("BRANCH: Entering Handle drag branch."); // <--- 分支 1
+        machine()->startDraggingHandle(handle, scenePos);
+        machine()->setState(DrawingStateMachine::DraggingHandle);
+        return true;
     }
 
-    return false; // 其他情况不处理
+    if (roi && event->button() == Qt::LeftButton && item == roi) { // 点击ROI本体
+        log_("BRANCH: Entering ROI drag branch (returning false)."); // <--- 分支 2
+        qDebug() << "IdleState: Clicked on ROI Body, letting ROI handle drag.";
+        return false;
+    }
+
+    if (event->button() == Qt::LeftButton) {
+        log_("BRANCH: Entering LeftButton (Panning) branch."); // <--- 分支 3 (你期望的)
+        log_("BBB"); // <--- 你的日志
+        machine()->setState(DrawingStateMachine::Panning);
+        qDebug() << "IdleState: Left click on background, entering Panning state.";
+        return true;
+    }
+
+    log_("BRANCH: No branch matched. Returning false."); // <--- 分支 4 (崩溃路径)
+    return false; // 其他情况（例如右键点击背景）
 }
+
+
 
 bool IdleState::handleMouseMoveEvent(QMouseEvent *event)
 {

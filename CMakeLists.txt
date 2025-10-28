@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(MyProject)
+project(xscanner)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -96,10 +96,8 @@ target_link_libraries(${PROJECT_NAME}
     Qt5::SerialPort
 )
 
-# -------------------------------------------------------------------
 # 关键修改：添加编译定义
 # 解决 log4qt 与 windows.h (由OpenCV引入) 的宏冲突 (如 LogError, min/max)
-# -------------------------------------------------------------------
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     WIN32_LEAN_AND_MEAN
     NOMINMAX
@@ -118,12 +116,6 @@ target_link_libraries(${PROJECT_NAME}
     "${CMAKE_CURRENT_SOURCE_DIR}/../sdk/log4qt/lib/log4qt.lib"
 )
 
-# 处理Debug版本的log4qt库
-if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_CONFIGURATION_TYPES MATCHES "Debug")
-    target_link_libraries(${PROJECT_NAME}
-        "${CMAKE_CURRENT_SOURCE_DIR}/../sdk/log4qt/lib/log4qt_d.lib"
-    )
-endif()
 
 # 设置运行时输出目录（统一到bin/Debug或bin/Release）
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -144,8 +136,8 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
             "${OPENCV_DLL}"
             "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            # 使用生成器表达式选择 Debug 或 Release 的 DLL
-            "$<IF:$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>,$<IF:$<BOOL:${LOG4QT_DLL_DEBUG}>,${LOG4QT_DLL_DEBUG},${LOG4QT_DLL_RELEASE}>,${LOG4QT_DLL_RELEASE}>"
+            # 只复制 Release 版本的 DLL
+            "${LOG4QT_DLL_RELEASE}"
             "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
     COMMENT "Copying config and DLLs to output directory"
 )

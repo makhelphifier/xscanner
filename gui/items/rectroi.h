@@ -26,6 +26,8 @@ public:
 
     virtual ~RectROI() override = default;
 
+    enum { Type = UserType + 3 };
+    int type() const override { return Type; }
 
     // --- 为 GenericDrawingState 提供的适配接口 ---
 

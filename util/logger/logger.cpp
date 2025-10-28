@@ -1,82 +1,68 @@
-// util/logger.cpp
-#include "logger.h"
+#include "log4qt/logger.h"
 #include "log4qt/propertyconfigurator.h"
+#include "log4qt/logmanager.h"
+#include "log4qt/loggingevent.h"
+#include "log4qt/level.h"
+
+#include "logger.h"
 #include <QCoreApplication>
 #include <QDir>
-#include <QDebug> // 用于在日志系统初始化失败时输出
+#include <QDateTime>
+#include <QThread>
+#include <QHash>
 
-// 初始化静态实例
-Logger* Logger::m_instance = nullptr;
-
-Logger* Logger::instance()
-{
-    // 注意：这里没有使用锁，假定 init() 会在主线程最开始被调用
-    // 如果实例还未创建，则创建它
-    if (m_instance == nullptr) {
-        // 使用 QCoreApplication::instance() 作为父对象，以便在应用退出时自动清理
-        m_instance = new Logger(QCoreApplication::instance());
-    }
-    return m_instance;
-}
-
-void Logger::init(const QString& configFilePath)
-{
-    // 确保实例已创建
-    (void)instance();
-
-    // 配置 log4qt
-    // 假定配置文件位于可执行文件旁边
-    QString fullPath = configFilePath;
-    if (QCoreApplication::instance()) {
-        fullPath = QCoreApplication::applicationDirPath() + QDir::separator() + configFilePath;
-    }
-
-    if (Log4Qt::PropertyConfigurator::configure(fullPath)) {
-        // 使用刚配置好的日志系统记录第一条信息
-        instance()->info(QString("Logger initialized successfully from: %1").arg(fullPath));
-    } else {
-        // 如果配置失败，log4qt 会自动在 stderr 打印错误
-        // 我们也使用 Qt 的 qWarning 再次强调
-        qWarning() << "Failed to initialize logger from: " << fullPath;
-    }
-}
+static Logger* g_logger_instance = nullptr;
 
 Logger::Logger(QObject *parent)
     : QObject(parent)
 {
-    // 获取 root logger
-    m_rootLogger = Log4Qt::Logger::rootLogger();
+    m_rootLogger = Log4Qt::LogManager::rootLogger();
 }
 
-Logger::~Logger()
+Logger::~Logger() {}
+
+Logger* Logger::instance()
 {
-    // log4qt 会在 QCoreApplication 销毁时自动关闭
-    if (m_rootLogger) {
-        m_rootLogger->info("Logger shutting down.");
+    if (!g_logger_instance) {
+        g_logger_instance = new Logger(QCoreApplication::instance());
     }
+    return g_logger_instance;
 }
 
-void Logger::debug(const QString& message)
+void Logger::init(const QString& confPath)
 {
-    m_rootLogger->debug(message);
+    Log4Qt::PropertyConfigurator::configure(confPath);
+    LogInfo("Logger system initialized successfully.");
 }
 
-void Logger::info(const QString& message)
+void Logger::log(const char* file, int line, const char* function, const QString& level, const QString& message)
 {
-    m_rootLogger->info(message);
-}
+    if (!m_rootLogger) return;
 
-void Logger::warn(const QString& message)
-{
-    m_rootLogger->warn(message);
-}
+    Log4Qt::Level qtLevel = Log4Qt::Level::fromString(level);
 
-void Logger::error(const QString& message)
-{
-    m_rootLogger->error(message);
-}
+    QString threadName;
+    QThread* currentThread = QThread::currentThread();
+    if (!currentThread->objectName().isEmpty()) {
+        threadName = currentThread->objectName();
+    } else {
+        Qt::HANDLE threadId = currentThread->currentThreadId();
+        threadName = QString("Thread-%1").arg(reinterpret_cast<quintptr>(threadId), 0, 16);
+    }
 
-void Logger::fatal(const QString& message)
-{
-    m_rootLogger->fatal(message);
+    qint64 timeStamp = QDateTime::currentDateTime().toMSecsSinceEpoch();
+
+    Log4Qt::MessageContext context(file, line, function);
+
+    Log4Qt::LoggingEvent event(m_rootLogger,
+                               qtLevel,
+                               message,
+                               QString(),
+                               QHash<QString, QString>(),
+                               threadName,
+                               timeStamp,
+                               context,
+                               QString());
+
+    m_rootLogger->callAppenders(event);
 }

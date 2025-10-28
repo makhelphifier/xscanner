@@ -40,7 +40,8 @@ public:
     const QList<ROI*>& rois() const; // ++ 新增 getter ++
     void setPen(const QPen& pen);
     void setHoverPen(const QPen& pen);
-
+    enum { Type = UserType + 1 };
+    int type() const override { return Type; }
     HandleType handleType() const { return m_type; }
 
     // --- QGraphicsItem 重写 ---

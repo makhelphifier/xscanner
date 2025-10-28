@@ -17,7 +17,7 @@ ImageViewer::ImageViewer(QWidget *parent)
     setScene(m_scene);
     setRenderHint(QPainter::Antialiasing);
     setRenderHint(QPainter::HighQualityAntialiasing);
-    // setDragMode(QGraphicsView::ScrollHandDrag);
+    setDragMode(QGraphicsView::NoDrag);
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     setRenderHint(QPainter::SmoothPixmapTransform, true);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -282,14 +282,13 @@ void ImageViewer::mouseReleaseEvent(QMouseEvent *event)
     updatePixelInfo(mapToScene(event->pos())); // 总是更新像素信息
 }
 
-// ++ 新增：实现视图操作方法 ++
+
 void ImageViewer::translateView(const QPoint& delta)
 {
     // 操作滚动条实现平移
     QScrollBar *hBar = horizontalScrollBar();
     QScrollBar *vBar = verticalScrollBar();
-
-    // ++ 添加空指针检查 ++
+    qDebug()<<"ss";
     if (hBar && vBar) {
         hBar->setValue(hBar->value() - delta.x());
         vBar->setValue(vBar->value() - delta.y());

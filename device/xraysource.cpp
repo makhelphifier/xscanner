@@ -156,7 +156,7 @@ void XraySource::onProcessCommands()
     // 定期获取状态
     if (++timeCount > m_gettingStatusInterval) {
         timeCount = 0;
-        QMetaObject::invokeMethod(m_serialPortComm, "getStatus", Qt::QueuedConnection);
+        // QMetaObject::invokeMethod(m_serialPortComm, "getStatus", Qt::QueuedConnection);
     }
 
     // 继续处理循环

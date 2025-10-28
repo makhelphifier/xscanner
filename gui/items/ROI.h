@@ -68,6 +68,8 @@ public:
      */
     explicit ROI(const QPointF& pos, const QSizeF& size, QGraphicsItem* parent = nullptr);
     virtual ~ROI() override = default;
+    enum { Type = UserType + 2 };
+    int type() const override { return Type; }
 
     // --- 公有接口 (Public API) ---
     // 公共接口供状态机调用
