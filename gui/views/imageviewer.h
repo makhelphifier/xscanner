@@ -34,8 +34,9 @@ public:
     void updatePixmap(const QPixmap &pixmap);
     void setScale(qreal scale);
     void resetView();
-    void setDrawingState(DrawingState* state);
-
+    void translateView(const QPoint& delta);
+    void scaleView(qreal factor);
+    void panFinished(); // 平移结束后的处理
     // 窗宽窗位相关接口
     void setWindowLevel(int width, int level);
     void setAutoWindowing(bool enabled);
@@ -43,15 +44,21 @@ public:
     int bitDepth() const { return m_bitDepth; }  // 获取位深
     int currentWindowWidth() const ;  // 获取当前窗宽
     int currentWindowLevel() const ;  // 获取当前窗位
+    // ++ 新增：绘图使能控制 ++
+    bool isDrawingEnabled() const;
+    void setDrawingEnabled(bool enabled);
 
-Q_SIGNALS:
+    // ++ 新增：像素信息更新方法声明 ++
+    void updatePixelInfo(const QPointF &scenePos);
+    int getPixelValue(int x, int y) const; // 确保声明
+signals:
     void scaleChanged(qreal scale);  // 原有：缩放变化信号
 
     // 信号，用于通知外部（MainWindow 更新 UI，如 infoWidget）
     void windowLevelChanged(int width, int level);  // 窗宽窗位变化
     void autoWindowingToggled(bool enabled);  // 自动窗宽窗位切换
     void pixelInfoChanged(int x, int y, int value);  // 鼠标位置的像素信息（坐标 + 灰度值，value 为 -1 表示 N/A）
-
+    void viewZoomed(qreal factor);
 public slots:
     void onWindowChanged(int value);  // 从 UI 滑动条接收窗宽变化
     void onLevelChanged(int value);   // 从 UI 滑动条接收窗位变化
@@ -71,8 +78,6 @@ private:
     qreal m_initialScale;
     QGraphicsRectItem *m_borderItem;
     void fitToView();
-    DrawingStateMachine* m_drawingStateMachine;
-
     // 图像数据和处理状态（迁移自 MainWindow）
     QImage m_originalImage;  // 原始图像
     int m_bitDepth = 8;      // 位深（8 或 16）
@@ -81,10 +86,11 @@ private:
     bool m_autoWindowing = false;  // 自动窗宽窗位状态
 
 
-    void updatePixelInfo(const QPointF &scenePos);  // 更新像素信息（发射信号）
-    int getPixelValue(int x, int y) const;          // 获取像素灰度值
     void calculateAutoWindowLevel(int &min, int &max);           // 计算自动窗宽窗位
-
+    // ++ 新增：状态机指针 ++
+    DrawingStateMachine* m_drawingStateMachine;
+    // ++ 新增：绘图使能标志 ++
+    bool m_drawingEnabled;
 };
 
 #endif // IMAGEVIEWER_H

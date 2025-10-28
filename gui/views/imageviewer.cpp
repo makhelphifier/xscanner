@@ -11,13 +11,13 @@
 
 
 ImageViewer::ImageViewer(QWidget *parent)
-    : QGraphicsView(parent), m_initialScale(1.0), m_pixmapItem(nullptr), m_borderItem(nullptr)
+    : QGraphicsView(parent), m_initialScale(1.0), m_pixmapItem(nullptr), m_borderItem(nullptr), m_drawingEnabled(true)
 {
     m_scene = new QGraphicsScene(this);
     setScene(m_scene);
     setRenderHint(QPainter::Antialiasing);
     setRenderHint(QPainter::HighQualityAntialiasing);
-    setDragMode(QGraphicsView::ScrollHandDrag);
+    // setDragMode(QGraphicsView::ScrollHandDrag);
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     setRenderHint(QPainter::SmoothPixmapTransform, true);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -247,60 +247,98 @@ void ImageViewer::onLevelChanged(int value)
     emit autoWindowingToggled(false);
 }
 
+// ++ 修改：事件处理函数，转发给状态机 ++
 void ImageViewer::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() != Qt::LeftButton) {
-        QGraphicsView::mousePressEvent(event);
-        return;
+    if (m_drawingStateMachine->handleMousePressEvent(event)) {
+        // 事件已被状态机消耗
+    } else {
+        // 如果状态机未消耗（例如进入 Panning 或 Idle 点击背景），调用基类处理（如果需要的话）
+        // 注意：如果 setDragMode(NoDrag)，基类不会处理平移
+        QGraphicsView::mousePressEvent(event); // 保留以便基类处理可能的其他交互
     }
-
-    if (m_originalImage.isNull()) {
-        QGraphicsView::mousePressEvent(event);
-        return;
-    }
-
-    // 将事件传递给状态机
-    m_drawingStateMachine->handleMousePress(event);
-    if (event->isAccepted()) {
-        return;
-    }
-
-    QPointF scenePos = mapToScene(event->pos());
-
-    updatePixelInfo(scenePos);
+    updatePixelInfo(mapToScene(event->pos())); // 总是更新像素信息
 }
-
 
 void ImageViewer::mouseMoveEvent(QMouseEvent *event)
 {
-    QPointF scenePos = mapToScene(event->pos());
-    updatePixelInfo(scenePos);  // 始终更新像素信息
-
-    // 将事件传递给状态机
-    m_drawingStateMachine->handleMouseMove(event);
-    if (event->isAccepted()) {
-        return;
+    if (m_drawingStateMachine->handleMouseMoveEvent(event)) {
+        // 事件已被状态机消耗
+    } else {
+        // 如果状态机未消耗（例如 Idle 或 ROI 内部处理拖动），调用基类处理
+        QGraphicsView::mouseMoveEvent(event);
     }
+    updatePixelInfo(mapToScene(event->pos())); // 总是更新像素信息
 }
 
 void ImageViewer::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (event->button() != Qt::LeftButton || m_originalImage.isNull()) {
+    if (m_drawingStateMachine->handleMouseReleaseEvent(event)) {
+        // 事件已被状态机消耗
+    } else {
+        // 如果状态机未消耗，调用基类处理
         QGraphicsView::mouseReleaseEvent(event);
-        return;
     }
-
-    // 将事件传递给状态机
-    m_drawingStateMachine->handleMouseRelease(event);
-    if (event->isAccepted()) {
-        return;
-    }
-
-    QPointF scenePos = mapToScene(event->pos());
-
-    updatePixelInfo(scenePos);
+    updatePixelInfo(mapToScene(event->pos())); // 总是更新像素信息
 }
 
+// ++ 新增：实现视图操作方法 ++
+void ImageViewer::translateView(const QPoint& delta)
+{
+    // 操作滚动条实现平移
+    QScrollBar *hBar = horizontalScrollBar();
+    QScrollBar *vBar = verticalScrollBar();
+
+    // ++ 添加空指针检查 ++
+    if (hBar && vBar) {
+        hBar->setValue(hBar->value() - delta.x());
+        vBar->setValue(vBar->value() - delta.y());
+        qDebug() << "ImageViewer::translateView by" << delta; // qDebug 可能会很多，先注释掉
+    } else {
+        qWarning() << "ImageViewer::translateView - Scroll bar(s) are null!";
+    }
+}
+
+void ImageViewer::scaleView(qreal factor)
+{
+    if (factor <= 0) return;
+
+    // ++ 使用正确的类型 QGraphicsView::ViewportAnchor ++
+    QGraphicsView::ViewportAnchor oldAnchor = transformationAnchor();
+
+    setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+    scale(factor, factor);
+    setTransformationAnchor(oldAnchor); // 恢复
+    qDebug() << "ImageViewer::scaleView by factor" << factor;
+    emit viewZoomed(factor);
+}
+
+void ImageViewer::panFinished()
+{
+    // 平移结束后可能需要的操作
+    qDebug() << "ImageViewer::panFinished";
+    // 例如，如果使用 QGraphicsView::ScrollHandDrag，可能需要设置回 NoDrag
+    // setDragMode(QGraphicsView::NoDrag);
+}
+
+// ++ 新增：实现绘图使能方法 ++
+bool ImageViewer::isDrawingEnabled() const
+{
+    return m_drawingEnabled;
+}
+
+void ImageViewer::setDrawingEnabled(bool enabled)
+{
+    if (m_drawingEnabled != enabled) {
+        m_drawingEnabled = enabled;
+        qDebug() << "Drawing enabled:" << enabled;
+        // 如果当前正在绘制，可能需要取消
+        if (!enabled && m_drawingStateMachine->currentState() == DrawingStateMachine::DrawingRect) {
+            m_drawingStateMachine->finishDrawingRect(); // 强制结束
+            m_drawingStateMachine->setState(DrawingStateMachine::Idle);
+        }
+    }
+}
 
 // 私有方法 - 像素信息更新
 void ImageViewer::updatePixelInfo(const QPointF &scenePos)
@@ -341,9 +379,4 @@ int ImageViewer::currentWindowWidth() const
 int ImageViewer::currentWindowLevel() const
 {
     return m_windowLevel;
-}
-
-void ImageViewer::setDrawingState(DrawingState *state)
-{
-    m_drawingStateMachine->setState(state);
 }

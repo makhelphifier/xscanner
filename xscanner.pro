@@ -13,6 +13,10 @@ SOURCES += \
     gui/items/ROI.cpp \
     gui/items/handle.cpp \
     gui/items/rectroi.cpp \
+    gui/states/dragginghandlestate.cpp \
+    gui/states/drawingrectstate.cpp \
+    gui/states/idlestate.cpp \
+    gui/states/panningstate.cpp \
     gui/widgets/logwidget.cpp \
     service/imageprocessor.cpp \
     # GUI - Views
@@ -37,7 +41,11 @@ HEADERS += \
     gui/items/ROI.h \
     gui/items/handle.h \
     gui/items/rectroi.h \
+    gui/states/dragginghandlestate.h \
+    gui/states/drawingrectstate.h \
     gui/states/genericdrawingstate.h \
+    gui/states/idlestate.h \
+    gui/states/panningstate.h \
     gui/widgets/logwidget.h \
     service/imageprocessor.h \
     # GUI - Views

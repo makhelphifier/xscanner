@@ -6,12 +6,20 @@
 #include <QGraphicsObject>
 #include <QPen>
 #include <QPainterPath>
-#include "roi.h" // 包含 roi.h 以使用 HandleType 枚举
-
+#include <QVector>
+#include <QMap>
+#include <QPair> // 用于 QPair
 // 前向声明
 class ROI;
 class QGraphicsSceneMouseEvent;
-
+// 定义句柄类型枚举
+enum class HandleType {
+    Scale,
+    Rotate,
+    ScaleRotate,
+    Translate, // 可能需要
+    Free       // 可能需要
+};
 /**
  * @brief 可拖动的句柄项，用于控制ROI。
  *
@@ -29,7 +37,7 @@ public:
     // --- 公共接口 ---
     void connectROI(ROI* roi);
     void disconnectROI(ROI* roi);
-
+    const QList<ROI*>& rois() const; // ++ 新增 getter ++
     void setPen(const QPen& pen);
     void setHoverPen(const QPen& pen);
 
@@ -38,7 +46,7 @@ public:
     // --- QGraphicsItem 重写 ---
     QRectF boundingRect() const override;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
-
+    void setPosInROI(const QPointF& relativePos, const QSizeF& roiSize);
 protected:
     // --- 事件处理 ---
     void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;

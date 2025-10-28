@@ -89,7 +89,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     toolBar->addAction(selectAction);
     toolGroup->addAction(selectAction);
     connect(selectAction, &QAction::triggered, this, [this]() {
-        viewer->setDrawingState(nullptr); // 清除任何绘图状态
+        // viewer->setDrawingState(nullptr); // 清除任何绘图状态
     });
 
     // 窗宽窗位工具
@@ -113,7 +113,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     toolGroup->addAction(rectAction);
     connect(rectAction, &QAction::triggered, [this]() {
 
-        viewer->setDrawingState(new GenericDrawingState<RectROI>(viewer)); // <<<--- 将 AnnotationRectItem 替换为 RectROI
+        // viewer->setDrawingState(new GenericDrawingState<RectROI>(viewer)); // <<<--- 将 AnnotationRectItem 替换为 RectROI
     });
 
     // 椭圆工具
@@ -122,7 +122,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // toolBar->addAction(ellipseAction);
     toolGroup->addAction(ellipseAction);
     connect(ellipseAction, &QAction::triggered, [this]() {
-        viewer->setDrawingState(new GenericDrawingState<AnnotationEllipseItem>(viewer));
+        // viewer->setDrawingState(new GenericDrawingState<AnnotationEllipseItem>(viewer));
     });
 
     // 点测量工具

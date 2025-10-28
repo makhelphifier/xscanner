@@ -4,36 +4,36 @@
 #include <QGraphicsObject>
 #include <QPen>
 #include <QList>
-
+#include "handle.h"
 class Handle;
 class QGraphicsSceneMouseEvent;
 class QPainter;
 class QStyleOptionGraphicsItem;
 class QWidget;
 
-
-// --- 辅助类型定义 (Helper Types) ---
-
-/**
- * @brief 定义句柄（Handle）的功能类型
- */
-enum class HandleType {
-    Free,
-    Translate,
-    Scale,
-    Rotate,
-    ScaleRotate,
-    RotateFree
-};
+#include <QtMath>
 
 /**
  * @brief 用于保存和恢复ROI的核心状态
  */
+// 前向声明
+class Handle;
+
+// ++ 定义一个结构体来保存 ROI 的核心状态 ++
 struct ROIState {
     QPointF pos;
     QSizeF size;
-    qreal angle = 0.0;
+    qreal angle = 0.0; // 角度（度）
+
+    bool operator!=(const ROIState& other) const {
+        return pos != other.pos || size != other.size || !qFuzzyCompare(angle, other.angle);
+    }
+    bool operator==(const ROIState& other) const {
+        return !(*this != other);
+    }
 };
+// 告诉 Qt 如何存储/加载 ROIState，以便 QVariant 可以使用
+Q_DECLARE_METATYPE(ROIState)
 
 /**
  * @brief 存储单个句柄的完整信息
@@ -70,7 +70,9 @@ public:
     virtual ~ROI() override = default;
 
     // --- 公有接口 (Public API) ---
-
+    // 公共接口供状态机调用
+    void handleDragStarted(Handle* handle);
+    void handleDragFinished(Handle* handle);
     // 状态访问 (State Accessors)
     QPointF pos() const { return m_state.pos; }
     QSizeF size() const { return m_state.size; }
@@ -157,6 +159,8 @@ signals:
      * @brief 当用户请求移除ROI时（例如通过右键菜单）发射此信号
      */
     void removeRequested(ROI* sender);
+private slots:
+    void stateChangeFinished();
 
 
 protected:
@@ -183,7 +187,6 @@ protected:
      */
     void stateChanged(bool finish = true);
 
-
 private:
     /**
      * @brief 根据当前状态更新所有句柄的位置
@@ -204,6 +207,7 @@ private:
 private:
     // --- 核心数据成员 ---
     ROIState m_state;              // 当前状态
+    ROIState m_lastState;   // 上一次发出信号时的状态
     ROIState m_preMoveState;       // 移动前的状态，用于取消操作
 
     // 外观

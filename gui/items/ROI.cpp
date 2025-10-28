@@ -11,7 +11,7 @@
 #include <QtMath>       // 用于qPow
 #include <QGraphicsScene> // stateChanged中需要用到
 #include <QTransform>
-
+#include <QDebug>
 
 /**
  * @brief ROI 类的构造函数
@@ -167,25 +167,44 @@ void ROI::setAngle(qreal angle, bool update, bool finish)
  *
  * @param finish 如果为true，则发射 regionChangeFinished 信号
  */
+// / ++ 确认：stateChanged 和 stateChangeFinished 实现无误 ++
 void ROI::stateChanged(bool finish)
 {
-    // 告知场景边界框可能已改变
-    if (scene()) {
-        scene()->update(mapToScene(boundingRect()).boundingRect());
+    // 检查状态是否真的改变
+    bool changed = (m_state != m_lastState);
+
+    if (changed) {
+        prepareGeometryChange(); // 准备更新外观和包围盒
+        // 更新所有句柄的位置
+        for (const auto& handleInfo : qAsConst(m_handles)) {
+            if (handleInfo.item) {
+                // QPointF localPos = handleInfo.pos; // 相对坐标 (0-1)
+                // QPointF roiCoordPos = QPointF(localPos.x() * m_state.size.width(),
+                //                             localPos.y() * m_state.size.height());
+                // handleInfo.item->setPos(roiCoordPos); // 更新句柄在ROI内的位置
+                // 注意：Handle 的 setPos 需要是 ROI 坐标系！
+                handleInfo.item->setPosInROI(handleInfo.pos, m_state.size); // 假设 Handle 有此方法
+            }
+        }
+        update(); // 请求重绘
+        m_lastState = m_state; // 更新 lastState
+        emit regionChanged(this); // 发送 regionChanged 信号
+        qDebug() << "ROI stateChanged - regionChanged emitted";
     }
-
-    // 更新所有句柄的位置（此函数将在下一步实现）
-    updateHandles();
-
-    // 触发重绘
-    QGraphicsObject::update();
-
-    // 发射信号，通知外部ROI已改变
-    emit regionChanged(this);
 
     if (finish) {
-        emit regionChangeFinished(this);
+        stateChangeFinished();
     }
+}
+
+void ROI::stateChangeFinished()
+{
+    // 检查 m_isMoving 是为了防止非用户交互（如 setState）意外触发 finish 信号？
+    // 但状态机驱动下，finish 只应在 release 时触发
+    // if (m_isMoving) { // 可能需要移除这个判断
+    emit regionChangeFinished(this); // 发送 regionChangeFinished 信号
+    qDebug() << "ROI stateChangeFinished - regionChangeFinished emitted";
+    // }
 }
 
 /**
@@ -305,96 +324,68 @@ void ROI::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
     update(); // 触发重绘以恢复颜色
 }
 
-/**
- * @brief 鼠标按下事件
- */
+// ++ 修改：鼠标按下事件 ++
 void ROI::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
-    if (event->button() != Qt::LeftButton) {
-        event->ignore();
-        return;
-    }
-
-    m_dragMode = DragMode::None;
-    const Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
-
-    if (m_movable && modifiers == Qt::NoModifier) {
-        m_dragMode = DragMode::Translate;
-    } else if (m_rotatable && modifiers == Qt::AltModifier) {
-        m_dragMode = DragMode::Rotate;
-    } else if (m_resizable && modifiers == Qt::ShiftModifier) {
-        m_dragMode = DragMode::Scale;
-    }
-
-    if (m_dragMode != DragMode::None) {
-        m_isMoving = true;
-        m_dragStartPos = event->scenePos();
-        m_preMoveState = m_state; // 保存开始前的状态
-        emit regionChangeStarted(this);
-        event->accept();
+    if (event->button() == Qt::LeftButton) {
+        qDebug() << "ROI mousePressEvent (Left Button)";
+        // 让状态机 (IdleState) 决定如何处理对 ROI 本体的点击
+        // 如果 ROI 本身不可移动，直接 accept 可能更好
+        // 如果 ROI 本身可移动，返回 false 让 IdleState 判断
+        event->ignore(); // <<-- 改为 ignore() 或不调用 accept()
+            // 这样事件会冒泡到 ImageViewer，然后 IdleState 会收到
+            // IdleState 根据 itemAt 的结果判断是 ROI 还是背景
+            // 但 IdleState 当前设计是让 ROI 自己处理本体拖动
+        // 如果希望 ROI 内部处理拖动，则需要：
+        /*
+        if (flags() & QGraphicsItem::ItemIsMovable) { // 检查 ROI 是否可移动
+            m_isMoving = true;
+            m_preMoveState = m_state;
+            m_dragStartPos = event->scenePos(); // 需要添加 m_dragStartPos 成员
+            emit regionChangeStarted(this);
+            qDebug() << "ROI started moving itself.";
+            event->accept();
+        } else {
+            event->ignore(); // 不可移动则忽略
+        }
+        */
     } else {
-        event->ignore();
+        // 保留其他按钮（如右键菜单）的处理
+        QGraphicsObject::mousePressEvent(event);
     }
 }
 
-/**
- * @brief 鼠标移动事件
- */
+// ++ 确认/修改：鼠标移动事件 (如果 ROI 内部处理本体拖动) ++
 void ROI::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
-    if (!m_isMoving || m_dragMode == DragMode::None) {
-        event->ignore();
-        return;
-    }
-
-    QPointF currentPos = event->scenePos();
-    QPointF delta = currentPos - m_dragStartPos;
-
-    switch (m_dragMode) {
-    case DragMode::Translate: {
-        // 新位置 = 初始位置 + 鼠标移动的偏移量
+    if (m_isMoving && (event->buttons() & Qt::LeftButton)) { // 检查是否由左键触发的移动
+        // 这是 ROI 本体拖动的逻辑
+        QPointF delta = event->scenePos() - m_dragStartPos;
         QPointF newPos = m_preMoveState.pos + delta;
-        setPos(newPos, true, false); // 连续更新，但不“完成”
-        break;
+
+        // TODO: 添加边界检查 (如果需要)
+        // ...
+
+        // 直接设置位置，但不立即触发 finish 信号
+        setPos(newPos, true, false);
+        event->accept();
+    } else {
+        QGraphicsObject::mouseMoveEvent(event); // 其他情况交给基类
     }
-    case DragMode::Rotate: {
-        const qreal rotateSpeed = 0.5;
-        // 新角度 = 初始角度 - 鼠标水平移动的距离
-        qreal newAngle = m_preMoveState.angle - delta.x() * rotateSpeed;
-        setAngle(newAngle, true, false);
-        break;
-    }
-    case DragMode::Scale: {
-        // 使用指数函数实现更平滑的缩放
-        // 向上拖动缩小，向下拖动放大
-        const qreal scaleSpeed = -0.01;
-        qreal scaleFactor = qPow(2.0, delta.y() * scaleSpeed);
-        QSizeF newSize = m_preMoveState.size * scaleFactor;
-        setSize(newSize, true, false);
-        break;
-    }
-    default:
-        break;
-    }
-    event->accept();
 }
 
-/**
- * @brief 鼠标释放事件
- */
+// ++ 确认/修改：鼠标释放事件 (如果 ROI 内部处理本体拖动) ++
 void ROI::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
     if (m_isMoving && event->button() == Qt::LeftButton) {
         m_isMoving = false;
-        m_dragMode = DragMode::None;
-        emit regionChangeFinished(this); // 发射“完成”信号
+        stateChangeFinished(); // 拖动结束，发送信号
+        qDebug() << "ROI finished moving itself.";
         event->accept();
     } else {
-        event->ignore();
+        QGraphicsObject::mouseReleaseEvent(event);
     }
 }
-
-
 
 /**
  * @brief 由Handle类调用，用于在拖动句柄开始时保存ROI的初始状态。
@@ -523,4 +514,21 @@ int ROI::indexOfHandle(Handle* handle) const
     return -1;
 }
 
+// ++ 实现：被状态机调用的方法 ++
+void ROI::handleDragStarted(Handle* handle)
+{
+    Q_UNUSED(handle); // 可能不需要区分是哪个handle
+    m_isMoving = true; // 标记开始移动
+    m_preMoveState = m_state; // 保存初始状态
+    emit regionChangeStarted(this); // 发出开始信号
+    qDebug() << "ROI notified: Handle drag started";
+}
 
+void ROI::handleDragFinished(Handle* handle)
+{
+    Q_UNUSED(handle);
+    m_isMoving = false; // 标记结束移动
+    // 注意：stateChangeFinished 应该在 movePoint(finish=true) 中调用
+    // emit regionChangeFinished(this); // 这里不需要重复发射
+    qDebug() << "ROI notified: Handle drag finished";
+}

@@ -1,9 +1,11 @@
 // handle.cpp
 
 #include "handle.h"
+#include "roi.h" // 需要包含 ROI 头文件
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
 #include <QtMath>
+#include <QDebug> // 用于调试
 
 // 不同类型句柄的形状定义（边数，起始角度）
 static const QMap<HandleType, QPair<int, qreal>> handle_shapes = {
@@ -16,11 +18,13 @@ static const QMap<HandleType, QPair<int, qreal>> handle_shapes = {
 Handle::Handle(HandleType type, QGraphicsItem* parent)
     : QGraphicsObject(parent), m_type(type)
 {
-    // !!! 关键：设置此标志可使句柄忽略场景的缩放和旋转变换，保持固定的屏幕像素大小
     setFlag(QGraphicsItem::ItemIgnoresTransformations);
     setAcceptHoverEvents(true);
-
+    m_pen = QPen(Qt::cyan);        // 设置默认画笔
+    m_hoverPen = QPen(Qt::yellow); // 设置默认悬停画笔
+    m_currentPen = m_pen;          // 初始画笔
     buildPath();
+    setZValue(10); // 确保 Handle 在 ROI 之上
 }
 
 void Handle::connectROI(ROI* roi)
@@ -34,7 +38,11 @@ void Handle::disconnectROI(ROI* roi)
 {
     m_rois.removeAll(roi);
 }
-
+// ++ 新增：rois() getter 实现 ++
+const QList<ROI*>& Handle::rois() const
+{
+    return m_rois;
+}
 void Handle::setPen(const QPen& pen)
 {
     m_pen = pen;
@@ -144,7 +152,15 @@ void Handle::buildPath()
     }
     m_path.closeSubpath();
 }
-
+// ++ 新增：setPosInROI 实现 ++
+void Handle::setPosInROI(const QPointF& relativePos, const QSizeF& roiSize)
+{
+    // 计算在 ROI 坐标系中的绝对位置
+    QPointF roiCoordPos(relativePos.x() * roiSize.width(),
+                        relativePos.y() * roiSize.height());
+    // 调用 QGraphicsItem::setPos 设置相对于父项(ROI)的位置
+    setPos(roiCoordPos);
+}
 
 
 
