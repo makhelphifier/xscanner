@@ -28,7 +28,7 @@ public:
     enum StateType {
         Idle,
         Panning,
-        DrawingRect,
+        Drawing,
         DraggingHandle
         // DraggingROI // 如果需要
     };
@@ -43,6 +43,7 @@ public:
     bool handleMouseReleaseEvent(QMouseEvent *event);
     bool handleWheelEvent(QWheelEvent *event);
 
+    void setState(DrawingState* newState, bool temporary = false);
     // 状态转换
     void setState(StateType type);
     StateType currentState() const; // 返回当前状态类型
@@ -54,9 +55,7 @@ public:
     void setStartDragPos(const QPointF& pos) { m_startDragPos = pos; }
     QPointF startDragPos() const { return m_startDragPos; }
 
-    void startDrawingRect(const QPointF& scenePos);
-    void updateDrawingRect(const QPointF& scenePos);
-    void finishDrawingRect();
+
 
     void startDraggingHandle(Handle* handle, const QPointF& scenePos);
     void updateDraggingHandle(const QPointF& scenePos);
@@ -68,17 +67,16 @@ signals:
 private:
     QPointer<ImageViewer> m_viewer;
     DrawingState* m_currentStatePtr; // 当前状态对象指针
-
+    bool m_currentStateIsTemporary = false;
     // 持有所有状态的实例
     IdleState* m_idleState;
     PanningState* m_panningState;
-    DrawingRectState* m_drawingRectState;
     DraggingHandleState* m_draggingHandleState;
 
     // 状态相关临时数据 (由状态类通过状态机接口访问/修改)
     QPoint m_lastMousePos;        // 视图坐标，用于平移计算
     QPointF m_startDragPos;       // 场景坐标，用于绘制/拖动计算
-    RectROI* m_currentlyDrawingRoi; // 正在绘制的ROI
+    // RectROI* m_currentlyDrawingRoi; // 正在绘制的ROI
     Handle* m_currentlyDraggingHandle; // 正在拖动的Handle
     ROI* m_targetRoi;             // 拖动Handle时关联的ROI
 };

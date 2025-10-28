@@ -52,6 +52,7 @@ ROI::ROI(const QPointF& pos, const QSizeF& size, QGraphicsItem* parent)
     //    - ItemSendsGeometryChanges: 当项的位置、变换等改变时发送通知
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges);
+    setFlag(QGraphicsItem::ItemIsMovable);
     // 启用鼠标悬停事件
     setAcceptHoverEvents(true);
 }
@@ -88,7 +89,7 @@ void ROI::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidg
 
     painter->setRenderHint(QPainter::Antialiasing, true);
     painter->setPen(m_currentPen);
-
+    painter->setBrush(QColor(255, 255, 0, 255)); // 1/255 的透明度
     // 我们在局部坐标系 (0,0) 到 (width, height) 的范围内绘制一个矩形
     painter->drawRect(boundingRect());
 }
@@ -332,8 +333,18 @@ void ROI::mousePressEvent(QGraphicsSceneMouseEvent* event)
         // 让状态机 (IdleState) 决定如何处理对 ROI 本体的点击
         // 如果 ROI 本身不可移动，直接 accept 可能更好
         // 如果 ROI 本身可移动，返回 false 让 IdleState 判断
-        event->ignore(); // <<-- 改为 ignore() 或不调用 accept()
-            // 这样事件会冒泡到 ImageViewer，然后 IdleState 会收到
+        // ++ 替换为以下逻辑 ++
+        if (flags() & QGraphicsItem::ItemIsMovable) { // 检查 ROI 是否可移动
+            m_isMoving = true;
+            m_preMoveState = m_state;
+            m_dragStartPos = event->scenePos(); // 记录场景位置
+            emit regionChangeStarted(this);
+            qDebug() << "ROI started moving itself.";
+            event->accept();
+        } else {
+            event->ignore(); // 不可移动则忽略
+        }
+        // 这样事件会冒泡到 ImageViewer，然后 IdleState 会收到
             // IdleState 根据 itemAt 的结果判断是 ROI 还是背景
             // 但 IdleState 当前设计是让 ROI 自己处理本体拖动
         // 如果希望 ROI 内部处理拖动，则需要：
@@ -362,9 +373,6 @@ void ROI::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         // 这是 ROI 本体拖动的逻辑
         QPointF delta = event->scenePos() - m_dragStartPos;
         QPointF newPos = m_preMoveState.pos + delta;
-
-        // TODO: 添加边界检查 (如果需要)
-        // ...
 
         // 直接设置位置，但不立即触发 finish 信号
         setPos(newPos, true, false);
@@ -402,6 +410,7 @@ void ROI::handleMoveStarted()
  * @param scenePos 句柄在场景坐标系中的新位置
  * @param finish 拖动是否结束
  */
+// ROI.cpp 中的 movePoint 函数（替换原有）
 void ROI::movePoint(Handle* handle, const QPointF& scenePos, bool finish)
 {
     // 1. 找到被拖动句柄的信息
@@ -409,8 +418,8 @@ void ROI::movePoint(Handle* handle, const QPointF& scenePos, bool finish)
     if (handleIndex < 0) return;
     const HandleInfo& handleInfo = m_handles[handleIndex];
 
-    // 2. 将句柄的新场景坐标转换为ROI父项的坐标系
-    QPointF parentPos = mapFromScene(scenePos);
+    // 2. 将鼠标场景坐标转换为ROI的本地未变换坐标系（自动处理旋转、中心）
+    QPointF p1_local = mapFromScene(scenePos);  // 这替换了原有手动转换逻辑，确保正确
 
     // 3. 获取变换前的状态
     ROIState newState = m_preMoveState;
@@ -418,87 +427,68 @@ void ROI::movePoint(Handle* handle, const QPointF& scenePos, bool finish)
     // 4. 根据句柄类型执行不同的变换逻辑
     switch (handleInfo.type) {
     case HandleType::Scale: {
-        // --- 缩放逻辑 ---
-        // a. 计算缩放中心点和句柄在“变换前”的局部坐标
-        QPointF centerLocal(handleInfo.center.x() * newState.size.width(), handleInfo.center.y() * newState.size.height());
-        QPointF handleLocal(handleInfo.pos.x() * newState.size.width(), handleInfo.pos.y() * newState.size.height());
+        // 1. 获取锚点在本地坐标系中的位置
+        QPointF centerRelPos = handleInfo.center;
+        QPointF anchor_local(centerRelPos.x() * newState.size.width(),
+                             centerRelPos.y() * newState.size.height());
 
-        // b. 将句柄新位置(parentPos)也转换到ROI的局部坐标系（无旋转）
-        QTransform t;
-        t.rotate(-newState.angle);
-        QPointF p1_local = t.map(parentPos - newState.pos);
+        // 2. 从固定的锚点和移动的鼠标点创建新的本地矩形
+        QRectF newLocalRect;
+        newLocalRect.setCoords(anchor_local.x(), anchor_local.y(),  // 固定点
+                               p1_local.x(), p1_local.y());       // 鼠标点（本地未变换）
 
-        // c. 计算从中心点到句柄的原始向量和新向量
-        QPointF lp0 = handleLocal - centerLocal;
-        QPointF lp1 = p1_local - centerLocal;
+        // 3. 归一化 (处理反向拖动)
+        newLocalRect = newLocalRect.normalized();
 
-        // d. 计算缩放比例
-        qreal sx = (qFuzzyIsNull(lp0.x())) ? 1.0 : lp1.x() / lp0.x();
-        qreal sy = (qFuzzyIsNull(lp0.y())) ? 1.0 : lp1.y() / lp0.y();
+        // 4. 从新矩形中获取新的尺寸和新的本地左上角位置
+        QSizeF newSize = newLocalRect.size();
+        QPointF newLocalTopLeft = newLocalRect.topLeft();
 
-        // e. 计算新尺寸，并修正负值
-        QSizeF newSize(newState.size.width() * sx, newState.size.height() * sy);
-        if (newSize.width() < 0) newSize.setWidth(-newSize.width());
-        if (newSize.height() < 0) newSize.setHeight(-newSize.height());
+        // 5. 计算(0,0)原点在本地发生了多少位移
+        QPointF localPosDelta = newLocalTopLeft - QPointF(0, 0);
 
-        // f. 计算位置修正，以保持缩放中心点在场景中位置不变
-        QPointF s0_local = centerLocal;
-        QPointF s1_local(handleInfo.center.x() * newSize.width(), handleInfo.center.y() * newSize.height());
+        // 6. 将这个本地位移旋转回父坐标系，得到真正的位置修正
         QTransform rot;
-        rot.rotate(newState.angle);
-        QPointF posCorrection = rot.map(s0_local - s1_local);
+        rot.rotate(newState.angle);  // 使用当前角度旋转delta
+        QPointF posCorrection = rot.map(localPosDelta);
 
-        // g. 设置新状态
+        // 7. 设置新状态 (update=false, finish=false 避免中途信号)
         setPos(newState.pos + posCorrection, false, false);
         setSize(newSize, false, false);
+
         break;
     }
-
     case HandleType::Rotate: {
-        // --- 旋转逻辑 ---
-        // a. 计算旋转中心点和句柄在“变换前”的局部坐标
-        QPointF centerLocal(handleInfo.center.x() * newState.size.width(), handleInfo.center.y() * newState.size.height());
-        QPointF handleLocal(handleInfo.pos.x() * newState.size.width(), handleInfo.pos.y() * newState.size.height());
+        // 1. 计算旋转中心点和句柄在“变换前”的局部坐标
+        QPointF centerLocal(handleInfo.center.x() * newState.size.width(),
+                            handleInfo.center.y() * newState.size.height());
+        QPointF handleLocal(handleInfo.pos.x() * newState.size.width(),
+                            handleInfo.pos.y() * newState.size.height());
 
-        // b. 将句柄新位置(parentPos)也转换到ROI的局部坐标系（无旋转）
-        QTransform t;
-        t.rotate(-newState.angle);
-        QPointF p1_local = t.map(parentPos - newState.pos);
-
-        // c. 计算从中心点到句柄的原始向量和新向量
+        // 2. 计算从中心点到句柄的原始向量和新向量（使用p1_local）
         QPointF lp0 = handleLocal - centerLocal;
         QPointF lp1 = p1_local - centerLocal;
 
-        // d. 使用atan2计算两个向量的角度，并求出角度差
+        // 3. 使用atan2计算两个向量的角度，并求出角度差
         qreal angle0 = atan2(lp0.y(), lp0.x());
         qreal angle1 = atan2(lp1.y(), lp1.x());
-        qreal angleDelta = angle1 - angle0; // 弧度
+        qreal angleDelta = angle1 - angle0;  // 弧度
 
-        // e. 计算ROI的新角度
+        // 4. 计算ROI的新角度
         qreal newAngle = newState.angle + qRadiansToDegrees(angleDelta);
 
-        // f. 计算位置修正，以保持旋转中心点在场景中位置不变
-        QTransform t_old_rot;
-        t_old_rot.rotate(newState.angle);
-        QTransform t_new_rot;
-        t_new_rot.rotate(newAngle);
-
-        QPointF posCorrection = t_old_rot.map(centerLocal) - t_new_rot.map(centerLocal);
-
-        // g. 设置新状态
-        setPos(newState.pos + posCorrection, false, false);
+        // 5. 设置新状态（无需位置修正，Qt自动保持中心固定）
         setAngle(newAngle, false, false);
+
         break;
     }
-
     default:
         break;
     }
 
-    // 5. 统一应用状态变更
+    // 5. 统一应用状态变更（更新Handle位置、发射信号）
     stateChanged(finish);
 }
-
 /**
  * @brief [私有] 获取句柄在m_handles列表中的索引
  * @param handle 要查找的句柄指针
@@ -531,4 +521,20 @@ void ROI::handleDragFinished(Handle* handle)
     // 注意：stateChangeFinished 应该在 movePoint(finish=true) 中调用
     // emit regionChangeFinished(this); // 这里不需要重复发射
     qDebug() << "ROI notified: Handle drag finished";
+}
+
+
+/**
+ * @brief 返回ROI的精确形状（用于碰撞检测和 itemAt）
+ *
+ * 重写此方法对于画刷为 Qt::transparent 的项至关重要，
+ * 否则 itemAt 无法选中它们。
+ *
+ * @return QPainterPath 描述此项轮廓的路径
+ */
+QPainterPath ROI::shape() const
+{
+    QPainterPath path;
+    path.addRect(boundingRect());
+    return path;
 }

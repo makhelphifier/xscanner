@@ -83,7 +83,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     toolBar->addAction(selectAction);
     toolGroup->addAction(selectAction);
     connect(selectAction, &QAction::triggered, this, [this]() {
-        // viewer->setDrawingState(nullptr); // 清除任何绘图状态
+        viewer->setToolMode(ImageViewer::ModeSelect);
     });
 
     // 窗宽窗位工具
@@ -106,8 +106,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     toolBar->addAction(rectAction);
     toolGroup->addAction(rectAction);
     connect(rectAction, &QAction::triggered, [this]() {
-
-        // viewer->setDrawingState(new GenericDrawingState<RectROI>(viewer)); // <<<--- 将 AnnotationRectItem 替换为 RectROI
+        viewer->setToolMode(ImageViewer::ModeDrawRect);
     });
 
     // 椭圆工具

@@ -37,7 +37,7 @@ public:
     // --- 公共接口 ---
     void connectROI(ROI* roi);
     void disconnectROI(ROI* roi);
-    const QList<ROI*>& rois() const; // ++ 新增 getter ++
+    const QList<ROI*>& rois() const;
     void setPen(const QPen& pen);
     void setHoverPen(const QPen& pen);
     enum { Type = UserType + 1 };
@@ -69,7 +69,6 @@ private:
 
     bool m_isMoving = false;
     QPainterPath m_path;     // 句柄的几何形状
-
 
 };
 

@@ -12,7 +12,6 @@ PanningState::PanningState(DrawingStateMachine* machine, QObject *parent)
 
 bool PanningState::handleMousePressEvent(QMouseEvent *event)
 {
-    log_("bbb");
     // 在平移状态下再次按下鼠标通常不做任何事
     return true; // 消耗事件
 }

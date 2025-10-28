@@ -37,7 +37,7 @@ set(SOURCES
     gui/states/idlestate.cpp
     gui/states/panningstate.cpp
     gui/states/dragginghandlestate.cpp
-    gui/states/drawingrectstate.cpp
+
 
     # device
     device/gongy.cpp
@@ -71,7 +71,7 @@ set(HEADERS
     gui/states/idlestate.h
     gui/states/panningstate.h
     gui/states/dragginghandlestate.h
-    gui/states/drawingrectstate.h
+
 
     # device
     device/gongy.h

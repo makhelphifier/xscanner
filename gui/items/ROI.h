@@ -109,7 +109,7 @@ public:
     // --- 从 QGraphicsItem 重写 ---
     QRectF boundingRect() const override;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
-    // QPainterPath shape() const override;
+    QPainterPath shape() const override;
 
     enum class DragMode {
         None,

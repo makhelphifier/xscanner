@@ -1,10 +1,8 @@
-// rectroi.h
-
 #ifndef RECTROI_H
 #define RECTROI_H
 
 #include "roi.h"
-#include <QGraphicsRectItem> // 用于预览项
+#include <QGraphicsRectItem>
 #include <QPen>
 
 /**

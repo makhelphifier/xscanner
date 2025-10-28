@@ -11,9 +11,9 @@
 #include <QGraphicsItem>
 #include "gui/states/drawingstatemachine.h"
 #include "gui/views/imageviewer.h"
-// 前向声明 ImageViewer
+
 class ImageViewer;
-class DrawingStateMachine; // 需要包含或前向声明状态机
+class DrawingStateMachine;
 template <typename T>
 struct has_preview_item_type {
     template <typename U>
@@ -49,33 +49,28 @@ public:
 
             m_isDrawing = true;
 
-            // 创建预览项 - 假设 FinalItem 有 PreviewItemType 定义和静态方法
-            // 你需要确保 FinalItem 确实有这些
             if constexpr (has_preview_item_type<FinalItem>::value) { // C++17 if constexpr + SFINAE
-                // 假设 FinalItem 定义了 createPreview 和 initPreview
-                m_previewItem = FinalItem::createPreview(); // 静态方法创建
+                m_previewItem = new typename FinalItem::PreviewItemType();
                 if (m_previewItem) {
-                    FinalItem::initPreview(m_previewItem, m_startPoint); // 静态方法初始化
+                    FinalItem::initPreview(m_previewItem);
+                    FinalItem::updatePreview(m_previewItem, m_startPoint, m_startPoint);
                     viewer->scene()->addItem(m_previewItem);
                 } else {
                     qWarning() << "Failed to create preview item.";
                     m_isDrawing = false; // 创建失败则取消绘制
                     return false;
                 }
-            } else {
+            }else {
                 qWarning() << "FinalItem does not define PreviewItemType.";
                 m_isDrawing = false; // 无法创建预览则取消绘制
                 return false;
             }
-
-
             event->accept();
             return true; // 事件已处理
         }
         return false; // 其他按钮不处理
     }
 
-    // ++ 修改返回类型为 bool，添加 override ++
     bool handleMouseMoveEvent(QMouseEvent *event) override
     {
         ImageViewer* viewer = machine()->viewer();
@@ -90,7 +85,6 @@ public:
         return false; // 未处理
     }
 
-    // ++ 修改返回类型为 bool，添加 override ++
     bool handleMouseReleaseEvent(QMouseEvent *event) override
     {
         ImageViewer* viewer = machine()->viewer();
@@ -124,13 +118,11 @@ public:
         return false; // 未处理
     }
 
-    // ++ 新增：实现 handleWheelEvent，添加 override ++
     bool handleWheelEvent(QWheelEvent *event) override
     {
-        // 在绘制状态下通常忽略滚轮事件，但消耗掉它
         Q_UNUSED(event);
         qDebug() << "GenericDrawingState: Wheel Event ignored";
-        return true; // 消耗事件，防止视图缩放
+        return true;
     }
 
 
@@ -138,7 +130,7 @@ private:
     void clearPreview()
     {
         ImageViewer* viewer = machine()->viewer();
-        if (m_previewItem && viewer && viewer->scene()) { // 增加 viewer 和 scene 的检查
+        if (m_previewItem && viewer && viewer->scene()) {
             viewer->scene()->removeItem(m_previewItem);
             delete m_previewItem;
             m_previewItem = nullptr;
@@ -148,10 +140,9 @@ private:
     bool m_isDrawing;
     QPointF m_startPoint;
     // 使用指针类型别名简化代码
-    using PreviewItem = typename FinalItem::PreviewItemType; // 假设 FinalItem 定义了 PreviewItemType
+    using PreviewItem = typename FinalItem::PreviewItemType;
     PreviewItem* m_previewItem;
 
-    // ImageViewer* m_viewer; // 不需要，通过 machine()->viewer() 获取
 };
 
 #endif // GENERICDRAWINGSTATE_H

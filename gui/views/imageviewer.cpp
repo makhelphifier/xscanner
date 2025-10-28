@@ -7,7 +7,7 @@
 #include <QImage>
 #include "service/imageprocessor.h"
 #include <QList>
-// #include "util/logger/logger.h"
+#include "util/logger/logger.h"
 #include "gui/states/drawingstatemachine.h"
 
 ImageViewer::ImageViewer(QWidget *parent)
@@ -253,6 +253,7 @@ void ImageViewer::mousePressEvent(QMouseEvent *event)
     if (m_drawingStateMachine->handleMousePressEvent(event)) {
         // 事件已被状态机消耗
     } else {
+        log_("aaa=====");
         // 如果状态机未消耗（例如进入 Panning 或 Idle 点击背景），调用基类处理（如果需要的话）
         // 注意：如果 setDragMode(NoDrag)，基类不会处理平移
         QGraphicsView::mousePressEvent(event); // 保留以便基类处理可能的其他交互
@@ -288,11 +289,10 @@ void ImageViewer::translateView(const QPoint& delta)
     // 操作滚动条实现平移
     QScrollBar *hBar = horizontalScrollBar();
     QScrollBar *vBar = verticalScrollBar();
-    qDebug()<<"ss";
     if (hBar && vBar) {
         hBar->setValue(hBar->value() - delta.x());
         vBar->setValue(vBar->value() - delta.y());
-        qDebug() << "ImageViewer::translateView by" << delta; // qDebug 可能会很多，先注释掉
+        // qDebug() << "ImageViewer::translateView by" << delta; // qDebug 可能会很多，先注释掉
     } else {
         qWarning() << "ImageViewer::translateView - Scroll bar(s) are null!";
     }
@@ -319,24 +319,26 @@ void ImageViewer::panFinished()
     // 例如，如果使用 QGraphicsView::ScrollHandDrag，可能需要设置回 NoDrag
     // setDragMode(QGraphicsView::NoDrag);
 }
-
-// ++ 新增：实现绘图使能方法 ++
-bool ImageViewer::isDrawingEnabled() const
+void ImageViewer::setToolMode(ToolMode mode)
 {
-    return m_drawingEnabled;
+    if (m_currentToolMode == mode) return;
+
+    m_currentToolMode = mode;
+    qDebug() << "ImageViewer: Tool mode set to" << mode;
+
+    // 如果在绘图时切换回选择模式，应取消当前绘图
+    // (我们将在状态机中重命名 DrawingRect 为 Drawing)
+    if (mode == ModeSelect &&
+        (m_drawingStateMachine->currentState() != DrawingStateMachine::Idle))
+    {
+        // 强制状态机返回 Idle
+        m_drawingStateMachine->setState(DrawingStateMachine::Idle);
+    }
 }
 
-void ImageViewer::setDrawingEnabled(bool enabled)
+ImageViewer::ToolMode ImageViewer::currentToolMode() const
 {
-    if (m_drawingEnabled != enabled) {
-        m_drawingEnabled = enabled;
-        qDebug() << "Drawing enabled:" << enabled;
-        // 如果当前正在绘制，可能需要取消
-        if (!enabled && m_drawingStateMachine->currentState() == DrawingStateMachine::DrawingRect) {
-            m_drawingStateMachine->finishDrawingRect(); // 强制结束
-            m_drawingStateMachine->setState(DrawingStateMachine::Idle);
-        }
-    }
+    return m_currentToolMode;
 }
 
 // 私有方法 - 像素信息更新

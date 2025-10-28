@@ -3,7 +3,6 @@
 #include "drawingstate.h" // 基类
 #include "idlestate.h"
 #include "panningstate.h"
-#include "drawingrectstate.h"
 #include "dragginghandlestate.h"
 #include "gui/views/imageviewer.h"
 #include "gui/items/rectroi.h"
@@ -17,14 +16,13 @@ DrawingStateMachine::DrawingStateMachine(ImageViewer* viewer, QObject *parent)
     : QObject(parent),
     m_viewer(viewer),
     m_currentStatePtr(nullptr),
-    m_currentlyDrawingRoi(nullptr),
+   m_currentStateIsTemporary(false),
     m_currentlyDraggingHandle(nullptr),
     m_targetRoi(nullptr)
 {
     // 创建所有状态实例
     m_idleState = new IdleState(this, this);
     m_panningState = new PanningState(this, this);
-    m_drawingRectState = new DrawingRectState(this, this);
     m_draggingHandleState = new DraggingHandleState(this, this);
 
     // 设置初始状态
@@ -37,6 +35,10 @@ DrawingStateMachine::DrawingStateMachine(ImageViewer* viewer, QObject *parent)
 
 DrawingStateMachine::~DrawingStateMachine()
 {
+    if (m_currentStatePtr && m_currentStateIsTemporary) {
+        delete m_currentStatePtr;
+        m_currentStatePtr = nullptr;
+    }
     // QObject 会自动管理子对象，状态实例会被删除
 }
 
@@ -46,29 +48,49 @@ void DrawingStateMachine::setState(StateType type)
     switch (type) {
     case Idle:           nextState = m_idleState; break;
     case Panning:        nextState = m_panningState; break;
-    case DrawingRect:    nextState = m_drawingRectState; break;
+    // case DrawingRect:    // <-- 移除
     case DraggingHandle: nextState = m_draggingHandleState; break;
+    case Drawing:        // 'Drawing' 状态是临时的，不能用这个函数设置
+    default:
+        qWarning() << "Attempted to transition to an invalid or temporary state type:" << type;
+        return;
     }
 
-    if (m_currentStatePtr != nextState && nextState != nullptr) {
-        StateType oldType = currentState(); // 获取旧类型
-        if (m_currentStatePtr) {
-            m_currentStatePtr->exit(); // 调用旧状态的退出方法
-        }
-        m_currentStatePtr = nextState;
-        m_currentStatePtr->enter(); // 调用新状态的进入方法
-        qDebug() << "State transitioned to:" << type;
-        emit stateChanged(type); // 发送信号
-    } else if (!nextState) {
-        qWarning() << "Attempted to transition to an invalid state type:" << type;
-    }
+    // 调用新的重载，标记为 false (非临时)
+    setState(nextState, false);
 }
+void DrawingStateMachine::setState(DrawingState* nextState, bool temporary)
+{
+    if (m_currentStatePtr == nextState || nextState == nullptr) {
+        if (!nextState) {
+            qWarning() << "Attempted to transition to a null state.";
+        }
+        return; // 没有变化或状态无效
+    }
 
+    // 退出旧状态
+    if (m_currentStatePtr) {
+        m_currentStatePtr->exit();
+        // 如果旧状态是临时的，立即删除
+        if (m_currentStateIsTemporary) {
+            qDebug() << "Deleting temporary state.";
+            delete m_currentStatePtr;
+        }
+    }
+
+    m_currentStatePtr = nextState;
+    m_currentStateIsTemporary = temporary; // 记录新状态是否为临时
+    m_currentStatePtr->enter(); // 调用新状态的进入方法
+
+    qDebug() << "State transitioned to:" << m_currentStatePtr->metaObject()->className()
+             << "(Temporary:" << temporary << ")";
+
+    // emit stateChanged(currentState()); // ++ 更新信号发射 ++
+}
 DrawingStateMachine::StateType DrawingStateMachine::currentState() const
 {
     if (m_currentStatePtr == m_idleState) return Idle;
     if (m_currentStatePtr == m_panningState) return Panning;
-    if (m_currentStatePtr == m_drawingRectState) return DrawingRect;
     if (m_currentStatePtr == m_draggingHandleState) return DraggingHandle;
     return Idle; // 默认或错误情况
 }
@@ -105,35 +127,6 @@ bool DrawingStateMachine::handleWheelEvent(QWheelEvent *event)
 }
 
 
-// --- 辅助方法实现 (与之前类似，供状态类调用) ---
-
-void DrawingStateMachine::startDrawingRect(const QPointF& scenePos)
-{
-    if (!m_viewer) return;
-    m_currentlyDrawingRoi = new RectROI(scenePos, QSizeF(0, 0)); // 使用 RectROI
-    m_viewer->scene()->addItem(m_currentlyDrawingRoi);
-    qDebug() << "StateMachine: Started drawing RectROI at:" << scenePos;
-}
-
-void DrawingStateMachine::updateDrawingRect(const QPointF& scenePos)
-{
-    if (!m_currentlyDrawingRoi || !m_viewer) return;
-    QRectF rect = QRectF(m_startDragPos, scenePos).normalized();
-    m_currentlyDrawingRoi->setPos(rect.topLeft());
-    m_currentlyDrawingRoi->setSize(rect.size());
-}
-
-void DrawingStateMachine::finishDrawingRect()
-{
-    if (!m_currentlyDrawingRoi || !m_viewer) return;
-    qDebug() << "StateMachine: Finished drawing RectROI:" << m_currentlyDrawingRoi->boundingRect();
-    if (m_currentlyDrawingRoi->size().width() < 5 || m_currentlyDrawingRoi->size().height() < 5) { // 增加最小尺寸判断
-        m_viewer->scene()->removeItem(m_currentlyDrawingRoi);
-        delete m_currentlyDrawingRoi;
-        qDebug() << "StateMachine: Removed ROI because it was too small.";
-    }
-    m_currentlyDrawingRoi = nullptr;
-}
 
 void DrawingStateMachine::startDraggingHandle(Handle* handle, const QPointF& scenePos)
 {

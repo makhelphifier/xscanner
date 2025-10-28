@@ -39,7 +39,7 @@ void Handle::disconnectROI(ROI* roi)
 {
     m_rois.removeAll(roi);
 }
-// ++ 新增：rois() getter 实现 ++
+
 const QList<ROI*>& Handle::rois() const
 {
     return m_rois;
@@ -97,6 +97,7 @@ void Handle::mousePressEvent(QGraphicsSceneMouseEvent* event)
         event->accept();
         for (ROI* roi : qAsConst(m_rois)) {
             roi->regionChangeStarted(roi); // 通知ROI拖动开始
+            roi->handleMoveStarted();
         }
     } else {
         event->ignore();
@@ -128,6 +129,7 @@ void Handle::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
         QPointF finalScenePos = event->scenePos();
         for (ROI* roi : qAsConst(m_rois)) {
             roi->movePoint(this, finalScenePos, true); // 最后一次更新，并标记为“完成”
+            roi->handleDragFinished(this);
         }
         event->accept();
     } else {
