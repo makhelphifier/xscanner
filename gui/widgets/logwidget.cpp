@@ -11,7 +11,7 @@ LogWidget::LogWidget(QWidget *parent) : QWidget(parent)
 {
     m_logDisplay = new QPlainTextEdit(this);
     m_logDisplay->setReadOnly(true);
-    m_logDisplay->document()->setMaximumBlockCount(2000); // 限制最大行数，防止内存占用过高
+    m_logDisplay->document()->setMaximumBlockCount(2000);
     m_logDisplay->setStyleSheet("background-color: white; color: black; font-family: 'Microsoft YaHei'; font-size: 12pt;"); // 设置白底黑字 + 微软雅黑 + 12pt字号
     m_logDisplay->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -93,11 +93,11 @@ void LogWidget::createLogLevelMenu()
 
     connect(levelGroup, &QActionGroup::triggered, this, [this](QAction *action){
         Log4Qt::Level selectedLevel = action->data().value<Log4Qt::Level>();
-        m_currentLogLevel = selectedLevel;  // 添加成员变量存储当前级别：
+        m_currentLogLevel = selectedLevel;
         emit logLevelChanged(selectedLevel);
     });
 
-    updateLogLevelCheckState(Log4Qt::Level::ALL_INT); // 默认
+    updateLogLevelCheckState(Log4Qt::Level::ALL_INT);
 }
 
 void LogWidget::updateLogLevelCheckState(Log4Qt::Level level)
@@ -107,5 +107,14 @@ void LogWidget::updateLogLevelCheckState(Log4Qt::Level level)
             action->setChecked(true);
             break;
         }
+    }
+}
+
+
+void LogWidget::appendLogMessage(const QString &message)
+{
+    if (m_logDisplay)
+    {
+       m_logDisplay->appendPlainText(message);
     }
 }

@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include "log4qt/level.h"
-
+#include <QString>
 class QPlainTextEdit;
 class QMenu;
 
@@ -17,7 +17,12 @@ public:
 public slots:
     void appendLogMessage(const QString &text, int level);
     void clearLogs();
-
+public slots:
+    /**
+     * @brief 公共槽函数，用于接收日志消息并追加到内部的文本框中。
+     * @param message 要追加的消息。
+     */
+    void appendLogMessage(const QString &message);
 signals:
     void logLevelChanged(Log4Qt::Level level);
 

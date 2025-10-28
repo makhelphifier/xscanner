@@ -9,10 +9,10 @@
 #include <QKeyEvent>
 #include <QResizeEvent>
 #include <QTimer>
-#include <QMouseEvent>      // 用于鼠标事件重写
-#include <QImage>           // 用于图像数据
-#include <QGraphicsRectItem> // 用于预览矩形
-#include <QGraphicsLineItem> // 用于预览线条
+#include <QMouseEvent>
+#include <QImage>
+#include <QGraphicsRectItem>
+#include <QGraphicsLineItem>
 #include <QGraphicsEllipseItem>
 // #include "gui/states/drawingstatemachine.h"
 
@@ -28,8 +28,8 @@ class ImageViewer : public QGraphicsView
 
 public:
     explicit ImageViewer(QWidget *parent = nullptr);
-    void loadImage(const QString &filePath);  // 原有：加载图像
-    QGraphicsPixmapItem *pixmapItem() const { return m_pixmapItem; }  // 原有
+    void loadImage(const QString &filePath);
+    QGraphicsPixmapItem *pixmapItem() const { return m_pixmapItem; }
 
     void setImage(const QImage &image);
     void updatePixmap(const QPixmap &pixmap);
@@ -45,11 +45,9 @@ public:
     int bitDepth() const { return m_bitDepth; }  // 获取位深
     int currentWindowWidth() const ;  // 获取当前窗宽
     int currentWindowLevel() const ;  // 获取当前窗位
-    // ++ 新增：绘图使能控制 ++
     bool isDrawingEnabled() const;
     void setDrawingEnabled(bool enabled);
 
-    // ++ 新增：像素信息更新方法声明 ++
     void updatePixelInfo(const QPointF &scenePos);
     int getPixelValue(int x, int y) const; // 确保声明
 signals:
@@ -88,9 +86,7 @@ private:
 
 
     void calculateAutoWindowLevel(int &min, int &max);           // 计算自动窗宽窗位
-    // ++ 新增：状态机指针 ++
     DrawingStateMachine* m_drawingStateMachine;
-    // ++ 新增：绘图使能标志 ++
     bool m_drawingEnabled;
 };
 

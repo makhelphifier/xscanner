@@ -1,7 +1,7 @@
 // rectroi.cpp
 
 #include "rectroi.h"
-#include "handle.h" // 创建句柄需要包含此头文件
+#include "handle.h"
 
 // 构造函数1的实现
 RectROI::RectROI(const QPointF& pos, const QSizeF& size, bool centered, bool sideScalers, QGraphicsItem* parent)

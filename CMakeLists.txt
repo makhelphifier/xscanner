@@ -83,7 +83,9 @@ set(HEADERS
 add_executable(${PROJECT_NAME}
     ${SOURCES}
     ${HEADERS}
-    gui/Img.qrc  # Qt资源文件（AUTORCC会自动处理）
+    gui/Img.qrc
+    util/logger/logger.h util/logger/logger.cpp
+    util/logger/qtwidgetappender.h util/logger/qtwidgetappender.cpp  # Qt资源文件（AUTORCC会自动处理）
 )
 
 # 链接Qt库
