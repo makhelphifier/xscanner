@@ -37,8 +37,9 @@ SOURCES += \
     gui/states/drawingstatemachine.cpp \
     util/logger/logger.cpp \
     util/logger/qtwidgetappender.cpp \
-    device/gongy.cpp \
     # device/gongyu.cpp \
+	device/gycustomcontrol.cpp \
+    device/motionwidget.cpp \
     device/serialcomunicator.cpp \
     device/xraysource.cpp
 HEADERS += \
@@ -69,8 +70,9 @@ HEADERS += \
     gui/states/drawingstatemachine.h \
     util/logger/logger.h \
     util/logger/qtwidgetappender.h \
-    device/gongy.h \
     # device/gongyu.h \
+	device/motionwidget.h \
+    device/gycustomcontrol.h \
     device/serialcomunicator.h \
     device/xraysource.h
 # Default rules for deployment.
