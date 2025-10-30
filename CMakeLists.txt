@@ -35,7 +35,8 @@ set(SOURCES
     gui/states/panningstate.cpp
     gui/states/dragginghandlestate.cpp
     # device
-    device/gongy.cpp
+    device/gycustomcontrol.cpp
+    device/motionwidget.cpp
     device/serialcomunicator.cpp
     device/xraysource.cpp
 
@@ -70,7 +71,8 @@ set(HEADERS
 
 
     # device
-    device/gongy.h
+    device/motionwidget.h
+    device/gycustomcontrol.h
     device/serialcomunicator.h
     device/xraysource.h
 
@@ -82,7 +84,7 @@ qt_add_executable(${PROJECT_NAME}
     ${SOURCES}
     Img.qrc
     util/logger/logger.h util/logger/logger.cpp
-    util/logger/qtwidgetappender.h util/logger/qtwidgetappender.cpp  # Qt资源文件（AUTORCC会自动处理）
+    util/logger/qtwidgetappender.h util/logger/qtwidgetappender.cpp
 
 )
 
