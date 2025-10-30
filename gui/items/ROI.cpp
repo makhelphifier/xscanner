@@ -12,6 +12,7 @@
 #include <QGraphicsScene> // stateChanged中需要用到
 #include <QTransform>
 #include <QDebug>
+#include "util/logger/logger.h"
 
 /**
  * @brief ROI 类的构造函数
@@ -190,7 +191,7 @@ void ROI::stateChanged(bool finish)
         update(); // 请求重绘
         m_lastState = m_state; // 更新 lastState
         emit regionChanged(this); // 发送 regionChanged 信号
-        qDebug() << "ROI stateChanged - regionChanged emitted";
+        // qDebug() << "ROI stateChanged - regionChanged emitted";
     }
 
     if (finish) {
@@ -325,15 +326,16 @@ void ROI::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
     update(); // 触发重绘以恢复颜色
 }
 
-// ++ 修改：鼠标按下事件 ++
 void ROI::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     if (event->button() == Qt::LeftButton) {
         qDebug() << "ROI mousePressEvent (Left Button)";
         // 让状态机 (IdleState) 决定如何处理对 ROI 本体的点击
-        // 如果 ROI 本身不可移动，直接 accept 可能更好
-        // 如果 ROI 本身可移动，返回 false 让 IdleState 判断
-        // ++ 替换为以下逻辑 ++
+        // ++ 新增：检查点击是否在 Handle 子项上 ++
+        QPointF clickPosInROICoords = event->pos();
+
+
+
         if (flags() & QGraphicsItem::ItemIsMovable) { // 检查 ROI 是否可移动
             m_isMoving = true;
             m_preMoveState = m_state;
@@ -344,29 +346,12 @@ void ROI::mousePressEvent(QGraphicsSceneMouseEvent* event)
         } else {
             event->ignore(); // 不可移动则忽略
         }
-        // 这样事件会冒泡到 ImageViewer，然后 IdleState 会收到
-            // IdleState 根据 itemAt 的结果判断是 ROI 还是背景
-            // 但 IdleState 当前设计是让 ROI 自己处理本体拖动
-        // 如果希望 ROI 内部处理拖动，则需要：
-        /*
-        if (flags() & QGraphicsItem::ItemIsMovable) { // 检查 ROI 是否可移动
-            m_isMoving = true;
-            m_preMoveState = m_state;
-            m_dragStartPos = event->scenePos(); // 需要添加 m_dragStartPos 成员
-            emit regionChangeStarted(this);
-            qDebug() << "ROI started moving itself.";
-            event->accept();
-        } else {
-            event->ignore(); // 不可移动则忽略
-        }
-        */
     } else {
         // 保留其他按钮（如右键菜单）的处理
         QGraphicsObject::mousePressEvent(event);
     }
 }
 
-// ++ 确认/修改：鼠标移动事件 (如果 ROI 内部处理本体拖动) ++
 void ROI::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
     if (m_isMoving && (event->buttons() & Qt::LeftButton)) { // 检查是否由左键触发的移动
@@ -382,7 +367,6 @@ void ROI::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
     }
 }
 
-// ++ 确认/修改：鼠标释放事件 (如果 ROI 内部处理本体拖动) ++
 void ROI::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
     if (m_isMoving && event->button() == Qt::LeftButton) {
@@ -410,72 +394,131 @@ void ROI::handleMoveStarted()
  * @param scenePos 句柄在场景坐标系中的新位置
  * @param finish 拖动是否结束
  */
-// ROI.cpp 中的 movePoint 函数（替换原有）
+
 void ROI::movePoint(Handle* handle, const QPointF& scenePos, bool finish)
 {
     // 1. 找到被拖动句柄的信息
     int handleIndex = indexOfHandle(handle);
-    if (handleIndex < 0) return;
+    log_(QStringLiteral("movePoint: 开始。 句柄索引: %1, 场景坐标: (%2, %3), 拖动结束: %4")
+             .arg(handleIndex)
+             .arg(scenePos.x())
+             .arg(scenePos.y())
+             .arg(finish ? "是" : "否"));
+
+    if (handleIndex < 0) {
+        log_(QStringLiteral("movePoint: 错误：未找到句柄索引，提前返回。"));
+        return;
+    }
     const HandleInfo& handleInfo = m_handles[handleIndex];
 
     // 2. 将鼠标场景坐标转换为ROI的本地未变换坐标系（自动处理旋转、中心）
-    QPointF p1_local = mapFromScene(scenePos);  // 这替换了原有手动转换逻辑，确保正确
+    QPointF p1_local = mapFromScene(scenePos); // 这替换了原有手动转换逻辑，确保正确
+    log_(QStringLiteral("movePoint: 坐标转换：场景 (%1, %2) -> 本地 (%3, %4)")
+             .arg(scenePos.x()).arg(scenePos.y())
+             .arg(p1_local.x()).arg(p1_local.y()));
 
     // 3. 获取变换前的状态
     ROIState newState = m_preMoveState;
+    log_(QStringLiteral("movePoint: 获取变换前状态：Pos(%1, %2), Size(%3, %4), Angle(%5)")
+             .arg(newState.pos.x()).arg(newState.pos.y())
+             .arg(newState.size.width()).arg(newState.size.height())
+             .arg(newState.angle));
 
     // 4. 根据句柄类型执行不同的变换逻辑
     switch (handleInfo.type) {
     case HandleType::Scale: {
+        log_(QStringLiteral("movePoint: 缩放(Scale)逻辑开始。句柄类型: %1")
+                 .arg(static_cast<int>(handleInfo.type)));
         // 1. 获取锚点在本地坐标系中的位置
         QPointF centerRelPos = handleInfo.center;
+        log_(QString(" movePoint--- Center: %1").arg(centerRelPos.x()).arg(centerRelPos.y())); // 手动格式化 (用户原有日志)
+        log_(QStringLiteral("  [Scale] 相对锚点(中心): (%1, %2)")
+                 .arg(centerRelPos.x()).arg(centerRelPos.y()));
+
         QPointF anchor_local(centerRelPos.x() * newState.size.width(),
                              centerRelPos.y() * newState.size.height());
+        log_(QStringLiteral("  [Scale] 绝对本地锚点 (基于preMoveState): (%1, %2)")
+                 .arg(anchor_local.x()).arg(anchor_local.y()));
 
         // 2. 从固定的锚点和移动的鼠标点创建新的本地矩形
         QRectF newLocalRect;
-        newLocalRect.setCoords(anchor_local.x(), anchor_local.y(),  // 固定点
-                               p1_local.x(), p1_local.y());       // 鼠标点（本地未变换）
+        newLocalRect.setCoords(anchor_local.x(), anchor_local.y(), // 固定点
+                               p1_local.x(), p1_local.y());   // 鼠标点（本地未变换）
+        log_(QStringLiteral("  [Scale] 初始本地矩形 (锚点: (%1, %2), 鼠标: (%3, %4)) -> 矩形: (%5, %6, %7x%8)")
+                 .arg(anchor_local.x()).arg(anchor_local.y())
+                 .arg(p1_local.x()).arg(p1_local.y())
+                 .arg(newLocalRect.x()).arg(newLocalRect.y())
+                 .arg(newLocalRect.width()).arg(newLocalRect.height()));
 
         // 3. 归一化 (处理反向拖动)
         newLocalRect = newLocalRect.normalized();
+        log_(QStringLiteral("  [Scale] 归一化后矩形: (%1, %2, %3x%4)")
+                 .arg(newLocalRect.x()).arg(newLocalRect.y())
+                 .arg(newLocalRect.width()).arg(newLocalRect.height()));
 
         // 4. 从新矩形中获取新的尺寸和新的本地左上角位置
         QSizeF newSize = newLocalRect.size();
         QPointF newLocalTopLeft = newLocalRect.topLeft();
+        log_(QStringLiteral("  [Scale] 新尺寸: (%1x%2), 新本地左上角: (%3, %4)")
+                 .arg(newSize.width()).arg(newSize.height())
+                 .arg(newLocalTopLeft.x()).arg(newLocalTopLeft.y()));
 
         // 5. 计算(0,0)原点在本地发生了多少位移
         QPointF localPosDelta = newLocalTopLeft - QPointF(0, 0);
+        log_(QStringLiteral("  [Scale] 本地原点(0,0)位移 (delta): (%1, %2)")
+                 .arg(localPosDelta.x()).arg(localPosDelta.y()));
 
         // 6. 将这个本地位移旋转回父坐标系，得到真正的位置修正
         QTransform rot;
-        rot.rotate(newState.angle);  // 使用当前角度旋转delta
+        rot.rotate(newState.angle); // 使用当前角度旋转delta
         QPointF posCorrection = rot.map(localPosDelta);
+        log_(QStringLiteral("  [Scale] 旋转 %1 度后的位置修正: (%2, %3)")
+                 .arg(newState.angle)
+                 .arg(posCorrection.x()).arg(posCorrection.y()));
 
         // 7. 设置新状态 (update=false, finish=false 避免中途信号)
-        setPos(newState.pos + posCorrection, false, false);
+        QPointF finalPos = newState.pos + posCorrection;
+        log_(QStringLiteral("  [Scale] 准备设置新状态：Pos(%1, %2), Size(%3, %4)")
+                 .arg(finalPos.x()).arg(finalPos.y())
+                 .arg(newSize.width()).arg(newSize.height()));
+        setPos(finalPos, false, false);
         setSize(newSize, false, false);
 
         break;
     }
     case HandleType::Rotate: {
+        log_(QStringLiteral("movePoint: 旋转(Rotate)逻辑开始。句柄类型: %1")
+                 .arg(static_cast<int>(handleInfo.type)));
         // 1. 计算旋转中心点和句柄在“变换前”的局部坐标
         QPointF centerLocal(handleInfo.center.x() * newState.size.width(),
                             handleInfo.center.y() * newState.size.height());
         QPointF handleLocal(handleInfo.pos.x() * newState.size.width(),
                             handleInfo.pos.y() * newState.size.height());
+        log_(QStringLiteral("  [Rotate] 本地旋转中心: (%1, %2), 本地原句柄: (%3, %4)")
+                 .arg(centerLocal.x()).arg(centerLocal.y())
+                 .arg(handleLocal.x()).arg(handleLocal.y()));
 
         // 2. 计算从中心点到句柄的原始向量和新向量（使用p1_local）
         QPointF lp0 = handleLocal - centerLocal;
         QPointF lp1 = p1_local - centerLocal;
+        log_(QStringLiteral("  [Rotate] 原始向量 (lp0): (%1, %2), 新向量 (lp1): (%3, %4)")
+                 .arg(lp0.x()).arg(lp0.y())
+                 .arg(lp1.x()).arg(lp1.y()));
 
         // 3. 使用atan2计算两个向量的角度，并求出角度差
         qreal angle0 = atan2(lp0.y(), lp0.x());
         qreal angle1 = atan2(lp1.y(), lp1.x());
-        qreal angleDelta = angle1 - angle0;  // 弧度
+        qreal angleDelta = angle1 - angle0; // 弧度
+        log_(QStringLiteral("  [Rotate] 原始角度: %1 rad (%2 deg), 新角度: %3 rad (%4 deg), 角度差: %5 rad (%6 deg)")
+                 .arg(angle0).arg(qRadiansToDegrees(angle0))
+                 .arg(angle1).arg(qRadiansToDegrees(angle1))
+                 .arg(angleDelta).arg(qRadiansToDegrees(angleDelta)));
 
         // 4. 计算ROI的新角度
         qreal newAngle = newState.angle + qRadiansToDegrees(angleDelta);
+        log_(QStringLiteral("  [Rotate] 原始ROI角度: %1, 最终新角度: %2")
+                 .arg(newState.angle)
+                 .arg(newAngle));
 
         // 5. 设置新状态（无需位置修正，Qt自动保持中心固定）
         setAngle(newAngle, false, false);
@@ -483,12 +526,17 @@ void ROI::movePoint(Handle* handle, const QPointF& scenePos, bool finish)
         break;
     }
     default:
+        log_(QStringLiteral("movePoint: 警告：未知的句柄类型 (Type: %1)")
+                 .arg(static_cast<int>(handleInfo.type)));
         break;
     }
 
     // 5. 统一应用状态变更（更新Handle位置、发射信号）
+    log_(QStringLiteral("movePoint: 逻辑处理完毕，调用 stateChanged(finish=%1)")
+             .arg(finish ? "是" : "否"));
     stateChanged(finish);
 }
+
 /**
  * @brief [私有] 获取句柄在m_handles列表中的索引
  * @param handle 要查找的句柄指针

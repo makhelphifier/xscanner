@@ -116,7 +116,6 @@ void Handle::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
     // 通知所有关联的ROI，它们需要根据句柄的新位置进行更新
     for (ROI* roi : qAsConst(m_rois)) {
         // 调用ROI的movePoint方法，让ROI处理这个移动
-        // (movePoint将在下一步中实现)
         roi->movePoint(this, newScenePos, false);
     }
     event->accept();
@@ -155,7 +154,8 @@ void Handle::buildPath()
     }
     m_path.closeSubpath();
 }
-// ++ 新增：setPosInROI 实现 ++
+
+
 void Handle::setPosInROI(const QPointF& relativePos, const QSizeF& roiSize)
 {
     // 计算在 ROI 坐标系中的绝对位置
