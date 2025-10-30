@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 project(xscanner)
 
 # 查找Qt6（包括Core、Gui、Widgets 和 SerialPort）
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets )
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets SerialPort )
 
 # 自动设置 CMAKE_AUTOMOC, CMAKE_AUTORCC, CMAKE_AUTOUIC
 # 并且会设置 CMAKE_CXX_STANDARD 17 (Qt6 默认)
@@ -35,8 +35,9 @@ set(SOURCES
     gui/states/panningstate.cpp
     gui/states/dragginghandlestate.cpp
     # device
-
-
+    device/gongy.cpp
+    device/serialcomunicator.cpp
+    device/xraysource.cpp
 
 )
 
@@ -69,7 +70,9 @@ set(HEADERS
 
 
     # device
-
+    device/gongy.h
+    device/serialcomunicator.h
+    device/xraysource.h
 
 
 )
@@ -96,6 +99,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt6::Core
     Qt6::Gui
     Qt6::Widgets
+    Qt6::SerialPort
 
     # 外部库
     "${CMAKE_CURRENT_SOURCE_DIR}/third_party/sdk/opencv/build/x64/vc16/lib/opencv_world4120.lib"
