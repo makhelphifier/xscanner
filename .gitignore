@@ -91,7 +91,7 @@ resources/
 *.png
 *.jpg
 /sdk/
-
+/third_party
 # Prerequisites
 *.d
 

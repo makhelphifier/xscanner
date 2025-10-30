@@ -173,9 +173,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // 默认选择模式
     selectAction->setChecked(true);
 
+    QString exeDir = QCoreApplication::applicationDirPath();
+    QString filePath = QDir(exeDir).filePath("Resources/img/000006.raw");
+    qDebug() << "Attempting to load from filesystem:" << filePath;
     // 默认加载图像（委托给 viewer）
     QString defaultPath = ":/Resources/img/000006.raw";
-    viewer->loadImage(defaultPath);
+    viewer->loadImage(filePath);
+
 
     // 延迟更新 UI（等待图像加载）
     QTimer::singleShot(100, this, [this]() {

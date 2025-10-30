@@ -1,15 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
 project(xscanner)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# 查找Qt6（包括Core、Gui、Widgets 和 SerialPort）
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets )
 
-# 启用 AUTOMOC 和 AUTORCC
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-
-# 查找Qt5（包括Core、Gui、Widgets 和 SerialPort）
-find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets SerialPort)
+# 自动设置 CMAKE_AUTOMOC, CMAKE_AUTORCC, CMAKE_AUTOUIC
+# 并且会设置 CMAKE_CXX_STANDARD 17 (Qt6 默认)
+qt_standard_project_setup()
 
 # 定义源文件
 set(SOURCES
@@ -37,12 +34,10 @@ set(SOURCES
     gui/states/idlestate.cpp
     gui/states/panningstate.cpp
     gui/states/dragginghandlestate.cpp
-
-
     # device
-    device/gongy.cpp
-    device/serialcomunicator.cpp
-    device/xraysource.cpp
+
+
+
 )
 
 # 定义头文件
@@ -74,48 +69,38 @@ set(HEADERS
 
 
     # device
-    device/gongy.h
-    device/serialcomunicator.h
-    device/xraysource.h
+
+
+
 )
 
 # 添加可执行文件目标
-add_executable(${PROJECT_NAME}
+qt_add_executable(${PROJECT_NAME}
     ${SOURCES}
-    ${HEADERS}
-    gui/Img.qrc
+    Img.qrc
     util/logger/logger.h util/logger/logger.cpp
     util/logger/qtwidgetappender.h util/logger/qtwidgetappender.cpp  # Qt资源文件（AUTORCC会自动处理）
+
 )
 
-# 链接Qt库
-target_link_libraries(${PROJECT_NAME}
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Widgets
-    Qt5::SerialPort
-)
-
-# 关键修改：添加编译定义
-# 解决 log4qt 与 windows.h (由OpenCV引入) 的宏冲突 (如 LogError, min/max)
-target_compile_definitions(${PROJECT_NAME} PRIVATE
-    WIN32_LEAN_AND_MEAN
-    NOMINMAX
-)
 
 # 添加包含目录
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/../sdk/opencv/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/../sdk/log4qt/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/sdk/opencv/build/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/sdk/Log4Qt/x64-Release/include
 )
 
-# 链接外部库（OpenCV和log4qt，使用完整路径）
-target_link_libraries(${PROJECT_NAME}
-    "${CMAKE_CURRENT_SOURCE_DIR}/../sdk/opencv/lib/opencv_world470.lib"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../sdk/log4qt/lib/log4qt.lib"
-)
+# 链接库 (Qt, OpenCV, log4qt)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Widgets
 
+    # 外部库
+    "${CMAKE_CURRENT_SOURCE_DIR}/third_party/sdk/opencv/build/x64/vc16/lib/opencv_world4120.lib"
+    "${CMAKE_CURRENT_SOURCE_DIR}/third_party/sdk/Log4Qt/x64-Release/lib/log4qt.lib"
+)
 
 # 设置运行时输出目录（统一到bin/Debug或bin/Release）
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -124,25 +109,28 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/Release)
 
 # 复制配置文件和DLL到输出目录（POST_BUILD）
 set(CONFIG_FILE "${CMAKE_CURRENT_SOURCE_DIR}/config/log4qt.properties")
-set(OPENCV_DLL "${CMAKE_CURRENT_SOURCE_DIR}/../sdk/opencv/bin/opencv_world470.dll")
-set(LOG4QT_DLL_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/../sdk/log4qt/bin/log4qt.dll")
-set(LOG4QT_DLL_DEBUG "${CMAKE_CURRENT_SOURCE_DIR}/../sdk/log4qt/bin/log4qt_d.dll")
+set(LOG4QT_DLL_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/third_party/sdk/Log4Qt/x64-Release/bin/log4qt.dll")
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${CONFIG_FILE}"
             "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${OPENCV_DLL}"
-            "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            # 只复制 Release 版本的 DLL
             "${LOG4QT_DLL_RELEASE}"
             "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
     COMMENT "Copying config and DLLs to output directory"
 )
+# 复制整个 Resources 文件夹到可执行文件 (.exe) 旁边
+set(RESOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Resources")
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
+            "${RESOURCE_DIR}"
+            "$<TARGET_FILE_DIR:${PROJECT_NAME}>/Resources"
+    COMMENT "Copying Resources folder to output directory"
+)
 
-# 安装规则（可选，类似于.pro中的deployment）
+# 安装规则
 if(UNIX AND NOT ANDROID)
     install(TARGETS ${PROJECT_NAME} DESTINATION /opt/${PROJECT_NAME}/bin)
 elseif(WIN32)

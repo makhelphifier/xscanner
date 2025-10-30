@@ -1,0 +1,50 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Resources/icon.ico</file>
+        <file>Resources/qss/stylesheet.qss</file>
+        <file>Resources/img/000006.raw</file>
+        <file>Resources/img/aaa.jpg</file>
+        <file>Resources/img/arrow_tool.png</file>
+        <file>Resources/img/bbb.jpg</file>
+        <file>Resources/img/censor-analysis.png</file>
+        <file>Resources/img/color_tool.png</file>
+        <file>Resources/img/coordinate_system_64px.png</file>
+        <file>Resources/img/device_conn_icon.png</file>
+        <file>Resources/img/double_left_48px.png</file>
+        <file>Resources/img/double_left_48px_color.png</file>
+        <file>Resources/img/double_right_48px.png</file>
+        <file>Resources/img/double_right_48px_color.png</file>
+        <file>Resources/img/ellipse_tool.png</file>
+        <file>Resources/img/empty_trash.png</file>
+        <file>Resources/img/folded_icon.png</file>
+        <file>Resources/img/left.png</file>
+        <file>Resources/img/line_tool.png</file>
+        <file>Resources/img/logo.png</file>
+        <file>Resources/img/logo_2.png</file>
+        <file>Resources/img/masure.png</file>
+        <file>Resources/img/movement_icon.png</file>
+        <file>Resources/img/movement_status_icon.png</file>
+        <file>Resources/img/params_icon.png</file>
+        <file>Resources/img/pen_tool.png</file>
+        <file>Resources/img/person.png</file>
+        <file>Resources/img/rect_tool.png</file>
+        <file>Resources/img/right.png</file>
+        <file>Resources/img/Select Cursor_96px.png</file>
+        <file>Resources/img/settings.png</file>
+        <file>Resources/img/sort_down.png</file>
+        <file>Resources/img/switch_off.png</file>
+        <file>Resources/img/switch_on.png</file>
+        <file>Resources/img/text_tool.png</file>
+        <file>Resources/img/thumb_tool.png</file>
+        <file>Resources/img/thumb_tool_r.png</file>
+        <file>Resources/img/u25.png</file>
+        <file>Resources/img/u26.png</file>
+        <file>Resources/img/u27.png</file>
+        <file>Resources/img/u28.png</file>
+        <file>Resources/img/unfolded_icon.png</file>
+        <file>Resources/img/window_close.png</file>
+        <file>Resources/img/window_max.png</file>
+        <file>Resources/img/window_min.png</file>
+        <file>Resources/img/window_restore.png</file>
+    </qresource>
+</RCC>

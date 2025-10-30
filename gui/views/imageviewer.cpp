@@ -16,7 +16,7 @@ ImageViewer::ImageViewer(QWidget *parent)
     m_scene = new QGraphicsScene(this);
     setScene(m_scene);
     setRenderHint(QPainter::Antialiasing);
-    setRenderHint(QPainter::HighQualityAntialiasing);
+    // setRenderHint(QPainter::HighQualityAntialiasing);
     setDragMode(QGraphicsView::NoDrag);
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     setRenderHint(QPainter::SmoothPixmapTransform, true);

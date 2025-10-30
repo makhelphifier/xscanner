@@ -10,7 +10,6 @@
 #include <QThread>
 #include <QPlainTextEdit>
 
-#include "device/gongy.h"
 
 int main(int argc, char *argv[])
 {
@@ -22,9 +21,9 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    GongYTabWidget *colleagueWindow = new GongYTabWidget();
-    colleagueWindow->setWindowTitle("扫描设备控制");
-    // colleagueWindow->show();
+    // GongYTabWidget *colleagueWindow = new GongYTabWidget();
+    // colleagueWindow->setWindowTitle("扫描设备控制");
+    // // colleagueWindow->show();
 
     Log4Qt::PatternLayout *pLayout = new Log4Qt::PatternLayout(&a); // 传递父对象
     pLayout->setConversionPattern(QStringLiteral("[%d{yyyy-MM-dd HH:mm:ss.zzz}][%-20t][%l][%-5p] --> %m %n"));
@@ -34,4 +33,3 @@ int main(int argc, char *argv[])
 
     return a.exec();
 }
-
