@@ -1,11 +1,12 @@
 // handle.cpp
 
 #include "handle.h"
-#include "roi.h" // 需要包含 ROI 头文件
+#include "roi.h"
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
 #include <QtMath>
-#include <QDebug> // 用于调试
+#include <QDebug>
+#include <QMenu>
 
 // 不同类型句柄的形状定义（边数，起始角度）
 static const QMap<HandleType, QPair<int, qreal>> handle_shapes = {
@@ -168,3 +169,28 @@ void Handle::setPosInROI(const QPointF& relativePos, const QSizeF& roiSize)
 
 
 
+/**
+ * @brief [重写] 处理右键菜单事件，用于删除句柄
+ */
+void Handle::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
+{
+    QMenu menu;
+    QAction* deleteAction = menu.addAction("删除句柄 (Delete Handle)");
+
+    // 连接信号：当点击“删除”时
+    connect(deleteAction, &QAction::triggered, this, [this]() {
+        // 重要：我们必须迭代 m_rois 的一个*副本*
+        // 因为在循环中，roi->removeHandle(this) 会修改 m_rois 列表
+        QList<ROI*> rois_copy = m_rois;
+
+        for (ROI* roi : rois_copy) {
+            // 通知所有关联的 ROI 将此句柄移除
+            roi->removeHandle(this);
+        }
+
+        // 此时，removeHandle 逻辑（在 ROI.cpp 中实现）
+        // 应该已经安全地删除了这个句柄
+    });
+
+    menu.exec(event->screenPos());
+}

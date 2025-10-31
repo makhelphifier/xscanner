@@ -921,3 +921,34 @@ void ROI::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
     // 在鼠标光标位置显示菜单
     menu.exec(event->screenPos());
 }
+
+/**
+ * @brief 从ROI中移除一个句柄
+ * @param handle 要移除的句柄指针
+ */
+void ROI::removeHandle(Handle* handle)
+{
+    if (handle == nullptr) {
+        return;
+    }
+
+    int index = indexOfHandle(handle);
+    if (index == -1) {
+        qWarning() << "ROI::removeHandle: Handle not found in this ROI.";
+        return;
+    }
+
+    // 1. 从 m_handles 列表中移除
+    m_handles.removeAt(index);
+
+    // 2. 通知 Handle 它已与此 ROI 断开连接
+    handle->disconnectROI(this); //
+
+    // 3. 检查 Handle 是否已成为“孤儿”（不再被任何ROI拥有）
+    if (handle->rois().isEmpty()) { //
+        // 如果是，则安全地删除它
+        // 因为 Handle 的父项是 ROI，删除它会自动将其从场景中移除
+        qDebug() << "ROI::removeHandle: Deleting orphaned handle.";
+        delete handle;
+    }
+}

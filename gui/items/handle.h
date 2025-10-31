@@ -9,6 +9,8 @@
 #include <QVector>
 #include <QMap>
 #include <QPair> // 用于 QPair
+#include <QGraphicsSceneContextMenuEvent>
+
 // 前向声明
 class ROI;
 class QGraphicsSceneMouseEvent;
@@ -55,6 +57,7 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
 
 private:
     void buildPath(); // 根据类型构建句柄的形状路径
