@@ -52,7 +52,7 @@ void Logger::log(const char* file, int line, const char* function, const QString
 
     qint64 timeStamp = QDateTime::currentDateTime().toMSecsSinceEpoch();
 
-    Log4Qt::MessageContext context(file, line, function);
+    Log4Qt::MessageContext context(file, line, "function");
 
     Log4Qt::LoggingEvent event(m_rootLogger,
                                qtLevel,

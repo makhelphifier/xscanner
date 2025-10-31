@@ -397,6 +397,10 @@ void ROI::handleMoveStarted()
 
 void ROI::movePoint(Handle* handle, const QPointF& scenePos, bool finish)
 {
+    log_(QStringLiteral("movePoint: 接收到鼠标场景坐标 scenePos: (%1, %2)")
+             .arg(scenePos.x())
+             .arg(scenePos.y()));
+
     // 1. 找到被拖动句柄的信息
     int handleIndex = indexOfHandle(handle);
     log_(QStringLiteral("movePoint: 开始。 句柄索引: %1, 场景坐标: (%2, %3), 拖动结束: %4")
@@ -410,51 +414,86 @@ void ROI::movePoint(Handle* handle, const QPointF& scenePos, bool finish)
         return;
     }
     const HandleInfo& handleInfo = m_handles[handleIndex];
-
-    // 2. 将鼠标场景坐标转换为ROI的本地未变换坐标系（自动处理旋转、中心）
-    QPointF p1_local = mapFromScene(scenePos); // 这替换了原有手动转换逻辑，确保正确
-    log_(QStringLiteral("movePoint: 坐标转换：场景 (%1, %2) -> 本地 (%3, %4)")
-             .arg(scenePos.x()).arg(scenePos.y())
-             .arg(p1_local.x()).arg(p1_local.y()));
-
     // 3. 获取变换前的状态
     ROIState newState = m_preMoveState;
     log_(QStringLiteral("movePoint: 获取变换前状态：Pos(%1, %2), Size(%3, %4), Angle(%5)")
              .arg(newState.pos.x()).arg(newState.pos.y())
              .arg(newState.size.width()).arg(newState.size.height())
              .arg(newState.angle));
+    // 2. 将鼠标场景坐标转换为ROI的本地未变换坐标系（自动处理旋转、中心）
+    QPointF origin = QPointF(newState.size.width() / 2.0, newState.size.height() / 2.0);
+    QTransform preMove_LocalToScene_Transform;
+    preMove_LocalToScene_Transform.translate(newState.pos.x(), newState.pos.y());
+    preMove_LocalToScene_Transform.translate(origin.x(), origin.y());
+    preMove_LocalToScene_Transform.rotate(newState.angle);
+    preMove_LocalToScene_Transform.translate(-origin.x(), -origin.y());
+
+    // 获取其逆变换
+    bool invertible = false;
+    QTransform preMove_SceneToLocal_Transform = preMove_LocalToScene_Transform.inverted(&invertible);
+
+    QPointF p1_local;
+    if (invertible) {
+        p1_local = preMove_SceneToLocal_Transform.map(scenePos);
+    } else {
+        log_(QStringLiteral("movePoint: 警告：变换矩阵不可逆！"));
+        p1_local = QPointF(0,0); // 或者其他错误处理
+    }
+
+    log_(QStringLiteral("movePoint: 坐标转换：场景 (%1, %2) -> 本地 (基于preMoveState) (%3, %4)")
+             .arg(scenePos.x()).arg(scenePos.y())
+             .arg(p1_local.x()).arg(p1_local.y()));
+
+    // [新增] 声明两个变量，供 Scale 和 Rotate 共同使用
+    QPointF anchor_local; // 锚点在 preMoveState 本地坐标系中的位置
+    QPointF anchor_scene; // 锚点在 场景 坐标系中的位置 (必须保持不变)
 
     // 4. 根据句柄类型执行不同的变换逻辑
     switch (handleInfo.type) {
+        // [粘贴/替换此代码块]
+        // [替换]
     case HandleType::Scale: {
         log_(QStringLiteral("movePoint: 缩放(Scale)逻辑开始。句柄类型: %1")
                  .arg(static_cast<int>(handleInfo.type)));
-        // 1. 获取锚点在本地坐标系中的位置
+
+        // 1. 获取锚点
         QPointF centerRelPos = handleInfo.center;
-        log_(QString(" movePoint--- Center: %1").arg(centerRelPos.x()).arg(centerRelPos.y())); // 手动格式化 (用户原有日志)
+        log_(QString(" movePoint--- Center: (%1, %2)").arg(centerRelPos.x()).arg(centerRelPos.y()));
         log_(QStringLiteral("  [Scale] 相对锚点(中心): (%1, %2)")
                  .arg(centerRelPos.x()).arg(centerRelPos.y()));
 
-        QPointF anchor_local(centerRelPos.x() * newState.size.width(),
-                             centerRelPos.y() * newState.size.height());
+        // 1a. 计算本地锚点 和 必须保持不变的场景锚点
+        anchor_local = QPointF(centerRelPos.x() * newState.size.width(),
+                               centerRelPos.y() * newState.size.height());
+        // preMove_LocalToScene_Transform 是我们在函数开头计算 p1_local 时得到的
+        anchor_scene = preMove_LocalToScene_Transform.map(anchor_local);
+
         log_(QStringLiteral("  [Scale] 绝对本地锚点 (基于preMoveState): (%1, %2)")
                  .arg(anchor_local.x()).arg(anchor_local.y()));
+        log_(QStringLiteral("  [Scale] 绝对场景锚点 (固定点): (%1, %2)")
+                 .arg(anchor_scene.x()).arg(anchor_scene.y()));
 
         // 2. 从固定的锚点和移动的鼠标点创建新的本地矩形
         QRectF newLocalRect;
-        newLocalRect.setCoords(anchor_local.x(), anchor_local.y(), // 固定点
-                               p1_local.x(), p1_local.y());   // 鼠标点（本地未变换）
-        log_(QStringLiteral("  [Scale] 初始本地矩形 (锚点: (%1, %2), 鼠标: (%3, %4)) -> 矩形: (%5, %6, %7x%8)")
-                 .arg(anchor_local.x()).arg(anchor_local.y())
-                 .arg(p1_local.x()).arg(p1_local.y())
-                 .arg(newLocalRect.x()).arg(newLocalRect.y())
-                 .arg(newLocalRect.width()).arg(newLocalRect.height()));
+        // (保留之前的侧边缩放逻辑)
+        bool isHorizontalScale = qFuzzyCompare(handleInfo.pos.y(), handleInfo.center.y());
+        bool isVerticalScale = qFuzzyCompare(handleInfo.pos.x(), handleInfo.center.x());
+        QPointF preMove_TopLeft(0, 0);
+        QPointF preMove_BottomRight(newState.size.width(), newState.size.height());
 
-        // 3. 归一化 (处理反向拖动)
+        if (isHorizontalScale && !isVerticalScale) {
+            log_(QStringLiteral("  [Scale] 模式: 水平缩放 (Horizontal)"));
+            newLocalRect.setCoords(anchor_local.x(), preMove_TopLeft.y(), p1_local.x(), preMove_BottomRight.y());
+        } else if (isVerticalScale && !isHorizontalScale) {
+            log_(QStringLiteral("  [Scale] 模式: 垂直缩放 (Vertical)"));
+            newLocalRect.setCoords(preMove_TopLeft.x(), anchor_local.y(), preMove_BottomRight.x(), p1_local.y());
+        } else {
+            log_(QStringLiteral("  [Scale] 模式: 对角缩放 (Diagonal)"));
+            newLocalRect.setCoords(anchor_local.x(), anchor_local.y(), p1_local.x(), p1_local.y());
+        }
+
+        // 3. 归一化
         newLocalRect = newLocalRect.normalized();
-        log_(QStringLiteral("  [Scale] 归一化后矩形: (%1, %2, %3x%4)")
-                 .arg(newLocalRect.x()).arg(newLocalRect.y())
-                 .arg(newLocalRect.width()).arg(newLocalRect.height()));
 
         // 4. 从新矩形中获取新的尺寸和新的本地左上角位置
         QSizeF newSize = newLocalRect.size();
@@ -463,68 +502,99 @@ void ROI::movePoint(Handle* handle, const QPointF& scenePos, bool finish)
                  .arg(newSize.width()).arg(newSize.height())
                  .arg(newLocalTopLeft.x()).arg(newLocalTopLeft.y()));
 
-        // 5. 计算(0,0)原点在本地发生了多少位移
-        QPointF localPosDelta = newLocalTopLeft - QPointF(0, 0);
-        log_(QStringLiteral("  [Scale] 本地原点(0,0)位移 (delta): (%1, %2)")
-                 .arg(localPosDelta.x()).arg(localPosDelta.y()));
+        // --- [全新逻辑] ---
+        // 5. 计算锚点在 *新* 局部坐标系中的位置
+        //    (即，相对于 newLocalTopLeft)
+        QPointF anchor_in_new_local = anchor_local - newLocalTopLeft;
+        log_(QStringLiteral("  [Scale] 锚点在 *新* 局部几何中的位置: (%1, %2)")
+                 .arg(anchor_in_new_local.x()).arg(anchor_in_new_local.y()));
 
-        // 6. 将这个本地位移旋转回父坐标系，得到真正的位置修正
-        QTransform rot;
-        rot.rotate(newState.angle); // 使用当前角度旋转delta
-        QPointF posCorrection = rot.map(localPosDelta);
-        log_(QStringLiteral("  [Scale] 旋转 %1 度后的位置修正: (%2, %3)")
-                 .arg(newState.angle)
-                 .arg(posCorrection.x()).arg(posCorrection.y()));
+        // 6. 构建 *新* 的、纯本地的变换 (不含 pos)
+        //    使用 newSize 和 preMoveState 的角度
+        QPointF newOrigin = QPointF(newSize.width() / 2.0, newSize.height() / 2.0);
+        QTransform T_local_new;
+        T_local_new.translate(newOrigin.x(), newOrigin.y());
+        T_local_new.rotate(newState.angle); // 角度不变 (因为这是 Scale 操作)
+        T_local_new.translate(-newOrigin.x(), -newOrigin.y());
 
-        // 7. 设置新状态 (update=false, finish=false 避免中途信号)
-        QPointF finalPos = newState.pos + posCorrection;
-        log_(QStringLiteral("  [Scale] 准备设置新状态：Pos(%1, %2), Size(%3, %4)")
-                 .arg(finalPos.x()).arg(finalPos.y())
-                 .arg(newSize.width()).arg(newSize.height()));
+        // 7. 计算锚点在应用 T_local_new 后的位置 (假设 newPos = (0,0))
+        QPointF anchor_transformed_local = T_local_new.map(anchor_in_new_local);
+        log_(QStringLiteral("  [Scale] 锚点在本地变换后的位置 (假设pos=0): (%1, %2)")
+                 .arg(anchor_transformed_local.x()).arg(anchor_transformed_local.y()));
+
+        // 8. 计算所需的新 pos
+        // newPos + anchor_transformed_local == anchor_scene
+        QPointF finalPos = anchor_scene - anchor_transformed_local;
+        log_(QStringLiteral("  [Scale] 最终计算的新 pos: (%1, %2)")
+                 .arg(finalPos.x()).arg(finalPos.y()));
+
+        // 9. 设置新状态
         setPos(finalPos, false, false);
         setSize(newSize, false, false);
 
         break;
     }
+        // [替换]
     case HandleType::Rotate: {
         log_(QStringLiteral("movePoint: 旋转(Rotate)逻辑开始。句柄类型: %1")
                  .arg(static_cast<int>(handleInfo.type)));
-        // 1. 计算旋转中心点和句柄在“变换前”的局部坐标
-        QPointF centerLocal(handleInfo.center.x() * newState.size.width(),
-                            handleInfo.center.y() * newState.size.height());
+
+        // 1. 计算本地旋转中心 和 场景旋转中心
+        anchor_local = QPointF(handleInfo.center.x() * newState.size.width(),
+                               handleInfo.center.y() * newState.size.height());
+        // preMove_LocalToScene_Transform 是我们在函数开头计算 p1_local 时得到的
+        anchor_scene = preMove_LocalToScene_Transform.map(anchor_local);
+        log_(QStringLiteral("  [Rotate] 本地旋转中心 (基于preMove): (%1, %2)")
+                 .arg(anchor_local.x()).arg(anchor_local.y()));
+        log_(QStringLiteral("  [Rotate] 场景旋转中心 (固定点): (%1, %2)")
+                 .arg(anchor_scene.x()).arg(anchor_scene.y()));
+
+        // 2. 计算新角度 (这部分原始逻辑是正确的)
         QPointF handleLocal(handleInfo.pos.x() * newState.size.width(),
                             handleInfo.pos.y() * newState.size.height());
-        log_(QStringLiteral("  [Rotate] 本地旋转中心: (%1, %2), 本地原句柄: (%3, %4)")
-                 .arg(centerLocal.x()).arg(centerLocal.y())
-                 .arg(handleLocal.x()).arg(handleLocal.y()));
-
-        // 2. 计算从中心点到句柄的原始向量和新向量（使用p1_local）
-        QPointF lp0 = handleLocal - centerLocal;
-        QPointF lp1 = p1_local - centerLocal;
-        log_(QStringLiteral("  [Rotate] 原始向量 (lp0): (%1, %2), 新向量 (lp1): (%3, %4)")
-                 .arg(lp0.x()).arg(lp0.y())
-                 .arg(lp1.x()).arg(lp1.y()));
-
-        // 3. 使用atan2计算两个向量的角度，并求出角度差
+        QPointF lp0 = handleLocal - anchor_local; // vector center-to-handle
+        QPointF lp1 = p1_local - anchor_local; // vector center-to-mouse
         qreal angle0 = atan2(lp0.y(), lp0.x());
         qreal angle1 = atan2(lp1.y(), lp1.x());
-        qreal angleDelta = angle1 - angle0; // 弧度
-        log_(QStringLiteral("  [Rotate] 原始角度: %1 rad (%2 deg), 新角度: %3 rad (%4 deg), 角度差: %5 rad (%6 deg)")
-                 .arg(angle0).arg(qRadiansToDegrees(angle0))
-                 .arg(angle1).arg(qRadiansToDegrees(angle1))
-                 .arg(angleDelta).arg(qRadiansToDegrees(angleDelta)));
-
-        // 4. 计算ROI的新角度
+        qreal angleDelta = angle1 - angle0;
         qreal newAngle = newState.angle + qRadiansToDegrees(angleDelta);
         log_(QStringLiteral("  [Rotate] 原始ROI角度: %1, 最终新角度: %2")
-                 .arg(newState.angle)
-                 .arg(newAngle));
+                 .arg(newState.angle).arg(newAngle));
 
-        // 5. 设置新状态（无需位置修正，Qt自动保持中心固定）
+        // --- [全新逻辑] ---
+        // 3. 计算新 pos
+        // 旋转时, 尺寸(newSize) 和 旋转中心(anchor_in_new_local) 在本地坐标系中都保持不变
+        QSizeF newSize = newState.size;
+        QPointF newOrigin = QPointF(newSize.width() / 2.0, newSize.height() / 2.0);
+        QPointF anchor_in_new_local = anchor_local; // 旋转中心在本地的位置不变
+
+        // 4. 构建 *新* 的、纯本地的变换 (不含 pos)
+        //    使用 preMoveState 的 newSize 和 *newAngle*
+        QTransform T_local_new_rotate;
+        T_local_new_rotate.translate(newOrigin.x(), newOrigin.y());
+        T_local_new_rotate.rotate(newAngle); // <--- 使用新角度
+        T_local_new_rotate.translate(-newOrigin.x(), -newOrigin.y());
+
+        // 5. 计算旋转中心在应用 T_local_new_rotate 后的位置 (假设 newPos = (0,0))
+        QPointF anchor_transformed_local_rotate = T_local_new_rotate.map(anchor_in_new_local);
+        log_(QStringLiteral("  [Rotate] 旋转中心在本地变换后的位置 (假设pos=0): (%1, %2)")
+                 .arg(anchor_transformed_local_rotate.x()).arg(anchor_transformed_local_rotate.y()));
+
+        // 6. 计算所需的新 pos
+        // newPos + anchor_transformed_local_rotate == anchor_scene
+        QPointF finalPos = anchor_scene - anchor_transformed_local_rotate;
+        log_(QStringLiteral("  [Rotate] 最终计算的新 pos: (%1, %2)")
+                 .arg(finalPos.x()).arg(finalPos.y()));
+
+        // 7. 设置新状态
+        setPos(finalPos, false, false);
+        // setSize(newSize, false, false); // 尺寸不变
         setAngle(newAngle, false, false);
 
         break;
     }
+
+
     default:
         log_(QStringLiteral("movePoint: 警告：未知的句柄类型 (Type: %1)")
                  .arg(static_cast<int>(handleInfo.type)));
@@ -532,9 +602,32 @@ void ROI::movePoint(Handle* handle, const QPointF& scenePos, bool finish)
     }
 
     // 5. 统一应用状态变更（更新Handle位置、发射信号）
-    log_(QStringLiteral("movePoint: 逻辑处理完毕，调用 stateChanged(finish=%1)")
-             .arg(finish ? "是" : "否"));
+    // log_(QStringLiteral("movePoint: 逻辑处理完毕，调用 stateChanged(finish=%1)")
+    //          .arg(finish ? "是" : "否"));
     stateChanged(finish);
+
+    //打印矩形四个顶点的场景坐标 ===
+    // 计算四个本地顶点
+    qreal w = m_state.size.width();
+    qreal h = m_state.size.height();
+    QVector<QPointF> localVertices = {
+        QPointF(0, 0),      // 0: 左上
+        QPointF(w, 0),      // 1: 右上
+        QPointF(w, h),      // 2: 右下
+        QPointF(0, h)       // 3: 左下
+    };
+
+    log_(QStringLiteral("movePoint: 当前ROI状态 - Pos(%1, %2), Size(%3x%4), Angle(%5°)")
+             .arg(m_state.pos.x()).arg(m_state.pos.y())
+             .arg(w).arg(h).arg(m_state.angle));
+
+    log_(QStringLiteral("movePoint: 矩形四个顶点的场景坐标 (scenePos):"));
+    for (int i = 0; i < 4; ++i) {
+        QPointF sceneVertex = mapToScene(localVertices[i]);  // 转换为场景坐标
+        QString label = i == 0 ? "左上" : i == 1 ? "右上" : i == 2 ? "右下" : "左下";
+        log_(QStringLiteral("  顶点 %1 (%2): (%3, %4)")
+                 .arg(i).arg(label).arg(sceneVertex.x()).arg(sceneVertex.y()));
+    }
 }
 
 /**
