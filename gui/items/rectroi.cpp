@@ -1,9 +1,12 @@
 #include "rectroi.h"
 #include "handle.h"
 
+#include "util/logger/logger.h"
+
 RectROI::RectROI(const QPointF& pos, const QSizeF& size, bool centered, bool sideScalers, QGraphicsItem* parent)
     : ROI(pos, size, parent)
 {
+    log_("sss");
     // QPointF center = centered ? QPointF(0.5, 0.5) : QPointF(0.0, 0.0);
 
         // 添加四个角的 scale handle（对角缩放）
@@ -29,4 +32,5 @@ RectROI::RectROI(const QPointF &startPoint, const QPointF &endPoint, QGraphicsIt
               false,
               parent)
 {
+
 }
