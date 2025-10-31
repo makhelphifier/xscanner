@@ -108,6 +108,10 @@ public:
                 if (ROI* roiItem = dynamic_cast<ROI*>(finalItem)) {
                     // 如果转换成功，从 viewer 获取边界并设置
                     roiItem->setMaxBounds(viewer->imageBounds());
+                    // 设置吸附值
+                    roiItem->setTranslateSnap(500.0); // 吸附到 1 像素
+                    roiItem->setScaleSnap(500.0);     // 吸附到 1 像素
+                    roiItem->setRotateSnap(15.0);   // 吸附到 15 度
                     qDebug() << "GenericDrawingState: Applied maxBounds to new ROI.";
                 }
                 viewer->scene()->addItem(finalItem);

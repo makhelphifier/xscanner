@@ -388,7 +388,12 @@ void ROI::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         // 这是 ROI 本体拖动的逻辑
         QPointF delta = event->scenePos() - m_dragStartPos;
         QPointF newPos = m_preMoveState.pos + delta;
-
+        //平移吸附逻辑
+        bool snap = (QApplication::keyboardModifiers() & Qt::ControlModifier);
+        if (snap && m_translateSnapSize > 0) {
+            newPos.setX(snapValue(newPos.x(), m_translateSnapSize));
+            newPos.setY(snapValue(newPos.y(), m_translateSnapSize));
+        }
         // 直接设置位置，但不立即触发 finish 信号
         setPos(newPos, true, false);
         event->accept();
@@ -427,8 +432,8 @@ void ROI::handleMoveStarted()
 
 void ROI::movePoint(Handle* handle, const QPointF& scenePos, bool finish)
 {
-
-    // ++ 钳制传入的场景坐标 (这一步仍然需要，以防止旋转句柄拖得太远) ++
+    bool snap = (QApplication::keyboardModifiers() & Qt::ControlModifier);
+    // 钳制传入的场景坐标
     QPointF clampedScenePos = scenePos;
     if (m_maxBounds.isValid()) { // (移除了 qFuzzyCompare(m_preMoveState.angle, 0.0))
         QRectF bounds = m_maxBounds.toRectF();
@@ -538,9 +543,7 @@ void ROI::movePoint(Handle* handle, const QPointF& scenePos, bool finish)
                  .arg(newSize.width()).arg(newSize.height())
                  .arg(newLocalTopLeft.x()).arg(newLocalTopLeft.y()));
 
-        // --- [全新逻辑] ---
-        // 5. 计算锚点在 *新* 局部坐标系中的位置
-        //    (即，相对于 newLocalTopLeft)
+        // 5. 计算锚点在 新*局部坐标系中的位置
         QPointF anchor_in_new_local = anchor_local - newLocalTopLeft;
         log_(QStringLiteral("  [Scale] 锚点在 *新* 局部几何中的位置: (%1, %2)")
                  .arg(anchor_in_new_local.x()).arg(anchor_in_new_local.y()));
@@ -563,14 +566,22 @@ void ROI::movePoint(Handle* handle, const QPointF& scenePos, bool finish)
         QPointF finalPos = anchor_scene - anchor_transformed_local;
         log_(QStringLiteral("  [Scale] 最终计算的新 pos: (%1, %2)")
                  .arg(finalPos.x()).arg(finalPos.y()));
-
+        if (snap) {
+            if (m_translateSnapSize > 0) {
+                finalPos.setX(snapValue(finalPos.x(), m_translateSnapSize));
+                finalPos.setY(snapValue(finalPos.y(), m_translateSnapSize));
+            }
+            if (m_scaleSnapSize > 0) {
+                newSize.setWidth(snapValue(newSize.width(), m_scaleSnapSize));
+                newSize.setHeight(snapValue(newSize.height(), m_scaleSnapSize));
+            }
+        }
         // 9. 设置新状态
         setPos(finalPos, false, false);
         setSize(newSize, false, false);
 
         break;
     }
-        // [替换]
     case HandleType::Rotate: {
         log_(QStringLiteral("movePoint: 旋转(Rotate)逻辑开始。句柄类型: %1")
                  .arg(static_cast<int>(handleInfo.type)));
@@ -621,7 +632,15 @@ void ROI::movePoint(Handle* handle, const QPointF& scenePos, bool finish)
         QPointF finalPos = anchor_scene - anchor_transformed_local_rotate;
         log_(QStringLiteral("  [Rotate] 最终计算的新 pos: (%1, %2)")
                  .arg(finalPos.x()).arg(finalPos.y()));
-
+        if (snap) {
+            if (m_translateSnapSize > 0) {
+                finalPos.setX(snapValue(finalPos.x(), m_translateSnapSize));
+                finalPos.setY(snapValue(finalPos.y(), m_translateSnapSize));
+            }
+            if (m_rotateSnapAngle > 0) {
+                newAngle = snapValue(newAngle, m_rotateSnapAngle);
+            }
+        }
         // 7. 设置新状态
         setPos(finalPos, false, false);
         // setSize(newSize, false, false); // 尺寸不变
@@ -781,4 +800,37 @@ bool ROI::isStateWithinBounds(const ROIState& state) const
     }
 
     return true; // 所有顶点都在边界内
+}
+
+
+
+/**
+ * @brief 将一个值吸附到最近的 'snapSize' 倍数上
+ * @param value 原始值
+ * @param snapSize 吸附的步进值
+ * @return 吸附后的值
+ */
+qreal ROI::snapValue(qreal value, qreal snapSize) const
+{
+    if (snapSize <= 0) {
+        return value;
+    }
+    return round(value / snapSize) * snapSize;
+}
+
+
+// 吸附设置方法的实现
+void ROI::setTranslateSnap(qreal size)
+{
+    m_translateSnapSize = size;
+}
+
+void ROI::setScaleSnap(qreal size)
+{
+    m_scaleSnapSize = size;
+}
+
+void ROI::setRotateSnap(qreal angle)
+{
+    m_rotateSnapAngle = angle;
 }

@@ -101,6 +101,10 @@ public:
     void setPen(const QPen& pen);
     void setHoverPen(const QPen& pen);
     void setMaxBounds(const QRectF& bounds);
+    // 吸附功能设置
+    void setTranslateSnap(qreal size);
+    void setScaleSnap(qreal size);
+    void setRotateSnap(qreal angle);
 
     // 句柄管理 (Handle Management)
     Handle* addFreeHandle(const QPointF& pos, const QString& name = QString());
@@ -110,7 +114,6 @@ public:
     void removeHandle(Handle* handle);
     QList<Handle*> getHandles() const;
 
-    // --- 从 QGraphicsItem 重写 ---
     QRectF boundingRect() const override;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
     QPainterPath shape() const override;
@@ -195,6 +198,14 @@ protected:
 
 private:
     /**
+     * @brief 将一个值吸附到最近的 'snapSize' 倍数上
+     * @param value 原始值
+     * @param snapSize 吸附的步进值
+     * @return 吸附后的值
+     */
+    qreal snapValue(qreal value, qreal snapSize) const;
+
+    /**
      * @brief 检查一个给定的ROI状态是否完全位于maxBounds之内
      * @param state 要检查的状态
      * @return true 如果在边界内或未设置边界，false 如果超出边界
@@ -223,6 +234,11 @@ private:
     ROIState m_lastState;   // 上一次发出信号时的状态
     ROIState m_preMoveState;       // 移动前的状态，用于取消操作
     QVariant m_maxBounds;
+
+    // 吸附步进值
+    qreal m_translateSnapSize = 1.0;
+    qreal m_scaleSnapSize = 1.0;
+    qreal m_rotateSnapAngle = 15.0; // 默认吸附到15度
 
     // 外观
     QPen m_pen;
