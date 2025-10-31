@@ -7,13 +7,16 @@
 #include <QStyleOptionGraphicsItem>
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
-#include <QApplication> // 用于获取键盘修饰键
-#include <QtMath>       // 用于qPow
-#include <QGraphicsScene> // stateChanged中需要用到
+#include <QApplication>
+#include <QtMath>
+#include <QGraphicsScene>
 #include <QTransform>
 #include <QVariant>
 #include <QDebug>
 #include "util/logger/logger.h"
+#include <QPainter>
+#include <QMenu>
+
 
 /**
  * @brief ROI 类的构造函数
@@ -801,7 +804,63 @@ bool ROI::isStateWithinBounds(const ROIState& state) const
 
     return true; // 所有顶点都在边界内
 }
+/**
+ * @brief 提取ROI覆盖的图像区域
+ *
+ * 根据ROI的状态（位置、尺寸、角度）从源图像中提取像素。
+ * 如果ROI有旋转，将使用QPainter和反向变换来“采样”像素，
+ * 并自动处理插值（如果启用）。
+ *
+ * @param sourceImage 原始的 QImage (例如 ImageViewer::m_originalImage)
+ * @param useInterpolation 是否使用双线性插值（推荐在旋转时使用）
+ * @return 一个新的 QImage，其尺寸与ROI相同，包含提取的像素
+ */
+QImage ROI::getArrayRegion(const QImage& sourceImage, bool useInterpolation) const
+{
+    // 1. 验证输入
+    if (sourceImage.isNull() || m_state.size.isEmpty()) {
+        return QImage(); // 返回空图像
+    }
 
+    // 2. 优化：无旋转的情况 (使用 QImage::copy)
+    if (qFuzzyCompare(m_state.angle, 0.0)) {
+        QRectF srcRect(m_state.pos, m_state.size);
+        // 确保裁剪区域在源图像范围内
+        srcRect = srcRect.intersected(sourceImage.rect());
+        return sourceImage.copy(srcRect.toRect());
+    }
+
+    // 3. 带旋转的情况 (使用 QPainter)
+    // 3a. 创建目标图像，尺寸为ROI的尺寸，格式与源相同
+    QImage destImage(m_state.size.toSize(), sourceImage.format());
+    destImage.fill(Qt::black); // 填充背景（0值）
+
+    // 3b. 创建 QPainter
+    QPainter painter(&destImage);
+
+    // 3c. 设置插值（高质量）
+    if (useInterpolation) {
+        painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+    }
+
+    // 3d. 设置反向变换
+    // 我们要将 "源图像(世界)" 绘制到 "目标图像(视口)" 上
+    // 变换必须是ROI正向变换的逆序和反向操作
+    QPointF origin(m_state.size.width() / 2.0, m_state.size.height() / 2.0);
+
+    painter.translate(origin.x(), origin.y());       // 4. 移到目标中心
+    painter.rotate(-m_state.angle);                  // 3. 反向旋转
+    painter.translate(-origin.x(), -origin.y());     // 2. 移回目标左上角
+    painter.translate(-m_state.pos.x(), -m_state.pos.y()); // 1. 反向平移
+
+    // 3e. 绘制
+    // QPainter 现在会从 destImage 的 (0,0) 点开始
+    // 并使用我们设置的变换矩阵去源 QImage 中查找像素
+    painter.drawImage(0, 0, sourceImage);
+    painter.end();
+
+    return destImage;
+}
 
 
 /**
@@ -833,4 +892,32 @@ void ROI::setScaleSnap(qreal size)
 void ROI::setRotateSnap(qreal angle)
 {
     m_rotateSnapAngle = angle;
+}
+
+
+/**
+ * @brief [重写] 处理右键菜单事件
+ */
+void ROI::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
+{
+    // 创建一个菜单
+    QMenu menu;
+
+    // 添加 "提取区域" 动作
+    QAction* extractAction = menu.addAction("提取区域 (Extract Region)");
+
+    // 连接动作的 triggered() 信号到 lambda 表达式
+    connect(extractAction, &QAction::triggered, this, [this]() {
+        // 发射信号，通知外界 (ImageViewer) 来处理
+        emit extractRequested(this);
+    });
+
+    // (未来可以在此添加 "删除" 动作)
+    // QAction* deleteAction = menu.addAction("删除");
+    // connect(deleteAction, &QAction::triggered, this, [this](){
+    //     emit removeRequested(this);
+    // });
+
+    // 在鼠标光标位置显示菜单
+    menu.exec(event->screenPos());
 }

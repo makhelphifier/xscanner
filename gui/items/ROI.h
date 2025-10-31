@@ -5,8 +5,10 @@
 #include <QPen>
 #include <QList>
 #include "handle.h"
-#include <QRectF>    // ++ 添加
-#include <QVariant>  // ++ 添加
+#include <QRectF>
+#include <QVariant>
+#include <QImage>
+#include <QGraphicsSceneContextMenuEvent>
 
 class Handle;
 class QGraphicsSceneMouseEvent;
@@ -97,6 +99,15 @@ public:
     ROIState saveState() const;
     void setState(const ROIState& state, bool update = true);
 
+    /**
+     * @brief 提取ROI覆盖的图像区域，
+     *
+     * @param sourceImage 原始的 QImage
+     * @param useInterpolation 是否使用双线性插值（处理旋转时）
+     * @return 一个新的 QImage，其尺寸与ROI相同，包含提取的像素
+     */
+    QImage getArrayRegion(const QImage& sourceImage, bool useInterpolation = true) const;
+
     // 外观设置
     void setPen(const QPen& pen);
     void setHoverPen(const QPen& pen);
@@ -139,6 +150,13 @@ public:
 
 
 signals:
+
+
+    /**
+     * @brief 当用户请求提取此ROI区域的图像时
+     */
+    void extractRequested(ROI* sender);
+
     /**
      * @brief 当用户开始拖动ROI或其句柄时发射此信号
      */
@@ -179,7 +197,7 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
-    // void contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
 
     // --- 内部方法 (Internal Methods) ---
 

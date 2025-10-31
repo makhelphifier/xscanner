@@ -101,17 +101,19 @@ public:
             QPointF endPoint = viewer->mapToScene(event->pos());
 
             // 检查绘制是否有效 (例如，距离是否足够大)
-            if ((endPoint - m_startPoint).manhattanLength() > 5) { // 示例：最小绘制距离
+            if ((endPoint - m_startPoint).manhattanLength() > 5) {
                 // 使用 FinalItem 的构造函数创建最终项
-                FinalItem* finalItem = new FinalItem(m_startPoint, endPoint); // 假设构造函数是这样
+                FinalItem* finalItem = new FinalItem(m_startPoint, endPoint);
                 // 尝试将新项转换为 ROI
                 if (ROI* roiItem = dynamic_cast<ROI*>(finalItem)) {
                     // 如果转换成功，从 viewer 获取边界并设置
                     roiItem->setMaxBounds(viewer->imageBounds());
                     // 设置吸附值
-                    roiItem->setTranslateSnap(500.0); // 吸附到 1 像素
-                    roiItem->setScaleSnap(500.0);     // 吸附到 1 像素
+                    roiItem->setTranslateSnap(50.0); // 吸附到 1 像素
+                    roiItem->setScaleSnap(50.0);     // 吸附到 1 像素
                     roiItem->setRotateSnap(15.0);   // 吸附到 15 度
+                    connect(roiItem, &ROI::extractRequested,
+                            machine()->viewer(), &ImageViewer::onExtractRegion);
                     qDebug() << "GenericDrawingState: Applied maxBounds to new ROI.";
                 }
                 viewer->scene()->addItem(finalItem);

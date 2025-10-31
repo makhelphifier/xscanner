@@ -21,6 +21,9 @@ class QGraphicsRectItem;
 class QGraphicsLineItem;
 class AnnotationPointItem;
 class DrawingStateMachine;
+class ROI;
+class ExtractedImageViewer;
+
 
 class ImageViewer : public QGraphicsView
 {
@@ -65,6 +68,11 @@ signals:
 public slots:
     void onWindowChanged(int value);  // 从 UI 滑动条接收窗宽变化
     void onLevelChanged(int value);   // 从 UI 滑动条接收窗位变化
+    /**
+     * @brief 槽：当一个ROI请求被提取时调用
+     * @param roi 请求提取的ROI实例
+     */
+    void onExtractRegion(ROI* roi);
 protected:
     void wheelEvent(QWheelEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;

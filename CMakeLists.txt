@@ -85,6 +85,7 @@ qt_add_executable(${PROJECT_NAME}
     Img.qrc
     util/logger/logger.h util/logger/logger.cpp
     util/logger/qtwidgetappender.h util/logger/qtwidgetappender.cpp
+    gui/widgets/extractedimageviewer.h gui/widgets/extractedimageviewer.cpp
 
 )
 

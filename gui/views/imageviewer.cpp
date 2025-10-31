@@ -9,6 +9,8 @@
 #include <QList>
 #include "util/logger/logger.h"
 #include "gui/states/drawingstatemachine.h"
+#include "gui/items/roi.h"
+#include "gui/widgets/extractedimageviewer.h"
 
 ImageViewer::ImageViewer(QWidget *parent)
     : QGraphicsView(parent), m_initialScale(1.0), m_pixmapItem(nullptr), m_borderItem(nullptr), m_drawingEnabled(true)
@@ -253,40 +255,32 @@ void ImageViewer::onLevelChanged(int value)
     emit autoWindowingToggled(false);
 }
 
-// ++ 修改：事件处理函数，转发给状态机 ++
+
 void ImageViewer::mousePressEvent(QMouseEvent *event)
 {
     if (m_drawingStateMachine->handleMousePressEvent(event)) {
-        // 事件已被状态机消耗
     } else {
-        log_("aaa=====");
-        // 如果状态机未消耗（例如进入 Panning 或 Idle 点击背景），调用基类处理（如果需要的话）
-        // 注意：如果 setDragMode(NoDrag)，基类不会处理平移
-        QGraphicsView::mousePressEvent(event); // 保留以便基类处理可能的其他交互
+        QGraphicsView::mousePressEvent(event);
     }
-    updatePixelInfo(mapToScene(event->pos())); // 总是更新像素信息
+    updatePixelInfo(mapToScene(event->pos()));
 }
 
 void ImageViewer::mouseMoveEvent(QMouseEvent *event)
 {
     if (m_drawingStateMachine->handleMouseMoveEvent(event)) {
-        // 事件已被状态机消耗
     } else {
-        // 如果状态机未消耗（例如 Idle 或 ROI 内部处理拖动），调用基类处理
         QGraphicsView::mouseMoveEvent(event);
     }
-    updatePixelInfo(mapToScene(event->pos())); // 总是更新像素信息
+    updatePixelInfo(mapToScene(event->pos()));
 }
 
 void ImageViewer::mouseReleaseEvent(QMouseEvent *event)
 {
     if (m_drawingStateMachine->handleMouseReleaseEvent(event)) {
-        // 事件已被状态机消耗
     } else {
-        // 如果状态机未消耗，调用基类处理
         QGraphicsView::mouseReleaseEvent(event);
     }
-    updatePixelInfo(mapToScene(event->pos())); // 总是更新像素信息
+    updatePixelInfo(mapToScene(event->pos()));
 }
 
 
@@ -308,7 +302,6 @@ void ImageViewer::scaleView(qreal factor)
 {
     if (factor <= 0) return;
 
-    // ++ 使用正确的类型 QGraphicsView::ViewportAnchor ++
     QGraphicsView::ViewportAnchor oldAnchor = transformationAnchor();
 
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
@@ -386,4 +379,61 @@ int ImageViewer::currentWindowWidth() const
 int ImageViewer::currentWindowLevel() const
 {
     return m_windowLevel;
+}
+
+
+/**
+ * @brief 槽：当一个ROI请求被提取时调用
+ *
+ * 这是 getArrayRegion 功能的最终执行点。
+ * @param roi 请求提取的ROI实例
+ */
+void ImageViewer::onExtractRegion(ROI* roi)
+{
+    if (!roi) {
+        qWarning() << "onExtractRegion: Received null ROI.";
+        return;
+    }
+    if (m_originalImage.isNull()) {
+        qWarning() << "onExtractRegion: m_originalImage is null, cannot extract.";
+        return;
+    }
+
+    qDebug() << "ImageViewer: Received request to extract from ROI.";
+
+    // 1. 调用我们之前编写的核心函数
+    QImage extractedImage = roi->getArrayRegion(m_originalImage, true);
+
+    if (extractedImage.isNull()) {
+        qWarning() << "onExtractRegion: getArrayRegion returned a null image.";
+        return;
+    }
+
+    // 成功！打印信息
+    qDebug() << "SUCCESS: Extracted image of size" << extractedImage.size()
+             << "format" << extractedImage.format();
+
+    // 2. ++ 修改：在新窗口中显示 extractedImage ++
+    QImage displayImage = extractedImage;
+
+    // 2a. 对 Grayscale16 图像进行特殊处理以便显示
+    //     (因为 QPixmap/QLabel 无法正确显示 16-bit 灰度)
+    if (extractedImage.format() == QImage::Format_Grayscale16) {
+        qDebug() << "Performing 16-bit to 8-bit conversion for display...";
+
+        // 2b. 使用 ImageProcessor 自动计算最佳窗宽窗位
+        int minVal, maxVal;
+        ImageProcessor::calculateAutoWindowLevel(extractedImage, minVal, maxVal);
+
+        qDebug() << "Auto window/level for extracted image: Min =" << minVal << "Max =" << maxVal;
+
+        // 2c. 应用窗宽窗位 (这将返回一个 Format_Grayscale8 图像)
+        displayImage = ImageProcessor::applyWindowLevel(extractedImage, minVal, maxVal);
+    }
+
+    // 3. 创建并显示新窗口
+    //    (this 被用作 parent，使其成为 ImageViewer 的子窗口)
+    ExtractedImageViewer *viewer = new ExtractedImageViewer(displayImage, this);
+    viewer->show();
+    // -- 结束修改 --
 }
