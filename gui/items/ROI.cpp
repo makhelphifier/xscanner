@@ -11,6 +11,7 @@
 #include <QtMath>       // 用于qPow
 #include <QGraphicsScene> // stateChanged中需要用到
 #include <QTransform>
+#include <QVariant>
 #include <QDebug>
 #include "util/logger/logger.h"
 
@@ -106,10 +107,22 @@ void ROI::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidg
  */
 void ROI::setPos(const QPointF& pos, bool update, bool finish)
 {
-    if (m_state.pos == pos)
+    QPointF finalPos = pos;
+    // 使用 isStateWithinBounds 检查
+    // 只有当 update=true 时才检查 (例如ROI拖动或外部调用)
+    // update=false 时 (由 movePoint 调用)，检查将由 movePoint 自己在最后完成
+    if (update && m_maxBounds.isValid()) {
+        ROIState nextState = m_state;
+        nextState.pos = pos;
+        if (!isStateWithinBounds(nextState)) {
+            return; // 拒绝移动
+        }
+    }
+
+    if (m_state.pos == finalPos) // 比较最终值
         return;
 
-    m_state.pos = pos;
+    m_state.pos = finalPos; // 使用最终值
     QGraphicsObject::setPos(m_state.pos); // 更新QGraphicsItem的实际位置
 
     if (update) {
@@ -125,7 +138,16 @@ void ROI::setPos(const QPointF& pos, bool update, bool finish)
  */
 void ROI::setSize(const QSizeF& size, bool update, bool finish)
 {
-    if (m_state.size == size)
+    QSizeF finalSize = size;
+    if (update && m_maxBounds.isValid()) {
+        ROIState nextState = m_state;
+        nextState.size = size;
+        if (!isStateWithinBounds(nextState)) {
+            return; // 拒绝调整大小
+        }
+    }
+
+    if (m_state.size == finalSize) // 比较最终值
         return;
 
     // 在改变边界框之前必须调用此函数，这是Qt的要求
@@ -148,6 +170,14 @@ void ROI::setSize(const QSizeF& size, bool update, bool finish)
  */
 void ROI::setAngle(qreal angle, bool update, bool finish)
 {
+    if (update && m_maxBounds.isValid()) {
+        ROIState nextState = m_state;
+        nextState.angle = angle;
+        if (!isStateWithinBounds(nextState)) {
+            return; // 拒绝旋转
+        }
+    }
+
     if (m_state.angle == angle)
         return;
 
@@ -358,7 +388,12 @@ void ROI::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         // 这是 ROI 本体拖动的逻辑
         QPointF delta = event->scenePos() - m_dragStartPos;
         QPointF newPos = m_preMoveState.pos + delta;
-
+        //平移吸附逻辑
+        bool snap = (QApplication::keyboardModifiers() & Qt::ControlModifier);
+        if (snap && m_translateSnapSize > 0) {
+            newPos.setX(snapValue(newPos.x(), m_translateSnapSize));
+            newPos.setY(snapValue(newPos.y(), m_translateSnapSize));
+        }
         // 直接设置位置，但不立即触发 finish 信号
         setPos(newPos, true, false);
         event->accept();
@@ -397,10 +432,19 @@ void ROI::handleMoveStarted()
 
 void ROI::movePoint(Handle* handle, const QPointF& scenePos, bool finish)
 {
-    log_(QStringLiteral("movePoint: 接收到鼠标场景坐标 scenePos: (%1, %2)")
+    bool snap = (QApplication::keyboardModifiers() & Qt::ControlModifier);
+    // 钳制传入的场景坐标
+    QPointF clampedScenePos = scenePos;
+    if (m_maxBounds.isValid()) { // (移除了 qFuzzyCompare(m_preMoveState.angle, 0.0))
+        QRectF bounds = m_maxBounds.toRectF();
+        clampedScenePos.setX(qMax(bounds.left(), qMin(scenePos.x(), bounds.right())));
+        clampedScenePos.setY(qMax(bounds.top(), qMin(scenePos.y(), bounds.bottom())));
+    }
+    log_(QStringLiteral("movePoint: 接收到鼠标场景坐标 scenePos: (%1, %2) [Clamped: (%3, %4)]")
              .arg(scenePos.x())
-             .arg(scenePos.y()));
-
+             .arg(scenePos.y())
+             .arg(clampedScenePos.x())
+             .arg(clampedScenePos.y()));
     // 1. 找到被拖动句柄的信息
     int handleIndex = indexOfHandle(handle);
     log_(QStringLiteral("movePoint: 开始。 句柄索引: %1, 场景坐标: (%2, %3), 拖动结束: %4")
@@ -434,24 +478,21 @@ void ROI::movePoint(Handle* handle, const QPointF& scenePos, bool finish)
 
     QPointF p1_local;
     if (invertible) {
-        p1_local = preMove_SceneToLocal_Transform.map(scenePos);
+        p1_local = preMove_SceneToLocal_Transform.map(clampedScenePos);
     } else {
         log_(QStringLiteral("movePoint: 警告：变换矩阵不可逆！"));
         p1_local = QPointF(0,0); // 或者其他错误处理
     }
 
-    log_(QStringLiteral("movePoint: 坐标转换：场景 (%1, %2) -> 本地 (基于preMoveState) (%3, %4)")
-             .arg(scenePos.x()).arg(scenePos.y())
-             .arg(p1_local.x()).arg(p1_local.y()));
 
-    // [新增] 声明两个变量，供 Scale 和 Rotate 共同使用
+
+    // 声明两个变量，供 Scale 和 Rotate 共同使用
     QPointF anchor_local; // 锚点在 preMoveState 本地坐标系中的位置
     QPointF anchor_scene; // 锚点在 场景 坐标系中的位置 (必须保持不变)
 
     // 4. 根据句柄类型执行不同的变换逻辑
     switch (handleInfo.type) {
-        // [粘贴/替换此代码块]
-        // [替换]
+
     case HandleType::Scale: {
         log_(QStringLiteral("movePoint: 缩放(Scale)逻辑开始。句柄类型: %1")
                  .arg(static_cast<int>(handleInfo.type)));
@@ -502,9 +543,7 @@ void ROI::movePoint(Handle* handle, const QPointF& scenePos, bool finish)
                  .arg(newSize.width()).arg(newSize.height())
                  .arg(newLocalTopLeft.x()).arg(newLocalTopLeft.y()));
 
-        // --- [全新逻辑] ---
-        // 5. 计算锚点在 *新* 局部坐标系中的位置
-        //    (即，相对于 newLocalTopLeft)
+        // 5. 计算锚点在 新*局部坐标系中的位置
         QPointF anchor_in_new_local = anchor_local - newLocalTopLeft;
         log_(QStringLiteral("  [Scale] 锚点在 *新* 局部几何中的位置: (%1, %2)")
                  .arg(anchor_in_new_local.x()).arg(anchor_in_new_local.y()));
@@ -527,14 +566,22 @@ void ROI::movePoint(Handle* handle, const QPointF& scenePos, bool finish)
         QPointF finalPos = anchor_scene - anchor_transformed_local;
         log_(QStringLiteral("  [Scale] 最终计算的新 pos: (%1, %2)")
                  .arg(finalPos.x()).arg(finalPos.y()));
-
+        if (snap) {
+            if (m_translateSnapSize > 0) {
+                finalPos.setX(snapValue(finalPos.x(), m_translateSnapSize));
+                finalPos.setY(snapValue(finalPos.y(), m_translateSnapSize));
+            }
+            if (m_scaleSnapSize > 0) {
+                newSize.setWidth(snapValue(newSize.width(), m_scaleSnapSize));
+                newSize.setHeight(snapValue(newSize.height(), m_scaleSnapSize));
+            }
+        }
         // 9. 设置新状态
         setPos(finalPos, false, false);
         setSize(newSize, false, false);
 
         break;
     }
-        // [替换]
     case HandleType::Rotate: {
         log_(QStringLiteral("movePoint: 旋转(Rotate)逻辑开始。句柄类型: %1")
                  .arg(static_cast<int>(handleInfo.type)));
@@ -585,7 +632,15 @@ void ROI::movePoint(Handle* handle, const QPointF& scenePos, bool finish)
         QPointF finalPos = anchor_scene - anchor_transformed_local_rotate;
         log_(QStringLiteral("  [Rotate] 最终计算的新 pos: (%1, %2)")
                  .arg(finalPos.x()).arg(finalPos.y()));
-
+        if (snap) {
+            if (m_translateSnapSize > 0) {
+                finalPos.setX(snapValue(finalPos.x(), m_translateSnapSize));
+                finalPos.setY(snapValue(finalPos.y(), m_translateSnapSize));
+            }
+            if (m_rotateSnapAngle > 0) {
+                newAngle = snapValue(newAngle, m_rotateSnapAngle);
+            }
+        }
         // 7. 设置新状态
         setPos(finalPos, false, false);
         // setSize(newSize, false, false); // 尺寸不变
@@ -601,6 +656,19 @@ void ROI::movePoint(Handle* handle, const QPointF& scenePos, bool finish)
         break;
     }
 
+    if (m_maxBounds.isValid()) {
+        if (!isStateWithinBounds(m_state)) {
+            // 如果新状态 (m_state) 无效 (即使钳制了鼠标)
+            // (例如，缩放或旋转导致某个角超出了边界)
+            // 我们将状态回滚到上一个已知的有效状态 (m_lastState)
+            m_state = m_lastState;
+
+            // 并且必须将 QGraphicsItem 的属性也回滚
+            QGraphicsObject::setPos(m_state.pos);
+            setTransformOriginPoint(m_state.size.width() / 2.0, m_state.size.height() / 2.0);
+            QGraphicsObject::setRotation(m_state.angle);
+        }
+    }
     // 5. 统一应用状态变更（更新Handle位置、发射信号）
     // log_(QStringLiteral("movePoint: 逻辑处理完毕，调用 stateChanged(finish=%1)")
     //          .arg(finish ? "是" : "否"));
@@ -678,4 +746,91 @@ QPainterPath ROI::shape() const
     QPainterPath path;
     path.addRect(boundingRect());
     return path;
+}
+
+
+/**
+ * @brief 设置ROI的边界限制
+ * @param bounds 边界矩形（场景坐标）
+ */
+void ROI::setMaxBounds(const QRectF& bounds)
+{
+    m_maxBounds = bounds;
+}
+/**
+ * @brief 检查一个给定的ROI状态是否完全位于maxBounds之内
+ *
+ * 通过计算该状态下ROI的4个场景顶点，并检查它们是否都在m_maxBounds内
+ *
+ * @param state 要检查的ROIState
+ * @return true 如果在边界内或未设置边界，false 如果超出边界
+ */
+bool ROI::isStateWithinBounds(const ROIState& state) const
+{
+    if (!m_maxBounds.isValid()) {
+        return true; // 没有设置边界，始终有效
+    }
+    QRectF bounds = m_maxBounds.toRectF();
+
+    // 1. 获取该状态的4个本地顶点
+    qreal w = state.size.width();
+    qreal h = state.size.height();
+    QVector<QPointF> localVertices = {
+        QPointF(0, 0),      // 左上
+        QPointF(w, 0),      // 右上
+        QPointF(w, h),      // 右下
+        QPointF(0, h)       // 左下
+    };
+
+    // 2. 构建此状态的 局部坐标 -> 场景坐标 变换
+    QTransform t;
+    QPointF origin(w / 2.0, h / 2.0);
+    t.translate(state.pos.x(), state.pos.y()); // 3. 平移到最终位置
+    t.translate(origin.x(), origin.y());      // 2. 将原点移动到中心
+    t.rotate(state.angle);                    // 1. 围绕中心旋转
+    t.translate(-origin.x(), -origin.y());    // 0. (重置原点)
+
+    // 3. 检查变换后的每个顶点
+    for (const QPointF& localV : localVertices) {
+        QPointF sceneV = t.map(localV);
+        if (!bounds.contains(sceneV)) {
+            // 只要有一个顶点在边界外，此状态就无效
+            return false;
+        }
+    }
+
+    return true; // 所有顶点都在边界内
+}
+
+
+
+/**
+ * @brief 将一个值吸附到最近的 'snapSize' 倍数上
+ * @param value 原始值
+ * @param snapSize 吸附的步进值
+ * @return 吸附后的值
+ */
+qreal ROI::snapValue(qreal value, qreal snapSize) const
+{
+    if (snapSize <= 0) {
+        return value;
+    }
+    return round(value / snapSize) * snapSize;
+}
+
+
+// 吸附设置方法的实现
+void ROI::setTranslateSnap(qreal size)
+{
+    m_translateSnapSize = size;
+}
+
+void ROI::setScaleSnap(qreal size)
+{
+    m_scaleSnapSize = size;
+}
+
+void ROI::setRotateSnap(qreal angle)
+{
+    m_rotateSnapAngle = angle;
 }

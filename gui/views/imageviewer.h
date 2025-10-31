@@ -15,7 +15,7 @@
 #include <QGraphicsLineItem>
 #include <QGraphicsEllipseItem>
 // #include "gui/states/drawingstatemachine.h"
-
+#include <QRectF>
 
 class QGraphicsRectItem;
 class QGraphicsLineItem;
@@ -49,7 +49,7 @@ public:
     int bitDepth() const { return m_bitDepth; }  // 获取位深
     int currentWindowWidth() const ;  // 获取当前窗宽
     int currentWindowLevel() const ;  // 获取当前窗位
-
+    QRectF imageBounds() const;
     void setToolMode(ToolMode mode);
     ToolMode currentToolMode() const;
     void updatePixelInfo(const QPointF &scenePos);
@@ -81,7 +81,8 @@ private:
     qreal m_initialScale;
     QGraphicsRectItem *m_borderItem;
     void fitToView();
-    // 图像数据和处理状态（迁移自 MainWindow）
+    // 图像数据和处理状态
+    QRectF m_imageBounds;
     QImage m_originalImage;  // 原始图像
     int m_bitDepth = 8;      // 位深（8 或 16）
     int m_windowWidth = 256; // 当前窗宽（默认值）

@@ -38,6 +38,7 @@ void ImageViewer::loadImage(const QString &filePath)
     if (filePath.endsWith(".raw", Qt::CaseInsensitive) || filePath.endsWith(".bin", Qt::CaseInsensitive)) {
         // 加载 RAW 图像
         loadedImage = ImageProcessor::readRawImg_qImage(filePath, 2882, 2340);  // 调整尺寸如果需要
+        m_imageBounds = loadedImage.rect();
     } else {
         // 加载标准图像
         loadedImage.load(filePath);
@@ -150,6 +151,7 @@ void ImageViewer::setImage(const QImage &image)
         if (m_borderItem) m_borderItem->setRect(QRectF());
         m_originalImage = QImage();
         m_scene->setSceneRect(QRectF());
+        m_imageBounds = QRectF();
         return;
     }
 
@@ -169,8 +171,8 @@ void ImageViewer::setImage(const QImage &image)
     m_borderItem->setRect(m_pixmapItem->boundingRect());
 
     m_scene->setSceneRect(m_pixmapItem->boundingRect());
-
-    // 初始化窗宽窗位（迁移自 MainWindow）
+    m_imageBounds = m_pixmapItem->boundingRect();
+    // 初始化窗宽窗位
     int maxVal = (m_bitDepth == 16) ? 65535 : 255;
     m_windowWidth = maxVal + 1;
     m_windowLevel = maxVal / 2;
@@ -180,6 +182,10 @@ void ImageViewer::setImage(const QImage &image)
 
 
 
+}
+QRectF ImageViewer::imageBounds() const
+{
+    return m_imageBounds;
 }
 
 // 公共接口 - 窗宽窗位
