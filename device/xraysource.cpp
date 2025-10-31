@@ -1,7 +1,7 @@
 ﻿#include "xraysource.h"
 #include <QMutexLocker>
 #include <QtConcurrent/QtConcurrent>
-#include <device/serialcomunicator.h>
+#include <serialcomunicator.h>
 
 // Static member definitions
 XraySource* XraySource::s_instance = nullptr;
@@ -31,57 +31,154 @@ void XraySource::destroyInstance()
 XraySource::XraySource(QObject *parent)
     : QObject{parent}
 {
-    // 使用QObject的moveToThread代替QtConcurrent::run，更好更好的控制线程生命周期
-    m_workerThread = new QThread(this);
-    m_serialPortComm = new SerialComunicator();
+    m_commandFuture = QtConcurrent::run([this](){
 
-    // 将SerialComunicator移动到工作线程
-    m_serialPortComm->moveToThread(m_workerThread);
 
-    // 设置线程清理函数
-    connect(m_workerThread, &QThread::finished, m_serialPortComm, &QObject::deleteLater);
-    connect(m_workerThread, &QThread::finished, m_workerThread, &QObject::deleteLater);
+        m_serialPortComm = new SerialComunicator;
+        connect(m_serialPortComm, &SerialComunicator::sig_didConnect, [this](int state, const QString& msg){
+            qDebug()<<"&SerialPortViewModel::sig_didConnect: "<<state;
+            emit sig_didConnect(state);
+        });
+        connect(m_serialPortComm, &SerialComunicator::sig_didDisconnect, [this](int state, const QString& msg){
+            qDebug()<<"&SerialPortViewModel::sig_didDisconnect";
+            emit sig_didDisconnect(state);
+        });
+        connect(m_serialPortComm, &SerialComunicator::sig_didLoadPortList, [=](const QList<StSerialPortInfo*>& itemList){
+            QStringList nameList;
+            for (int i = 0; i < itemList.count(); i++) {
+                nameList << itemList.at(i)->description;
+            }
+            emit sig_didLoadPortsList(nameList);
+        });
+        connect(m_serialPortComm, &SerialComunicator::sig_didGetStatus, [this](StSerialPortInfo *item){
+            emit sig_didGetXrayStatus(item->xrayInfo.warmingupState == 1 ? true : false,
+                                      item->xrayInfo.interLock,
+                                      item->xrayInfo.xRayOn,
+                                      item->xrayInfo.currKv,
+                                      item->xrayInfo.currUA);
+        });
 
-    // 连接信号槽
-    connect(m_serialPortComm, &SerialComunicator::sig_didConnect, this, [this](int state, const QString& msg){
-        qDebug() << "Connected state:" << state;
-        emit sig_didConnect(state);
-    });
+        m_serialPortComm->loadPorts();
 
-    connect(m_serialPortComm, &SerialComunicator::sig_didDisconnect, this, [this](int state, const QString& msg){
-        qDebug() << "Disconnected";
-        emit sig_didDisconnect(state);
-    });
+        int timeCount = 0;
+        while (m_commandLoop) {
+            if (!m_commandQueue.isEmpty()) {
 
-    connect(m_serialPortComm, &SerialComunicator::sig_didLoadPortList, this, [this](const QList<StSerialPortInfo*>& itemList){
-        QStringList nameList;
-        for (const auto* item : itemList) {
-            nameList << item->description;
+                StXrayCommand *cmd = m_commandQueue.dequeue();
+                switch (cmd->type) {
+                case XRAY_CMD_TYPE_CONNECT:
+                {
+                    if (m_serialPortComm->avaliblePorts().count() > cmd->value) {
+                        m_serialPortComm->selPort(cmd->value);
+                    }
+
+                    break;
+                }
+                case XRAY_CMD_TYPE_DISCONNECT:
+                {
+                    m_serialPortComm->stopConnecting();
+                    break;
+                }
+                case XRAY_CMD_TYPE_XRAY_ON:
+                {
+                    m_serialPortComm->xrayOn();
+                    break;
+                }
+                case XRAY_CMD_TYPE_XRAY_OFF:
+                {
+                    m_serialPortComm->xrayOff();
+                    break;
+                }
+                case XRAY_CMD_TYPE_XRAY_SET_KV:
+                {
+                    m_serialPortComm->setKv(cmd->value);
+                    break;
+                }
+                case XRAY_CMD_TYPE_XRAY_SET_BEAM:
+                {
+                    m_serialPortComm->setBeam(cmd->value);
+                    break;
+                }
+                case XRAY_CMD_TYPE_XRAY_GET_STATUS:
+                {
+                    m_gettingStatusInterval = cmd->value;
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+
+                }
+
+                delete cmd;
+
+
+            }
+            if (++timeCount > m_gettingStatusInterval) {
+                timeCount = 0;
+
+                m_serialPortComm->getStatus();
+            }
+
+            QThread::msleep(10);
         }
-        emit sig_didLoadPortsList(nameList);
+
+        m_serialPortComm->stopConnecting();
+        m_serialPortComm->deleteLater();
     });
 
-    connect(m_serialPortComm, &SerialComunicator::sig_didGetStatus, this, [this](StSerialPortInfo *item){
-        emit sig_didGetXrayStatus(
-            item->xrayInfo.warmingupState == 1,
-            item->xrayInfo.interLock,
-            item->xrayInfo.xRayOn,
-            item->xrayInfo.currKv,
-            item->xrayInfo.currUA
-            );
-    });
+    // // 使用QObject的moveToThread代替QtConcurrent::run，更好更好的控制线程生命周期
+    // m_workerThread = new QThread(this);
+    // m_serialPortComm = new SerialComunicator();
 
-    // 使用工作线程的处理函数
-    connect(this, &XraySource::sig_processCommands, this, &XraySource::onProcessCommands, Qt::QueuedConnection);
+    // // 将SerialComunicator移动到工作线程
+    // m_serialPortComm->moveToThread(m_workerThread);
 
-    // 启动工作线程
-    m_workerThread->start();
+    // // 设置线程清理函数
+    // connect(m_workerThread, &QThread::finished, m_serialPortComm, &QObject::deleteLater);
+    // connect(m_workerThread, &QThread::finished, m_workerThread, &QObject::deleteLater);
 
-    // 加载端口列表
-    QMetaObject::invokeMethod(m_serialPortComm, "loadPorts", Qt::QueuedConnection);
+    // // 连接信号槽
+    // connect(m_serialPortComm, &SerialComunicator::sig_didConnect, this, [this](int state, const QString& msg){
+    //     qDebug() << "Connected state:" << state;
+    //     emit sig_didConnect(state);
+    // });
 
-    // 启动命令处理循环
-    emit sig_processCommands();
+    // connect(m_serialPortComm, &SerialComunicator::sig_didDisconnect, this, [this](int state, const QString& msg){
+    //     qDebug() << "Disconnected";
+    //     emit sig_didDisconnect(state);
+    // });
+
+    // connect(m_serialPortComm, &SerialComunicator::sig_didLoadPortList, this, [this](const QList<StSerialPortInfo*>& itemList){
+    //     QStringList nameList;
+    //     for (const auto* item : itemList) {
+    //         nameList << item->description;
+    //     }
+    //     emit sig_didLoadPortsList(nameList);
+    // });
+
+    // connect(m_serialPortComm, &SerialComunicator::sig_didGetStatus, this, [this](StSerialPortInfo *item){
+    //     emit sig_didGetXrayStatus(
+    //         item->xrayInfo.warmingupState == 1,
+    //         item->xrayInfo.interLock,
+    //         item->xrayInfo.xRayOn,
+    //         item->xrayInfo.currKv,
+    //         item->xrayInfo.currUA
+    //         );
+    // });
+
+    // // 使用工作线程的处理函数
+    // connect(this, &XraySource::sig_processCommands, this, &XraySource::onProcessCommands, Qt::QueuedConnection);
+
+    // // 启动工作线程
+    // m_workerThread->start();
+
+    // // 加载端口列表
+    // QMetaObject::invokeMethod(m_serialPortComm, "loadPorts", Qt::QueuedConnection);
+
+    // // 启动命令处理循环
+    // emit sig_processCommands();
 }
 
 XraySource::~XraySource()
@@ -156,8 +253,9 @@ void XraySource::onProcessCommands()
     // 定期获取状态
     if (++timeCount > m_gettingStatusInterval) {
         timeCount = 0;
-        // QMetaObject::invokeMethod(m_serialPortComm, "getStatus", Qt::QueuedConnection);
+        QMetaObject::invokeMethod(m_serialPortComm, "getStatus", Qt::QueuedConnection);
     }
+
 
     // 继续处理循环
     if (m_commandLoop) {

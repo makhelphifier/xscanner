@@ -39,7 +39,11 @@ set(SOURCES
     device/motionwidget.cpp
     device/serialcomunicator.cpp
     device/xraysource.cpp
-
+    device/motioncommand.cpp
+    device/motionconfig.cpp
+    device/motioncontroller.cpp
+    device/motionhelper.cpp
+    device/motionmanager.cpp
 )
 
 # 定义头文件
@@ -75,8 +79,12 @@ set(HEADERS
     device/gycustomcontrol.h
     device/serialcomunicator.h
     device/xraysource.h
-
-
+    device/motioncommand.h
+    device/motionconfig.h
+    device/motioncontroller.h
+    device/motiondef.h
+    device/motionhelper.h
+    device/motionmanager.h
 )
 
 # 添加可执行文件目标

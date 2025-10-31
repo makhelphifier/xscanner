@@ -45,5 +45,10 @@
         <file>../Resources/img/window_max.png</file>
         <file>../Resources/img/window_min.png</file>
         <file>../Resources/img/window_restore.png</file>
+        <file>../device/img/close.png</file>
+        <file>../device/img/home1.jpg</file>
+        <file>../device/img/left.png</file>
+        <file>../device/img/right.png</file>
+        <file>../device/img/stop.png</file>
     </qresource>
 </RCC>
