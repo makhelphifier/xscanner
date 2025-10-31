@@ -5,6 +5,9 @@
 #include <QPen>
 #include <QList>
 #include "handle.h"
+#include <QRectF>    // ++ 添加
+#include <QVariant>  // ++ 添加
+
 class Handle;
 class QGraphicsSceneMouseEvent;
 class QPainter;
@@ -97,6 +100,7 @@ public:
     // 外观设置
     void setPen(const QPen& pen);
     void setHoverPen(const QPen& pen);
+    void setMaxBounds(const QRectF& bounds);
 
     // 句柄管理 (Handle Management)
     Handle* addFreeHandle(const QPointF& pos, const QString& name = QString());
@@ -191,6 +195,13 @@ protected:
 
 private:
     /**
+     * @brief 检查一个给定的ROI状态是否完全位于maxBounds之内
+     * @param state 要检查的状态
+     * @return true 如果在边界内或未设置边界，false 如果超出边界
+     */
+    bool isStateWithinBounds(const ROIState& state) const;
+
+    /**
      * @brief 根据当前状态更新所有句柄的位置
      */
     void updateHandles();
@@ -211,6 +222,7 @@ private:
     ROIState m_state;              // 当前状态
     ROIState m_lastState;   // 上一次发出信号时的状态
     ROIState m_preMoveState;       // 移动前的状态，用于取消操作
+    QVariant m_maxBounds;
 
     // 外观
     QPen m_pen;
@@ -235,6 +247,7 @@ private:
     // 拖动状态变量
     DragMode m_dragMode = DragMode::None; // 当前拖动模式
     QPointF m_dragStartPos;               // 拖动开始时鼠标的场景位置
+
 
 };
 

@@ -11,6 +11,8 @@
 #include <QGraphicsItem>
 #include "gui/states/drawingstatemachine.h"
 #include "gui/views/imageviewer.h"
+#include "gui/items/roi.h"
+
 
 class ImageViewer;
 class DrawingStateMachine;
@@ -102,6 +104,12 @@ public:
             if ((endPoint - m_startPoint).manhattanLength() > 5) { // 示例：最小绘制距离
                 // 使用 FinalItem 的构造函数创建最终项
                 FinalItem* finalItem = new FinalItem(m_startPoint, endPoint); // 假设构造函数是这样
+                // 尝试将新项转换为 ROI
+                if (ROI* roiItem = dynamic_cast<ROI*>(finalItem)) {
+                    // 如果转换成功，从 viewer 获取边界并设置
+                    roiItem->setMaxBounds(viewer->imageBounds());
+                    qDebug() << "GenericDrawingState: Applied maxBounds to new ROI.";
+                }
                 viewer->scene()->addItem(finalItem);
                 qDebug() << "GenericDrawingState: Created FinalItem.";
             } else {
