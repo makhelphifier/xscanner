@@ -11,6 +11,11 @@ LIBS += -L$$PWD/../sdk/opencv/lib/ -lopencv_world470
 LIBS += -L$$PWD/../sdk/log4qt/lib/ -llog4qt
 SOURCES += \
     app/main.cpp \
+    device/motioncommand.cpp \
+    device/motionconfig.cpp \
+    device/motioncontroller.cpp \
+    device/motionhelper.cpp \
+    device/motionmanager.cpp \
     gui/items/ROI.cpp \
     gui/items/handle.cpp \
     gui/items/rectroi.cpp \
@@ -43,6 +48,12 @@ SOURCES += \
     device/serialcomunicator.cpp \
     device/xraysource.cpp
 HEADERS += \
+    device/motioncommand.h \
+    device/motionconfig.h \
+    device/motioncontroller.h \
+    device/motiondef.h \
+    device/motionhelper.h \
+    device/motionmanager.h \
     gui/items/ROI.h \
     gui/items/handle.h \
     gui/items/rectroi.h \

@@ -3,7 +3,8 @@
 
 #include <QObject>
 #include <QDebug>
-#include <QSerialPort>
+// #include <QSerialPort>
+#include <QtSerialPort/QSerialPort>
 class QTimer;
 
 struct StXrayInfo {

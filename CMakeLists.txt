@@ -3,7 +3,8 @@ project(xscanner)
 
 # 查找Qt6（包括Core、Gui、Widgets 和 SerialPort）
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets SerialPort )
-
+# find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets )
+# find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Qt6SerialPort)
 # 自动设置 CMAKE_AUTOMOC, CMAKE_AUTORCC, CMAKE_AUTOUIC
 # 并且会设置 CMAKE_CXX_STANDARD 17 (Qt6 默认)
 qt_standard_project_setup()
@@ -39,7 +40,11 @@ set(SOURCES
     device/motionwidget.cpp
     device/serialcomunicator.cpp
     device/xraysource.cpp
-
+    device/motioncommand.cpp
+    device/motionconfig.cpp
+    device/motioncontroller.cpp
+    device/motionhelper.cpp
+    device/motionmanager.cpp
 )
 
 # 定义头文件
@@ -75,8 +80,35 @@ set(HEADERS
     device/gycustomcontrol.h
     device/serialcomunicator.h
     device/xraysource.h
+    device/motioncommand.h
+    device/motionconfig.h
+    device/motioncontroller.h
+    device/motiondef.h
+    device/motionhelper.h
+    device/motionmanager.h
+)
+
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/device/thirdparty/include
+)
+
+# link_directories(${CMAKE_CURRENT_SOURCE_DIR}/device/thirdparty/lib/LTDMC.lib)
+
+if(MSVC)
+    # MSVC: /utf-8 选项同时设置源字符集和执行字符集
+    add_compile_options(/utf-8)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    # GCC/Clang: 需要分别设置源字符集和执行字符集
+    add_compile_options(-finput-charset=UTF-8)
+    add_compile_options(-fexec-charset=UTF-8)
+endif()
 
 
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/device/thirdparty/bin/LTDMC.dll
+    ${CMAKE_CURRENT_SOURCE_DIR}/device/thirdparty/MotionCtrlConfig.ini
+    ${CMAKE_CURRENT_SOURCE_DIR}/device/thirdparty/adaptor.ini
+    COPYONLY
 )
 
 # 添加可执行文件目标
@@ -107,6 +139,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     # 外部库
     "${CMAKE_CURRENT_SOURCE_DIR}/third_party/sdk/opencv/build/x64/vc16/lib/opencv_world4120.lib"
     "${CMAKE_CURRENT_SOURCE_DIR}/third_party/sdk/Log4Qt/x64-Release/lib/log4qt.lib"
+    "${CMAKE_CURRENT_SOURCE_DIR}//device/thirdparty/lib/LTDMC.lib"
 )
 
 # 设置运行时输出目录（统一到bin/Debug或bin/Release）

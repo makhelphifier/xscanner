@@ -1,5 +1,8 @@
 ﻿#include "motionwidget.h"
 #include "xraysource.h"
+#include "motioncontroller.h"
+#include "motionconfig.h"
+#include "motiondef.h"
 #include <QDebug>
 #include <QVBoxLayout>
 #include <QPushButton>
@@ -15,8 +18,6 @@
 #include <QLineEdit>
 #include <QRadioButton>
 
-
-#pragma execution_character_set("utf-8")
 
 GongYTabWidget::GongYTabWidget(QWidget *parent)
     : QTabWidget(parent), m_opacity(1.0),m_font("Microsoft YaHei"),m_online(false)
@@ -38,6 +39,16 @@ GongYTabWidget::GongYTabWidget(QWidget *parent)
     });
     m_pXraySource->startToConnect(0);
 
+    m_pMotionController = new MotionController(this);
+    connect(m_pMotionController,&MotionController::sig_motionMsg,this,[this](QString msg){
+        // ui->textEdit->append(msg);
+    });
+    connect(m_pMotionController,&MotionController::sig_motionMsg,this,[this](QString msg){
+        // ui->textEdit->append(msg);
+    });
+    connect(m_pMotionController,&MotionController::sig_dataChanged,this,&GongYTabWidget::slot_DataChanged);
+
+    updateSpinBoxValue();
 
     m_pTimer = new QTimer();
     connect(m_pTimer,&QTimer::timeout,this,&GongYTabWidget::slotXrayWarning);
@@ -47,6 +58,18 @@ GongYTabWidget::GongYTabWidget(QWidget *parent)
 
 GongYTabWidget::~GongYTabWidget()
 {
+    if(m_pMotionController)
+    {
+        m_pMotionController->deleteLater();
+        m_pMotionController = nullptr;
+    }
+
+    if(m_pXraySource)
+    {
+        XraySource::destroyInstance();
+        m_pXraySource=nullptr;
+    }
+
     if(m_pLabel)
     {
         delete m_pLabel;
@@ -71,7 +94,7 @@ void GongYTabWidget::setSlashMark(bool slashMark)
     if(m_slash)
     {
         if(!m_pTimer->isActive())
-            m_pTimer->start(50);
+            m_pTimer->start(150);
         else
             return;
     }
@@ -213,6 +236,7 @@ void GongYTabWidget::createXrayGroup(QVBoxLayout* layout)
     m_pVolCurrentLineEdit->setFont(m_font);
     m_pVolCurrentLineEdit->setEnabled(false);
     m_pVolTargetSpinbox = new GyIntSpinBox();
+    m_pVolTargetSpinbox->setRange(0,500);
     m_pVolTargetSpinbox->setFont(m_font);
     connect(m_pVolTargetSpinbox->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotVoltageChanged);
     connect(m_pVolTargetSpinbox->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotVoltageChanged);
@@ -230,6 +254,7 @@ void GongYTabWidget::createXrayGroup(QVBoxLayout* layout)
     m_pCurrentCurrentLineEdit->setFont(m_font);
     m_pCurrentCurrentLineEdit->setEnabled(false);
     m_pCurrentTargetSpinbox = new GyIntSpinBox();
+    m_pCurrentTargetSpinbox->setRange(0,1000);
     m_pCurrentTargetSpinbox->setFont(m_font);
     connect(m_pCurrentTargetSpinbox->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotCurrentChanged);
     connect(m_pCurrentTargetSpinbox->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotCurrentChanged);
@@ -294,11 +319,12 @@ void GongYTabWidget::createDetectorGroup(QVBoxLayout* layout)
     pXraySpeedLable->setAlignment(Qt::AlignCenter);
     pXraySpeedLable->setFont(m_font);
     QPushButton* pXrayStopAllBtn = new QPushButton(tr("Stop all"));
+    connect(pXrayStopAllBtn,&QPushButton::clicked,this,&GongYTabWidget::slotStopAllBtnClick);
     pXrayStopAllBtn->setFont(m_font);
     pGridLayout->addWidget(pXrayCurrentLable,0,1,Qt::AlignCenter);
     pGridLayout->addWidget(pXrayTargetLable,0,2,Qt::AlignCenter);
     pGridLayout->addWidget(pXraySpeedLable,0,3,Qt::AlignCenter);
-    pGridLayout->addWidget(pXrayStopAllBtn,0,4,1,2,Qt::AlignCenter);
+    pGridLayout->addWidget(pXrayStopAllBtn,0,4,1,4,Qt::AlignCenter);
 
     //画线
     QLabel* pXrayLineLable = new QLabel(tr("射线源"));
@@ -306,55 +332,89 @@ void GongYTabWidget::createDetectorGroup(QVBoxLayout* layout)
     GyHorizontalLine* pXrayHoriLineLabel = new GyHorizontalLine();
     pXrayHoriLineLabel->setFont(m_font);
     pGridLayout->addWidget(pXrayLineLable,1,0,Qt::AlignCenter);
-    pGridLayout->addWidget(pXrayHoriLineLabel,1,1,1,5);
+    pGridLayout->addWidget(pXrayHoriLineLabel,1,1,1,7);
 
     //画x轴
     QLabel* pXrayXAixs = new QLabel(tr("X轴 (mm)"));
     pXrayXAixs->setFont(m_font);
-    m_pXrayCurrentPos = new GyDoubleSpinBox();
+    m_pXrayCurrentPos = new GyDoubleSpinBox(1,Xray_X);
     m_pXrayCurrentPos->setFont(m_font);
-    m_pXrayTargetPos = new GyDoubleSpinBox();
+    m_pXrayTargetPos = new GyDoubleSpinBox(2,Xray_X);
+    m_pXrayTargetPos->setRange(-100,1000);
     connect(m_pXrayTargetPos->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisPosChanged);
-    connect(m_pXrayTargetPos->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
+    // connect(m_pXrayTargetPos->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
     m_pXrayTargetPos->setFont(m_font);
-    m_pXraySpeed = new GyDoubleSpinBox();
+    m_pXraySpeed = new GyDoubleSpinBox(3,Xray_X);
     connect(m_pXraySpeed->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisSpeedChanged);
-    connect(m_pXraySpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisSpeedChanged);
+    // connect(m_pXraySpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisSpeedChanged);
     m_pXraySpeed->setFont(m_font);
-    QPushButton* pXrayXStartBtn = new QPushButton(tr("开始"));
-    pXrayXStartBtn->setFont(m_font);
-    QPushButton* pXrayStopBtn = new QPushButton(tr("停止"));
+    GyPushButton* pXrayXLeftBtn = new GyPushButton(Xray_X,tr(""));/*向左*/
+    pXrayXLeftBtn->setIcon(QIcon(":/img/left.png"));
+    connect(pXrayXLeftBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotLeftButtonPress);
+    connect(pXrayXLeftBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
+    pXrayXLeftBtn->setFont(m_font);
+    GyPushButton* pXrayXRightBtn = new GyPushButton(Xray_X,tr(""));//向右
+    pXrayXRightBtn->setIcon(QIcon(":/img/right.png"));
+    connect(pXrayXRightBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotRightButtonPress);
+    connect(pXrayXRightBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
+    pXrayXRightBtn->setFont(m_font);
+    GyPushButton* pXrayXHomeBtn = new GyPushButton(Xray_X,tr("回零"));//
+    //pXrayXHomeBtn->setIcon(QIcon(":/img/home.png"));
+    connect(pXrayXHomeBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotHomeButtonClick);
+    pXrayXHomeBtn->setFont(m_font);
+    GyPushButton* pXrayStopBtn = new GyPushButton(Xray_X, tr(""));//停止
+    pXrayStopBtn->setIcon(QIcon(":/img/stop.png"));
+    connect(pXrayStopBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotEndButtonClick);
     pXrayStopBtn->setFont(m_font);
     pGridLayout->addWidget(pXrayXAixs,2,0,Qt::AlignCenter);
     pGridLayout->addWidget(m_pXrayCurrentPos,2,1,Qt::AlignCenter);
     pGridLayout->addWidget(m_pXrayTargetPos,2,2,Qt::AlignCenter);
     pGridLayout->addWidget(m_pXraySpeed,2,3,Qt::AlignCenter);
-    pGridLayout->addWidget(pXrayXStartBtn,2,4,Qt::AlignCenter);
-    pGridLayout->addWidget(pXrayStopBtn,2,5,Qt::AlignCenter);
+    pGridLayout->addWidget(pXrayXLeftBtn,2,4,Qt::AlignCenter);
+    pGridLayout->addWidget(pXrayXRightBtn,2,5,Qt::AlignCenter);
+    pGridLayout->addWidget(pXrayXHomeBtn,2,6,Qt::AlignCenter);
+    pGridLayout->addWidget(pXrayStopBtn,2,7,Qt::AlignCenter);
 
     //画z轴
     QLabel* pXrayZAixs = new QLabel(tr("Z轴 (mm)"));
     pXrayZAixs->setFont(m_font);
-    m_pXrayZCurrentPos = new GyDoubleSpinBox();
+    m_pXrayZCurrentPos = new GyDoubleSpinBox(4,Xray_Z);
     m_pXrayZCurrentPos->setFont(m_font);
-    m_pXrayZTargetPos = new GyDoubleSpinBox();
+    m_pXrayZTargetPos = new GyDoubleSpinBox(5,Xray_Z);
     m_pXrayZTargetPos->setFont(m_font);
+    m_pXrayZTargetPos->setRange(-100,1000);
     connect(m_pXrayZTargetPos->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisPosChanged);
-    connect(m_pXrayZTargetPos->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
-    m_pXrayZSpeed = new GyDoubleSpinBox();
+    // connect(m_pXrayZTargetPos->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
+    m_pXrayZSpeed = new GyDoubleSpinBox(6,Xray_Z);
     m_pXrayZSpeed->setFont(m_font);
     connect(m_pXrayZSpeed->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisSpeedChanged);
-    connect(m_pXrayZSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisSpeedChanged);
-    QPushButton* pXrayZXStartBtn = new QPushButton(tr("开始"));
-    pXrayZXStartBtn->setFont(m_font);
-    QPushButton* pXrayZStopBtn = new QPushButton(tr("停止"));
+    // connect(m_pXrayZSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisSpeedChanged);
+    GyPushButton* pXrayZLeftBtn = new GyPushButton(Xray_Z,tr(""));
+    pXrayZLeftBtn->setIcon(QIcon(":/img/left.png"));
+    connect(pXrayZLeftBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotLeftButtonPress);
+    connect(pXrayZLeftBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
+    pXrayZLeftBtn->setFont(m_font);
+    GyPushButton* pXrayZXRightBtn = new GyPushButton(Xray_Z,tr(""));
+    pXrayZXRightBtn->setIcon(QIcon(":/img/right.png"));
+    connect(pXrayZXRightBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotRightButtonPress);
+    connect(pXrayZXRightBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
+    pXrayZXRightBtn->setFont(m_font);
+    GyPushButton* pXrayZXHomeBtn = new GyPushButton(Xray_Z,tr("回零"));
+    connect(pXrayZXHomeBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotHomeButtonClick);
+    pXrayZXHomeBtn->setFont(m_font);
+
+    GyPushButton* pXrayZStopBtn = new GyPushButton(Xray_Z,tr(""));
+    pXrayZStopBtn->setIcon(QIcon(":/img/stop.png"));
+    connect(pXrayZStopBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotEndButtonClick);
     pXrayZStopBtn->setFont(m_font);
     pGridLayout->addWidget(pXrayZAixs,3,0,Qt::AlignCenter);
     pGridLayout->addWidget(m_pXrayZCurrentPos,3,1,Qt::AlignCenter);
     pGridLayout->addWidget(m_pXrayZTargetPos,3,2,Qt::AlignCenter);
     pGridLayout->addWidget(m_pXrayZSpeed,3,3,Qt::AlignCenter);
-    pGridLayout->addWidget(pXrayZXStartBtn,3,4,Qt::AlignCenter);
-    pGridLayout->addWidget(pXrayZStopBtn,3,5,Qt::AlignCenter);
+    pGridLayout->addWidget(pXrayZLeftBtn,3,4,Qt::AlignCenter);
+    pGridLayout->addWidget(pXrayZXRightBtn,3,5,Qt::AlignCenter);
+    pGridLayout->addWidget(pXrayZXHomeBtn,3,6,Qt::AlignCenter);
+    pGridLayout->addWidget(pXrayZStopBtn,3,7,Qt::AlignCenter);
 
     //载物台
     QLabel* pStageLabel = new QLabel(tr("载物台"));
@@ -362,78 +422,129 @@ void GongYTabWidget::createDetectorGroup(QVBoxLayout* layout)
     GyHorizontalLine* pStageHoriLine = new GyHorizontalLine();
     pStageHoriLine->setFont(m_font);
     pGridLayout->addWidget(pStageLabel,4,0,Qt::AlignCenter);
-    pGridLayout->addWidget(pStageHoriLine,4,1,1,5);
+    pGridLayout->addWidget(pStageHoriLine,4,1,1,7);
 
     //画x轴
     QLabel* pStageXAixs = new QLabel(tr("X轴 (mm)"));
     pStageXAixs->setFont(m_font);
-    m_pStageCurrentPos = new GyDoubleSpinBox();
+    m_pStageCurrentPos = new GyDoubleSpinBox(7,Material_X);
     m_pStageCurrentPos->setFont(m_font);
-    m_pStageTargetPos = new GyDoubleSpinBox();
+    m_pStageTargetPos = new GyDoubleSpinBox(8,Material_X);
     m_pStageTargetPos->setFont(m_font);
+    m_pStageTargetPos->setRange(-100,1000);
     connect(m_pStageTargetPos->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisPosChanged);
-    connect(m_pStageTargetPos->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
-    m_pStageSpeed = new GyDoubleSpinBox();
+    // connect(m_pStageTargetPos->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
+    m_pStageSpeed = new GyDoubleSpinBox(9,Material_X);
     m_pStageSpeed->setFont(m_font);
     connect(m_pStageSpeed->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisSpeedChanged);
-    connect(m_pStageSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisSpeedChanged);
-    QPushButton* pStageXStartBtn = new QPushButton(tr("开始"));
-    pStageXStartBtn->setFont(m_font);
-    QPushButton* pStageStopBtn = new QPushButton(tr("停止"));
+    // connect(m_pStageSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisSpeedChanged);
+    GyPushButton* pStageXLeftBtn = new GyPushButton(Material_X,tr(""));
+    pStageXLeftBtn->setIcon(QIcon(":/img/left.png"));
+    connect(pStageXLeftBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotLeftButtonPress);
+    connect(pStageXLeftBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
+    pStageXLeftBtn->setFont(m_font);
+    GyPushButton* pStageXRightBtn = new GyPushButton(Material_X,tr(""));
+    pStageXRightBtn->setIcon(QIcon(":/img/right.png"));
+    connect(pStageXRightBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotRightButtonPress);
+    connect(pStageXRightBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
+    pStageXRightBtn->setFont(m_font);
+    GyPushButton* pStageXHomeBtn = new GyPushButton(Material_X,tr("回零"));
+    connect(pStageXHomeBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotHomeButtonClick);
+    pStageXHomeBtn->setFont(m_font);
+
+    GyPushButton* pStageStopBtn = new GyPushButton(Material_X,tr(""));
+    pStageStopBtn->setIcon(QIcon(":/img/stop.png"));
+    connect(pStageStopBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotEndButtonClick);
     pStageStopBtn->setFont(m_font);
     pGridLayout->addWidget(pStageXAixs,5,0,Qt::AlignCenter);
     pGridLayout->addWidget(m_pStageCurrentPos,5,1,Qt::AlignCenter);
     pGridLayout->addWidget(m_pStageTargetPos,5,2,Qt::AlignCenter);
     pGridLayout->addWidget(m_pStageSpeed,5,3,Qt::AlignCenter);
-    pGridLayout->addWidget(pStageXStartBtn,5,4,Qt::AlignCenter);
-    pGridLayout->addWidget(pStageStopBtn,5,5,Qt::AlignCenter);
+    pGridLayout->addWidget(pStageXLeftBtn,5,4,Qt::AlignCenter);
+     pGridLayout->addWidget(pStageXRightBtn,5,5,Qt::AlignCenter);
+     pGridLayout->addWidget(pStageXHomeBtn,5,6,Qt::AlignCenter);
+    pGridLayout->addWidget(pStageStopBtn,5,7,Qt::AlignCenter);
 
     //画y轴
     QLabel* pStageYAixs = new QLabel(tr("Y轴 (mm)"));
     pStageYAixs->setFont(m_font);
-    m_pStageYCurrentPos = new GyDoubleSpinBox();
+    m_pStageYCurrentPos = new GyDoubleSpinBox(10,Material_Y);
     m_pStageYCurrentPos->setFont(m_font);
-    m_pStageYTargetPos = new GyDoubleSpinBox();
+    m_pStageYTargetPos = new GyDoubleSpinBox(11,Material_Y);
     m_pStageYTargetPos->setFont(m_font);
+    m_pStageYTargetPos->setRange(-100,1000);
     connect(m_pStageYTargetPos->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisPosChanged);
-    connect(m_pStageYTargetPos->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
-    m_pStageYSpeed = new GyDoubleSpinBox();
+    // connect(m_pStageYTargetPos->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
+    m_pStageYSpeed = new GyDoubleSpinBox(12,Material_Y);
     m_pStageYSpeed->setFont(m_font);
     connect(m_pStageYSpeed->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisSpeedChanged);
-    connect(m_pStageYSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisSpeedChanged);
-    QPushButton* pStageYXStartBtn = new QPushButton(tr("开始"));
-    pStageYXStartBtn->setFont(m_font);
-    QPushButton* pStageYStopBtn = new QPushButton(tr("停止"));
+    // connect(m_pStageYSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisSpeedChanged);
+    GyPushButton* pStageYXLeftBtn = new GyPushButton(Material_Y,tr(""));
+    pStageYXLeftBtn->setIcon(QIcon(":/img/left.png"));
+    connect(pStageYXLeftBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotLeftButtonPress);
+    connect(pStageYXLeftBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
+    pStageYXLeftBtn->setFont(m_font);
+    GyPushButton* pStageYXRightBtn = new GyPushButton(Material_Y,tr(""));
+    pStageYXRightBtn->setIcon(QIcon(":/img/right.png"));
+    connect(pStageYXRightBtn,&GyPushButton::pressed,this,&::GongYTabWidget::slotRightButtonPress);
+    connect(pStageYXRightBtn,&GyPushButton::released,this,&::GongYTabWidget::slotButtonRelease);
+    pStageYXRightBtn->setFont(m_font);
+    GyPushButton* pStageYXHomeBtn = new GyPushButton(Material_Y,tr("回零"));
+    connect(pStageYXHomeBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotHomeButtonClick);
+    pStageYXHomeBtn->setFont(m_font);
+
+    GyPushButton* pStageYStopBtn = new GyPushButton(Material_Y,tr(""));
+    pStageYStopBtn->setIcon(QIcon(":/img/stop.png"));
+    connect(pStageYStopBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotEndButtonClick);
     pStageYStopBtn->setFont(m_font);
     pGridLayout->addWidget(pStageYAixs,6,0,Qt::AlignCenter);
     pGridLayout->addWidget(m_pStageYCurrentPos,6,1,Qt::AlignCenter);
     pGridLayout->addWidget(m_pStageYTargetPos,6,2,Qt::AlignCenter);
     pGridLayout->addWidget(m_pStageYSpeed,6,3,Qt::AlignCenter);
-    pGridLayout->addWidget(pStageYXStartBtn,6,4,Qt::AlignCenter);
-    pGridLayout->addWidget(pStageYStopBtn,6,5,Qt::AlignCenter);
+    pGridLayout->addWidget(pStageYXLeftBtn,6,4,Qt::AlignCenter);
+    pGridLayout->addWidget(pStageYXRightBtn,6,5,Qt::AlignCenter);
+    pGridLayout->addWidget(pStageYXHomeBtn,6,6,Qt::AlignCenter);
+    pGridLayout->addWidget(pStageYStopBtn,6,7,Qt::AlignCenter);
     //画z轴
     QLabel* pStageZAixs = new QLabel(tr("Z轴 (mm)"));
     pStageZAixs->setFont(m_font);
-    m_pStageZCurrentPos = new GyDoubleSpinBox();
+    m_pStageZCurrentPos = new GyDoubleSpinBox(13,Material_Z);
     m_pStageZCurrentPos->setFont(m_font);
-    m_pStageZTargetPos = new GyDoubleSpinBox();
+    m_pStageZTargetPos = new GyDoubleSpinBox(14,Material_Z);
     m_pStageZTargetPos->setFont(m_font);
+    m_pStageZTargetPos->setRange(-100,1000);
     connect(m_pStageZTargetPos->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisPosChanged);
-    connect(m_pStageZTargetPos->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
-    m_pStageZSpeed = new GyDoubleSpinBox();
+    // connect(m_pStageZTargetPos->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
+    m_pStageZSpeed = new GyDoubleSpinBox(15,Material_Z);
     m_pStageZSpeed->setFont(m_font);
     connect(m_pStageZSpeed->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisSpeedChanged);
-    connect(m_pStageZSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisSpeedChanged);
-    QPushButton* pStageZXStartBtn = new QPushButton(tr("开始"));
-    pStageZXStartBtn->setFont(m_font);
-    QPushButton* pStageZStopBtn = new QPushButton(tr("停止"));
+    // connect(m_pStageZSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisSpeedChanged);
+    GyPushButton* pStageZLeftBtn = new GyPushButton(Material_Z,tr(""));
+    pStageZLeftBtn->setIcon(QIcon(":/img/left.png"));
+    connect(pStageZLeftBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotLeftButtonPress);
+    connect(pStageZLeftBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
+    pStageZLeftBtn->setFont(m_font);
+    GyPushButton* pStageZXRightBtn = new GyPushButton(Material_Z,tr(""));
+    pStageZXRightBtn->setIcon(QIcon(":/img/right.png"));
+    connect(pStageZXRightBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotRightButtonPress);
+    connect(pStageZXRightBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
+    pStageZXRightBtn->setFont(m_font);
+    GyPushButton* pStageZXHomeBtn = new GyPushButton(Material_Z,tr("回零"));
+    connect(pStageZXHomeBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotHomeButtonClick);
+    pStageZXHomeBtn->setFont(m_font);
+
+    GyPushButton* pStageZStopBtn = new GyPushButton(Material_Z,tr(""));
+    pStageZStopBtn->setIcon(QIcon(":/img/stop.png"));
+    connect(pStageZStopBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotEndButtonClick);
     pStageZStopBtn->setFont(m_font);
     pGridLayout->addWidget(pStageZAixs,7,0,Qt::AlignCenter);
     pGridLayout->addWidget(m_pStageZCurrentPos,7,1,Qt::AlignCenter);
     pGridLayout->addWidget(m_pStageZTargetPos,7,2,Qt::AlignCenter);
     pGridLayout->addWidget(m_pStageZSpeed,7,3,Qt::AlignCenter);
-    pGridLayout->addWidget(pStageZXStartBtn,7,4,Qt::AlignCenter);
-    pGridLayout->addWidget(pStageZStopBtn,7,5,Qt::AlignCenter);
+    pGridLayout->addWidget(pStageZLeftBtn,7,4,Qt::AlignCenter);
+    pGridLayout->addWidget(pStageZXRightBtn,7,5,Qt::AlignCenter);
+    pGridLayout->addWidget(pStageZXHomeBtn,7,6,Qt::AlignCenter);
+    pGridLayout->addWidget(pStageZStopBtn,7,7,Qt::AlignCenter);
 
 
     //探测器
@@ -442,78 +553,127 @@ void GongYTabWidget::createDetectorGroup(QVBoxLayout* layout)
     GyHorizontalLine* pDetectorLine = new GyHorizontalLine();
     pDetectorLine->setFont(m_font);
     pGridLayout->addWidget(pDetectorLabel,8,0,Qt::AlignCenter);
-    pGridLayout->addWidget(pDetectorLine,8,1,1,5);
+    pGridLayout->addWidget(pDetectorLine,8,1,1,7);
 
     //画x轴
     QLabel* pDetectorXAixs = new QLabel(tr("X轴 (mm)"));
     pDetectorXAixs->setFont(m_font);
-    m_pDetectorCurrentPos = new GyDoubleSpinBox();
+    m_pDetectorCurrentPos = new GyDoubleSpinBox(16,Detector_X);
     m_pDetectorCurrentPos->setFont(m_font);
-    m_pDetectorTargetPos = new GyDoubleSpinBox();
+    m_pDetectorTargetPos = new GyDoubleSpinBox(17,Detector_X);
     m_pDetectorTargetPos->setFont(m_font);
+    m_pDetectorTargetPos->setRange(-100,1000);
     connect(m_pDetectorTargetPos->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisPosChanged);
-    connect(m_pDetectorTargetPos->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
-    m_pDetectorSpeed = new GyDoubleSpinBox();
+    // connect(m_pDetectorTargetPos->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
+    m_pDetectorSpeed = new GyDoubleSpinBox(18,Detector_X);
     m_pDetectorSpeed->setFont(m_font);
     connect(m_pDetectorSpeed->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisSpeedChanged);
-    connect(m_pDetectorSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisSpeedChanged);
-    QPushButton* pDetectorXStartBtn = new QPushButton(tr("开始"));
-    pDetectorXStartBtn->setFont(m_font);
-    QPushButton* pDetectorStopBtn = new QPushButton(tr("停止"));
+    // connect(m_pDetectorSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisSpeedChanged);
+    GyPushButton* pDetectorXLeftBtn = new GyPushButton(Detector_X,tr(""));
+    pDetectorXLeftBtn->setIcon(QIcon(":/img/left.png"));
+    connect(pDetectorXLeftBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotLeftButtonPress);
+    connect(pDetectorXLeftBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
+    pDetectorXLeftBtn->setFont(m_font);
+    GyPushButton* pDetectorXRightBtn = new GyPushButton(Detector_X,tr(""));
+    pDetectorXRightBtn->setIcon(QIcon(":/img/right.png"));
+    connect(pDetectorXRightBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotRightButtonPress);
+    connect(pDetectorXRightBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
+    pDetectorXRightBtn->setFont(m_font);
+    GyPushButton* pDetectorXHomeBtn = new GyPushButton(Detector_X,tr("回零"));
+    connect(pDetectorXHomeBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotHomeButtonClick);
+    pDetectorXHomeBtn->setFont(m_font);
+    GyPushButton* pDetectorStopBtn = new GyPushButton(Detector_X,tr(""));
+    pDetectorStopBtn->setIcon(QIcon(":/img/stop.png"));
+    connect(pDetectorStopBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotEndButtonClick);
     pDetectorStopBtn->setFont(m_font);
     pGridLayout->addWidget(pDetectorXAixs,9,0,Qt::AlignCenter);
     pGridLayout->addWidget(m_pDetectorCurrentPos,9,1,Qt::AlignCenter);
     pGridLayout->addWidget(m_pDetectorTargetPos,9,2,Qt::AlignCenter);
     pGridLayout->addWidget(m_pDetectorSpeed,9,3,Qt::AlignCenter);
-    pGridLayout->addWidget(pDetectorXStartBtn,9,4,Qt::AlignCenter);
-    pGridLayout->addWidget(pDetectorStopBtn,9,5,Qt::AlignCenter);
+    pGridLayout->addWidget(pDetectorXLeftBtn,9,4,Qt::AlignCenter);
+    pGridLayout->addWidget(pDetectorXRightBtn,9,5,Qt::AlignCenter);
+    pGridLayout->addWidget(pDetectorXHomeBtn,9,6,Qt::AlignCenter);
+    pGridLayout->addWidget(pDetectorStopBtn,9,7,Qt::AlignCenter);
 
     //画y轴
     QLabel* pDetectorYAixs = new QLabel(tr("Y轴 (mm)"));
     pDetectorYAixs->setFont(m_font);
-    m_pDetectorYCurrentPos = new GyDoubleSpinBox();
+    m_pDetectorYCurrentPos = new GyDoubleSpinBox(19,Detector_Y);
     m_pDetectorYCurrentPos->setFont(m_font);
-    m_pDetectorYTargetPos = new GyDoubleSpinBox();
+    m_pDetectorYTargetPos = new GyDoubleSpinBox(20,Detector_Y);
     m_pDetectorYTargetPos->setFont(m_font);
+    m_pDetectorYTargetPos->setRange(-100,1000);
     connect(m_pDetectorYTargetPos->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisPosChanged);
-    connect(m_pDetectorYTargetPos->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
-    m_pDetectorYSpeed = new GyDoubleSpinBox();
+    // connect(m_pDetectorYTargetPos->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
+    m_pDetectorYSpeed = new GyDoubleSpinBox(21,Detector_Y);
     m_pDetectorYSpeed->setFont(m_font);
     connect(m_pDetectorYSpeed->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisPosChanged);
-    connect(m_pDetectorYSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
-    QPushButton* pDetectorYXStartBtn = new QPushButton(tr("开始"));
-    pDetectorYXStartBtn->setFont(m_font);
-    QPushButton* pDetectorYStopBtn = new QPushButton(tr("停止"));
+    // connect(m_pDetectorYSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
+    GyPushButton* pDetectorYXLeftBtn = new GyPushButton(Detector_Y,tr(""));
+    pDetectorYXLeftBtn->setIcon(QIcon(":/img/left.png"));
+    connect(pDetectorYXLeftBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotLeftButtonPress);
+    connect(pDetectorYXLeftBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
+    pDetectorYXLeftBtn->setFont(m_font);
+    GyPushButton* pDetectorYXRightBtn = new GyPushButton(Detector_Y,tr(""));
+    pDetectorYXRightBtn->setIcon(QIcon(":/img/right.png"));
+    connect(pDetectorYXRightBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotRightButtonPress);
+    connect(pDetectorYXRightBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
+    pDetectorYXRightBtn->setFont(m_font);
+    GyPushButton* pDetectorYXHomeBtn = new GyPushButton(Detector_Y,tr("回零"));
+    connect(pDetectorYXHomeBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotHomeButtonClick);
+    pDetectorYXHomeBtn->setFont(m_font);
+
+    GyPushButton* pDetectorYStopBtn = new GyPushButton(Detector_Y,tr(""));
+    pDetectorYStopBtn->setIcon(QIcon(":/img/stop.png"));
+    connect(pDetectorYStopBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotEndButtonClick);
     pDetectorYStopBtn->setFont(m_font);
     pGridLayout->addWidget(pDetectorYAixs,10,0,Qt::AlignCenter);
     pGridLayout->addWidget(m_pDetectorYCurrentPos,10,1,Qt::AlignCenter);
     pGridLayout->addWidget(m_pDetectorYTargetPos,10,2,Qt::AlignCenter);
     pGridLayout->addWidget(m_pDetectorYSpeed,10,3,Qt::AlignCenter);
-    pGridLayout->addWidget(pDetectorYXStartBtn,10,4,Qt::AlignCenter);
-    pGridLayout->addWidget(pDetectorYStopBtn,10,5,Qt::AlignCenter);
+    pGridLayout->addWidget(pDetectorYXLeftBtn,10,4,Qt::AlignCenter);
+    pGridLayout->addWidget(pDetectorYXRightBtn,10,5,Qt::AlignCenter);
+    pGridLayout->addWidget(pDetectorYXHomeBtn,10,6,Qt::AlignCenter);
+    pGridLayout->addWidget(pDetectorYStopBtn,10,7,Qt::AlignCenter);
     //画z轴
     QLabel* pDetectorZAixs = new QLabel(tr("Z轴 (mm)"));
     pDetectorZAixs->setFont(m_font);
-    m_pDetectorZCurrentPos = new GyDoubleSpinBox();
+    m_pDetectorZCurrentPos = new GyDoubleSpinBox(22,Detector_Z);
     m_pDetectorZCurrentPos->setFont(m_font);
-    m_pDetectorZTargetPos = new GyDoubleSpinBox();
+    m_pDetectorZTargetPos = new GyDoubleSpinBox(23,Detector_Z);
     m_pDetectorZTargetPos->setFont(m_font);
+    m_pDetectorZTargetPos->setRange(-100,1000);
     connect(m_pDetectorZTargetPos->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisPosChanged);
-    connect(m_pDetectorZTargetPos->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
-    m_pDetectorZSpeed = new GyDoubleSpinBox();
+    // connect(m_pDetectorZTargetPos->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
+    m_pDetectorZSpeed = new GyDoubleSpinBox(24,Detector_Z);
     m_pDetectorZSpeed->setFont(m_font);
     connect(m_pDetectorZSpeed->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisPosChanged);
-    connect(m_pDetectorZSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
-    QPushButton* pDetectorZXStartBtn = new QPushButton(tr("开始"));
-    pDetectorZXStartBtn->setFont(m_font);
-    QPushButton* pDetectorZStopBtn = new QPushButton(tr("停止"));
+    // connect(m_pDetectorZSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
+    GyPushButton* pDetectorZXLeftBtn = new GyPushButton(Detector_Z,tr(""));
+    pDetectorZXLeftBtn->setIcon(QIcon(":/img/left.png"));
+    connect(pDetectorZXLeftBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotLeftButtonPress);
+    connect(pDetectorZXLeftBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
+    pDetectorZXLeftBtn->setFont(m_font);
+    GyPushButton* pDetectorZXRightBtn = new GyPushButton(Detector_Z,tr(""));
+    pDetectorZXRightBtn->setIcon(QIcon(":/img/right.png"));
+    connect(pDetectorZXRightBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotRightButtonPress);
+    connect(pDetectorZXRightBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
+    pDetectorZXRightBtn->setFont(m_font);
+    GyPushButton* pDetectorZXHomeBtn = new GyPushButton(Detector_Z,tr("回零"));
+    connect(pDetectorZXHomeBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotHomeButtonClick);
+    pDetectorZXHomeBtn->setFont(m_font);
+    GyPushButton* pDetectorZStopBtn = new GyPushButton(Detector_Z,tr(""));
+    pDetectorZStopBtn->setIcon(QIcon(":/img/stop.png"));
+    connect(pDetectorZStopBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotEndButtonClick);
     pDetectorZStopBtn->setFont(m_font);
     pGridLayout->addWidget(pDetectorZAixs,11,0,Qt::AlignCenter);
     pGridLayout->addWidget(m_pDetectorZCurrentPos,11,1,Qt::AlignCenter);
     pGridLayout->addWidget(m_pDetectorZTargetPos,11,2,Qt::AlignCenter);
     pGridLayout->addWidget(m_pDetectorZSpeed,11,3,Qt::AlignCenter);
-    pGridLayout->addWidget(pDetectorZXStartBtn,11,4,Qt::AlignCenter);
-    pGridLayout->addWidget(pDetectorZStopBtn,11,5,Qt::AlignCenter);
+    pGridLayout->addWidget(pDetectorZXLeftBtn,11,4,Qt::AlignCenter);
+    pGridLayout->addWidget(pDetectorZXRightBtn,11,5,Qt::AlignCenter);
+    pGridLayout->addWidget(pDetectorZXHomeBtn,11,6,Qt::AlignCenter);
+    pGridLayout->addWidget(pDetectorZStopBtn,11,7,Qt::AlignCenter);
 
 
     layout->addWidget(pMotionCtrlGroup);
@@ -542,6 +702,30 @@ void GongYTabWidget::createAcquireGroup(QVBoxLayout* pGroupLayout)
 
     pAcquireVLayout->addLayout(pAcquireModeHLayout);
     pGroupLayout->addWidget(pAcquireGroup);
+}
+
+void GongYTabWidget::updateSpinBoxValue()
+{
+    m_pXraySpeed->setValue(MotionConfig::lastAxisSpeed[Xray_X]);
+    m_pXrayTargetPos->setValue(MotionConfig::lastAxisPos[Xray_X]);
+    m_pXrayZTargetPos->setValue(MotionConfig::lastAxisPos[Xray_Z]);
+    m_pXrayZSpeed->setValue(MotionConfig::lastAxisSpeed[Xray_Z]);
+
+    m_pStageSpeed->setValue(MotionConfig::lastAxisSpeed[Material_X]);
+    m_pStageTargetPos->setValue(MotionConfig::lastAxisPos[Material_X]);
+    m_pStageYTargetPos->setValue(MotionConfig::lastAxisPos[Material_Y]);
+    m_pStageYSpeed->setValue(MotionConfig::lastAxisSpeed[Material_Y]);
+    m_pStageZTargetPos->setValue(MotionConfig::lastAxisPos[Material_Z]);
+    m_pStageZSpeed->setValue(MotionConfig::lastAxisSpeed[Material_Z]);
+
+    m_pDetectorSpeed->setValue(MotionConfig::lastAxisSpeed[Detector_X]);
+    m_pDetectorTargetPos->setValue(MotionConfig::lastAxisPos[Detector_X]);
+    m_pDetectorYTargetPos->setValue(MotionConfig::lastAxisPos[Detector_Y]);
+    m_pDetectorYSpeed->setValue(MotionConfig::lastAxisSpeed[Detector_Y]);
+    m_pDetectorZTargetPos->setValue(MotionConfig::lastAxisPos[Detector_Z]);
+    m_pDetectorZSpeed->setValue(MotionConfig::lastAxisSpeed[Detector_Z]);
+
+    MotionConfig::writeMotionConfig();
 }
 
 void GongYTabWidget::slotXrayWarning()
@@ -620,8 +804,15 @@ void GongYTabWidget::slotAxisPosChanged()
     if(pSendBox == nullptr)
         return;
 
-    double val = pSendBox->text().toDouble();
-    qDebug()<<pSendBox->text();
+    GyDoubleSpinBox* parent = qobject_cast<GyDoubleSpinBox*>(pSendBox->parentWidget());
+    if(parent == nullptr)
+        return;
+
+    AXIS axis = parent->Axis();
+    float value = parent->value();
+    // ui->textEdit->append(QString(u8"轴%1 %2 设置目标位置 %3").arg(ui->comboBox->currentIndex()).arg(ui->comboBox->currentText()).arg(ui->edit_pos->text()));
+    MotionConfig::lastAxisPos[axis] = value;
+    m_pMotionController->onBtn_axisStartClicked(axis,QString::number(value));
 }
 
 void GongYTabWidget::slotAxisSpeedChanged()
@@ -630,8 +821,131 @@ void GongYTabWidget::slotAxisSpeedChanged()
     if(pSendBox == nullptr)
         return;
 
-    double val = pSendBox->text().toDouble();
-    qDebug()<<pSendBox->text();
+    GyDoubleSpinBox* parentSpinBox = qobject_cast<GyDoubleSpinBox*>(pSendBox->parentWidget());
+    if(parentSpinBox==nullptr)
+        return;
+    AXIS curAxis = parentSpinBox->Axis();
+    float value = parentSpinBox->value();
+    if(curAxis == /*annulus_W*/4)
+    {
+        if(value>40)
+        {
+            MotionConfig::lastAxisSpeed[curAxis] =  40;
+        }else
+        {
+            MotionConfig::lastAxisSpeed[curAxis] =  value;
+        }
+    }
+    else
+    {
+        MotionConfig::lastAxisSpeed[curAxis] = value;
+    }
+
+}
+
+void GongYTabWidget::slot_DataChanged(const QVariant &var)
+{
+    QVector<MotionCtrlData::MotionCtrlInfo> mcVec = var.value<QVector<MotionCtrlData::MotionCtrlInfo>>();
+
+    //运动控制，载物台x轴
+    m_pXrayCurrentPos->setValue(mcVec[Xray_X].axEncPos);
+    m_pXrayZCurrentPos->setValue(mcVec[Xray_Z].axEncPos);
+
+    m_pStageCurrentPos->setValue(mcVec[Material_X].axEncPos);
+    m_pStageYCurrentPos->setValue(mcVec[Material_Y].axEncPos);
+    m_pStageZCurrentPos->setValue(mcVec[Material_Z].axEncPos);
+
+    m_pDetectorCurrentPos->setValue(mcVec[Detector_X].axEncPos);
+    m_pDetectorYCurrentPos->setValue(mcVec[Detector_Y].axEncPos);
+    m_pDetectorZCurrentPos->setValue(mcVec[Detector_Z].axEncPos);
+}
+
+void GongYTabWidget::slotStartButtonClick()
+{
+    GyPushButton* pSendBtn = qobject_cast<GyPushButton*>(sender());
+    if(pSendBtn == nullptr)
+        return;
+
+    AXIS axis = pSendBtn->Axis();
+    double value=0.0;
+
+
+    QList<GyDoubleSpinBox*> spinBoxList;
+    spinBoxList << m_pXrayTargetPos << m_pXrayZTargetPos << m_pStageTargetPos<<m_pStageYTargetPos<<m_pStageZTargetPos<<m_pDetectorTargetPos<<m_pDetectorYTargetPos<<m_pDetectorZTargetPos;
+    foreach (GyDoubleSpinBox* item, spinBoxList) {
+        if(item->Axis() == axis)
+        {
+            value = item->value();
+            break;
+        }
+    }
+    qDebug()<<value;
+    m_pMotionController->onBtn_axisStartClicked(axis,QString::number(value));
+}
+
+void GongYTabWidget::slotEndButtonClick()
+{
+    GyPushButton* pSendBtn = qobject_cast<GyPushButton*>(sender());
+    if(pSendBtn == nullptr)
+        return;
+
+    AXIS axis = pSendBtn->Axis();
+    m_pMotionController->onBtn_axisStopClicked(axis);
+}
+
+void GongYTabWidget::slotLeftButtonPress()
+{
+    GyPushButton* pSendBtn = qobject_cast<GyPushButton*>(sender());
+    if(pSendBtn == nullptr)
+        return;
+
+    AXIS axis = pSendBtn->Axis();
+    m_pMotionController->onBtn_axisLeftPressed(axis);
+}
+
+void GongYTabWidget::slotRightButtonPress()
+{
+    GyPushButton* pSendBtn = qobject_cast<GyPushButton*>(sender());
+    if(pSendBtn == nullptr)
+        return;
+
+    AXIS axis = pSendBtn->Axis();
+    m_pMotionController->onBtn_axisRightPressed(axis);
+}
+
+void GongYTabWidget::slotButtonRelease()
+{
+    GyPushButton* pSendBtn = qobject_cast<GyPushButton*>(sender());
+    if(pSendBtn == nullptr)
+        return;
+
+    AXIS axis = pSendBtn->Axis();
+    m_pMotionController->onBtn_axisStopClicked(axis);
+}
+
+void GongYTabWidget::slotHomeButtonClick()
+{
+    GyPushButton* pSendBtn = qobject_cast<GyPushButton*>(sender());
+    if(pSendBtn == nullptr)
+        return;
+
+    AXIS axis = pSendBtn->Axis();
+    m_pMotionController->onBtn_axisResetPosClicked(axis);
+}
+
+void GongYTabWidget::slotStopAllBtnClick()
+{
+    if(m_online && m_pMotionController)
+    {
+        m_pMotionController->onBtn_axisStopClicked(Xray_X);
+        m_pMotionController->onBtn_axisStopClicked(Xray_Z);
+        m_pMotionController->onBtn_axisStopClicked(Material_X);
+        m_pMotionController->onBtn_axisStopClicked(Material_Y);
+        m_pMotionController->onBtn_axisStopClicked(Material_Z);
+        m_pMotionController->onBtn_axisStopClicked(Detector_X);
+        m_pMotionController->onBtn_axisStopClicked(Detector_Y);
+        m_pMotionController->onBtn_axisStopClicked(Detector_Z);
+    }
 }
 
 void GongYTabWidget::slotGetXrayStatus(bool warmup, bool locked, bool on, int kv, int ua)

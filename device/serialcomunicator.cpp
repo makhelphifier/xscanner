@@ -1,6 +1,7 @@
 ﻿#include "serialcomunicator.h"
 #include <QVariant>
-#include <QSerialPortInfo>
+// #include <QSerialPortInfo>
+#include <QtSerialPort/QSerialPortInfo>
 #include <QDebug>
 #include <QTimer>
 

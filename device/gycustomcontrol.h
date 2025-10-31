@@ -3,8 +3,10 @@
 
 #include <QSpinBox>
 #include <QDoubleSpinBox>
+#include <QPushButton>
 #include <QPen>
 #include <QPainter>
+#include "motiondef.h"
 
 class GyHorizontalLine : public QWidget {
     Q_OBJECT
@@ -79,19 +81,34 @@ public:
 
 public:
     QLineEdit *LineEdit() const;
-
 };
 
 class GyDoubleSpinBox : public QDoubleSpinBox
 {
     Q_OBJECT
 public:
-    GyDoubleSpinBox(QWidget* parent=nullptr);
+    GyDoubleSpinBox(int id, AXIS axisNum, QWidget* parent=nullptr);
     ~GyDoubleSpinBox(){}
 
 public:
     QLineEdit *LineEdit() const;
+    AXIS Axis();
+private:
+    int m_id;
+    AXIS m_axisNum;
+};
 
+class GyPushButton: public QPushButton
+{
+    Q_OBJECT
+public:
+    GyPushButton(AXIS axisNum,QString title, QWidget *parent = nullptr);
+    ~GyPushButton(){}
+
+    AXIS Axis();
+
+private:
+    AXIS m_axisNum;
 };
 
 #endif // GYCUSTOMCONTROL_H

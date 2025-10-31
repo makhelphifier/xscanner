@@ -12,6 +12,7 @@ class QLabel;
 class XraySource;
 class QCheckBox;
 class QPushButton;
+class MotionController;
 class GongYTabWidget : public QTabWidget
 {
     Q_OBJECT
@@ -36,6 +37,15 @@ private slots:
     void slotCurrentChanged();
     void slotAxisPosChanged();
     void slotAxisSpeedChanged();
+    void slot_DataChanged(const QVariant &var);
+    void slotStartButtonClick();
+    void slotEndButtonClick();
+    void slotStopAllBtnClick();
+    void slotLeftButtonPress();
+    void slotRightButtonPress();
+    void slotButtonRelease();
+    void slotHomeButtonClick();
+
 private:
     void setupTabs();
     QWidget* createFirstTab();
@@ -46,6 +56,7 @@ private:
     void createAcquireGroup(QVBoxLayout* pGroupLayout);
 
     void setCheckboxStyle(QCheckBox* pCheckbox);
+    void updateSpinBoxValue();
 
     float m_opacity;
     QFont m_font;
@@ -103,6 +114,8 @@ private:
     GyDoubleSpinBox* m_pDetectorZCurrentPos = nullptr;
     GyDoubleSpinBox* m_pDetectorZTargetPos = nullptr;
     GyDoubleSpinBox* m_pDetectorZSpeed = nullptr;
+
     XraySource* m_pXraySource=nullptr;
+    MotionController* m_pMotionController=nullptr;
 };
 #endif // MOTIONWIDGET_H

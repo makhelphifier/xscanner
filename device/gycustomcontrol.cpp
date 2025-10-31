@@ -1,4 +1,5 @@
 ﻿#include "gycustomcontrol.h"
+#include <QPushButton>
 
 GyHorizontalLine::GyHorizontalLine(QWidget *parent)
     : QWidget(parent),
@@ -137,12 +138,30 @@ QLineEdit *GyIntSpinBox::LineEdit() const
 }
 
 
-GyDoubleSpinBox::GyDoubleSpinBox(QWidget* parent):QDoubleSpinBox(parent)
+GyDoubleSpinBox::GyDoubleSpinBox(int id , AXIS axisNum, QWidget* parent):QDoubleSpinBox(parent),m_id(id),m_axisNum(axisNum)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    setFixedWidth(60);
+
 }
 
 QLineEdit *GyDoubleSpinBox::LineEdit() const
 {
     return lineEdit();
+}
+
+AXIS GyDoubleSpinBox::Axis()
+{
+    return m_axisNum;
+}
+
+GyPushButton::GyPushButton(AXIS axisNum,QString title, QWidget *parent):QPushButton(title,parent),m_axisNum(axisNum)
+{
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    setFixedWidth(40);
+}
+
+AXIS GyPushButton::Axis()
+{
+    return m_axisNum;
 }
