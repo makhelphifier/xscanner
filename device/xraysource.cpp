@@ -1,7 +1,8 @@
 ﻿#include "xraysource.h"
 #include <QMutexLocker>
 #include <QtConcurrent/QtConcurrent>
-#include <serialcomunicator.h>
+// #include <serialcomunicator.h>
+#include "serialcomunicator.h"
 
 // Static member definitions
 XraySource* XraySource::s_instance = nullptr;

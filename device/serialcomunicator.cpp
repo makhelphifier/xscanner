@@ -1,6 +1,7 @@
 ﻿#include "serialcomunicator.h"
 #include <QVariant>
-#include <QSerialPortInfo>
+// #include <QSerialPortInfo>
+#include <QtSerialPort/QSerialPortInfo>
 #include <QDebug>
 #include <QTimer>
 
@@ -51,7 +52,7 @@ void SerialComunicator::loadPorts()
         item->vendorIdentifier = info.vendorIdentifier();
         item->productIdentifier = info.productIdentifier();
         item->isNull = info.isNull();
-        item->isBusy = info.isBusy();
+        // item->isBusy = info.isBusy();
 
         m_itemList.append(item);
     }
@@ -371,18 +372,18 @@ QSerialPort *SerialComunicator::currSerialPortInst()
             case QSerialPort::OpenError:
                 msg = "OpenError";
                 break;
-            case QSerialPort::ParityError:
-                msg = "ParityError";
-                break;
-            case QSerialPort::FramingError:
-                msg = "FramingError";
-                break;
-            case QSerialPort::BreakConditionError:
-                msg = "BreakConditionError";
-                break;
-            case QSerialPort::WriteError:
-                msg = "WriteError";
-                break;
+            // case QSerialPort::ParityError:
+            //     msg = "ParityError";
+            //     break;
+            // case QSerialPort::FramingError:
+            //     msg = "FramingError";
+            //     break;
+            // case QSerialPort::BreakConditionError:
+            //     msg = "BreakConditionError";
+            //     break;
+            // case QSerialPort::WriteError:
+            //     msg = "WriteError";
+            //     break;
             case QSerialPort::ReadError:
                 msg = "ReadError";
                 break;
