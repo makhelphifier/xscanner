@@ -16,6 +16,7 @@
 #include "util/logger/logger.h"
 #include <QPainter>
 #include <QMenu>
+#include <QPainterPathStroker>
 
 
 /**
@@ -202,44 +203,43 @@ void ROI::setAngle(qreal angle, bool update, bool finish)
  *
  * @param finish 如果为true，则发射 regionChangeFinished 信号
  */
-// / ++ 确认：stateChanged 和 stateChangeFinished 实现无误 ++
 void ROI::stateChanged(bool finish)
 {
     // 检查状态是否真的改变
     bool changed = (m_state != m_lastState);
 
-    if (changed) {
-        prepareGeometryChange(); // 准备更新外观和包围盒
-        // 更新所有句柄的位置
-        for (const auto& handleInfo : qAsConst(m_handles)) {
-            if (handleInfo.item) {
-                // QPointF localPos = handleInfo.pos; // 相对坐标 (0-1)
-                // QPointF roiCoordPos = QPointF(localPos.x() * m_state.size.width(),
-                //                             localPos.y() * m_state.size.height());
-                // handleInfo.item->setPos(roiCoordPos); // 更新句柄在ROI内的位置
-                // 注意：Handle 的 setPos 需要是 ROI 坐标系！
-                handleInfo.item->setPosInROI(handleInfo.pos, m_state.size); // 假设 Handle 有此方法
+    prepareGeometryChange(); // 准备更新外观和包围盒
+
+    for (const auto& handleInfo : qAsConst(m_handles)) { // 使用 protected m_handles
+        if (handleInfo.item) {
+
+            if (handleInfo.type == HandleType::Free) {
+                // 自由句柄的 'pos' 存储的是绝对本地坐标
+                handleInfo.item->setPos(handleInfo.pos);
+            } else {
+                // 其他句柄(Scale, Rotate)的 'pos' 是相对(0-1)坐标
+                handleInfo.item->setPosInROI(handleInfo.pos, m_state.size);
             }
         }
-        update(); // 请求重绘
+    }
+
+    if (changed) {
+        update(); // 请求重绘ROI
         m_lastState = m_state; // 更新 lastState
         emit regionChanged(this); // 发送 regionChanged 信号
-        // qDebug() << "ROI stateChanged - regionChanged emitted";
+    } else {
+
+        emit regionChanged(this);
     }
+
 
     if (finish) {
         stateChangeFinished();
     }
 }
-
 void ROI::stateChangeFinished()
 {
-    // 检查 m_isMoving 是为了防止非用户交互（如 setState）意外触发 finish 信号？
-    // 但状态机驱动下，finish 只应在 release 时触发
-    // if (m_isMoving) { // 可能需要移除这个判断
     emit regionChangeFinished(this); // 发送 regionChangeFinished 信号
-    qDebug() << "ROI stateChangeFinished - regionChangeFinished emitted";
-    // }
 }
 
 /**
@@ -364,10 +364,7 @@ void ROI::mousePressEvent(QGraphicsSceneMouseEvent* event)
     if (event->button() == Qt::LeftButton) {
         qDebug() << "ROI mousePressEvent (Left Button)";
         // 让状态机 (IdleState) 决定如何处理对 ROI 本体的点击
-        // ++ 新增：检查点击是否在 Handle 子项上 ++
         QPointF clickPosInROICoords = event->pos();
-
-
 
         if (flags() & QGraphicsItem::ItemIsMovable) { // 检查 ROI 是否可移动
             m_isMoving = true;
@@ -487,15 +484,26 @@ void ROI::movePoint(Handle* handle, const QPointF& scenePos, bool finish)
         p1_local = QPointF(0,0); // 或者其他错误处理
     }
 
-
-
-    // 声明两个变量，供 Scale 和 Rotate 共同使用
     QPointF anchor_local; // 锚点在 preMoveState 本地坐标系中的位置
     QPointF anchor_scene; // 锚点在 场景 坐标系中的位置 (必须保持不变)
 
     // 4. 根据句柄类型执行不同的变换逻辑
     switch (handleInfo.type) {
+    case HandleType::Free: {
+        // log_(QStringLiteral("movePoint: 自由(Free)逻辑开始。"));
+        // p1_local 是鼠标在ROI本地坐标系中的新位置
+        HandleInfo& info = m_handles[handleIndex]; // 获取可写引用
+        info.pos = p1_local; // 更新存储的位置
 
+        // 如果需要吸附
+        if (snap) {
+            if (m_translateSnapSize > 0) {
+                info.pos.setX(snapValue(p1_local.x(), m_translateSnapSize));
+                info.pos.setY(snapValue(p1_local.y(), m_translateSnapSize));
+            }
+        }
+        break;
+    }
     case HandleType::Scale: {
         log_(QStringLiteral("movePoint: 缩放(Scale)逻辑开始。句柄类型: %1")
                  .arg(static_cast<int>(handleInfo.type)));
@@ -952,3 +960,23 @@ void ROI::removeHandle(Handle* handle)
         delete handle;
     }
 }
+
+
+/**
+ * @brief 添加一个自由句柄（仅移动，不影响ROI）
+ * @param pos 句柄在ROI局部坐标系中的位置 (与size无关)
+ * @param name 句柄的可选名称
+ * @return 创建的句柄指针
+ */
+Handle* ROI::addFreeHandle(const QPointF& pos, const QString& name)
+{
+    HandleInfo info;
+    info.type = HandleType::Free;
+    info.pos = pos; // 存储绝对局部坐标
+    // info.name = name; // C++ HandleInfo 结构体中没有 name 成员
+    return addHandle(info);
+}
+
+
+
+

@@ -1,12 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(xscanner)
 
-# 查找Qt6（包括Core、Gui、Widgets 和 SerialPort）
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets SerialPort )
-# find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets )
-# find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Qt6SerialPort)
-# 自动设置 CMAKE_AUTOMOC, CMAKE_AUTORCC, CMAKE_AUTOUIC
-# 并且会设置 CMAKE_CXX_STANDARD 17 (Qt6 默认)
+
 qt_standard_project_setup()
 
 # 定义源文件
@@ -16,7 +12,10 @@ set(SOURCES
     gui/items/handle.cpp
     gui/items/rectroi.cpp
     gui/widgets/logwidget.cpp
+    gui/widgets/extractedimageviewer.cpp
     service/imageprocessor.cpp
+    util/logger/logger.cpp
+    util/logger/qtwidgetappender.cpp
     # GUI - Views
     gui/views/imageviewer.cpp
     gui/views/mainwindow.cpp
@@ -29,6 +28,7 @@ set(SOURCES
     gui/items/annotationpointitem.cpp
     gui/items/annotationrectitem.cpp
     gui/items/annotationverticallineitem.cpp
+    gui/items/linesegmentroi.cpp
     # GUI - States
     gui/states/drawingstate.cpp
     gui/states/drawingstatemachine.cpp
@@ -55,11 +55,14 @@ set(HEADERS
     gui/states/genericdrawingstate.h
     gui/widgets/logwidget.h
     service/imageprocessor.h
+    util/logger/logger.h
+    util/logger/qtwidgetappender.h
     # GUI - Views
     gui/views/imageviewer.h
     gui/views/mainwindow.h
     # GUI - Widgets
     gui/widgets/toprightinfowidget.h
+    gui/widgets/extractedimageviewer.h
     # GUI - Items
     gui/items/annotationellipseitem.h
     gui/items/annotationhorizontallineitem.h
@@ -67,14 +70,13 @@ set(HEADERS
     gui/items/annotationpointitem.h
     gui/items/annotationrectitem.h
     gui/items/annotationverticallineitem.h
+    gui/items/linesegmentroi.h
     # GUI - States
     gui/states/drawingstate.h
     gui/states/drawingstatemachine.h
     gui/states/idlestate.h
     gui/states/panningstate.h
     gui/states/dragginghandlestate.h
-
-
     # device
     device/motionwidget.h
     device/gycustomcontrol.h
@@ -89,7 +91,6 @@ set(HEADERS
 )
 
 
-# link_directories(${CMAKE_CURRENT_SOURCE_DIR}/device/thirdparty/lib/LTDMC.lib)
 
 if(MSVC)
     # MSVC: /utf-8 选项同时设置源字符集和执行字符集
@@ -105,10 +106,6 @@ endif()
 qt_add_executable(${PROJECT_NAME}
     ${SOURCES}
     Img.qrc
-    util/logger/logger.h util/logger/logger.cpp
-    util/logger/qtwidgetappender.h util/logger/qtwidgetappender.cpp
-    gui/widgets/extractedimageviewer.h gui/widgets/extractedimageviewer.cpp
-
 )
 
 

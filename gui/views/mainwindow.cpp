@@ -96,9 +96,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // 直线工具
     lineAction = new QAction(QIcon(":/Resources/img/line_tool.png"), "直线", this);
     lineAction->setCheckable(true);
-    // toolBar->addAction(lineAction);
+    toolBar->addAction(lineAction);
     toolGroup->addAction(lineAction);
-    connect(lineAction, &QAction::triggered, [this]() { });
+    connect(lineAction, &QAction::triggered, [this]() {  viewer->setToolMode(ImageViewer::ModeDrawLine);});
 
     // 矩形工具
     rectAction = new QAction(QIcon(":/Resources/img/rect_tool.png"), "矩形", this);

@@ -36,7 +36,8 @@ public:
     enum ToolMode {
         ModeSelect,       // 用于平移、拖动 Handle
         ModeDrawRect,     // 绘制矩形 (使用 RectROI)
-        ModeDrawEllipse   // 绘制椭圆 (使用 AnnotationEllipseItem)
+        ModeDrawEllipse,   // 绘制椭圆 (使用 AnnotationEllipseItem)
+        ModeDrawLine,
     };
     void setImage(const QImage &image);
     void updatePixmap(const QPixmap &pixmap);
