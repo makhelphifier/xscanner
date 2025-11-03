@@ -93,9 +93,20 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
         }
         case ImageViewer::ModeSelect:
         default:
+        {
+            // 仅在选择/默认模式下，检查是否点击了可拖动的线条
+            InfiniteLineItem* line = qgraphicsitem_cast<InfiniteLineItem*>(item);
+            if (line && line->isMovable())
+            {
+                // 是线条，返回 false，让 QGraphicsView 将事件传递给 line
+                return false;
+            }
+
+            // 不是线条（或线条不可拖动），则开始平移 (Panning)
             machine()->setState(DrawingStateMachine::Panning);
-            return true;
+            return true;}
         }
+
         if (nextState) {
             machine()->setState(nextState, isTemporary);
             return nextState->handleMousePressEvent(event);
