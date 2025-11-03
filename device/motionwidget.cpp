@@ -348,13 +348,13 @@ void GongYTabWidget::createDetectorGroup(QVBoxLayout* layout)
     connect(m_pXraySpeed->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisSpeedChanged);
     // connect(m_pXraySpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisSpeedChanged);
     m_pXraySpeed->setFont(m_font);
-    GyPushButton* pXrayXLeftBtn = new GyPushButton(Xray_X,tr(""));/*向左*/
-    pXrayXLeftBtn->setIcon(QIcon(":/img/left.png"));
+    GyPushButton* pXrayXLeftBtn = new GyPushButton(Xray_X,tr("向左"));/*向左*/
+    // pXrayXLeftBtn->setIcon(QIcon(":/device\\img/motionleft"));
     connect(pXrayXLeftBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotLeftButtonPress);
     connect(pXrayXLeftBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
     pXrayXLeftBtn->setFont(m_font);
-    GyPushButton* pXrayXRightBtn = new GyPushButton(Xray_X,tr(""));//向右
-    pXrayXRightBtn->setIcon(QIcon(":/img/right.png"));
+    GyPushButton* pXrayXRightBtn = new GyPushButton(Xray_X,tr("向右"));//向右
+    // pXrayXRightBtn->setIcon(QIcon(":/img/right.png"));
     connect(pXrayXRightBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotRightButtonPress);
     connect(pXrayXRightBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
     pXrayXRightBtn->setFont(m_font);
@@ -362,8 +362,8 @@ void GongYTabWidget::createDetectorGroup(QVBoxLayout* layout)
     //pXrayXHomeBtn->setIcon(QIcon(":/img/home.png"));
     connect(pXrayXHomeBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotHomeButtonClick);
     pXrayXHomeBtn->setFont(m_font);
-    GyPushButton* pXrayStopBtn = new GyPushButton(Xray_X, tr(""));//停止
-    pXrayStopBtn->setIcon(QIcon(":/img/stop.png"));
+    GyPushButton* pXrayStopBtn = new GyPushButton(Xray_X, tr("停止"));//停止
+    // pXrayStopBtn->setIcon(QIcon(":/img/stop.png"));
     connect(pXrayStopBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotEndButtonClick);
     pXrayStopBtn->setFont(m_font);
     pGridLayout->addWidget(pXrayXAixs,2,0,Qt::AlignCenter);
@@ -389,12 +389,12 @@ void GongYTabWidget::createDetectorGroup(QVBoxLayout* layout)
     m_pXrayZSpeed->setFont(m_font);
     connect(m_pXrayZSpeed->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisSpeedChanged);
     // connect(m_pXrayZSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisSpeedChanged);
-    GyPushButton* pXrayZLeftBtn = new GyPushButton(Xray_Z,tr(""));
+    GyPushButton* pXrayZLeftBtn = new GyPushButton(Xray_Z,tr("向左"));
     pXrayZLeftBtn->setIcon(QIcon(":/img/left.png"));
     connect(pXrayZLeftBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotLeftButtonPress);
     connect(pXrayZLeftBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
     pXrayZLeftBtn->setFont(m_font);
-    GyPushButton* pXrayZXRightBtn = new GyPushButton(Xray_Z,tr(""));
+    GyPushButton* pXrayZXRightBtn = new GyPushButton(Xray_Z,tr("向右"));
     pXrayZXRightBtn->setIcon(QIcon(":/img/right.png"));
     connect(pXrayZXRightBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotRightButtonPress);
     connect(pXrayZXRightBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
@@ -403,7 +403,7 @@ void GongYTabWidget::createDetectorGroup(QVBoxLayout* layout)
     connect(pXrayZXHomeBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotHomeButtonClick);
     pXrayZXHomeBtn->setFont(m_font);
 
-    GyPushButton* pXrayZStopBtn = new GyPushButton(Xray_Z,tr(""));
+    GyPushButton* pXrayZStopBtn = new GyPushButton(Xray_Z,tr("停止"));
     pXrayZStopBtn->setIcon(QIcon(":/img/stop.png"));
     connect(pXrayZStopBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotEndButtonClick);
     pXrayZStopBtn->setFont(m_font);
@@ -438,12 +438,12 @@ void GongYTabWidget::createDetectorGroup(QVBoxLayout* layout)
     m_pStageSpeed->setFont(m_font);
     connect(m_pStageSpeed->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisSpeedChanged);
     // connect(m_pStageSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisSpeedChanged);
-    GyPushButton* pStageXLeftBtn = new GyPushButton(Material_X,tr(""));
+    GyPushButton* pStageXLeftBtn = new GyPushButton(Material_X,tr("向左"));
     pStageXLeftBtn->setIcon(QIcon(":/img/left.png"));
     connect(pStageXLeftBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotLeftButtonPress);
     connect(pStageXLeftBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
     pStageXLeftBtn->setFont(m_font);
-    GyPushButton* pStageXRightBtn = new GyPushButton(Material_X,tr(""));
+    GyPushButton* pStageXRightBtn = new GyPushButton(Material_X,tr("向右"));
     pStageXRightBtn->setIcon(QIcon(":/img/right.png"));
     connect(pStageXRightBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotRightButtonPress);
     connect(pStageXRightBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
@@ -452,7 +452,7 @@ void GongYTabWidget::createDetectorGroup(QVBoxLayout* layout)
     connect(pStageXHomeBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotHomeButtonClick);
     pStageXHomeBtn->setFont(m_font);
 
-    GyPushButton* pStageStopBtn = new GyPushButton(Material_X,tr(""));
+    GyPushButton* pStageStopBtn = new GyPushButton(Material_X,tr("停止"));
     pStageStopBtn->setIcon(QIcon(":/img/stop.png"));
     connect(pStageStopBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotEndButtonClick);
     pStageStopBtn->setFont(m_font);
@@ -479,12 +479,12 @@ void GongYTabWidget::createDetectorGroup(QVBoxLayout* layout)
     m_pStageYSpeed->setFont(m_font);
     connect(m_pStageYSpeed->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisSpeedChanged);
     // connect(m_pStageYSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisSpeedChanged);
-    GyPushButton* pStageYXLeftBtn = new GyPushButton(Material_Y,tr(""));
+    GyPushButton* pStageYXLeftBtn = new GyPushButton(Material_Y,tr("向左"));
     pStageYXLeftBtn->setIcon(QIcon(":/img/left.png"));
     connect(pStageYXLeftBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotLeftButtonPress);
     connect(pStageYXLeftBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
     pStageYXLeftBtn->setFont(m_font);
-    GyPushButton* pStageYXRightBtn = new GyPushButton(Material_Y,tr(""));
+    GyPushButton* pStageYXRightBtn = new GyPushButton(Material_Y,tr("向右"));
     pStageYXRightBtn->setIcon(QIcon(":/img/right.png"));
     connect(pStageYXRightBtn,&GyPushButton::pressed,this,&::GongYTabWidget::slotRightButtonPress);
     connect(pStageYXRightBtn,&GyPushButton::released,this,&::GongYTabWidget::slotButtonRelease);
@@ -493,7 +493,7 @@ void GongYTabWidget::createDetectorGroup(QVBoxLayout* layout)
     connect(pStageYXHomeBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotHomeButtonClick);
     pStageYXHomeBtn->setFont(m_font);
 
-    GyPushButton* pStageYStopBtn = new GyPushButton(Material_Y,tr(""));
+    GyPushButton* pStageYStopBtn = new GyPushButton(Material_Y,tr("停止"));
     pStageYStopBtn->setIcon(QIcon(":/img/stop.png"));
     connect(pStageYStopBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotEndButtonClick);
     pStageYStopBtn->setFont(m_font);
@@ -519,12 +519,12 @@ void GongYTabWidget::createDetectorGroup(QVBoxLayout* layout)
     m_pStageZSpeed->setFont(m_font);
     connect(m_pStageZSpeed->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisSpeedChanged);
     // connect(m_pStageZSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisSpeedChanged);
-    GyPushButton* pStageZLeftBtn = new GyPushButton(Material_Z,tr(""));
+    GyPushButton* pStageZLeftBtn = new GyPushButton(Material_Z,tr("向左"));
     pStageZLeftBtn->setIcon(QIcon(":/img/left.png"));
     connect(pStageZLeftBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotLeftButtonPress);
     connect(pStageZLeftBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
     pStageZLeftBtn->setFont(m_font);
-    GyPushButton* pStageZXRightBtn = new GyPushButton(Material_Z,tr(""));
+    GyPushButton* pStageZXRightBtn = new GyPushButton(Material_Z,tr("向右"));
     pStageZXRightBtn->setIcon(QIcon(":/img/right.png"));
     connect(pStageZXRightBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotRightButtonPress);
     connect(pStageZXRightBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
@@ -533,7 +533,7 @@ void GongYTabWidget::createDetectorGroup(QVBoxLayout* layout)
     connect(pStageZXHomeBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotHomeButtonClick);
     pStageZXHomeBtn->setFont(m_font);
 
-    GyPushButton* pStageZStopBtn = new GyPushButton(Material_Z,tr(""));
+    GyPushButton* pStageZStopBtn = new GyPushButton(Material_Z,tr("停止"));
     pStageZStopBtn->setIcon(QIcon(":/img/stop.png"));
     connect(pStageZStopBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotEndButtonClick);
     pStageZStopBtn->setFont(m_font);
@@ -569,12 +569,12 @@ void GongYTabWidget::createDetectorGroup(QVBoxLayout* layout)
     m_pDetectorSpeed->setFont(m_font);
     connect(m_pDetectorSpeed->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisSpeedChanged);
     // connect(m_pDetectorSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisSpeedChanged);
-    GyPushButton* pDetectorXLeftBtn = new GyPushButton(Detector_X,tr(""));
+    GyPushButton* pDetectorXLeftBtn = new GyPushButton(Detector_X,tr("向左"));
     pDetectorXLeftBtn->setIcon(QIcon(":/img/left.png"));
     connect(pDetectorXLeftBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotLeftButtonPress);
     connect(pDetectorXLeftBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
     pDetectorXLeftBtn->setFont(m_font);
-    GyPushButton* pDetectorXRightBtn = new GyPushButton(Detector_X,tr(""));
+    GyPushButton* pDetectorXRightBtn = new GyPushButton(Detector_X,tr("向右"));
     pDetectorXRightBtn->setIcon(QIcon(":/img/right.png"));
     connect(pDetectorXRightBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotRightButtonPress);
     connect(pDetectorXRightBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
@@ -582,7 +582,7 @@ void GongYTabWidget::createDetectorGroup(QVBoxLayout* layout)
     GyPushButton* pDetectorXHomeBtn = new GyPushButton(Detector_X,tr("回零"));
     connect(pDetectorXHomeBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotHomeButtonClick);
     pDetectorXHomeBtn->setFont(m_font);
-    GyPushButton* pDetectorStopBtn = new GyPushButton(Detector_X,tr(""));
+    GyPushButton* pDetectorStopBtn = new GyPushButton(Detector_X,tr("停止"));
     pDetectorStopBtn->setIcon(QIcon(":/img/stop.png"));
     connect(pDetectorStopBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotEndButtonClick);
     pDetectorStopBtn->setFont(m_font);
@@ -609,12 +609,12 @@ void GongYTabWidget::createDetectorGroup(QVBoxLayout* layout)
     m_pDetectorYSpeed->setFont(m_font);
     connect(m_pDetectorYSpeed->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisPosChanged);
     // connect(m_pDetectorYSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
-    GyPushButton* pDetectorYXLeftBtn = new GyPushButton(Detector_Y,tr(""));
+    GyPushButton* pDetectorYXLeftBtn = new GyPushButton(Detector_Y,tr("向左"));
     pDetectorYXLeftBtn->setIcon(QIcon(":/img/left.png"));
     connect(pDetectorYXLeftBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotLeftButtonPress);
     connect(pDetectorYXLeftBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
     pDetectorYXLeftBtn->setFont(m_font);
-    GyPushButton* pDetectorYXRightBtn = new GyPushButton(Detector_Y,tr(""));
+    GyPushButton* pDetectorYXRightBtn = new GyPushButton(Detector_Y,tr("向右"));
     pDetectorYXRightBtn->setIcon(QIcon(":/img/right.png"));
     connect(pDetectorYXRightBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotRightButtonPress);
     connect(pDetectorYXRightBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
@@ -623,7 +623,7 @@ void GongYTabWidget::createDetectorGroup(QVBoxLayout* layout)
     connect(pDetectorYXHomeBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotHomeButtonClick);
     pDetectorYXHomeBtn->setFont(m_font);
 
-    GyPushButton* pDetectorYStopBtn = new GyPushButton(Detector_Y,tr(""));
+    GyPushButton* pDetectorYStopBtn = new GyPushButton(Detector_Y,tr("停止"));
     pDetectorYStopBtn->setIcon(QIcon(":/img/stop.png"));
     connect(pDetectorYStopBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotEndButtonClick);
     pDetectorYStopBtn->setFont(m_font);
@@ -649,12 +649,12 @@ void GongYTabWidget::createDetectorGroup(QVBoxLayout* layout)
     m_pDetectorZSpeed->setFont(m_font);
     connect(m_pDetectorZSpeed->LineEdit(),&QLineEdit::returnPressed,this,&GongYTabWidget::slotAxisPosChanged);
     // connect(m_pDetectorZSpeed->LineEdit(),&QLineEdit::editingFinished,this,&GongYTabWidget::slotAxisPosChanged);
-    GyPushButton* pDetectorZXLeftBtn = new GyPushButton(Detector_Z,tr(""));
+    GyPushButton* pDetectorZXLeftBtn = new GyPushButton(Detector_Z,tr("向左"));
     pDetectorZXLeftBtn->setIcon(QIcon(":/img/left.png"));
     connect(pDetectorZXLeftBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotLeftButtonPress);
     connect(pDetectorZXLeftBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
     pDetectorZXLeftBtn->setFont(m_font);
-    GyPushButton* pDetectorZXRightBtn = new GyPushButton(Detector_Z,tr(""));
+    GyPushButton* pDetectorZXRightBtn = new GyPushButton(Detector_Z,tr("向右"));
     pDetectorZXRightBtn->setIcon(QIcon(":/img/right.png"));
     connect(pDetectorZXRightBtn,&GyPushButton::pressed,this,&GongYTabWidget::slotRightButtonPress);
     connect(pDetectorZXRightBtn,&GyPushButton::released,this,&GongYTabWidget::slotButtonRelease);
@@ -662,7 +662,7 @@ void GongYTabWidget::createDetectorGroup(QVBoxLayout* layout)
     GyPushButton* pDetectorZXHomeBtn = new GyPushButton(Detector_Z,tr("回零"));
     connect(pDetectorZXHomeBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotHomeButtonClick);
     pDetectorZXHomeBtn->setFont(m_font);
-    GyPushButton* pDetectorZStopBtn = new GyPushButton(Detector_Z,tr(""));
+    GyPushButton* pDetectorZStopBtn = new GyPushButton(Detector_Z,tr("停止"));
     pDetectorZStopBtn->setIcon(QIcon(":/img/stop.png"));
     connect(pDetectorZStopBtn,&GyPushButton::clicked,this,&GongYTabWidget::slotEndButtonClick);
     pDetectorZStopBtn->setFont(m_font);

@@ -1,7 +1,7 @@
 ﻿#include "motioncommand.h"
 #include <Windows.h>
 #include <QtConcurrent/QtConcurrent>
-#include "../third_party/device/include/LTDMC.h"
+#include "../third_party/device/motor/include//LTDMC.h"
 // #include "MainInterface/toastmsgwidget.h"
 #include <iomanip>
 
