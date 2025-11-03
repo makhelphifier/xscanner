@@ -38,6 +38,8 @@ public:
         ModeDrawRect,     // 绘制矩形 (使用 RectROI)
         ModeDrawEllipse,   // 绘制椭圆 (使用 AnnotationEllipseItem)
         ModeDrawLine,
+        ModeDrawHLine,
+        ModeDrawVLine,
     };
     void setImage(const QImage &image);
     void updatePixmap(const QPixmap &pixmap);
@@ -66,6 +68,10 @@ signals:
     void autoWindowingToggled(bool enabled);  // 自动窗宽窗位切换
     void pixelInfoChanged(int x, int y, int value);  // 鼠标位置的像素信息（坐标 + 灰度值，value 为 -1 表示 N/A）
     void viewZoomed(qreal factor);
+    /**
+     * @brief 当视图平移时发射。
+     */
+    void viewPanned();
 public slots:
     void onWindowChanged(int value);  // 从 UI 滑动条接收窗宽变化
     void onLevelChanged(int value);   // 从 UI 滑动条接收窗位变化

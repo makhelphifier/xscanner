@@ -13,7 +13,8 @@
 #include "gui/items/rectroi.h"
 #include "gui/items/linesegmentroi.h"
 #include "gui/states/genericdrawingstate.h"
-
+#include "gui/items/infinitelineitem.h"
+#include <QGraphicsScene>
 
 IdleState::IdleState(DrawingStateMachine* machine, QObject *parent)
     : DrawingState(machine, parent) {}
@@ -71,6 +72,17 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
             nextState = new GenericDrawingState<LineSegmentROI>(machine());
             isTemporary = true;
             break;
+        case ImageViewer::ModeDrawHLine:
+        case ImageViewer::ModeDrawVLine:
+        {
+            qreal angle = (tool == ImageViewer::ModeDrawHLine) ? 0 : 90;
+            InfiniteLineItem* line = new InfiniteLineItem(viewer, angle);
+            viewer->scene()->addItem(line);
+            qreal value = (angle == 0) ? scenePos.y() : scenePos.x();
+            line->setValue(value);
+            machine()->setState(DrawingStateMachine::Idle);
+            return true; // 事件已处理
+        }
         case ImageViewer::ModeSelect:
         default:
             machine()->setState(DrawingStateMachine::Panning);

@@ -292,6 +292,7 @@ void ImageViewer::translateView(const QPoint& delta)
     if (hBar && vBar) {
         hBar->setValue(hBar->value() - delta.x());
         vBar->setValue(vBar->value() - delta.y());
+        emit viewPanned();
         // qDebug() << "ImageViewer::translateView by" << delta; // qDebug 可能会很多，先注释掉
     } else {
         qWarning() << "ImageViewer::translateView - Scroll bar(s) are null!";

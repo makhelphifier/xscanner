@@ -9,8 +9,6 @@
 #include <QFileDialog>
 #include <QMenuBar>
 #include "gui/states/genericdrawingstate.h"
-#include "gui/items/annotationrectitem.h"
-#include "gui/items/annotationellipseitem.h"
 #include "gui/widgets/logwidget.h"
 #include "util/logger/qtwidgetappender.h"
 #include "log4qt/logger.h"
@@ -126,18 +124,18 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(pointAction, &QAction::triggered, [this]() { });
 
     // 水平线工具
-    hLineAction = new QAction(QIcon(":/Resources/img/u26.png"), "", this);
+    hLineAction = new QAction(QIcon(":/Resources/img/u26.png"), "水平线", this);
     hLineAction->setCheckable(true);
-    // toolBar->addAction(hLineAction);
+    toolBar->addAction(hLineAction);
     toolGroup->addAction(hLineAction);
-    connect(hLineAction, &QAction::triggered, [this]() {  });
+    connect(hLineAction, &QAction::triggered, [this]() {  viewer->setToolMode(ImageViewer::ModeDrawHLine);});
 
     // 垂直线工具
-    vLineAction = new QAction(QIcon(":/Resources/img/u25.png"), "", this);
+    vLineAction = new QAction(QIcon(":/Resources/img/u25.png"), "垂直线", this);
     vLineAction->setCheckable(true);
-    // toolBar->addAction(vLineAction);
+    toolBar->addAction(vLineAction);
     toolGroup->addAction(vLineAction);
-    connect(vLineAction, &QAction::triggered, [this]() { });
+    connect(vLineAction, &QAction::triggered, [this]() { viewer->setToolMode(ImageViewer::ModeDrawVLine);});
 
     // 添加分隔符
     toolBar->addSeparator();

@@ -22,12 +22,7 @@ set(SOURCES
     # GUI - Widgets
     gui/widgets/toprightinfowidget.cpp
     # GUI - Items
-    gui/items/annotationellipseitem.cpp
-    gui/items/annotationhorizontallineitem.cpp
-    gui/items/annotationlineitem.cpp
     gui/items/annotationpointitem.cpp
-    gui/items/annotationrectitem.cpp
-    gui/items/annotationverticallineitem.cpp
     gui/items/linesegmentroi.cpp
     # GUI - States
     gui/states/drawingstate.cpp
@@ -64,12 +59,7 @@ set(HEADERS
     gui/widgets/toprightinfowidget.h
     gui/widgets/extractedimageviewer.h
     # GUI - Items
-    gui/items/annotationellipseitem.h
-    gui/items/annotationhorizontallineitem.h
-    gui/items/annotationlineitem.h
     gui/items/annotationpointitem.h
-    gui/items/annotationrectitem.h
-    gui/items/annotationverticallineitem.h
     gui/items/linesegmentroi.h
     # GUI - States
     gui/states/drawingstate.h
@@ -106,6 +96,7 @@ endif()
 qt_add_executable(${PROJECT_NAME}
     ${SOURCES}
     Img.qrc
+    gui/items/infinitelineitem.h gui/items/infinitelineitem.cpp
 )
 
 
