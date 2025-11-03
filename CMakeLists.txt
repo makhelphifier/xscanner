@@ -88,9 +88,6 @@ set(HEADERS
     device/motionmanager.h
 )
 
-include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/device/thirdparty/include
-)
 
 # link_directories(${CMAKE_CURRENT_SOURCE_DIR}/device/thirdparty/lib/LTDMC.lib)
 
@@ -103,13 +100,6 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     add_compile_options(-fexec-charset=UTF-8)
 endif()
 
-
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/device/thirdparty/bin/LTDMC.dll
-    ${CMAKE_CURRENT_SOURCE_DIR}/device/thirdparty/MotionCtrlConfig.ini
-    ${CMAKE_CURRENT_SOURCE_DIR}/device/thirdparty/adaptor.ini
-    COPYONLY
-)
 
 # 添加可执行文件目标
 qt_add_executable(${PROJECT_NAME}
@@ -127,6 +117,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/sdk/opencv/build/include
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/sdk/Log4Qt/x64-Release/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/device/include
 )
 
 # 链接库 (Qt, OpenCV, log4qt)
@@ -139,7 +130,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     # 外部库
     "${CMAKE_CURRENT_SOURCE_DIR}/third_party/sdk/opencv/build/x64/vc16/lib/opencv_world4120.lib"
     "${CMAKE_CURRENT_SOURCE_DIR}/third_party/sdk/Log4Qt/x64-Release/lib/log4qt.lib"
-    "${CMAKE_CURRENT_SOURCE_DIR}//device/thirdparty/lib/LTDMC.lib"
+    "${CMAKE_CURRENT_SOURCE_DIR}/third_party/device/lib/LTDMC.lib"
 )
 
 # 设置运行时输出目录（统一到bin/Debug或bin/Release）
@@ -147,9 +138,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin/Debug)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/Release)
 
+
 # 复制配置文件和DLL到输出目录（POST_BUILD）
 set(CONFIG_FILE "${CMAKE_CURRENT_SOURCE_DIR}/config/log4qt.properties")
 set(LOG4QT_DLL_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/third_party/sdk/Log4Qt/x64-Release/bin/log4qt.dll")
+set(LTDMC_DLL "${CMAKE_CURRENT_SOURCE_DIR}/third_party/device/bin/LTDMC.dll")
+set (MOTION_CTRL_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/third_party//device/MotionCtrlConfig.ini")
+set (ADAPTOR_INI "${CMAKE_CURRENT_SOURCE_DIR}/third_party/device/adaptor.ini")
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -158,6 +153,18 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${LOG4QT_DLL_RELEASE}"
+            "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${LTDMC_DLL}"
+            "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${MOTION_CTRL_CONFIG}"
+            "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${ADAPTOR_INI}"
             "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
     COMMENT "Copying config and DLLs to output directory"
 )

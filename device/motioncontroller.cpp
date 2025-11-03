@@ -1,6 +1,6 @@
 #include "motioncontroller.h"
 #include "motionconfig.h"
-#include "thirdparty/include/LTDMC.h"
+#include "../third_party/device/include/LTDMC.h"
 using namespace std;
 
 MotionController::MotionController(QObject *parent)
