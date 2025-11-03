@@ -75,7 +75,6 @@ CMakeLists.txt.user*
 
 # Binaries
 # --------
-*.dll
 *.exe
 
 # Directories with generated files
@@ -86,12 +85,8 @@ CMakeLists.txt.user*
 .uic/
 /build*/
 
-# 资源文件（不纳入 Git）
-resources/
-*.png
-*.jpg
-/sdk/
-/third_party
+
+
 # Prerequisites
 *.d
 
@@ -108,7 +103,6 @@ resources/
 # Compiled Dynamic libraries
 *.so
 *.dylib
-*.dll
 
 # Fortran module files
 *.mod
@@ -118,7 +112,6 @@ resources/
 *.lai
 *.la
 *.a
-*.lib
 
 # Executables
 *.exe
