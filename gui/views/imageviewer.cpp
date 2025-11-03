@@ -103,7 +103,7 @@ void ImageViewer::wheelEvent(QWheelEvent *event)
             scale(10 * m_initialScale, 10 * m_initialScale);
         }
         emit scaleChanged(newScale);
-
+        emit viewZoomed(factor);
         event->accept();
     } else {
         QGraphicsView::wheelEvent(event);

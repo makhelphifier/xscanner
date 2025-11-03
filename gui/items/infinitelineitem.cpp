@@ -6,9 +6,10 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>
 #include <QStyleOptionGraphicsItem>
+#include "infinitelinelabel.h"
 
 InfiniteLineItem::InfiniteLineItem(ImageViewer* viewer, qreal angle, QGraphicsItem* parent)
-    : QGraphicsObject(parent), m_viewer(viewer), m_angle(0)
+    : QGraphicsObject(parent), m_viewer(viewer), m_angle(0), m_label(nullptr)
 {
     if (!m_viewer) {
         qWarning() << "InfiniteLineItem created with null viewer!";
@@ -20,16 +21,14 @@ InfiniteLineItem::InfiniteLineItem(ImageViewer* viewer, qreal angle, QGraphicsIt
 
     setAngle(angle); // 设置角度和初始位置
     setValue(0);     // 默认在 (0,0)
-
+    m_label = new InfiniteLineLabel(this);
     setAcceptHoverEvents(true);
 
-    // --- 关键连接 ---
-    // 监听 ImageViewer 的视图变化信号
     if (m_viewer) {
-        // ++ 使用新的专用信号 ++
         connect(m_viewer, &ImageViewer::viewZoomed, this, &InfiniteLineItem::onViewChanged);
         connect(m_viewer, &ImageViewer::viewPanned, this, &InfiniteLineItem::onViewChanged);
     }
+    QTimer::singleShot(0, m_label, &InfiniteLineLabel::onViewChanged);
 }
 
 void InfiniteLineItem::setPen(const QPen& pen)
@@ -49,26 +48,35 @@ void InfiniteLineItem::setHoverPen(const QPen& pen)
         update();
     }
 }
-
 void InfiniteLineItem::setAngle(qreal angle)
 {
     m_angle = angle;
-    setRotation(m_angle); // QGraphicsObject::setRotation
-    onViewChanged(); // 角度变化需要重算包围盒
+    setRotation(m_angle);
+    if (m_label) {
+        m_label->setFormat(m_angle);
+    }
+
+    onViewChanged();
 }
 
 void InfiniteLineItem::setValue(qreal value)
 {
     QPointF newPos;
-    if (m_angle == 90) { // 垂直线
+    if (m_angle == 90) {
         newPos = QPointF(value, 0);
     } else if (m_angle == 0) { // 水平线
         newPos = QPointF(0, value);
     } else {
-        // 暂不支持任意角度的 setValue
         newPos = QPointF(0, 0);
     }
-    setPos(newPos); // QGraphicsItem::setPos
+
+    if (pos() == newPos) {
+        return;
+    }
+
+    setPos(newPos);
+
+    emit positionChanged(value);
 }
 
 qreal InfiniteLineItem::value() const
@@ -84,11 +92,12 @@ qreal InfiniteLineItem::value() const
 
 void InfiniteLineItem::onViewChanged()
 {
-    // 当视图变化时，清除缓存的包围盒
     if (m_cachedBoundingRect.isValid()) {
         prepareGeometryChange();
         m_cachedBoundingRect = QRectF();
-        // update(); // update() 会在 boundingRect() 之后被自动调用
+    }
+    if (m_label) {
+        m_label->onViewChanged();
     }
 }
 
@@ -121,8 +130,6 @@ QRectF InfiniteLineItem::calculateBoundingRect() const
         if (penWidth == 0) penWidth = 1.0; // 0宽度笔刷实际是1像素
         qreal padding = 5.0; // 额外的区域用于悬停检测
 
-        // 3. 【修改】移除 if (m_angle == 90)
-        // 始终在局部坐标系中计算水平线的包围盒 (沿X轴)
         QRectF newRect;
         newRect.setRect(localViewRect.left(),
                         -penWidth / 2 - padding,

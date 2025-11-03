@@ -7,7 +7,7 @@
 class ImageViewer; // 前向声明
 class QPainter;
 class QStyleOptionGraphicsItem;
-
+class InfiniteLineLabel;
 /**
  * @brief 一个可交互的无限长线条item。
  *
@@ -45,6 +45,10 @@ public:
     // 设置/获取线条的位置 (垂直线为X值, 水平线为Y值)
     void setValue(qreal value);
     qreal value() const;
+    /**
+     * @brief 公共访问器，返回关联的 ImageViewer
+     */
+    ImageViewer* viewer() const { return m_viewer; }
 
 signals:
     /**
@@ -91,6 +95,7 @@ private:
 
     // 缓存包围盒，用于性能优化
     mutable QRectF m_cachedBoundingRect;
+    InfiniteLineLabel* m_label;
 };
 
 #endif // INFINITELINEITEM_H

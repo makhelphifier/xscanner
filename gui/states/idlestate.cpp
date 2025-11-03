@@ -48,6 +48,14 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
         machine()->setState(DrawingStateMachine::DraggingHandle);
         return true;
     }
+    // --- 优先级 2: 拖动 InfiniteLineItem (新增) ---
+    // InfiniteLineItem* line = qgraphicsitem_cast<InfiniteLineItem*>(item);
+    // if (line && event->button() == Qt::LeftButton) {
+    //     // 找到了线条，并且是左键点击。
+    //     // 我们不在这里处理它，而是返回 false，
+    //     // QGraphicsView 会自动将此事件传递给 line item 自己的 mousePressEvent。
+    //     return false;
+    // }
 
     if (roi && event->button() == Qt::LeftButton && item == roi) {
         return false;
