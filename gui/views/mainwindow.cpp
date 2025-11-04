@@ -117,11 +117,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     });
 
     // 点测量工具
-    pointAction = new QAction(QIcon(":/Resources/img/masure.png"), "", this);
+    pointAction = new QAction(QIcon(":/Resources/img/masure.png"), "点测量", this);
     pointAction->setCheckable(true);
-    // toolBar->addAction(pointAction);
+    toolBar->addAction(pointAction);
     toolGroup->addAction(pointAction);
-    connect(pointAction, &QAction::triggered, [this]() { });
+    connect(pointAction, &QAction::triggered, [this]() { viewer->setToolMode(ImageViewer::ModeDrawPoint);});
 
     // 水平线工具
     hLineAction = new QAction(QIcon(":/Resources/img/u26.png"), "水平线", this);

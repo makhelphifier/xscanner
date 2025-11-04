@@ -101,6 +101,7 @@ qt_add_executable(${PROJECT_NAME}
     gui/items/angledlineroi.h gui/items/angledlineroi.cpp
     gui/items/angleroi.h gui/items/angleroi.cpp
     gui/states/angledrawingstate.h gui/states/angledrawingstate.cpp
+    gui/items/pointmeasureitem.h gui/items/pointmeasureitem.cpp
 )
 
 

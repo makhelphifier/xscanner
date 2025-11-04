@@ -16,6 +16,7 @@
 #include <QGraphicsScene>
 #include "gui/items/angledlineroi.h"
 #include "angledrawingstate.h"
+#include "gui/items/pointmeasureitem.h"
 
 IdleState::IdleState(DrawingStateMachine* machine, QObject *parent)
     : DrawingState(machine, parent) {}
@@ -94,6 +95,22 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
             log_("BRANCH: Switching to AngleDrawingState");
             machine()->setState(DrawingStateMachine::AngleDrawing);
             return machine()->angleDrawingState()->handleMousePressEvent(event);
+        }
+        case ImageViewer::ModeDrawPoint:
+        {
+            ImageViewer* viewer = machine()->viewer();
+            QPointF scenePos = machine()->startDragPos(); // 获取点击位置
+
+            // 检查点击是否在图像内
+            if (!viewer->imageBounds().contains(scenePos)) {
+                return true; // 消耗点击，但什么也不做
+            }
+
+            // 创建新的点测量项
+            PointMeasureItem* item = new PointMeasureItem(scenePos, viewer);
+            viewer->scene()->addItem(item);
+
+            return true; // 事件已处理，保持在 IdleState
         }
         case ImageViewer::ModeSelect:
         default:
