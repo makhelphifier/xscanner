@@ -19,7 +19,10 @@
 #include "gui/items/pointmeasureitem.h"
 #include "polylinedrawingstate.h"
 #include <QTimer>
+#include <QTextCursor>
+
 #include "freehanddrawingstate.h"
+#include "gui/items/annotationtextitem.h"
 
 IdleState::IdleState(DrawingStateMachine* machine, QObject *parent)
     : DrawingState(machine, parent) {}
@@ -113,6 +116,30 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
             // 转发第一次点击
             return machine()->freehandDrawingState()->handleMousePressEvent(event);
         }
+        case ImageViewer::ModeDrawText:
+        {
+            log_("BRANCH: Creating AnnotationTextItem");
+            ImageViewer* viewer = machine()->viewer();
+            QPointF scenePos = machine()->startDragPos(); // 获取点击位置
+
+            // 1. 创建文本项
+            AnnotationTextItem* textItem = new AnnotationTextItem(scenePos);
+            viewer->scene()->addItem(textItem);
+
+            // 2. [关键] 立即将其设置为可编辑并给予焦点
+            textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
+            textItem->setFocus(Qt::MouseFocusReason);
+
+            // 3. （可选）全选默认文本
+            QTextCursor cursor = textItem->textCursor();
+            cursor.select(QTextCursor::Document);
+            textItem->setTextCursor(cursor);
+
+            // 4. 我们保持在 Idle 状态，因为该项现在自己管理交互
+            machine()->setState(DrawingStateMachine::Idle);
+            event->accept();
+            return true;
+        }
         case ImageViewer::ModeDrawPoint:
         {
             ImageViewer* viewer = machine()->viewer();
@@ -143,22 +170,21 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
         case ImageViewer::ModeSelect:
         default:
         {
-            // 仅在选择/默认模式下，检查是否点击了可拖动的线条
             InfiniteLineItem* line = qgraphicsitem_cast<InfiniteLineItem*>(item);
             if (line && line->isMovable())
             {
-                log_("sss");
-                // 是线条，返回 false，让 QGraphicsView 将事件传递给 line
+                log_("IdleState: Detected movable InfiniteLineItem. Passing event to item.");
                 return false;
             }
-
-            // 不是线条（或线条不可拖动），则开始平移 (Panning)
+            if (item && (item->flags() & QGraphicsItem::ItemIsMovable))
+            {
+                log_("IdleState: Detected item with ItemIsMovable flag. Passing event to QGraphicsView.");
+                return false;
+            }
             machine()->setState(DrawingStateMachine::Panning);
             return true;
         }
-
         }
-
         if (nextState) {
             machine()->setState(nextState, isTemporary);
             return nextState->handleMousePressEvent(event);

@@ -161,6 +161,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     toolGroup->addAction(freehandAction);
     connect(freehandAction, &QAction::triggered, [this]() { viewer->setToolMode(ImageViewer::ModeDrawFreehand);});
 
+    textAction = new QAction(QIcon(":/Resources/img/text_tool.png"), "文本", this);
+    textAction->setCheckable(true);
+    toolBar->addAction(textAction);
+    toolGroup->addAction(textAction);
+    connect(textAction, &QAction::triggered, [this]() { viewer->setToolMode(ImageViewer::ModeDrawText);});
+
     // 添加分隔符
     toolBar->addSeparator();
 

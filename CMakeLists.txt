@@ -106,6 +106,7 @@ qt_add_executable(${PROJECT_NAME}
     gui/states/polylinedrawingstate.h gui/states/polylinedrawingstate.cpp
     gui/items/freehandroi.h gui/items/freehandroi.cpp
     gui/states/freehanddrawingstate.h gui/states/freehanddrawingstate.cpp
+    gui/items/annotationtextitem.h gui/items/annotationtextitem.cpp
 
 )
 
