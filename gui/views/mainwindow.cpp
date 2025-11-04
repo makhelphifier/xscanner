@@ -149,11 +149,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     toolGroup->addAction(angleAction);
     connect(angleAction, &QAction::triggered, [this]() { viewer->setToolMode(ImageViewer::ModeDrawAngle);});
 
-    polylineAction = new QAction(QIcon(":/Resources/img/pen_tool.png"), "自由轨迹", this);
+    polylineAction = new QAction(QIcon(":/Resources/img/pen_tool.png"), "折线", this);
     polylineAction->setCheckable(true);
     toolBar->addAction(polylineAction);
     toolGroup->addAction(polylineAction);
     connect(polylineAction, &QAction::triggered, [this]() { viewer->setToolMode(ImageViewer::ModeDrawPolyline);});
+
+    freehandAction = new QAction(QIcon(":/Resources/img/color_tool.png"), "自由轨迹", this);
+    freehandAction->setCheckable(true);
+    toolBar->addAction(freehandAction);
+    toolGroup->addAction(freehandAction);
+    connect(freehandAction, &QAction::triggered, [this]() { viewer->setToolMode(ImageViewer::ModeDrawFreehand);});
 
     // 添加分隔符
     toolBar->addSeparator();

@@ -18,6 +18,7 @@ class ROI;
 class RectROI;
 class AngleDrawingState;
 class PolylineDrawingState;
+class FreehandDrawingState;
 
 class DrawingStateMachine : public QObject
 {
@@ -31,6 +32,7 @@ public:
         DraggingHandle,
         AngleDrawing,
         PolylineDrawing,
+        FreehandDrawing,
     };
     Q_ENUM(StateType)
 
@@ -57,6 +59,7 @@ public:
     QPointF startDragPos() const { return m_startDragPos; }
     AngleDrawingState* angleDrawingState() const;
     PolylineDrawingState* polylineDrawingState() const;
+    FreehandDrawingState* freehandDrawingState() const;
 
     void startDraggingHandle(Handle* handle, const QPointF& scenePos);
     void updateDraggingHandle(const QPointF& scenePos);
@@ -81,6 +84,7 @@ private:
     ROI* m_targetRoi;
     AngleDrawingState* m_angleDrawingState;
     PolylineDrawingState* m_polylineDrawingState;
+    FreehandDrawingState* m_freehandDrawingState;
 };
 
 #endif // DRAWINGSTATEMACHINE_H

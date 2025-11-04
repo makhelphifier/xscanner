@@ -979,4 +979,27 @@ Handle* ROI::addFreeHandle(const QPointF& pos, const QString& name)
 
 
 
+/**
+ * @brief [新增] 设置ROI的默认画笔
+ */
+void ROI::setPen(const QPen& pen)
+{
+    m_pen = pen;
+    // m_mouseHovering 是在 hoverEnter/LeaveEvent 中设置的
+    if (!m_mouseHovering) {
+        m_currentPen = m_pen;
+        update();
+    }
+}
 
+/**
+ * @brief [新增] 设置ROI的悬停画笔
+ */
+void ROI::setHoverPen(const QPen& pen)
+{
+    m_hoverPen = pen;
+    if (m_mouseHovering) {
+        m_currentPen = m_hoverPen;
+        update();
+    }
+}

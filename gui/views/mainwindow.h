@@ -50,6 +50,7 @@ private:
     QAction *angledLineAction;
     QAction *angleAction;
     QAction *polylineAction;
+    QAction *freehandAction;
     QAction *clearAction;
     QActionGroup *toolGroup;
     QLabel *sizeLabel;

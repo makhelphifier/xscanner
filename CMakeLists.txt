@@ -104,6 +104,8 @@ qt_add_executable(${PROJECT_NAME}
     gui/items/pointmeasureitem.h gui/items/pointmeasureitem.cpp
     gui/items/polylineroi.h gui/items/polylineroi.cpp
     gui/states/polylinedrawingstate.h gui/states/polylinedrawingstate.cpp
+    gui/items/freehandroi.h gui/items/freehandroi.cpp
+    gui/states/freehanddrawingstate.h gui/states/freehanddrawingstate.cpp
 
 )
 

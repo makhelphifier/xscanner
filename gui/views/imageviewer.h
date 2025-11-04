@@ -44,6 +44,7 @@ public:
         ModeDrawAngle,
         ModeDrawPoint,
         ModeDrawPolyline,
+        ModeDrawFreehand,
     };
     void setImage(const QImage &image);
     void updatePixmap(const QPixmap &pixmap);

@@ -19,6 +19,7 @@
 #include "gui/items/pointmeasureitem.h"
 #include "polylinedrawingstate.h"
 #include <QTimer>
+#include "freehanddrawingstate.h"
 
 IdleState::IdleState(DrawingStateMachine* machine, QObject *parent)
     : DrawingState(machine, parent) {}
@@ -104,6 +105,13 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
             machine()->setState(DrawingStateMachine::PolylineDrawing);
             // 转发第一次点击
             return machine()->polylineDrawingState()->handleMousePressEvent(event);
+        }
+        case ImageViewer::ModeDrawFreehand:
+        {
+            log_("BRANCH: Switching to FreehandDrawingState");
+            machine()->setState(DrawingStateMachine::FreehandDrawing);
+            // 转发第一次点击
+            return machine()->freehandDrawingState()->handleMousePressEvent(event);
         }
         case ImageViewer::ModeDrawPoint:
         {
