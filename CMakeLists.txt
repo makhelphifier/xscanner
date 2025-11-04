@@ -107,6 +107,7 @@ qt_add_executable(${PROJECT_NAME}
     gui/items/freehandroi.h gui/items/freehandroi.cpp
     gui/states/freehanddrawingstate.h gui/states/freehanddrawingstate.cpp
     gui/items/annotationtextitem.h gui/items/annotationtextitem.cpp
+    gui/items/ellipseroi.h gui/items/ellipseroi.cpp
 
 )
 

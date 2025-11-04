@@ -20,7 +20,7 @@
 #include "polylinedrawingstate.h"
 #include <QTimer>
 #include <QTextCursor>
-
+#include "gui/items/ellipseroi.h"
 #include "freehanddrawingstate.h"
 #include "gui/items/annotationtextitem.h"
 
@@ -140,6 +140,11 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
             event->accept();
             return true;
         }
+        case ImageViewer::ModeDrawEllipse:
+            log_("BRANCH: Creating GenericDrawingState<EllipseROI>");
+            nextState = new GenericDrawingState<EllipseROI>(machine());
+            isTemporary = true;
+            break;
         case ImageViewer::ModeDrawPoint:
         {
             ImageViewer* viewer = machine()->viewer();

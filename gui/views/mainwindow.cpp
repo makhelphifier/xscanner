@@ -110,10 +110,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // 椭圆工具
     ellipseAction = new QAction(QIcon(":/Resources/img/ellipse_tool.png"), "椭圆", this);
     ellipseAction->setCheckable(true);
-    // toolBar->addAction(ellipseAction);
+    toolBar->addAction(ellipseAction);
     toolGroup->addAction(ellipseAction);
     connect(ellipseAction, &QAction::triggered, [this]() {
-        // viewer->setDrawingState(new GenericDrawingState<AnnotationEllipseItem>(viewer));
+        viewer->setToolMode(ImageViewer::ModeDrawEllipse);
     });
 
     // 点测量工具
