@@ -98,6 +98,7 @@ qt_add_executable(${PROJECT_NAME}
     Img.qrc
     gui/items/infinitelineitem.h gui/items/infinitelineitem.cpp
     gui/items/infinitelinelabel.h gui/items/infinitelinelabel.cpp
+    gui/items/angledlineroi.h gui/items/angledlineroi.cpp
 )
 
 

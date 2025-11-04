@@ -32,6 +32,16 @@ public:
     QRectF boundingRect() const override;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
+    /**
+     * @brief 为 QGraphicsItem 的类型系统定义唯一的 Type
+     */
+    enum { Type = UserType + 5 };
+
+    /**
+     * @brief 重写 type() 函数以返回自定义类型
+     */
+    int type() const override { return Type; }
+
     // --- 公共接口 ---
     void setAngle(qreal angle);
     qreal angle() const { return m_angle; }

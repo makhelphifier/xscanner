@@ -1,6 +1,5 @@
-// gui/states/drawingstatemachine.cpp
 #include "drawingstatemachine.h"
-#include "drawingstate.h" // 基类
+#include "drawingstate.h"
 #include "idlestate.h"
 #include "panningstate.h"
 #include "dragginghandlestate.h"
@@ -39,7 +38,6 @@ DrawingStateMachine::~DrawingStateMachine()
         delete m_currentStatePtr;
         m_currentStatePtr = nullptr;
     }
-    // QObject 会自动管理子对象，状态实例会被删除
 }
 
 void DrawingStateMachine::setState(StateType type)
@@ -48,9 +46,8 @@ void DrawingStateMachine::setState(StateType type)
     switch (type) {
     case Idle:           nextState = m_idleState; break;
     case Panning:        nextState = m_panningState; break;
-    // case DrawingRect:    // <-- 移除
     case DraggingHandle: nextState = m_draggingHandleState; break;
-    case Drawing:        // 'Drawing' 状态是临时的，不能用这个函数设置
+    case Drawing:
     default:
         qWarning() << "Attempted to transition to an invalid or temporary state type:" << type;
         return;
@@ -68,10 +65,8 @@ void DrawingStateMachine::setState(DrawingState* nextState, bool temporary)
         return; // 没有变化或状态无效
     }
 
-    // 退出旧状态
     if (m_currentStatePtr) {
         m_currentStatePtr->exit();
-        // 如果旧状态是临时的，立即删除
         if (m_currentStateIsTemporary) {
             qDebug() << "Deleting temporary state.";
             delete m_currentStatePtr;
@@ -84,8 +79,6 @@ void DrawingStateMachine::setState(DrawingState* nextState, bool temporary)
 
     qDebug() << "State transitioned to:" << m_currentStatePtr->metaObject()->className()
              << "(Temporary:" << temporary << ")";
-
-    // emit stateChanged(currentState()); // ++ 更新信号发射 ++
 }
 DrawingStateMachine::StateType DrawingStateMachine::currentState() const
 {
@@ -159,11 +152,9 @@ void DrawingStateMachine::finishDraggingHandle()
 {
     if (!m_currentlyDraggingHandle || !m_targetRoi) return;
     qDebug() << "StateMachine: Finished dragging handle.";
-    // 获取 Handle 当前的最终位置来调用 movePoint(true)
     QPointF finalScenePos = m_currentlyDraggingHandle->scenePos();
     m_targetRoi->movePoint(m_currentlyDraggingHandle, finalScenePos, true);
     m_targetRoi->handleDragFinished(m_currentlyDraggingHandle);
-
     m_currentlyDraggingHandle = nullptr;
     m_targetRoi = nullptr;
 }

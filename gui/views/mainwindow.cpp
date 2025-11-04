@@ -137,6 +137,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     toolGroup->addAction(vLineAction);
     connect(vLineAction, &QAction::triggered, [this]() { viewer->setToolMode(ImageViewer::ModeDrawVLine);});
 
+    angledLineAction = new QAction(QIcon(":/Resources/img/u28.png"), "倾斜直线", this); // u28.png 是一条斜线
+    angledLineAction->setCheckable(true);
+    toolBar->addAction(angledLineAction);
+    toolGroup->addAction(angledLineAction);
+    connect(angledLineAction, &QAction::triggered, [this]() { viewer->setToolMode(ImageViewer::ModeDrawAngledLine);});
+
     // 添加分隔符
     toolBar->addSeparator();
 

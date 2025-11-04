@@ -1,4 +1,3 @@
-// gui/states/idlestate.cpp
 #include "idlestate.h"
 #include "drawingstatemachine.h"
 #include "gui/views/imageviewer.h"
@@ -15,6 +14,7 @@
 #include "gui/states/genericdrawingstate.h"
 #include "gui/items/infinitelineitem.h"
 #include <QGraphicsScene>
+#include "gui/items/angledlineroi.h"
 
 IdleState::IdleState(DrawingStateMachine* machine, QObject *parent)
     : DrawingState(machine, parent) {}
@@ -91,20 +91,28 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
             machine()->setState(DrawingStateMachine::Idle);
             return true; // 事件已处理
         }
+        case ImageViewer::ModeDrawAngledLine:
+            log_("BRANCH: Creating GenericDrawingState<AngledLineROI>");
+            nextState = new GenericDrawingState<AngledLineROI>(machine());
+            isTemporary = true;
+            break;
         case ImageViewer::ModeSelect:
         default:
         {
-            // // 仅在选择/默认模式下，检查是否点击了可拖动的线条
-            // InfiniteLineItem* line = qgraphicsitem_cast<InfiniteLineItem*>(item);
-            // if (line && line->isMovable())
-            // {
-            //     // 是线条，返回 false，让 QGraphicsView 将事件传递给 line
-            //     return false;
-            // }
+            // 仅在选择/默认模式下，检查是否点击了可拖动的线条
+            InfiniteLineItem* line = qgraphicsitem_cast<InfiniteLineItem*>(item);
+            if (line && line->isMovable())
+            {
+                log_("sss");
+                // 是线条，返回 false，让 QGraphicsView 将事件传递给 line
+                return false;
+            }
 
             // 不是线条（或线条不可拖动），则开始平移 (Panning)
             machine()->setState(DrawingStateMachine::Panning);
-            return true;}
+            return true;
+        }
+
         }
 
         if (nextState) {

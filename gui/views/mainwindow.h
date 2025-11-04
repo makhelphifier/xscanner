@@ -47,6 +47,7 @@ private:
     QAction *pointAction;
     QAction *hLineAction;
     QAction *vLineAction;
+    QAction *angledLineAction;
     QAction *clearAction;
     QActionGroup *toolGroup;
     QLabel *sizeLabel;
