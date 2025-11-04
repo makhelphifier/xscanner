@@ -149,6 +149,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     toolGroup->addAction(angleAction);
     connect(angleAction, &QAction::triggered, [this]() { viewer->setToolMode(ImageViewer::ModeDrawAngle);});
 
+    polylineAction = new QAction(QIcon(":/Resources/img/pen_tool.png"), "自由轨迹", this);
+    polylineAction->setCheckable(true);
+    toolBar->addAction(polylineAction);
+    toolGroup->addAction(polylineAction);
+    connect(polylineAction, &QAction::triggered, [this]() { viewer->setToolMode(ImageViewer::ModeDrawPolyline);});
+
     // 添加分隔符
     toolBar->addSeparator();
 

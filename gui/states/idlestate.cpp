@@ -17,6 +17,7 @@
 #include "gui/items/angledlineroi.h"
 #include "angledrawingstate.h"
 #include "gui/items/pointmeasureitem.h"
+#include "polylinedrawingstate.h"
 #include <QTimer>
 
 IdleState::IdleState(DrawingStateMachine* machine, QObject *parent)
@@ -97,6 +98,13 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
             machine()->setState(DrawingStateMachine::AngleDrawing);
             return machine()->angleDrawingState()->handleMousePressEvent(event);
         }
+        case ImageViewer::ModeDrawPolyline:
+        {
+            log_("BRANCH: Switching to PolylineDrawingState");
+            machine()->setState(DrawingStateMachine::PolylineDrawing);
+            // 转发第一次点击
+            return machine()->polylineDrawingState()->handleMousePressEvent(event);
+        }
         case ImageViewer::ModeDrawPoint:
         {
             ImageViewer* viewer = machine()->viewer();
@@ -110,22 +118,10 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
             // 创建新的点测量项
             PointMeasureItem* item = new PointMeasureItem(scenePos, viewer);
             viewer->scene()->addItem(item);
-            // --- 2. "取巧"的解决方案 (Hide/Show Hack) ---
-            // 立即隐藏该项
-            // item->hide();
-            // 安排它在下一个事件循环中显示。
-            // 这会强制 QGraphicsScene 重新计算其几何形状
-            // --- "取巧"的解决方案 (Zoom Hack) ---
-            // 按照您的要求，在创建后模拟一次缩放
-            // 我们使用一个0ms的定时器来确保这个操作在
-            // "addItem" 完成 *之后* 的下一个事件循环中执行
+
             QTimer::singleShot(0, [viewer]() {
                 if (viewer) {
-                    // 1. 施加一个几乎为零的缩放
                     viewer->scaleView(1.000001);
-
-                    // 2. 立即在 *另*一个 0ms 定时器中缩放回来
-                    //    这确保了重绘事件在两次缩放之间被处理
                     QTimer::singleShot(0, [viewer]() {
                         if (viewer) {
                             viewer->scaleView(1.0 / 1.000001);
@@ -133,7 +129,7 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
                     });
                 }
             });
-            // --- 结束 Hack ---
+
             return true; // 事件已处理，保持在 IdleState
         }
         case ImageViewer::ModeSelect:

@@ -17,6 +17,7 @@ class Handle;
 class ROI;
 class RectROI;
 class AngleDrawingState;
+class PolylineDrawingState;
 
 class DrawingStateMachine : public QObject
 {
@@ -29,7 +30,7 @@ public:
         Drawing,
         DraggingHandle,
         AngleDrawing,
-
+        PolylineDrawing,
     };
     Q_ENUM(StateType)
 
@@ -41,6 +42,7 @@ public:
     bool handleMouseMoveEvent(QMouseEvent *event);
     bool handleMouseReleaseEvent(QMouseEvent *event);
     bool handleWheelEvent(QWheelEvent *event);
+    bool handleMouseDoubleClickEvent(QMouseEvent *event);
 
     void setState(DrawingState* newState, bool temporary = false);
     // 状态转换
@@ -54,7 +56,7 @@ public:
     void setStartDragPos(const QPointF& pos) { m_startDragPos = pos; }
     QPointF startDragPos() const { return m_startDragPos; }
     AngleDrawingState* angleDrawingState() const;
-
+    PolylineDrawingState* polylineDrawingState() const;
 
     void startDraggingHandle(Handle* handle, const QPointF& scenePos);
     void updateDraggingHandle(const QPointF& scenePos);
@@ -78,6 +80,7 @@ private:
     Handle* m_currentlyDraggingHandle;
     ROI* m_targetRoi;
     AngleDrawingState* m_angleDrawingState;
+    PolylineDrawingState* m_polylineDrawingState;
 };
 
 #endif // DRAWINGSTATEMACHINE_H

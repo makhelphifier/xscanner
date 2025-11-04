@@ -122,7 +122,7 @@ public:
     Handle* addScaleHandle(const QPointF& pos, const QPointF& center, const QString& name = QString());
     Handle* addRotateHandle(const QPointF& pos, const QPointF& center, const QString& name = QString());
     Handle* addScaleRotateHandle(const QPointF& pos, const QPointF& center, const QString& name = QString());
-    void removeHandle(Handle* handle);
+    virtual void removeHandle(Handle* handle);
     QList<Handle*> getHandles() const;
 
     QRectF boundingRect() const override;

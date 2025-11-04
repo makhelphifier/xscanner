@@ -11,6 +11,7 @@
 #include <QWheelEvent>
 #include <QDebug>
 #include "angledrawingstate.h"
+#include "polylinedrawingstate.h"
 
 DrawingStateMachine::DrawingStateMachine(ImageViewer* viewer, QObject *parent)
     : QObject(parent),
@@ -25,7 +26,7 @@ DrawingStateMachine::DrawingStateMachine(ImageViewer* viewer, QObject *parent)
     m_panningState = new PanningState(this, this);
     m_draggingHandleState = new DraggingHandleState(this, this);
     m_angleDrawingState = new AngleDrawingState(this, this);
-
+    m_polylineDrawingState = new PolylineDrawingState(this, this);
     // 设置初始状态
     setState(Idle);
 
@@ -49,6 +50,7 @@ void DrawingStateMachine::setState(StateType type)
     case Idle:           nextState = m_idleState; break;
     case Panning:        nextState = m_panningState; break;
     case AngleDrawing:   nextState = m_angleDrawingState; break;
+    case PolylineDrawing: nextState = m_polylineDrawingState; break;
     case DraggingHandle: nextState = m_draggingHandleState; break;
     case Drawing:
     default:
@@ -88,6 +90,7 @@ DrawingStateMachine::StateType DrawingStateMachine::currentState() const
     if (m_currentStatePtr == m_idleState) return Idle;
     if (m_currentStatePtr == m_panningState) return Panning;
     if (m_currentStatePtr == m_draggingHandleState) return DraggingHandle;
+    if (m_currentStatePtr == m_polylineDrawingState) return PolylineDrawing;
     if (m_currentStatePtr == m_angleDrawingState) return AngleDrawing;
     return Idle; // 默认或错误情况
 }
@@ -100,6 +103,11 @@ AngleDrawingState* DrawingStateMachine::angleDrawingState() const
 {
     return m_angleDrawingState;
 }
+PolylineDrawingState* DrawingStateMachine::polylineDrawingState() const
+{
+    return m_polylineDrawingState;
+}
+
 // --- 事件转发 ---
 
 bool DrawingStateMachine::handleMousePressEvent(QMouseEvent *event)
@@ -164,4 +172,10 @@ void DrawingStateMachine::finishDraggingHandle()
     m_targetRoi->handleDragFinished(m_currentlyDraggingHandle);
     m_currentlyDraggingHandle = nullptr;
     m_targetRoi = nullptr;
+}
+
+bool DrawingStateMachine::handleMouseDoubleClickEvent(QMouseEvent *event)
+{
+    if (!m_currentStatePtr) return false;
+    return m_currentStatePtr->handleMouseDoubleClickEvent(event);
 }

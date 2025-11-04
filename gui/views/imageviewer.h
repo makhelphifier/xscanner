@@ -43,6 +43,7 @@ public:
         ModeDrawAngledLine,
         ModeDrawAngle,
         ModeDrawPoint,
+        ModeDrawPolyline,
     };
     void setImage(const QImage &image);
     void updatePixmap(const QPixmap &pixmap);
@@ -92,6 +93,7 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
 
 private:
     QGraphicsScene *m_scene;

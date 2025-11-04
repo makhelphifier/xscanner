@@ -25,7 +25,12 @@ public:
     virtual bool handleMouseMoveEvent(QMouseEvent *event) = 0;
     virtual bool handleMouseReleaseEvent(QMouseEvent *event) = 0;
     virtual bool handleWheelEvent(QWheelEvent *event) = 0;
-
+    /**
+     * @brief [新增] 处理双击事件 (默认为 false)
+     *
+     * 因为它不是纯虚函数，现有的状态类不需要修改。
+     */
+    virtual bool handleMouseDoubleClickEvent(QMouseEvent *event) { Q_UNUSED(event); return false; }
 protected:
     DrawingStateMachine* machine() const { return m_machine; } // 提供访问状态机的接口
 

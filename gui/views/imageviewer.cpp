@@ -39,6 +39,7 @@ void ImageViewer::loadImage(const QString &filePath)
     QImage loadedImage;
     if (filePath.endsWith(".raw", Qt::CaseInsensitive) || filePath.endsWith(".bin", Qt::CaseInsensitive)) {
         // 加载 RAW 图像
+        // loadedImage = ImageProcessor::readRawImg_qImage(filePath, 3072, 3072);  // 调整尺寸如果需要
         loadedImage = ImageProcessor::readRawImg_qImage(filePath, 2882, 2340);  // 调整尺寸如果需要
         m_imageBounds = loadedImage.rect();
     } else {
@@ -402,7 +403,6 @@ void ImageViewer::onExtractRegion(ROI* roi)
 
     qDebug() << "ImageViewer: Received request to extract from ROI.";
 
-    // 1. 调用我们之前编写的核心函数
     QImage extractedImage = roi->getArrayRegion(m_originalImage, true);
 
     if (extractedImage.isNull()) {
@@ -410,31 +410,25 @@ void ImageViewer::onExtractRegion(ROI* roi)
         return;
     }
 
-    // 成功！打印信息
-    qDebug() << "SUCCESS: Extracted image of size" << extractedImage.size()
-             << "format" << extractedImage.format();
-
-    // 2. ++ 修改：在新窗口中显示 extractedImage ++
     QImage displayImage = extractedImage;
 
-    // 2a. 对 Grayscale16 图像进行特殊处理以便显示
-    //     (因为 QPixmap/QLabel 无法正确显示 16-bit 灰度)
     if (extractedImage.format() == QImage::Format_Grayscale16) {
-        qDebug() << "Performing 16-bit to 8-bit conversion for display...";
-
-        // 2b. 使用 ImageProcessor 自动计算最佳窗宽窗位
         int minVal, maxVal;
         ImageProcessor::calculateAutoWindowLevel(extractedImage, minVal, maxVal);
-
         qDebug() << "Auto window/level for extracted image: Min =" << minVal << "Max =" << maxVal;
-
-        // 2c. 应用窗宽窗位 (这将返回一个 Format_Grayscale8 图像)
         displayImage = ImageProcessor::applyWindowLevel(extractedImage, minVal, maxVal);
     }
 
-    // 3. 创建并显示新窗口
-    //    (this 被用作 parent，使其成为 ImageViewer 的子窗口)
     ExtractedImageViewer *viewer = new ExtractedImageViewer(displayImage, this);
     viewer->show();
-    // -- 结束修改 --
+}
+
+
+void ImageViewer::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    if (m_drawingStateMachine->handleMouseDoubleClickEvent(event)) {
+        event->accept(); // 状态机处理了它
+    } else {
+        QGraphicsView::mouseDoubleClickEvent(event); // 基类处理（例如缩放）
+    }
 }
