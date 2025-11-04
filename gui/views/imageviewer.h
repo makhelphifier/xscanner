@@ -41,6 +41,7 @@ public:
         ModeDrawHLine,
         ModeDrawVLine,
         ModeDrawAngledLine,
+        ModeDrawAngle,
     };
     void setImage(const QImage &image);
     void updatePixmap(const QPixmap &pixmap);

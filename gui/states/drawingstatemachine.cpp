@@ -10,6 +10,7 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QDebug>
+#include "angledrawingstate.h"
 
 DrawingStateMachine::DrawingStateMachine(ImageViewer* viewer, QObject *parent)
     : QObject(parent),
@@ -23,6 +24,7 @@ DrawingStateMachine::DrawingStateMachine(ImageViewer* viewer, QObject *parent)
     m_idleState = new IdleState(this, this);
     m_panningState = new PanningState(this, this);
     m_draggingHandleState = new DraggingHandleState(this, this);
+    m_angleDrawingState = new AngleDrawingState(this, this);
 
     // 设置初始状态
     setState(Idle);
@@ -46,6 +48,7 @@ void DrawingStateMachine::setState(StateType type)
     switch (type) {
     case Idle:           nextState = m_idleState; break;
     case Panning:        nextState = m_panningState; break;
+    case AngleDrawing:   nextState = m_angleDrawingState; break;
     case DraggingHandle: nextState = m_draggingHandleState; break;
     case Drawing:
     default:
@@ -85,6 +88,7 @@ DrawingStateMachine::StateType DrawingStateMachine::currentState() const
     if (m_currentStatePtr == m_idleState) return Idle;
     if (m_currentStatePtr == m_panningState) return Panning;
     if (m_currentStatePtr == m_draggingHandleState) return DraggingHandle;
+    if (m_currentStatePtr == m_angleDrawingState) return AngleDrawing;
     return Idle; // 默认或错误情况
 }
 
@@ -92,7 +96,10 @@ ImageViewer *DrawingStateMachine::viewer() const
 {
  return m_viewer;
 }
-
+AngleDrawingState* DrawingStateMachine::angleDrawingState() const
+{
+    return m_angleDrawingState;
+}
 // --- 事件转发 ---
 
 bool DrawingStateMachine::handleMousePressEvent(QMouseEvent *event)

@@ -99,6 +99,8 @@ qt_add_executable(${PROJECT_NAME}
     gui/items/infinitelineitem.h gui/items/infinitelineitem.cpp
     gui/items/infinitelinelabel.h gui/items/infinitelinelabel.cpp
     gui/items/angledlineroi.h gui/items/angledlineroi.cpp
+    gui/items/angleroi.h gui/items/angleroi.cpp
+    gui/states/angledrawingstate.h gui/states/angledrawingstate.cpp
 )
 
 

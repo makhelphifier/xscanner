@@ -143,6 +143,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     toolGroup->addAction(angledLineAction);
     connect(angledLineAction, &QAction::triggered, [this]() { viewer->setToolMode(ImageViewer::ModeDrawAngledLine);});
 
+    angleAction = new QAction(QIcon(":/Resources/img/masure.png"), "角度测量", this);
+    angleAction->setCheckable(true);
+    toolBar->addAction(angleAction);
+    toolGroup->addAction(angleAction);
+    connect(angleAction, &QAction::triggered, [this]() { viewer->setToolMode(ImageViewer::ModeDrawAngle);});
+
     // 添加分隔符
     toolBar->addSeparator();
 
