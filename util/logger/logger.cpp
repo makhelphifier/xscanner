@@ -1,41 +1,29 @@
-#include "log4qt/logger.h"
+#include "logger.h"
 #include "log4qt/propertyconfigurator.h"
 #include "log4qt/logmanager.h"
 #include "log4qt/loggingevent.h"
 #include "log4qt/level.h"
-
-#include "logger.h"
 #include <QCoreApplication>
-#include <QDir>
 #include <QDateTime>
-#include <QThread>
+#include <QDir>
 #include <QHash>
+#include <QThread>
 
-static Logger* g_logger_instance = nullptr;
 
-Logger::Logger(QObject *parent)
-    : QObject(parent)
+LoggerWorker::LoggerWorker(QObject *parent) : QObject(parent)
+{
+    m_rootLogger = nullptr;
+}
+
+void LoggerWorker::initLogger(const QString& confPath)
 {
     m_rootLogger = Log4Qt::LogManager::rootLogger();
-}
-
-Logger::~Logger() {}
-
-Logger* Logger::instance()
-{
-    if (!g_logger_instance) {
-        g_logger_instance = new Logger(QCoreApplication::instance());
-    }
-    return g_logger_instance;
-}
-
-void Logger::init(const QString& confPath)
-{
     Log4Qt::PropertyConfigurator::configure(confPath);
+
     LogInfo("Logger system initialized successfully.");
 }
 
-void Logger::log(const char* file, int line, const char* function, const QString& level, const QString& message)
+void LoggerWorker::processLogRequest(const QString &file, int line, const QString &function, const QString &level, const QString &message)
 {
     if (!m_rootLogger) return;
 
@@ -52,7 +40,9 @@ void Logger::log(const char* file, int line, const char* function, const QString
 
     qint64 timeStamp = QDateTime::currentDateTime().toMSecsSinceEpoch();
 
-    Log4Qt::MessageContext context(file, line, function);
+    QByteArray fileBytes = file.toUtf8();
+    QByteArray funcBytes = function.toUtf8();
+    Log4Qt::MessageContext context(fileBytes.constData(), line, funcBytes.constData());
 
     Log4Qt::LoggingEvent event(m_rootLogger,
                                qtLevel,
@@ -65,4 +55,47 @@ void Logger::log(const char* file, int line, const char* function, const QString
                                QString());
 
     m_rootLogger->callAppenders(event);
+}
+
+
+
+Logger* Logger::g_logger_instance = nullptr;
+
+Logger::Logger(QObject *parent)
+    : QObject(parent)
+{
+    m_worker = new LoggerWorker;
+    m_worker->moveToThread(&m_workerThread);
+
+    connect(this, &Logger::logRequested, m_worker, &LoggerWorker::processLogRequest);
+    connect(this, &Logger::initRequested, m_worker, &LoggerWorker::initLogger);
+
+    connect(&m_workerThread, &QThread::finished, m_worker, &QObject::deleteLater);
+
+    m_workerThread.setObjectName("LoggerThread");
+    m_workerThread.start();
+}
+
+Logger::~Logger()
+{
+    m_workerThread.quit();
+    m_workerThread.wait();
+}
+
+Logger* Logger::instance()
+{
+    if (!g_logger_instance) {
+        g_logger_instance = new Logger(QCoreApplication::instance());
+    }
+    return g_logger_instance;
+}
+
+void Logger::init(const QString& confPath)
+{
+    emit instance()->initRequested(confPath);
+}
+
+void Logger::log(const char* file, int line, const char* function, const QString& level, const QString& message)
+{
+    emit logRequested(QString(file), line, QString(function), level, message);
 }

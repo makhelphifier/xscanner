@@ -41,20 +41,20 @@ protected:
      * @brief 拖动释放后更新 (X, Y, Value)
      */
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
-    /**
-     * @brief 在 item 被添加到 scene 时触发
-     */
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
 private:
     /**
-     * @brief 根据给定位置更新文本和包围盒
+     * @brief 根据给定位置更新文本
      */
     void updateTextAndPos(const QPointF& scenePos);
 
+    /**
+     * @brief [新] 动态计算文本的边界框（在局部坐标系中）
+     */
+    QRectF calculateTextRect() const;
+
     ImageViewer* m_viewer; // 指向视图
     QString m_text;        // 缓存要绘制的文本
-    QRectF m_textRect;     // 文本的包围盒
     QPointF m_textOffset;  // 文本相对于(0,0)十字中心的偏移
 
     static const int MARKER_SIZE = 5; // 十字标记的半径 (像素)

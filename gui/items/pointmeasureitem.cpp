@@ -28,24 +28,33 @@ PointMeasureItem::PointMeasureItem(const QPointF& pos, ImageViewer* viewer, QGra
 
     m_textOffset = QPointF(MARKER_SIZE + 2, -MARKER_SIZE);
 
-    // 设置初始文本
-    // updateTextAndPos(pos);
-
-
+    // 在构造函数中立即计算初始文本
+    // 这会设置 m_text
+    updateTextAndPos(pos);
 }
 
 QRectF PointMeasureItem::boundingRect() const
 {
-    // 返回一个包含十字标记和文本的矩形
-    QRectF rect = QRectF(-MARKER_SIZE, -MARKER_SIZE, MARKER_SIZE * 2, MARKER_SIZE * 2);
-    rect = rect.united(m_textRect); // m_textRect 是 updateTextAndPos 计算的
-    return rect.adjusted(-2, -2, 2, 2); // 额外 padding
+    // 1. 标记的矩形 (在 0,0)
+    QRectF crossRect = QRectF(-MARKER_SIZE, -MARKER_SIZE, MARKER_SIZE * 2, MARKER_SIZE * 2);
+
+    // 2. 动态计算文本矩形
+    QRectF textRect = calculateTextRect();
+
+    // 3. 合并
+    QRectF unitedRect = crossRect.united(textRect);
+
+    qDebug() << "[PointMeasureItem] boundingRect() called. TextRect:" << textRect << "Final unitedRect:" << unitedRect.adjusted(-2, -2, 2, 2);
+
+    return unitedRect.adjusted(-2, -2, 2, 2); // 额外 padding
 }
 
 void PointMeasureItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     Q_UNUSED(option);
     Q_UNUSED(widget);
+
+    // qDebug() << "[PointMeasureItem] paint() called. m_text:" << m_text;
 
     QPen pen(Qt::yellow, 1); // 始终为 1 像素宽
     pen.setCosmetic(true); // 确保 1 像素
@@ -57,11 +66,12 @@ void PointMeasureItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* 
 
     // 2. 绘制文本
     painter->setFont(QFont("Arial", 10));
-    painter->drawText(m_textOffset, m_text);
 
-    // (可选) 绘制调试边界
-    // painter->setPen(Qt::cyan);
-    // painter->drawRect(boundingRect());
+    // [修改]
+    // 之前: painter->drawText(m_textOffset, m_text); (这个版本不处理 '\n')
+    // 之后: 使用 calculateTextRect() 返回的矩形来绘制，
+    //       并设置 flags=0，这样 Qt 就会正确处理换行符。
+    painter->drawText(calculateTextRect(), 0, m_text);
 }
 
 void PointMeasureItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
@@ -75,7 +85,11 @@ void PointMeasureItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
         updateTextAndPos(pos());
     }
 }
-
+/**
+ * @brief 2. [修改] updateTextAndPos 函数
+ *
+ * 在这里添加动态翻转 m_textOffset 的逻辑
+ */
 void PointMeasureItem::updateTextAndPos(const QPointF& scenePos)
 {
     int x = qRound(scenePos.x());
@@ -86,37 +100,82 @@ void PointMeasureItem::updateTextAndPos(const QPointF& scenePos)
         value = m_viewer->getPixelValue(x, y);
     }
 
-    // 更新文本
+    // 1. 更新文本
     if (value != -1) {
-        m_text = QString("X: %1\n Y: %2\n Val: %3").arg(x).arg(y).arg(value);
+        m_text = QString("X: %1\nY: %2\nVal: %3").arg(x).arg(y).arg(value);
     } else {
-        m_text = QString("X: %1\n Y: %2\n Val: N/A").arg(x).arg(y);
+        m_text = QString("X: %1\nY: %2\nVal: N/A").arg(x).arg(y);
     }
 
+    // [新增] 动态计算 m_textOffset 以避免超出图像边界
+    if (m_viewer) {
+        // --- [在这里调整灵敏度] ---
+        // 增加这个值，文本就会在距离边界更远的地方翻转
+        const qreal FLIP_BUFFER = 500.0; // 15 像素的缓冲区
+        // -------------------------
 
-    // 更新文本包围盒
-    QFontMetrics fm(QFont("Arial", 10));
-    // 1. 先在 (0,0) 计算多行文本的边界矩形
-    //    我们给一个 QRect()，flags 设为 0（因为 m_text 包含 \n）
-    // QRect rectAtOrigin = fm.boundingRect(QRect(0,0,0,0), 0, m_text);
-    QRect rectAtOrigin = fm.boundingRect(QRect(0, 0, 500, 0), 0, m_text);
-    // 2. 然后将这个矩形平移到我们的 m_textOffset 位置
-    m_textRect = rectAtOrigin.translated(m_textOffset.toPoint());
-    // 通知 Qt 我们的总包围盒 (boundingRect) 已经改变
+        // 1. 获取文本的预期大小
+        QFontMetrics fm(QFont("Arial", 10));
+        QRect textBlockRect = fm.boundingRect(QRect(0, 0, 500, 0), 0, m_text);
+        qreal textWidth = textBlockRect.width();
+        qreal textHeight = textBlockRect.height();
+
+        // 2. 获取图像边界 (在场景坐标系中)
+        QRectF bounds = m_viewer->imageBounds();
+
+        // 3. 定义文本到十字星的边距
+        qreal h_padding = MARKER_SIZE + 2;
+        qreal v_padding = MARKER_SIZE + 2;
+
+        qreal finalOffsetX;
+        qreal finalOffsetY;
+
+        // 4. 决定水平 (X) 位置
+        //    检查如果放右边，是否会超出右边界？
+        //    [修改] 增加了 + FLIP_BUFFER
+        if (scenePos.x() + h_padding + textWidth + FLIP_BUFFER > bounds.right()) {
+            // 是: 翻转到左侧
+            finalOffsetX = -h_padding - textWidth;
+        } else {
+            // 否: 默认放在右侧
+            finalOffsetX = h_padding;
+        }
+
+        // 5. 决定垂直 (Y) 位置
+        //    检查如果放上边，是否会超出上边界？
+        //    [修改] 增加了 - FLIP_BUFFER
+        if (scenePos.y() - v_padding - textHeight - FLIP_BUFFER < bounds.top()) {
+            // 是: 翻转到下方
+            finalOffsetY = v_padding;
+        } else {
+            // 否: 默认放在上方
+            finalOffsetY = -v_padding - textHeight;
+        }
+
+        // 6. 设置动态计算出的偏移量
+        m_textOffset = QPointF(finalOffsetX, finalOffsetY);
+    }
+    // [新增结束]
+
+
+    // 2. 通知 Qt 我们的总包围盒 (boundingRect) 已经改变
     prepareGeometryChange();
 
-    // 请求重绘
+    // 3. 请求重绘
     update();
 }
-
-
-QVariant PointMeasureItem::itemChange(GraphicsItemChange change, const QVariant &value)
+/**
+ * @brief [新] 动态计算文本的边界框（在局部坐标系中）
+ *
+ * 在 boundingRect() 中被调用，以确保边界始终是正确的
+ */
+QRectF PointMeasureItem::calculateTextRect() const
 {
-    // 当 item 第一次被添加到 scene 时，会触发这个
-    if (change == ItemSceneHasChanged && scene()) {
-        // 此时 item 已经 context，可以安全地计算几何
-        updateTextAndPos(pos());
-    }
+    QFontMetrics fm(QFont("Arial", 10));
+    // m_text 可能是空的（例如在构造的瞬间），但 updateTextAndPos 会立即设置它
+    // 我们给一个 QRect()，flags 设为 0（因为 m_text 包含 \n）
+    QRect rectAtOrigin = fm.boundingRect(QRect(0, 0, 500, 0), 0, m_text);
 
-    return QGraphicsObject::itemChange(change, value);
+    // 将这个矩形平移到我们的 m_textOffset 位置
+    return rectAtOrigin.translated(m_textOffset.toPoint());
 }
