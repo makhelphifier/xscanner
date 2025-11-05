@@ -6,17 +6,23 @@
 #include <QPixmap>
 #include <QRectF>
 #include <QVector>
-#include <QVector>
+#include <QMap>
 #include <opencv2/core.hpp>
 #include "qcustomplot.h"
 
-class QCPRange;
+    class QCPRange;
 
 class ImageViewModel : public QObject
 {
     Q_OBJECT
 
 public:
+    enum AdjustmentMode {
+        ModeWindowLevel,
+        ModeCurves
+    };
+    Q_ENUM(AdjustmentMode)
+
     explicit ImageViewModel(QObject *parent = nullptr);
     virtual ~ImageViewModel() = default;
 
@@ -37,6 +43,13 @@ public slots:
     // --- 查询 (从 View 调用) ---
     void requestPixelInfo(const QPointF &scenePos);
     double getPixelValue(int x, int y) const;
+
+    // --- 模式和曲线控制槽 ---
+    void setAdjustmentMode(AdjustmentMode mode);
+    void addCurvePoint(double key, double value);
+    void moveCurvePoint(double oldKey, double newKey, double newValue);
+    void removeCurvePoint(double key);
+    void resetCurve();
 
 signals:
     // --- 通知 (View 监听这些信号) ---
@@ -68,11 +81,20 @@ signals:
     void pixelInfoReady(int x, int y, double value);
 
     /**
-     * @brief (新) 当直方图数据计算完成时发出
+     * @brief 当直方图数据计算完成时发出
      * @param data 包含 HISTOGRAM_BINS 个计数值的 QVector
      * @param keyRange 数据的 X 轴范围 (m_trueDataMin 到 m_trueDataMax)
      */
     void histogramDataReady(const QVector<double> &data, const QCPRange &keyRange);
+
+    /**
+     * @brief 当模式从 WW/L 切换到 Curves 时发出
+     */
+    void adjustmentModeChanged(AdjustmentMode newMode);
+    /**
+     * @brief 当锚点被添加、移动或删除时发出
+     */
+    void curvePointsChanged(const QMap<double, double> &points);
 
 private:
     // --- 内部逻辑 ---
@@ -94,7 +116,11 @@ private:
     bool m_autoWindowing = false;
     QRectF m_imageBounds;
 
-    // (新) 直方图数据
+    // --- 调整模式和曲线数据 ---
+    AdjustmentMode m_adjustmentMode = ModeWindowLevel;
+    QMap<double, double> m_curvePoints;
+
+    // --- 直方图数据 ---
     QVector<double> m_histogramData;
     QCPRange m_histogramKeyRange;
 };

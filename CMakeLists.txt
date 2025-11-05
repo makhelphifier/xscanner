@@ -126,6 +126,7 @@ qt_add_executable(${PROJECT_NAME}
     ${SOURCES}
     Img.qrc
     gui/widgets/histogramwidget.h gui/widgets/histogramwidget.cpp
+    gui/widgets/curveswidget.h gui/widgets/curveswidget.cpp
 )
 
 

@@ -3,6 +3,7 @@
 
 #include <QImage>
 #include <QVector>
+#include <QMap>
 #include <opencv2/core.hpp>
 #include <opencv2/dnn.hpp>
 #include <opencv2/highgui.hpp>
@@ -17,10 +18,11 @@ public:
     // --- cv::Mat (浮点) 版本 ---
     static void calculateAutoWindowLevel(const cv::Mat &image, double &min, double &max, double saturatedRatio = 0.0035);
     static QImage applyWindowLevel(const cv::Mat &originalMat, double windowLevel, double windowWidth);
+    static QImage applyCurveLUT(const cv::Mat &originalMat, const QMap<double, double> &curvePoints);
     static cv::Mat readRawImg_cvMat(const QString imgPath, const int width, const int height, int cvType);
 
     /**
-     * @brief (新) 计算并返回图像的直方图数据
+     * @brief 计算并返回图像的直方图数据
      * @param image 原始 cv::Mat (CV_16U, CV_32F 等)
      * @param numBins 要分成的箱数 (例如 256)
      * @param minRange 数据的真实最小值 (m_trueDataMin)
@@ -32,12 +34,10 @@ public:
     static cv::Mat QImage2cvMat(const QImage &image);
     static QImage cvMat2QImage(const cv::Mat &mat);
 
-
     // --- QImage (整型) 版本 ---
     static void calculateAutoWindowLevel(const QImage &image, int &min, int &max, double saturatedRatio = 0.0035);
     static QImage applyWindowLevel(const QImage &originalImage, int min, int max);
     static QImage readRawImg_qImage(const QString imgPath, const int width, const int height);
-
 };
 
 #endif // IMAGEPROCESSOR_H

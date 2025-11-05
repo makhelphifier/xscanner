@@ -6,8 +6,7 @@
 #include <opencv2/opencv.hpp>
 #include <QtGlobal> // for qBound
 #include <QtMath> // for qFuzzyCompare
-
-
+#include <QMap>
 
 ImageViewModel::ImageViewModel(QObject *parent)
     : QObject(parent),
@@ -53,11 +52,10 @@ void ImageViewModel::loadImage(const QString &filePath)
         m_imageBounds = QRectF();
         emit imageLoaded(0.0, 0.0, 0, QRectF()); // 发出空信号
 
-        // --- (新) 发出空直方图 ---
+        // 发出空直方图
         m_histogramData.clear();
         m_histogramKeyRange = QCPRange(0, 0);
         emit histogramDataReady(m_histogramData, m_histogramKeyRange);
-        // --- 结束 ---
         return;
     }
 
@@ -66,11 +64,15 @@ void ImageViewModel::loadImage(const QString &filePath)
     // 获取并存储 *真实* 的完整数据范围
     cv::minMaxLoc(m_originalImageMat, &m_trueDataMin, &m_trueDataMax);
 
-    // --- (新) 计算直方图 ---
+    // 初始化默认曲线
+    m_curvePoints.clear();
+    m_curvePoints.insert(m_trueDataMin, 0.0);
+    m_curvePoints.insert(m_trueDataMax, 255.0);
+
+    // 计算直方图
     m_histogramData = ImageProcessor::calculateHistogram(m_originalImageMat, HISTOGRAM_BINS, m_trueDataMin, m_trueDataMax);
     m_histogramKeyRange = QCPRange(m_trueDataMin, m_trueDataMax);
     emit histogramDataReady(m_histogramData, m_histogramKeyRange);
-    // --- 结束 ---
 
     // 计算并存储 *饱和* 范围 (用于自动窗宽窗位)
     // m_dataMin/Max 现在存储的是自动窗宽的边界
@@ -89,6 +91,8 @@ void ImageViewModel::loadImage(const QString &filePath)
 
 void ImageViewModel::setWindowWidth(double width)
 {
+    setAdjustmentMode(ModeWindowLevel);
+
     // 使用 *真实* 范围来约束手动输入
     double newWidth = qBound(0.001, width, (m_trueDataMax - m_trueDataMin) + 1.0);
     // 使用 qFuzzyCompare 比较浮点数
@@ -104,6 +108,8 @@ void ImageViewModel::setWindowWidth(double width)
 
 void ImageViewModel::setLevel(double level)
 {
+    setAdjustmentMode(ModeWindowLevel);
+
     // 使用 *真实* 范围来约束手动输入
     double newLevel = qBound(m_trueDataMin, level, m_trueDataMax);
 
@@ -120,6 +126,11 @@ void ImageViewModel::setLevel(double level)
 
 void ImageViewModel::setAutoWindowing(bool enabled)
 {
+    // 如果启用，确保模式为 WindowLevel
+    if (enabled) {
+        setAdjustmentMode(ModeWindowLevel);
+    }
+
     // 状态未改变，直接返回
     if (m_autoWindowing == enabled) return;
 
@@ -219,4 +230,107 @@ void ImageViewModel::calculateAutoWindowLevel(double &min, double &max)
     // 将计算出的饱和范围也存起来
     m_dataMin = min;
     m_dataMax = max;
+}
+
+// --- 模式和曲线控制槽的实现 ---
+
+/**
+ * @brief 设置当前的图像调整模式 (窗宽窗位 或 曲线)
+ */
+void ImageViewModel::setAdjustmentMode(AdjustmentMode mode)
+{
+    if (m_adjustmentMode == mode)
+        return;
+
+    m_adjustmentMode = mode;
+    emit adjustmentModeChanged(m_adjustmentMode);
+
+    // 如果切换到曲线模式，则“自动窗宽”必须关闭
+    if (m_adjustmentMode == ModeCurves) {
+        if (m_autoWindowing) { // 仅在状态改变时才设置和发出信号
+            m_autoWindowing = false;
+            emit autoWindowingChanged(false);
+        }
+        // 切换到曲线模式时，立即发送当前曲线点
+        emit curvePointsChanged(m_curvePoints);
+    }
+
+    // (TODO: 在未来，这里应该调用 applyAdjustment() 来更新图像)
+    // applyWindowLevel(); // 暂时保留，直到曲线应用逻辑被添加
+}
+
+/**
+ * @brief 添加一个曲线锚点
+ */
+void ImageViewModel::addCurvePoint(double key, double value)
+{
+    // 确保值在有效输出范围内
+    value = qBound(0.0, value, 255.0);
+    key = qBound(m_trueDataMin, key, m_trueDataMax);
+
+    m_curvePoints.insert(key, value);
+    emit curvePointsChanged(m_curvePoints);
+
+    // (TODO: 在未来，这里应该调用 applyAdjustment())
+}
+
+/**
+ * @brief 移动一个曲线锚点
+ * @param oldKey 锚点原来的 Key (用于查找)
+ * @param newKey 锚点的新 Key
+ * @param newValue 锚点的新 Value
+ */
+void ImageViewModel::moveCurvePoint(double oldKey, double newKey, double newValue)
+{
+    if (!m_curvePoints.contains(oldKey))
+        return;
+
+    // 确保值在有效输出范围内
+    newValue = qBound(0.0, newValue, 255.0);
+    newKey = qBound(m_trueDataMin, newKey, m_trueDataMax);
+
+    // 不允许移动端点
+    if (qFuzzyCompare(oldKey, m_curvePoints.firstKey()) || qFuzzyCompare(oldKey, m_curvePoints.lastKey())) {
+        newKey = oldKey; // 保持 Key 不变，只允许修改 Value
+    }
+
+    m_curvePoints.remove(oldKey);
+    m_curvePoints.insert(newKey, newValue);
+
+    emit curvePointsChanged(m_curvePoints);
+
+    // (TODO: 在未来，这里应该调用 applyAdjustment())
+}
+
+/**
+ * @brief 移除一个曲线锚点
+ * @param key 要移除的锚点的 Key
+ */
+void ImageViewModel::removeCurvePoint(double key)
+{
+    if (!m_curvePoints.contains(key))
+        return;
+
+    // 不允许移除第一个或最后一个锚点
+    if (qFuzzyCompare(key, m_curvePoints.firstKey()) || qFuzzyCompare(key, m_curvePoints.lastKey())) {
+        return;
+    }
+
+    m_curvePoints.remove(key);
+    emit curvePointsChanged(m_curvePoints);
+
+    // (TODO: 在未来，这里应该调用 applyAdjustment())
+}
+
+/**
+ * @brief 将曲线重置为默认的直线状态
+ */
+void ImageViewModel::resetCurve()
+{
+    m_curvePoints.clear();
+    m_curvePoints.insert(m_trueDataMin, 0.0);
+    m_curvePoints.insert(m_trueDataMax, 255.0);
+    emit curvePointsChanged(m_curvePoints);
+
+    // (TODO: 在未来，这里应该调用 applyAdjustment())
 }

@@ -9,11 +9,13 @@
 #include "gui/widgets/toprightinfowidget.h"
 #include <QLabel>
 #include "log4qt/level.h"
+#include "gui/viewmodels/imageviewmodel.h"
 
 class TopRightInfoWidget;
 class LogWidget;
 class ImageViewModel;
 class HistogramWidget;
+class CurvesWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -38,6 +40,7 @@ private slots:
     void updateScale(qreal scale);
     void onScaleFromWidget(double scale);
     void onLogLevelChanged(Log4Qt::Level level);
+    void onAdjustmentModeChanged(ImageViewModel::AdjustmentMode mode);
 
 private:
     ImageViewModel *m_imageViewModel;
@@ -56,6 +59,7 @@ private:
     QAction *polylineAction;
     QAction *freehandAction;
     QAction *textAction;
+    QAction *m_curvesAction;
     QAction *clearAction;
     QActionGroup *toolGroup;
     QLabel *sizeLabel;
@@ -63,6 +67,7 @@ private:
     TopRightInfoWidget *infoWidget;
     LogWidget *m_logWidget;
     HistogramWidget *m_histogramWidget;
+    CurvesWidget *m_curvesWidget;
 };
 
 #endif // MAINWINDOW_H

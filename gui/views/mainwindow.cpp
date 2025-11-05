@@ -19,8 +19,8 @@
 #include "gui/widgets/toprightinfowidget.h"
 #include "util/logger/logger.h"
 #include "gui/items/rectroi.h"
-#include "gui/widgets/histogramwidget.h"
 #include <QFile>
+#include "gui/widgets/curveswidget.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -69,10 +69,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     addDockWidget(Qt::BottomDockWidgetArea, logDockWidget);
 
     // ---  添加直方图控件 ---
-    QDockWidget *histogramDockWidget = new QDockWidget("直方图", this);
-    m_histogramWidget = new HistogramWidget(this);
-    histogramDockWidget->setWidget(m_histogramWidget);
-    addDockWidget(Qt::RightDockWidgetArea, histogramDockWidget); // 停靠在右侧
+    QDockWidget *curvesDockWidget = new QDockWidget("直方图/曲线", this);
+    m_curvesWidget = new CurvesWidget(this);
+    curvesDockWidget->setWidget(m_curvesWidget);
+    addDockWidget(Qt::RightDockWidgetArea, curvesDockWidget);
 
     // 将 Appender 的信号连接到 LogWidget 的槽 ---
     connect(QtWidgetAppender::instance(), &QtWidgetAppender::messageAppended,
@@ -82,9 +82,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(m_logWidget, &LogWidget::logLevelChanged, this, &MainWindow::onLogLevelChanged);
 
     connect(m_imageViewModel, &ImageViewModel::histogramDataReady,
-            m_histogramWidget, &HistogramWidget::updateHistogram);
+            m_curvesWidget, &CurvesWidget::updateHistogram);
     connect(m_imageViewModel, &ImageViewModel::windowLevelChanged,
-            m_histogramWidget, &HistogramWidget::updateWindowLevelIndicator);
+            m_curvesWidget, &CurvesWidget::updateWindowLevelIndicator);
 
     // --- 菜单和工具栏 ---
     QMenu *fileMenu = menuBar()->addMenu("文件");
@@ -107,9 +107,20 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // 窗宽窗位工具
     wlAction = new QAction(QIcon(":/Resources/img/u27.png"), "窗宽窗位", this);
     wlAction->setCheckable(true);
-    // toolBar->addAction(wlAction);
+    toolBar->addAction(wlAction); // <-- 确保添加
     toolGroup->addAction(wlAction);
-    connect(wlAction, &QAction::triggered, [this]() {});
+    connect(wlAction, &QAction::triggered, [this]() {
+        m_imageViewModel->setAdjustmentMode(ImageViewModel::ModeWindowLevel);
+    });
+
+    //  曲线工具
+    m_curvesAction = new QAction(QIcon(":/Resources/img/censor-analysis.png"), "曲线", this);
+    m_curvesAction->setCheckable(true);
+    toolBar->addAction(m_curvesAction);
+    toolGroup->addAction(m_curvesAction);
+    connect(m_curvesAction, &QAction::triggered, [this]() {
+        m_imageViewModel->setAdjustmentMode(ImageViewModel::ModeCurves);
+    });
 
     // 直线工具
     lineAction = new QAction(QIcon(":/Resources/img/line_tool.png"), "直线", this);
@@ -200,6 +211,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     // 默认选择模式（确保 pointAction 未选中）
     selectAction->setChecked(true);
+    m_imageViewModel->setAdjustmentMode(ImageViewModel::ModeWindowLevel);
 
     // --- 连接信号和槽 ---
 
@@ -221,6 +233,26 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     // 图像加载 (VM -> MainWindow)
     connect(m_imageViewModel, &ImageViewModel::imageLoaded, this, &MainWindow::onImageLoaded);
+
+    // 1. (View -> VM) CurvesWidget 请求 VM 更改
+    connect(m_curvesWidget, &CurvesWidget::requestAddPoint,
+            m_imageViewModel, &ImageViewModel::addCurvePoint);
+    connect(m_curvesWidget, &CurvesWidget::requestMovePoint,
+            m_imageViewModel, &ImageViewModel::moveCurvePoint);
+    connect(m_curvesWidget, &CurvesWidget::requestRemovePoint,
+            m_imageViewModel, &ImageViewModel::removeCurvePoint);
+
+    // 2. (VM -> View) VM 通知 CurvesWidget 曲线已更改
+    connect(m_imageViewModel, &ImageViewModel::curvePointsChanged,
+            m_curvesWidget, &CurvesWidget::updateCurve);
+
+    // 3. (VM -> View) VM 通知 UI 模式已更改
+    connect(m_imageViewModel, &ImageViewModel::adjustmentModeChanged,
+            this, &MainWindow::onAdjustmentModeChanged);
+    connect(m_imageViewModel, &ImageViewModel::adjustmentModeChanged,
+            m_curvesWidget, [this](ImageViewModel::AdjustmentMode mode){
+                m_curvesWidget->setWindowLevelMode(mode == ImageViewModel::ModeWindowLevel);
+            });
 
     // 默认加载图像
     QString exeDir = QCoreApplication::applicationDirPath();
@@ -360,4 +392,27 @@ void MainWindow::onLogLevelChanged(Log4Qt::Level level)
 {
     Log4Qt::Logger::rootLogger()->setLevel(level);
     // LogInfo(QString("Log level changed to %1").arg(level.toString()));
+}
+
+
+
+void MainWindow::onAdjustmentModeChanged(ImageViewModel::AdjustmentMode mode)
+{
+    if (mode == ImageViewModel::ModeWindowLevel) {
+        // 窗宽窗位模式：
+        // 1. 显示 W/L 手动输入框 (infoWidget)
+        infoWidget->setVisible(true);
+        // 2. 选中 W/L 按钮
+        if (!wlAction->isChecked()) {
+            wlAction->setChecked(true);
+        }
+    } else {
+        // 曲线模式：
+        // 1. 隐藏 W/L 手动输入框 (infoWidget)
+        infoWidget->setVisible(false);
+        // 2. 选中 Curves 按钮
+        if (!m_curvesAction->isChecked()) {
+            m_curvesAction->setChecked(true);
+        }
+    }
 }

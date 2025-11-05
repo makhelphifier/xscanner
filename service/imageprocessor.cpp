@@ -10,6 +10,7 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <limits>
+#include <QMap>
 
 ImageProcessor::ImageProcessor() {}
 
@@ -230,7 +231,7 @@ void ImageProcessor::calculateAutoWindowLevel(const cv::Mat &image, double &min,
 }
 
 /**
- * @brief (新) 计算并返回图像的直方图数据 (阶段 1 实现)
+ * @brief 计算并返回图像的直方图数据 (阶段 1 实现)
  */
 QVector<double> ImageProcessor::calculateHistogram(const cv::Mat &image, int numBins, double minRange, double maxRange)
 {
@@ -428,4 +429,151 @@ QImage ImageProcessor::applyWindowLevel(const cv::Mat &originalMat, double windo
     originalMat.convertTo(eightBitMat, CV_8U, alpha, beta);
 
     return cvMat2QImage(eightBitMat);
+}
+
+/**
+ * @brief [辅助函数] 根据曲线锚点计算单个输入灰度值对应的输出值
+ * @param key         输入的灰度值
+ * @param curvePoints 锚点 map
+ * @return            插值后的输出值 (已钳制在 0-255)
+ */
+static inline uchar interpolateCurve(double key, const QMap<double, double> &curvePoints)
+{
+    // 1. 找到第一个 Key 大于或等于 key 的点
+    auto it_upper = curvePoints.lowerBound(key);
+
+    // 2. 处理边界情况 (超出范围)
+    if (it_upper == curvePoints.constEnd()) {
+        // key 大于所有锚点, 返回最后一个锚点的值
+        return static_cast<uchar>(qBound(0.0, curvePoints.last(), 255.0));
+    }
+    if (it_upper == curvePoints.constBegin()) {
+        // key 小于或等于第一个锚点, 返回第一个锚点的值
+        return static_cast<uchar>(qBound(0.0, it_upper.value(), 255.0));
+    }
+
+    // 3. 此时，it_upper 是 key 之后的点，(it_upper - 1) 是 key 之前的点
+    auto it_lower = it_upper - 1;
+
+    // 4. 进行线性插值
+    double key1 = it_lower.key();
+    double val1 = it_lower.value();
+    double key2 = it_upper.key();
+    double val2 = it_upper.value();
+
+    double denom = (key2 - key1);
+    double t = 0.0;
+    if (denom > 1e-9) { // 避免除以零
+        t = (key - key1) / denom;
+    }
+
+    double result = val1 + t * (val2 - val1);
+
+    return static_cast<uchar>(qBound(0.0, result, 255.0));
+}
+
+
+/**
+ * @brief 根据曲线锚点，使用 LUT 将原始 Mat 转换为 8-bit QImage
+ */
+QImage ImageProcessor::applyCurveLUT(const cv::Mat &originalMat, const QMap<double, double> &curvePoints)
+{
+    if (originalMat.empty() || curvePoints.size() < 2) {
+        return QImage();
+    }
+
+    int type = originalMat.type();
+
+    // --- 快速路径: CV_8U 和 CV_16U 可以使用 cv::LUT ---
+    if (type == CV_8U || type == CV_16U)
+    {
+        int lutSize = (type == CV_8U) ? 256 : 65536;
+        cv::Mat lut(1, lutSize, CV_8U);
+        uchar* lutData = lut.ptr<uchar>(0);
+
+        // 1. 预先计算整个查找表
+        auto it_lower = curvePoints.constBegin();
+        auto it_upper = it_lower + 1;
+
+        for (int i = 0; i < lutSize; ++i)
+        {
+            double key = static_cast<double>(i);
+
+            // 优化：移动迭代器区间
+            while (it_upper != curvePoints.constEnd() && key > it_upper.key()) {
+                ++it_lower;
+                ++it_upper;
+            }
+
+            // 2. 插值或钳位
+            if (it_upper == curvePoints.constEnd()) {
+                lutData[i] = static_cast<uchar>(qBound(0.0, it_lower.value(), 255.0));
+            } else {
+                double key1 = it_lower.key(), val1 = it_lower.value();
+                double key2 = it_upper.key(), val2 = it_upper.value();
+                double denom = (key2 - key1);
+                double t = (denom > 1e-9) ? ((key - key1) / denom) : 0.0;
+                double result = val1 + t * (val2 - val1);
+                lutData[i] = static_cast<uchar>(qBound(0.0, result, 255.0));
+            }
+        }
+
+        // 3. 应用 LUT
+        cv::Mat resultMat;
+        cv::LUT(originalMat, lut, resultMat);
+        return cvMat2QImage(resultMat);
+    }
+
+    // --- 兼容路径: 浮点或有符号类型 (CV_32F, CV_16S 等) ---
+    // 必须手动迭代，因为 cv::LUT 不支持这些类型
+
+    cv::Mat resultMat(originalMat.size(), CV_8U);
+    int width = originalMat.cols;
+    int height = originalMat.rows;
+
+    // 针对不同类型进行优化的逐行迭代
+    for (int y = 0; y < height; ++y) {
+        uchar* pResult = resultMat.ptr<uchar>(y);
+
+        switch(type) {
+        case CV_32F: {
+            const float* pSrc = originalMat.ptr<float>(y);
+            for (int x = 0; x < width; ++x) {
+                pResult[x] = interpolateCurve(pSrc[x], curvePoints);
+            }
+            break;
+        }
+        case CV_16S: {
+            const qint16* pSrc = originalMat.ptr<qint16>(y);
+            for (int x = 0; x < width; ++x) {
+                pResult[x] = interpolateCurve(pSrc[x], curvePoints);
+            }
+            break;
+        }
+        case CV_64F: {
+            const double* pSrc = originalMat.ptr<double>(y);
+            for (int x = 0; x < width; ++x) {
+                pResult[x] = interpolateCurve(pSrc[x], curvePoints);
+            }
+            break;
+        }
+        case CV_32S: {
+            const qint32* pSrc = originalMat.ptr<qint32>(y);
+            for (int x = 0; x < width; ++x) {
+                pResult[x] = interpolateCurve(pSrc[x], curvePoints);
+            }
+            break;
+        }
+        default: {
+            qWarning() << "applyCurveLUT: Unhandled optimized type, using slow fallback.";
+            // 极慢的 at() 回退
+            for (int x = 0; x < width; ++x) {
+                pResult[x] = interpolateCurve(originalMat.at<double>(y, x), curvePoints);
+            }
+            break;
+        }
+        }
+    }
+
+    return cvMat2QImage(resultMat);
 }
