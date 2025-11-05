@@ -28,11 +28,11 @@ protected:
 private slots:
     void openImage();
 
-    void onPixelInfoChanged(int x, int y, int value);
-    void onWindowLevelChanged(int width, int level);
+    void onPixelInfoChanged(int x, int y, double value);
+    void onWindowLevelChanged(double width, double level);
     void onAutoWindowingToggled(bool enabled);
 
-    void onImageLoaded(int min, int max, int bits, QRectF imageRect);
+    void onImageLoaded(double min, double max, int bits, QRectF imageRect);
 
     void updateScale(qreal scale);
     void onScaleFromWidget(double scale);

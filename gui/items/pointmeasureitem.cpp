@@ -1,3 +1,5 @@
+// gui/items/pointmeasureitem.cpp
+
 #include "pointmeasureitem.h"
 #include "gui/views/imageviewer.h"
 #include <QGraphicsSceneMouseEvent>
@@ -30,18 +32,10 @@ PointMeasureItem::PointMeasureItem(const QPointF& pos, ImageViewModel* viewModel
 
 QRectF PointMeasureItem::boundingRect() const
 {
-    // 1. 标记的矩形 (在 0,0)
     QRectF crossRect = QRectF(-MARKER_SIZE, -MARKER_SIZE, MARKER_SIZE * 2, MARKER_SIZE * 2);
-
-    // 2. 动态计算文本矩形
     QRectF textRect = calculateTextRect();
-
-    // 3. 合并
     QRectF unitedRect = crossRect.united(textRect);
-
-    qDebug() << "[PointMeasureItem] boundingRect() called. TextRect:" << textRect << "Final unitedRect:" << unitedRect.adjusted(-2, -2, 2, 2);
-
-    return unitedRect.adjusted(-2, -2, 2, 2); // 额外 padding
+    return unitedRect.adjusted(-2, -2, 2, 2);
 }
 
 void PointMeasureItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -63,36 +57,30 @@ void PointMeasureItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* 
 
 void PointMeasureItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
-    // 首先，让基类处理移动
     QGraphicsObject::mouseReleaseEvent(event);
-
-    // 检查是否真的移动了
     if (event->button() == Qt::LeftButton && m_viewModel) {
         updateTextAndPos(pos());
     }
 }
-/**
- * @brief 2. updateTextAndPos 函数
- *
- * 在这里添加动态翻转 m_textOffset 的逻辑
- */
+
 void PointMeasureItem::updateTextAndPos(const QPointF& scenePos)
 {
     int x = qRound(scenePos.x());
     int y = qRound(scenePos.y());
-    int value = -1;
+    double value = -1.0;
 
     if (m_viewModel && m_viewModel->imageBounds().contains(scenePos)) {
         value = m_viewModel->getPixelValue(x, y);
     }
     // 1. 更新文本
-    if (value != -1) {
-        m_text = QString("X: %1\nY: %2\nVal: %3").arg(x).arg(y).arg(value);
+    // 格式化浮点数
+    if (value != -1.0) {
+        m_text = QString("X: %1\nY: %2\nVal: %3").arg(x).arg(y).arg(value, 0, 'f', 2);
     } else {
         m_text = QString("X: %1\nY: %2\nVal: N/A").arg(x).arg(y);
     }
 
-    //  动态计算 m_textOffset 以避免超出图像边界
+    // 动态计算 m_textOffset 以避免超出图像边界
     if (m_viewModel) {
         // 增加这个值，文本就会在距离边界更远的地方翻转
         const qreal FLIP_BUFFER = 500.0;
@@ -140,18 +128,10 @@ void PointMeasureItem::updateTextAndPos(const QPointF& scenePos)
     prepareGeometryChange();
     update();
 }
-/**
- * @brief 动态计算文本的边界框（在局部坐标系中）
- *
- * 在 boundingRect() 中被调用，以确保边界始终是正确的
- */
+
 QRectF PointMeasureItem::calculateTextRect() const
 {
     QFontMetrics fm(QFont("Arial", 10));
-    // m_text 可能是空的（例如在构造的瞬间），但 updateTextAndPos 会立即设置它
-    // 我们给一个 QRect()，flags 设为 0（因为 m_text 包含 \n）
     QRect rectAtOrigin = fm.boundingRect(QRect(0, 0, 500, 0), 0, m_text);
-
-    // 将这个矩形平移到我们的 m_textOffset 位置
     return rectAtOrigin.translated(m_textOffset.toPoint());
 }

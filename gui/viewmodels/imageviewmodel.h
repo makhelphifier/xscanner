@@ -5,6 +5,7 @@
 #include <QImage>
 #include <QPixmap>
 #include <QRectF>
+#include <opencv2/core.hpp>
 
 class ImageViewModel : public QObject
 {
@@ -15,22 +16,22 @@ public:
     virtual ~ImageViewModel() = default;
 
     // --- 属性访问器 ---
-    int currentWindowWidth() const;
-    int currentWindowLevel() const;
-    int bitDepth() const;
+    double currentWindowWidth() const;
+    double currentWindowLevel() const;
+    int bitDepth() const; // 此函数现在可能返回 32
     QRectF imageBounds() const;
     bool isAutoWindowing() const;
 
 public slots:
     // --- 命令 (从 View 调用) ---
     void loadImage(const QString &filePath);
-    void setWindowWidth(int width);
-    void setLevel(int level);
+    void setWindowWidth(double width);
+    void setLevel(double level);
     void setAutoWindowing(bool enabled);
 
     // --- 查询 (从 View 调用) ---
     void requestPixelInfo(const QPointF &scenePos);
-    int getPixelValue(int x, int y) const; // 公开，供 PointMeasureItem 等使用
+    double getPixelValue(int x, int y) const;
 
 signals:
     // --- 通知 (View 监听这些信号) ---
@@ -42,17 +43,14 @@ signals:
 
     /**
      * @brief 当图像加载成功或失败时发出，用于更新 UI 范围
-     * @param min 灰度最小值 (通常为 0)
-     * @param max 灰度最大值 (255 或 65535)
-     * @param bits 位深 (8 或 16)
-     * @param imageRect 图像尺寸
+     * [修改] min/max 现在是 double 类型，用于设置 SpinBox
      */
-    void imageLoaded(int min, int max, int bits, QRectF imageRect);
+    void imageLoaded(double min, double max, int bits, QRectF imageRect);
 
     /**
-     * @brief 当窗宽窗位值改变时发出 (无论是自动还是手动)
+     * @brief 当窗宽窗位值改变时发出 (无论是自动还是手动) (签名修改)
      */
-    void windowLevelChanged(int width, int level);
+    void windowLevelChanged(double width, double level);
 
     /**
      * @brief 当自动窗宽窗位状态切换时发出
@@ -60,20 +58,23 @@ signals:
     void autoWindowingChanged(bool enabled);
 
     /**
-     * @brief 响应 requestPixelInfo，返回计算后的像素信息
+     * @brief 响应 requestPixelInfo，返回计算后的像素信息 (签名修改)
      */
-    void pixelInfoReady(int x, int y, int value);
+    void pixelInfoReady(int x, int y, double value);
 
 private:
     // --- 内部逻辑 ---
     void applyWindowLevel();
-    void calculateAutoWindowLevel(int &min, int &max);
+    void calculateAutoWindowLevel(double &min, double &max);
 
     // --- 数据模型和状态 ---
-    QImage m_originalImage; // Model
-    int m_bitDepth = 8;
-    int m_windowWidth = 256;
-    int m_windowLevel = 128;
+    cv::Mat m_originalImageMat;
+    int m_originalDataType;     // CV_16U, CV_32F etc.
+    int m_bitDepth = 8;         // 仅用于显示 (8, 16, 32)
+    double m_windowWidth = 256.0;
+    double m_windowLevel = 128.0;
+    double m_dataMin = 0.0;       // 数据的实际最小值
+    double m_dataMax = 255.0;     // 数据的实际最大值
     bool m_autoWindowing = false;
     QRectF m_imageBounds;
 };

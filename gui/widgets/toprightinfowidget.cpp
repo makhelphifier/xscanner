@@ -1,3 +1,5 @@
+// gui/widgets/toprightinfowidget.cpp
+
 #include "toprightinfowidget.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -5,7 +7,6 @@
 #include <QLabel>
 #include <QDoubleSpinBox>
 #include <QFormLayout>
-#include <QSlider>
 
 TopRightInfoWidget::TopRightInfoWidget(QWidget *parent) : QWidget(parent)
 {
@@ -22,17 +23,21 @@ TopRightInfoWidget::TopRightInfoWidget(QWidget *parent) : QWidget(parent)
 
     windowLevelLabel = new QLabel("window/level: 120.5/231");
 
-    // --- Window Slider ---
-    windowSlider = new QSlider(Qt::Horizontal);
-    windowSlider->setRange(1, 512); // 设置一个合理的范围
-    windowSlider->setValue(256);
-    connect(windowSlider, &QSlider::valueChanged, this, &TopRightInfoWidget::windowChanged);
+    // --- Window SpinBox ---
+    windowSpinBox = new QDoubleSpinBox;
+    windowSpinBox->setDecimals(2);
+    windowSpinBox->setRange(0.0, 65535.0);
+    windowSpinBox->setSingleStep(10.0);
+    windowSpinBox->setButtonSymbols(QAbstractSpinBox::UpDownArrows);
+    connect(windowSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TopRightInfoWidget::windowChanged);
 
-    // --- Level Slider ---
-    levelSlider = new QSlider(Qt::Horizontal);
-    levelSlider->setRange(0, 255);
-    levelSlider->setValue(128);
-    connect(levelSlider, &QSlider::valueChanged, this, &TopRightInfoWidget::levelChanged);
+    // --- Level SpinBox ---
+    levelSpinBox = new QDoubleSpinBox;
+    levelSpinBox->setDecimals(2);
+    levelSpinBox->setRange(0.0, 65535.0);
+    levelSpinBox->setSingleStep(10.0);
+    levelSpinBox->setButtonSymbols(QAbstractSpinBox::UpDownArrows);
+    connect(levelSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TopRightInfoWidget::levelChanged);
 
     // --- Scale SpinBox ---
     scaleSpinBox = new QDoubleSpinBox;
@@ -50,7 +55,6 @@ TopRightInfoWidget::TopRightInfoWidget(QWidget *parent) : QWidget(parent)
     // 连接信号，当用户手动编辑SpinBox时，发射我们自己的信号
     connect(scaleSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TopRightInfoWidget::scaleEdited);
 
-
     // --- 布局 ---
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(5, 5, 5, 5);
@@ -59,42 +63,43 @@ TopRightInfoWidget::TopRightInfoWidget(QWidget *parent) : QWidget(parent)
     mainLayout->addWidget(autoWindowingCheckBox);
     mainLayout->addWidget(windowLevelLabel);
 
+    // 添加 SpinBox 到布局
+    QFormLayout *wlLayout = new QFormLayout;
+    wlLayout->addRow("W:", windowSpinBox);
+    wlLayout->addRow("L:", levelSpinBox);
+    mainLayout->addLayout(wlLayout);
+
     QHBoxLayout *scaleLayout = new QHBoxLayout;
     scaleLayout->addWidget(new QLabel("scale:"));
     scaleLayout->addWidget(scaleSpinBox);
 
-    // 添加滑动条到布局
-    QFormLayout *wlLayout = new QFormLayout;
-    wlLayout->addRow("W:", windowSlider);
-    wlLayout->addRow("L:", levelSlider);
-    mainLayout->addLayout(wlLayout);
     mainLayout->addLayout(scaleLayout);
     setLayout(mainLayout);
 }
 
-
-void TopRightInfoWidget::setWindowValue(int value)
+void TopRightInfoWidget::setWindowValue(double value)
 {
-    bool oldSignalsState = windowSlider->blockSignals(true);
-    windowSlider->setValue(value);
-    windowSlider->blockSignals(oldSignalsState);
+    bool oldSignalsState = windowSpinBox->blockSignals(true);
+    windowSpinBox->setValue(value);
+    windowSpinBox->blockSignals(oldSignalsState);
 }
 
-void TopRightInfoWidget::setLevelValue(int value)
+void TopRightInfoWidget::setLevelValue(double value)
 {
-    bool oldSignalsState = levelSlider->blockSignals(true);
-    levelSlider->setValue(value);
-    levelSlider->blockSignals(oldSignalsState);
+    bool oldSignalsState = levelSpinBox->blockSignals(true);
+    levelSpinBox->setValue(value);
+    levelSpinBox->blockSignals(oldSignalsState);
 }
 
-void TopRightInfoWidget::setWindowRange(int min, int max) {
-    windowSlider->setRange(min, max);
+void TopRightInfoWidget::setWindowRange(double min, double max)
+{
+    windowSpinBox->setRange(min, max);
 }
 
-void TopRightInfoWidget::setLevelRange(int min, int max) {
-    levelSlider->setRange(min, max);
+void TopRightInfoWidget::setLevelRange(double min, double max)
+{
+    levelSpinBox->setRange(min, max);
 }
-
 
 void TopRightInfoWidget::setScale(qreal scale)
 {
@@ -104,12 +109,10 @@ void TopRightInfoWidget::setScale(qreal scale)
     scaleSpinBox->blockSignals(oldSignalsState);
 }
 
-
 void TopRightInfoWidget::setWindowLevelText(const QString &text)
 {
     windowLevelLabel->setText(text);
 }
-
 
 void TopRightInfoWidget::uncheckAutoWindowing()
 {

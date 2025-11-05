@@ -20,6 +20,8 @@ set(SOURCES
     # GUI - Views
     gui/views/imageviewer.cpp
     gui/views/mainwindow.cpp
+    # GUI - ViewModels
+    gui/viewmodels/imageviewmodel.cpp
     # GUI - Widgets
     gui/widgets/toprightinfowidget.cpp
     # GUI - Items
@@ -67,6 +69,8 @@ set(HEADERS
     # GUI - Views
     gui/views/imageviewer.h
     gui/views/mainwindow.h
+    # GUI - ViewModels
+    gui/viewmodels/imageviewmodel.h
     # GUI - Widgets
     gui/widgets/toprightinfowidget.h
     gui/widgets/extractedimageviewer.h
@@ -120,7 +124,6 @@ endif()
 qt_add_executable(${PROJECT_NAME}
     ${SOURCES}
     Img.qrc
-    gui/viewmodels/imageviewmodel.h gui/viewmodels/imageviewmodel.cpp
 )
 
 

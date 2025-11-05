@@ -1,7 +1,7 @@
-// xscanner - 副本/gui/views/mainwindow.cpp
+// gui/views/mainwindow.cpp
 
 #include "mainwindow.h"
-#include "gui/viewmodels/imageviewmodel.h" // [新增]
+#include "gui/viewmodels/imageviewmodel.h"
 #include <QApplication>
 #include <QDir>
 #include <QGraphicsPixmapItem>
@@ -19,15 +19,16 @@
 #include "gui/widgets/toprightinfowidget.h"
 #include "util/logger/logger.h"
 #include "gui/items/rectroi.h"
+#include <QFile>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     resize(800, 600);
 
-    // [修改] 1. 创建 ViewModel
+    // 1. 创建 ViewModel
     m_imageViewModel = new ImageViewModel(this);
 
-    // [修改] 2. 创建 View 并注入 ViewModel
+    // 2. 创建 View 并注入 ViewModel
     viewer = new ImageViewer(this);
     viewer->setViewModel(m_imageViewModel);
     setCentralWidget(viewer);
@@ -188,35 +189,36 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // 默认选择模式（确保 pointAction 未选中）
     selectAction->setChecked(true);
 
-    // --- [修改] 连接信号和槽 ---
+    // --- 连接信号和槽 ---
 
     // 缩放相关 (保持不变)
     connect(viewer, &ImageViewer::scaleChanged, this, &MainWindow::updateScale);
     connect(infoWidget, QOverload<double>::of(&TopRightInfoWidget::scaleEdited), this, &MainWindow::onScaleFromWidget);
 
-    // [修改] 像素信息 (VM -> MainWindow)
+    // 像素信息 (VM -> MainWindow)
     connect(m_imageViewModel, &ImageViewModel::pixelInfoReady, this, &MainWindow::onPixelInfoChanged);
 
-    // [修改] 窗宽窗位相关 (Widget -> VM)
+    // 窗宽窗位相关 (Widget -> VM)
     connect(infoWidget, &TopRightInfoWidget::windowChanged, m_imageViewModel, &ImageViewModel::setWindowWidth);
     connect(infoWidget, &TopRightInfoWidget::levelChanged, m_imageViewModel, &ImageViewModel::setLevel);
     connect(infoWidget, &TopRightInfoWidget::autoWindowingToggled, m_imageViewModel, &ImageViewModel::setAutoWindowing);
 
-    // [修改] 窗宽窗位相关 (VM -> MainWindow/Widget)
+    // 窗宽窗位相关 (VM -> MainWindow/Widget)
     connect(m_imageViewModel, &ImageViewModel::windowLevelChanged, this, &MainWindow::onWindowLevelChanged);
     connect(m_imageViewModel, &ImageViewModel::autoWindowingChanged, this, &MainWindow::onAutoWindowingToggled);
 
-    // [新增] 图像加载 (VM -> MainWindow)
+    // 图像加载 (VM -> MainWindow)
     connect(m_imageViewModel, &ImageViewModel::imageLoaded, this, &MainWindow::onImageLoaded);
 
-    // [修改] 默认加载图像
+    // 默认加载图像
     QString exeDir = QCoreApplication::applicationDirPath();
-    QString filePath = QDir(exeDir).filePath("Resources/img/000006.raw");
+    // 尝试加载浮点图
+    QString filePath = QDir(exeDir).filePath("Resources/img/image.fraw"); // 假设
+    if (!QFile::exists(filePath)) {
+        filePath = QDir(exeDir).filePath("Resources/img/000006.raw"); // 回退
+    }
     qDebug() << "Attempting to load from filesystem:" << filePath;
-    m_imageViewModel->loadImage(filePath); // [修改] 调用 ViewModel
-
-    // [移除] 延迟更新 UI 的 QTimer::singleShot(100, ...)
-    // [移除] onImageLoaded 将处理所有 UI 更新
+    m_imageViewModel->loadImage(filePath); // 调用 ViewModel
 
     // 手动调用 resizeEvent (保持不变)
     QTimer::singleShot(0, this, [this](){ resizeEvent(nullptr); });
@@ -226,16 +228,15 @@ MainWindow::~MainWindow() {}
 
 void MainWindow::openImage()
 {
-    QString filePath = QFileDialog::getOpenFileName(this, "打开图片", "", "Raw Binary (*.raw *.bin);;Images (*.png *.jpg *.bmp)");
+    // 添加 .fraw
+    QString filePath = QFileDialog::getOpenFileName(this, "打开图片", "", "Float Raw (*.fraw);;Raw Binary (*.raw *.bin);;Images (*.png *.jpg *.bmp)");
 
     if (filePath.isEmpty()) return;
 
     qDebug() << "Selected file path:" << filePath;
 
-    // [修改] 委托加载给 ViewModel
+    // 委托加载给 ViewModel
     m_imageViewModel->loadImage(filePath);
-
-    // [移除] QTimer::singleShot(100, ...)
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
@@ -249,12 +250,13 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     }
 }
 
-// [修改] onPixelInfoChanged 现在由 ViewModel 触发
-void MainWindow::onPixelInfoChanged(int x, int y, int value)
+// onPixelInfoChanged 现在由 ViewModel 触发 (double)
+void MainWindow::onPixelInfoChanged(int x, int y, double value)
 {
     QString infoText;
-    if (value != -1) {
-        infoText = QString("X: %1, Y: %2, value: %3").arg(x).arg(y).arg(value);
+    if (value != -1.0) {
+        // 格式化浮点数
+        infoText = QString("X: %1, Y: %2, value: %3").arg(x).arg(y).arg(value, 0, 'f', 2);
     } else {
         infoText = QString("X: %1, Y: %2, value: N/A").arg(x).arg(y);
     }
@@ -262,16 +264,19 @@ void MainWindow::onPixelInfoChanged(int x, int y, int value)
     infoLabel->adjustSize();
 }
 
-// [修改] onWindowLevelChanged 现在由 ViewModel 触发
-void MainWindow::onWindowLevelChanged(int width, int level)
+// onWindowLevelChanged 现在由 ViewModel 触发 (double)
+void MainWindow::onWindowLevelChanged(double width, double level)
 {
     infoWidget->setWindowValue(width);
     infoWidget->setLevelValue(level);
 
-    infoWidget->setWindowLevelText(QString("window/level: %1/%2").arg(width).arg(level));
+    // 格式化浮点数
+    infoWidget->setWindowLevelText(QString("window/level: %1 / %2")
+                                       .arg(width, 0, 'f', 2)
+                                       .arg(level, 0, 'f', 2));
 }
 
-// [修改] onAutoWindowingToggled 现在由 ViewModel 触发
+// onAutoWindowingToggled 现在由 ViewModel 触发
 void MainWindow::onAutoWindowingToggled(bool enabled)
 {
     // 更新复选框
@@ -282,8 +287,8 @@ void MainWindow::onAutoWindowingToggled(bool enabled)
     }
 }
 
-// [新增] onImageLoaded 槽实现
-void MainWindow::onImageLoaded(int min, int max, int bits, QRectF imageRect)
+// onImageLoaded 槽实现 (double)
+void MainWindow::onImageLoaded(double min, double max, int bits, QRectF imageRect)
 {
     if (imageRect.isNull()) {
         qDebug() << "Failed to load image.";
@@ -302,15 +307,17 @@ void MainWindow::onImageLoaded(int min, int max, int bits, QRectF imageRect)
 
     // 更新 infoWidget
     infoWidget->setVisible(true);
-    infoWidget->setWindowRange(1, max + 1);
-    infoWidget->setLevelRange(min, max);
+    infoWidget->setWindowRange(min, max); // 修改
+    infoWidget->setLevelRange(min, max);  // 修改
 
     // 从 ViewModel 获取当前值
     infoWidget->setWindowValue(m_imageViewModel->currentWindowWidth());
     infoWidget->setLevelValue(m_imageViewModel->currentWindowLevel());
-    infoWidget->setWindowLevelText(QString("window/level: %1/%2")
-                                       .arg(m_imageViewModel->currentWindowWidth())
-                                       .arg(m_imageViewModel->currentWindowLevel()));
+
+    // 格式化
+    infoWidget->setWindowLevelText(QString("window/level: %1 / %2")
+                                       .arg(m_imageViewModel->currentWindowWidth(), 0, 'f', 2)
+                                       .arg(m_imageViewModel->currentWindowLevel(), 0, 'f', 2));
 
     infoWidget->setAutoWindowingChecked(m_imageViewModel->isAutoWindowing());
 }

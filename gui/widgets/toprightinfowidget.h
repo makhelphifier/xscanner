@@ -1,3 +1,5 @@
+// gui/widgets/toprightinfowidget.h
+
 #ifndef TOPRIGHTINFOWIDGET_H
 #define TOPRIGHTINFOWIDGET_H
 
@@ -6,8 +8,6 @@
 class QCheckBox;
 class QLabel;
 class QDoubleSpinBox;
-class QSlider;
-
 
 class TopRightInfoWidget : public QWidget
 {
@@ -20,25 +20,25 @@ public slots:
     void setScale(qreal scale);
     void setWindowLevelText(const QString &text);
     void uncheckAutoWindowing();
-    void setWindowValue(int value);
-    void setLevelValue(int value);
-    void setWindowRange(int min, int max);
-    void setLevelRange(int min, int max);
+    void setWindowValue(double value);
+    void setLevelValue(double value);
+    void setWindowRange(double min, double max);
+    void setLevelRange(double min, double max);
     void setAutoWindowingChecked(bool checked);
     void checkAutoWindowing();
 
 signals:
     void scaleEdited(double scale);
     void autoWindowingToggled(bool checked);
-    void windowChanged(int value);
-    void levelChanged(int value);
+    void windowChanged(double value);
+    void levelChanged(double value);
 
 private:
     QCheckBox *autoWindowingCheckBox;
     QLabel *windowLevelLabel;
     QDoubleSpinBox *scaleSpinBox;
-    QSlider *windowSlider;
-    QSlider *levelSlider;
+    QDoubleSpinBox *windowSpinBox;
+    QDoubleSpinBox *levelSpinBox;
 };
 
 #endif // TOPRIGHTINFOWIDGET_H
