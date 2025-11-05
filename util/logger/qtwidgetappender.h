@@ -9,7 +9,7 @@ namespace Log4Qt {
 class LoggingEvent;
 }
 
-class QtWidgetAppender : public QObject, public Log4Qt::AppenderSkeleton
+class QtWidgetAppender :public Log4Qt::AppenderSkeleton
 {
     Q_OBJECT
 
@@ -28,7 +28,7 @@ public:
 protected:
     void append(const Log4Qt::LoggingEvent &rEvent) override;
 
-Q_SIGNALS:
+signals:
     // 定义信号，将日志事件的格式化文本和级别发送出去
     void messageAppended(const QString &formattedMessage, int level);
 };

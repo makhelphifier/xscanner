@@ -16,20 +16,32 @@ set(SOURCES
     service/imageprocessor.cpp
     util/logger/logger.cpp
     util/logger/qtwidgetappender.cpp
+    Img.qrc
     # GUI - Views
     gui/views/imageviewer.cpp
     gui/views/mainwindow.cpp
     # GUI - Widgets
     gui/widgets/toprightinfowidget.cpp
     # GUI - Items
-    gui/items/annotationpointitem.cpp
     gui/items/linesegmentroi.cpp
+    gui/items/infinitelineitem.cpp
+    gui/items/infinitelinelabel.cpp
+    gui/items/angledlineroi.cpp
+    gui/items/angleroi.cpp
+    gui/items/pointmeasureitem.cpp
+    gui/items/polylineroi.cpp
+    gui/items/freehandroi.cpp
+    gui/items/annotationtextitem.cpp
+    gui/items/ellipseroi.cpp
     # GUI - States
     gui/states/drawingstate.cpp
     gui/states/drawingstatemachine.cpp
     gui/states/idlestate.cpp
     gui/states/panningstate.cpp
     gui/states/dragginghandlestate.cpp
+    gui/states/angledrawingstate.cpp
+    gui/states/polylinedrawingstate.cpp
+    gui/states/freehanddrawingstate.cpp
     # device
     device/gycustomcontrol.cpp
     device/motionwidget.cpp
@@ -59,14 +71,25 @@ set(HEADERS
     gui/widgets/toprightinfowidget.h
     gui/widgets/extractedimageviewer.h
     # GUI - Items
-    gui/items/annotationpointitem.h
     gui/items/linesegmentroi.h
+    gui/items/infinitelineitem.h
+    gui/items/infinitelinelabel.h
+    gui/items/angledlineroi.h
+    gui/items/angleroi.h
+    gui/items/pointmeasureitem.h
+    gui/items/polylineroi.h
+    gui/items/freehandroi.h
+    gui/items/annotationtextitem.h
+    gui/items/ellipseroi.h
     # GUI - States
     gui/states/drawingstate.h
     gui/states/drawingstatemachine.h
     gui/states/idlestate.h
     gui/states/panningstate.h
     gui/states/dragginghandlestate.h
+    gui/states/angledrawingstate.h
+    gui/states/polylinedrawingstate.h
+    gui/states/freehanddrawingstate.h
     # device
     device/motionwidget.h
     device/gycustomcontrol.h
@@ -79,6 +102,7 @@ set(HEADERS
     device/motionhelper.h
     device/motionmanager.h
 )
+
 
 
 
@@ -96,19 +120,6 @@ endif()
 qt_add_executable(${PROJECT_NAME}
     ${SOURCES}
     Img.qrc
-    gui/items/infinitelineitem.h gui/items/infinitelineitem.cpp
-    gui/items/infinitelinelabel.h gui/items/infinitelinelabel.cpp
-    gui/items/angledlineroi.h gui/items/angledlineroi.cpp
-    gui/items/angleroi.h gui/items/angleroi.cpp
-    gui/states/angledrawingstate.h gui/states/angledrawingstate.cpp
-    gui/items/pointmeasureitem.h gui/items/pointmeasureitem.cpp
-    gui/items/polylineroi.h gui/items/polylineroi.cpp
-    gui/states/polylinedrawingstate.h gui/states/polylinedrawingstate.cpp
-    gui/items/freehandroi.h gui/items/freehandroi.cpp
-    gui/states/freehanddrawingstate.h gui/states/freehanddrawingstate.cpp
-    gui/items/annotationtextitem.h gui/items/annotationtextitem.cpp
-    gui/items/ellipseroi.h gui/items/ellipseroi.cpp
-
 )
 
 
