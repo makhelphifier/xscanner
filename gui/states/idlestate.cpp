@@ -9,8 +9,6 @@
 #include <QDebug>
 #include <QGraphicsLineItem>
 #include "util/logger/logger.h"
-#include "gui/items/rectroi.h"
-#include "gui/items/linesegmentroi.h"
 #include "gui/states/genericdrawingstate.h"
 #include "gui/items/infinitelineitem.h"
 #include <QGraphicsScene>
@@ -20,9 +18,9 @@
 #include "polylinedrawingstate.h"
 #include <QTimer>
 #include <QTextCursor>
-#include "gui/items/ellipseroi.h"
 #include "freehanddrawingstate.h"
 #include "gui/items/annotationtextitem.h"
+#include "gui/viewmodels/imageviewmodel.h"
 
 IdleState::IdleState(DrawingStateMachine* machine, QObject *parent)
     : DrawingState(machine, parent) {}
@@ -62,22 +60,15 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
     }
 
     if (event->button() == Qt::LeftButton) {
-        // 1. 从 viewer 获取当前工具模式
         ImageViewer::ToolMode tool = viewer->currentToolMode();
-
-        // DrawingState* nextState = nullptr; // <--- 移除
-        // bool isTemporary = false;          // <--- 移除
-
-        // 2. 使用 switch 决定下一个状态
         switch (tool) {
         case ImageViewer::ModeDrawRect:
         case ImageViewer::ModeDrawLine:
         case ImageViewer::ModeDrawAngledLine:
         case ImageViewer::ModeDrawEllipse:
         {
-            // [修改] 调用状态机中的工厂方法来创建并转换到新的 GenericDrawingState
-            if (machine()->startGenericDrawingState(tool, event)) { //
-                return true; // 事件已处理
+            if (machine()->startGenericDrawingState(tool, event)) {
+                return true;
             }
             break;
         }
@@ -109,29 +100,22 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
         {
             log_("BRANCH: Switching to FreehandDrawingState");
             machine()->setState(DrawingStateMachine::FreehandDrawing);
-            // 转发第一次点击
             return machine()->freehandDrawingState()->handleMousePressEvent(event);
         }
         case ImageViewer::ModeDrawText:
         {
             log_("BRANCH: Creating AnnotationTextItem");
             ImageViewer* viewer = machine()->viewer();
-            QPointF scenePos = machine()->startDragPos(); // 获取点击位置
+            QPointF scenePos = machine()->startDragPos();
 
-            // 1. 创建文本项
             AnnotationTextItem* textItem = new AnnotationTextItem(scenePos);
             viewer->scene()->addItem(textItem);
-
-            // 2. [关键] 立即将其设置为可编辑并给予焦点
             textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
             textItem->setFocus(Qt::MouseFocusReason);
-
-            // 3. （可选）全选默认文本
             QTextCursor cursor = textItem->textCursor();
             cursor.select(QTextCursor::Document);
             textItem->setTextCursor(cursor);
 
-            // 4. 我们保持在 Idle 状态，因为该项现在自己管理交互
             machine()->setState(DrawingStateMachine::Idle);
             event->accept();
             return true;
@@ -142,12 +126,15 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
             QPointF scenePos = machine()->startDragPos(); // 获取点击位置
 
             // 检查点击是否在图像内
-            if (!viewer->imageBounds().contains(scenePos)) {
-                return true; // 消耗点击，但什么也不做
+            // if (!viewer->imageBounds().contains(scenePos)) {
+            //     return true; // 消耗点击，但什么也不做
+            // }
+            if (!viewer->viewModel() || !viewer->viewModel()->imageBounds().contains(scenePos)) {
+                return true;
             }
 
             // 创建新的点测量项
-            PointMeasureItem* item = new PointMeasureItem(scenePos, viewer);
+            PointMeasureItem* item = new PointMeasureItem(scenePos, viewer->viewModel());
             viewer->scene()->addItem(item);
 
             QTimer::singleShot(0, [viewer]() {
@@ -181,11 +168,6 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
             return true;
         }
         }
-        // [移除原有的下一状态转换逻辑]
-        // if (nextState) {
-        //     machine()->setState(nextState, isTemporary);
-        //     return nextState->handleMousePressEvent(event);
-        // }
     }
 
     return false;
@@ -195,10 +177,10 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
 bool IdleState::handleMouseMoveEvent(QMouseEvent *event)
 {
     // Idle 状态下，鼠标移动通常只用于更新像素信息，由 ImageViewer 处理
-    ImageViewer* viewer = machine()->viewer();
-    if (viewer) {
-        viewer->updatePixelInfo(viewer->mapToScene(event->pos()));
-    }
+    // ImageViewer* viewer = machine()->viewer();
+    // if (viewer) {
+    //     viewer->updatePixelInfo(viewer->mapToScene(event->pos()));
+    // }
     return false; // 不消耗事件
 }
 

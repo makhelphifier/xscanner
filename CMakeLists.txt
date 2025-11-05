@@ -120,6 +120,7 @@ endif()
 qt_add_executable(${PROJECT_NAME}
     ${SOURCES}
     Img.qrc
+    gui/viewmodels/imageviewmodel.h gui/viewmodels/imageviewmodel.cpp
 )
 
 

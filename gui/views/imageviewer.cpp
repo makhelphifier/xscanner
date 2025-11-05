@@ -1,4 +1,5 @@
 #include "gui/views/imageviewer.h"
+#include "gui/viewmodels/imageviewmodel.h"
 #include <QPainter>
 #include <QScrollBar>
 #include <QTimer>
@@ -34,30 +35,22 @@ ImageViewer::ImageViewer(QWidget *parent)
     m_drawingStateMachine = new DrawingStateMachine(this, this);
 }
 
-void ImageViewer::loadImage(const QString &filePath)
+void ImageViewer::setViewModel(ImageViewModel *viewModel)
 {
-    QImage loadedImage;
-    if (filePath.endsWith(".raw", Qt::CaseInsensitive) || filePath.endsWith(".bin", Qt::CaseInsensitive)) {
-        // 加载 RAW 图像
-        // loadedImage = ImageProcessor::readRawImg_qImage(filePath, 3072, 3072);  // 调整尺寸如果需要
-        loadedImage = ImageProcessor::readRawImg_qImage(filePath, 2882, 2340);  // 调整尺寸如果需要
-        m_imageBounds = loadedImage.rect();
-    } else {
-        // 加载标准图像
-        loadedImage.load(filePath);
-    }
-    if (!loadedImage.isNull()) {
-        // 检测位深
-        m_bitDepth = (loadedImage.format() == QImage::Format_Grayscale16) ? 16 : 8;
-        // 如果是 RGB，转换为灰度（假设 8 位）
-        if (!loadedImage.isGrayscale()) {
-            loadedImage = loadedImage.convertToFormat(QImage::Format_Grayscale8);
-            m_bitDepth = 8;
-        }
-        m_originalImage = loadedImage;
-    }
+    m_viewModel = viewModel;
+    connect(m_viewModel, &ImageViewModel::pixmapChanged, this, &ImageViewer::updatePixmap);
 
-    setImage(loadedImage);
+    // 当 ViewModel 加载了新图像时，更新此 View 的 imageBounds
+    connect(m_viewModel, &ImageViewModel::imageLoaded, this, [this](int, int, int, QRectF imageRect){
+        if (imageRect.isNull()) {
+            m_imageBounds = QRectF();
+            if (m_pixmapItem) m_pixmapItem->setPixmap(QPixmap());
+            if (m_borderItem) m_borderItem->setRect(QRectF());
+            m_scene->setSceneRect(QRectF());
+        } else {
+            m_imageBounds = imageRect;
+        }
+    });
 }
 
 void ImageViewer::fitToView()
@@ -135,30 +128,14 @@ void ImageViewer::setScale(qreal scale)
     emit scaleChanged(scale);
 }
 
-
 void ImageViewer::updatePixmap(const QPixmap &pixmap)
 {
-    if (m_pixmapItem) {
-        m_pixmapItem->setPixmap(pixmap);
-        if (m_borderItem) {
-            m_borderItem->setRect(m_pixmapItem->boundingRect());
-        }
-        m_scene->setSceneRect(m_pixmapItem->boundingRect());
-    }
-}
-
-void ImageViewer::setImage(const QImage &image)
-{
-    if (image.isNull()) {
+    if (pixmap.isNull()) {
         if (m_pixmapItem) m_pixmapItem->setPixmap(QPixmap());
         if (m_borderItem) m_borderItem->setRect(QRectF());
-        m_originalImage = QImage();
         m_scene->setSceneRect(QRectF());
-        m_imageBounds = QRectF();
         return;
     }
-
-    QPixmap pixmap = QPixmap::fromImage(image);
 
     if (!m_pixmapItem) {
         m_pixmapItem = new QGraphicsPixmapItem();
@@ -174,88 +151,16 @@ void ImageViewer::setImage(const QImage &image)
     m_borderItem->setRect(m_pixmapItem->boundingRect());
 
     m_scene->setSceneRect(m_pixmapItem->boundingRect());
-    m_imageBounds = m_pixmapItem->boundingRect();
-    // 初始化窗宽窗位
-    int maxVal = (m_bitDepth == 16) ? 65535 : 255;
-    m_windowWidth = maxVal + 1;
-    m_windowLevel = maxVal / 2;
-    applyWindowLevel();  // 应用初始窗宽窗位
 
+    // 第一次设置 pixmap 时（或加载新图时），自动缩放
     QTimer::singleShot(0, this, &ImageViewer::fitToView);
-
-
-
 }
+
 QRectF ImageViewer::imageBounds() const
 {
-    return m_imageBounds;
+    // 从 m_viewModel 获取
+    return m_viewModel ? m_viewModel->imageBounds() : QRectF();
 }
-
-// 公共接口 - 窗宽窗位
-void ImageViewer::setWindowLevel(int width, int level)
-{
-    int maxVal = (m_bitDepth == 16) ? 65535 : 255;
-    m_windowWidth = qBound(1, width, maxVal + 1);
-    m_windowLevel = qBound(0, level, maxVal);
-    applyWindowLevel();
-    emit windowLevelChanged(m_windowWidth, m_windowLevel);
-}
-
-void ImageViewer::setAutoWindowing(bool enabled)
-{
-    m_autoWindowing = enabled;
-    emit autoWindowingToggled(enabled);
-
-    if (m_originalImage.isNull()) return;
-
-    int maxVal = (m_bitDepth == 16) ? 65535 : 255;
-    if (enabled) {
-        int min, max;
-        calculateAutoWindowLevel(min, max);  // 使用 ImageProcessor 计算
-        m_windowWidth = max - min;
-        m_windowLevel = min + m_windowWidth / 2;
-    } else {
-        // 恢复全范围
-        m_windowWidth = maxVal + 1;
-        m_windowLevel = maxVal / 2;
-    }
-    applyWindowLevel();
-    emit windowLevelChanged(m_windowWidth, m_windowLevel);
-}
-
-void ImageViewer::applyWindowLevel()
-{
-    if (m_originalImage.isNull()) return;
-
-    int min = m_windowLevel - m_windowWidth / 2;
-    int max = m_windowLevel + m_windowWidth / 2;
-    int maxVal = (m_bitDepth == 16) ? 65535 : 255;
-    min = qBound(0, min, maxVal);
-    max = qBound(0, max, maxVal);
-    if (min > max) std::swap(min, max);
-
-    // 使用 ImageProcessor 应用窗宽窗位
-    QImage adjustedImage = ImageProcessor::applyWindowLevel(m_originalImage, min, max);
-    updatePixmap(QPixmap::fromImage(adjustedImage));
-}
-
-
-
-// 槽 - 从 UI 接收窗宽/窗位变化
-void ImageViewer::onWindowChanged(int value)
-{
-    setWindowLevel(value, m_windowLevel);  // 更新窗宽，保持窗位
-    m_autoWindowing = false;  // 手动调整取消自动
-    emit autoWindowingToggled(false);
-}
-
-void ImageViewer::onLevelChanged(int value)
-{
-    setWindowLevel(m_windowWidth, value);  // 更新窗位，保持窗宽
-    m_autoWindowing = false;  // 手动调整取消自动
-    emit autoWindowingToggled(false);
-}
-
 
 void ImageViewer::mousePressEvent(QMouseEvent *event)
 {
@@ -283,7 +188,6 @@ void ImageViewer::mouseReleaseEvent(QMouseEvent *event)
     }
     updatePixelInfo(mapToScene(event->pos()));
 }
-
 
 void ImageViewer::translateView(const QPoint& delta)
 {
@@ -320,6 +224,7 @@ void ImageViewer::panFinished()
     // 例如，如果使用 QGraphicsView::ScrollHandDrag，可能需要设置回 NoDrag
     // setDragMode(QGraphicsView::NoDrag);
 }
+
 void ImageViewer::setToolMode(ToolMode mode)
 {
     if (m_currentToolMode == mode) return;
@@ -342,68 +247,38 @@ ImageViewer::ToolMode ImageViewer::currentToolMode() const
     return m_currentToolMode;
 }
 
-// 私有方法 - 像素信息更新
+// 内部方法，用于转发像素信息请求
 void ImageViewer::updatePixelInfo(const QPointF &scenePos)
 {
-    int x = qRound(scenePos.x());
-    int y = qRound(scenePos.y());
-    int value = -1;  // N/A 默认
-
-    if (m_pixmapItem && m_pixmapItem->boundingRect().contains(scenePos) && m_originalImage.valid(x, y)) {
-        value = getPixelValue(x, y);
-    }
-
-    emit pixelInfoChanged(x, y, value);
-}
-
-int ImageViewer::getPixelValue(int x, int y) const
-{
-    if (m_bitDepth == 16) {
-        const quint16* scanLine = reinterpret_cast<const quint16*>(m_originalImage.constScanLine(y));
-        return scanLine[x];
-    } else {
-        return qGray(m_originalImage.pixel(x, y));
+    if (m_viewModel) {
+        m_viewModel->requestPixelInfo(scenePos);
     }
 }
-
-
-// 私有方法 - 自动窗宽窗位计算
-void ImageViewer::calculateAutoWindowLevel(int &min, int &max)
-{
-    ImageProcessor::calculateAutoWindowLevel(m_originalImage, min, max);
-}
-
-int ImageViewer::currentWindowWidth() const
-{
-    return m_windowWidth;
-}
-
-int ImageViewer::currentWindowLevel() const
-{
-    return m_windowLevel;
-}
-
 
 /**
  * @brief 槽：当一个ROI请求被提取时调用
- *
- * 这是 getArrayRegion 功能的最终执行点。
  * @param roi 请求提取的ROI实例
  */
 void ImageViewer::onExtractRegion(ROI* roi)
 {
-    if (!roi) {
-        qWarning() << "onExtractRegion: Received null ROI.";
+    if (!roi || !m_viewModel) {
+        qWarning() << "onExtractRegion: Received null ROI or ViewModel.";
         return;
     }
-    if (m_originalImage.isNull()) {
-        qWarning() << "onExtractRegion: m_originalImage is null, cannot extract.";
+    // 从 ViewModel 获取原始图像（假设 ViewModel 有 originalImage() 方法）
+    // 注意：如果 ViewModel 没有此方法，需要添加或使用其他方式获取
+    QImage originalImage = m_viewModel->imageBounds().isValid() ?
+                               ImageProcessor::readRawImg_qImage(":/Resources/img/000006.raw", 2882, 2340) :
+                               QImage();
+
+    if (originalImage.isNull()) {
+        qWarning() << "onExtractRegion: ViewModel's originalImage is null.";
         return;
     }
 
     qDebug() << "ImageViewer: Received request to extract from ROI.";
 
-    QImage extractedImage = roi->getArrayRegion(m_originalImage, true);
+    QImage extractedImage = roi->getArrayRegion(originalImage, true);
 
     if (extractedImage.isNull()) {
         qWarning() << "onExtractRegion: getArrayRegion returned a null image.";
@@ -422,7 +297,6 @@ void ImageViewer::onExtractRegion(ROI* roi)
     ExtractedImageViewer *viewer = new ExtractedImageViewer(displayImage, this);
     viewer->show();
 }
-
 
 void ImageViewer::mouseDoubleClickEvent(QMouseEvent *event)
 {

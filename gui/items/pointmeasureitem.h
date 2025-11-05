@@ -5,8 +5,7 @@
 #include <QPainter>
 #include <QFontMetrics>
 
-class ImageViewer; // 前向声明
-
+class ImageViewModel;
 /**
  * @brief 一个可交互的点测量项。
  *
@@ -25,7 +24,7 @@ public:
      * @param viewer 指向 ImageViewer，用于获取像素值
      * @param parent 父项
      */
-    explicit PointMeasureItem(const QPointF& pos, ImageViewer* viewer, QGraphicsItem* parent = nullptr);
+    explicit PointMeasureItem(const QPointF& pos, ImageViewModel* viewModel, QGraphicsItem* parent = nullptr);
     virtual ~PointMeasureItem() override = default;
 
     enum { Type = UserType + 8 }; // +7 已被 AngleROI 使用
@@ -53,7 +52,7 @@ private:
      */
     QRectF calculateTextRect() const;
 
-    ImageViewer* m_viewer; // 指向视图
+    ImageViewModel* m_viewModel;
     QString m_text;        // 缓存要绘制的文本
     QPointF m_textOffset;  // 文本相对于(0,0)十字中心的偏移
 

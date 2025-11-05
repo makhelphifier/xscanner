@@ -1,4 +1,7 @@
+// xscanner - 副本/gui/views/mainwindow.cpp
+
 #include "mainwindow.h"
+#include "gui/viewmodels/imageviewmodel.h" // [新增]
 #include <QApplication>
 #include <QDir>
 #include <QGraphicsPixmapItem>
@@ -20,7 +23,13 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     resize(800, 600);
+
+    // [修改] 1. 创建 ViewModel
+    m_imageViewModel = new ImageViewModel(this);
+
+    // [修改] 2. 创建 View 并注入 ViewModel
     viewer = new ImageViewer(this);
+    viewer->setViewModel(m_imageViewModel);
     setCentralWidget(viewer);
 
     // --- 添加尺寸标签 ---
@@ -63,8 +72,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
             Qt::QueuedConnection);
     // 将 LogWidget 的级别更改信号连接到 MainWindow 的槽 ---
     connect(m_logWidget, &LogWidget::logLevelChanged, this, &MainWindow::onLogLevelChanged);
-
-
 
     // --- 菜单和工具栏 ---
     QMenu *fileMenu = menuBar()->addMenu("文件");
@@ -181,70 +188,37 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // 默认选择模式（确保 pointAction 未选中）
     selectAction->setChecked(true);
 
-    // --- 连接信号和槽 ---
-    // 缩放相关
+    // --- [修改] 连接信号和槽 ---
+
+    // 缩放相关 (保持不变)
     connect(viewer, &ImageViewer::scaleChanged, this, &MainWindow::updateScale);
-    // connect(viewer, &ImageViewer::scaleChanged, viewer, &ImageViewer::onScaleChanged);
     connect(infoWidget, QOverload<double>::of(&TopRightInfoWidget::scaleEdited), this, &MainWindow::onScaleFromWidget);
 
-    // 像素信息
-    connect(viewer, &ImageViewer::pixelInfoChanged, this, &MainWindow::onPixelInfoChanged);
+    // [修改] 像素信息 (VM -> MainWindow)
+    connect(m_imageViewModel, &ImageViewModel::pixelInfoReady, this, &MainWindow::onPixelInfoChanged);
 
-    // 窗宽窗位相关
-    connect(infoWidget, &TopRightInfoWidget::windowChanged, viewer, &ImageViewer::onWindowChanged);
-    connect(infoWidget, &TopRightInfoWidget::levelChanged, viewer, &ImageViewer::onLevelChanged);
-    connect(infoWidget, &TopRightInfoWidget::autoWindowingToggled, viewer, &ImageViewer::setAutoWindowing);
+    // [修改] 窗宽窗位相关 (Widget -> VM)
+    connect(infoWidget, &TopRightInfoWidget::windowChanged, m_imageViewModel, &ImageViewModel::setWindowWidth);
+    connect(infoWidget, &TopRightInfoWidget::levelChanged, m_imageViewModel, &ImageViewModel::setLevel);
+    connect(infoWidget, &TopRightInfoWidget::autoWindowingToggled, m_imageViewModel, &ImageViewModel::setAutoWindowing);
 
-    connect(viewer, &ImageViewer::windowLevelChanged, this, &MainWindow::onWindowLevelChanged);
-    connect(viewer, &ImageViewer::autoWindowingToggled, this, &MainWindow::onAutoWindowingToggled);
+    // [修改] 窗宽窗位相关 (VM -> MainWindow/Widget)
+    connect(m_imageViewModel, &ImageViewModel::windowLevelChanged, this, &MainWindow::onWindowLevelChanged);
+    connect(m_imageViewModel, &ImageViewModel::autoWindowingChanged, this, &MainWindow::onAutoWindowingToggled);
 
-    // 默认选择模式
-    selectAction->setChecked(true);
+    // [新增] 图像加载 (VM -> MainWindow)
+    connect(m_imageViewModel, &ImageViewModel::imageLoaded, this, &MainWindow::onImageLoaded);
 
+    // [修改] 默认加载图像
     QString exeDir = QCoreApplication::applicationDirPath();
     QString filePath = QDir(exeDir).filePath("Resources/img/000006.raw");
     qDebug() << "Attempting to load from filesystem:" << filePath;
-    // 默认加载图像（委托给 viewer）
-    QString defaultPath = ":/Resources/img/000006.raw";
-    viewer->loadImage(filePath);
+    m_imageViewModel->loadImage(filePath); // [修改] 调用 ViewModel
 
+    // [移除] 延迟更新 UI 的 QTimer::singleShot(100, ...)
+    // [移除] onImageLoaded 将处理所有 UI 更新
 
-    // 延迟更新 UI（等待图像加载）
-    QTimer::singleShot(100, this, [this]() {
-        if (!viewer->pixmapItem() || viewer->pixmapItem()->pixmap().isNull()) return;
-
-        // 更新尺寸标签
-        int width = viewer->pixmapItem()->pixmap().width();
-        int height = viewer->pixmapItem()->pixmap().height();
-        sizeLabel->setText(QString("size: %1x%2").arg(width).arg(height));
-        sizeLabel->adjustSize();
-        sizeLabel->setVisible(true);
-
-        // 更新 infoWidget 可见性和范围（从 viewer 查询位深）
-        infoWidget->setVisible(true);
-        int bitDepth = viewer->bitDepth();
-        int maxVal = (bitDepth == 16) ? 65535 : 255;
-        infoWidget->setWindowRange(1, maxVal + 1);
-        infoWidget->setLevelRange(0, maxVal);
-
-        // 初始化 UI 到当前值（从 viewer 查询）
-        infoWidget->setWindowValue(viewer->currentWindowWidth());
-        infoWidget->setLevelValue(viewer->currentWindowLevel());
-        infoWidget->setWindowLevelText(QString("window/level: %1/%2")
-                                           .arg(viewer->currentWindowWidth())
-                                           .arg(viewer->currentWindowLevel()));
-
-        // 启用自动窗宽
-        infoWidget->setAutoWindowingChecked(true);
-        viewer->setAutoWindowing(true);  // 确保 viewer 同步
-        // LogDebug("This is a debug message.");
-        // LogWarn("This is a warning message.");
-        // LogInfo("This is a info message.");
-        // LogError_("This is an error message.");
-        // LogFatal("This is a fatal message.");
-    });
-
-    // 手动调用 resizeEvent
+    // 手动调用 resizeEvent (保持不变)
     QTimer::singleShot(0, this, [this](){ resizeEvent(nullptr); });
 }
 
@@ -258,44 +232,10 @@ void MainWindow::openImage()
 
     qDebug() << "Selected file path:" << filePath;
 
-    // 委托加载给 viewer
-    viewer->loadImage(filePath);
+    // [修改] 委托加载给 ViewModel
+    m_imageViewModel->loadImage(filePath);
 
-    // 延迟更新 UI（等待加载完成）
-    QTimer::singleShot(100, this, [this, filePath]() {
-        if (!viewer->pixmapItem() || viewer->pixmapItem()->pixmap().isNull()) {
-            qDebug() << "Failed to load image:" << filePath;
-            sizeLabel->setVisible(false);
-            infoWidget->setVisible(false);
-            infoLabel->setText("X: N/A, Y: N/A, value: N/A");
-            return;
-        }
-
-        // 更新尺寸
-        int width = viewer->pixmapItem()->pixmap().width();
-        int height = viewer->pixmapItem()->pixmap().height();
-        sizeLabel->setText(QString("size: %1x%2").arg(width).arg(height));
-        sizeLabel->adjustSize();
-        sizeLabel->setVisible(true);
-
-        // 更新 infoWidget
-        infoWidget->setVisible(true);
-        int bitDepth = viewer->bitDepth();
-        int maxVal = (bitDepth == 16) ? 65535 : 255;
-        infoWidget->setWindowRange(1, maxVal + 1);
-        infoWidget->setLevelRange(0, maxVal);
-
-        // 从 viewer 获取当前值（加载后默认为全范围）
-        infoWidget->setWindowValue(viewer->currentWindowWidth());
-        infoWidget->setLevelValue(viewer->currentWindowLevel());
-        infoWidget->setWindowLevelText(QString("window/level: %1/%2")
-                                           .arg(viewer->currentWindowWidth())
-                                           .arg(viewer->currentWindowLevel()));
-
-        // 默认启用自动窗宽
-        infoWidget->setAutoWindowingChecked(true);
-        viewer->setAutoWindowing(true);
-    });
+    // [移除] QTimer::singleShot(100, ...)
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
@@ -309,7 +249,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     }
 }
 
-
+// [修改] onPixelInfoChanged 现在由 ViewModel 触发
 void MainWindow::onPixelInfoChanged(int x, int y, int value)
 {
     QString infoText;
@@ -322,6 +262,7 @@ void MainWindow::onPixelInfoChanged(int x, int y, int value)
     infoLabel->adjustSize();
 }
 
+// [修改] onWindowLevelChanged 现在由 ViewModel 触发
 void MainWindow::onWindowLevelChanged(int width, int level)
 {
     infoWidget->setWindowValue(width);
@@ -330,6 +271,7 @@ void MainWindow::onWindowLevelChanged(int width, int level)
     infoWidget->setWindowLevelText(QString("window/level: %1/%2").arg(width).arg(level));
 }
 
+// [修改] onAutoWindowingToggled 现在由 ViewModel 触发
 void MainWindow::onAutoWindowingToggled(bool enabled)
 {
     // 更新复选框
@@ -338,6 +280,39 @@ void MainWindow::onAutoWindowingToggled(bool enabled)
     } else {
         infoWidget->uncheckAutoWindowing();
     }
+}
+
+// [新增] onImageLoaded 槽实现
+void MainWindow::onImageLoaded(int min, int max, int bits, QRectF imageRect)
+{
+    if (imageRect.isNull()) {
+        qDebug() << "Failed to load image.";
+        sizeLabel->setVisible(false);
+        infoWidget->setVisible(false);
+        infoLabel->setText("X: N/A, Y: N/A, value: N/A");
+        return;
+    }
+
+    // 更新尺寸标签
+    int width = imageRect.width();
+    int height = imageRect.height();
+    sizeLabel->setText(QString("size: %1x%2").arg(width).arg(height));
+    sizeLabel->adjustSize();
+    sizeLabel->setVisible(true);
+
+    // 更新 infoWidget
+    infoWidget->setVisible(true);
+    infoWidget->setWindowRange(1, max + 1);
+    infoWidget->setLevelRange(min, max);
+
+    // 从 ViewModel 获取当前值
+    infoWidget->setWindowValue(m_imageViewModel->currentWindowWidth());
+    infoWidget->setLevelValue(m_imageViewModel->currentWindowLevel());
+    infoWidget->setWindowLevelText(QString("window/level: %1/%2")
+                                       .arg(m_imageViewModel->currentWindowWidth())
+                                       .arg(m_imageViewModel->currentWindowLevel()));
+
+    infoWidget->setAutoWindowingChecked(m_imageViewModel->isAutoWindowing());
 }
 
 void MainWindow::updateScale(qreal scale)

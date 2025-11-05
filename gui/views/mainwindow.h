@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QAction>
 #include <QActionGroup>
+#include <QRectF>
 #include "gui/views/imageviewer.h"
 #include "gui/widgets/toprightinfowidget.h"
 #include <QLabel>
@@ -11,7 +12,7 @@
 
 class TopRightInfoWidget;
 class LogWidget;
-
+class ImageViewModel;
 
 class MainWindow : public QMainWindow
 {
@@ -25,18 +26,20 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private slots:
-
     void openImage();
 
     void onPixelInfoChanged(int x, int y, int value);
     void onWindowLevelChanged(int width, int level);
     void onAutoWindowingToggled(bool enabled);
 
+    void onImageLoaded(int min, int max, int bits, QRectF imageRect);
+
     void updateScale(qreal scale);
     void onScaleFromWidget(double scale);
     void onLogLevelChanged(Log4Qt::Level level);
 
 private:
+    ImageViewModel *m_imageViewModel;
     ImageViewer *viewer;
     QAction *openAction;
     QAction *selectAction;
