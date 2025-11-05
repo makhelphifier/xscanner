@@ -2,6 +2,7 @@
 #include <QVBoxLayout>
 #include <QDebug>
 #include <QMouseEvent>
+#include <QtGlobal>
 
 // 曲线插值的精细度
 static const int CURVE_RESOLUTION = 256;
@@ -48,6 +49,28 @@ CurvesWidget::CurvesWidget(QWidget *parent)
 
     // 3. 初始状态
     setWindowLevelMode(true); // 默认显示窗宽窗位
+}
+
+/**
+ * @brief [新] Catmull-Rom 样条插值辅助函数
+ * @param p0 控制点 P0 (t=-1)
+ * @param p1 控制点 P1 (t=0)
+ * @param p2 控制点 P2 (t=1)
+ * @param p3 控制点 P3 (t=2)
+ * @param t 归一化的插值因子 (0.0 到 1.0)，代表在 P1 和 P2 之间的位置
+ * @return 插值后的值
+ */
+static inline double catmullRomInterpolate(double p0, double p1, double p2, double p3, double t)
+{
+    double t2 = t * t;
+    double t3 = t2 * t;
+
+    return 0.5 * (
+               (2.0 * p1) +
+               (-p0 + p2) * t +
+               (2.0 * p0 - 5.0 * p1 + 4.0 * p2 - p3) * t2 +
+               (-p0 + 3.0 * p1 - 3.0 * p2 + p3) * t3
+               );
 }
 
 /**
@@ -367,30 +390,57 @@ void CurvesWidget::generateSmoothCurve(const QMap<double, double> &points,
  */
 double CurvesWidget::interpolateCurve(double key, const QMap<double, double> &curvePoints)
 {
-    if (curvePoints.isEmpty()) return 0.0;
+    // 1. 安全检查
+    if (curvePoints.size() < 2) {
+        return 0.0;
+    }
 
-    auto it_upper = curvePoints.lowerBound(key);
+    // 2. 找到 key 所在的分段 (P1 -> P2)
+    auto it_p2 = curvePoints.lowerBound(key);
 
-    if (it_upper == curvePoints.constEnd()) {
+    // 3. 处理边界情况 (key 超出范围)
+    if (it_p2 == curvePoints.constEnd()) {
+        // 大于最后一个点
         return curvePoints.last();
     }
-    if (it_upper == curvePoints.constBegin()) {
-        return it_upper.value();
+    if (it_p2 == curvePoints.constBegin()) {
+        // 小于等于第一个点
+        return it_p2.value();
     }
 
-    auto it_lower = it_upper - 1;
+    // 4. 找到所有4个控制点 (P0, P1, P2, P3)
+    auto it_p1 = it_p2 - 1;
 
-    double key1 = it_lower.key();
-    double val1 = it_lower.value();
-    double key2 = it_upper.key();
-    double val2 = it_upper.value();
+    // 5. 处理曲线端点（创建“幽灵点” P0 和 P3）
+    auto it_p0 = (it_p1 == curvePoints.constBegin()) ? it_p1 : (it_p1 - 1);
+    auto it_p3 = (it_p2 + 1 == curvePoints.constEnd()) ? it_p2 : (it_p2 + 1);
 
-    double denom = (key2 - key1);
+    // 6. 提取 Y 值 (p0_y, p1_y, p2_y, p3_y)
+    double p0_y = it_p0.value();
+    double p1_y = it_p1.value();
+    double p2_y = it_p2.value();
+    double p3_y = it_p3.value();
+
+    // 7. 特殊处理：如果我们在第一个/最后一个真实分段，
+    //    我们需要修改 P0/P3 的Y值来使曲线端点平滑
+    if (it_p1 == curvePoints.constBegin()) {
+        // 我们在第一个分段 (P1 -> P2)。
+        // 强制 P0=P2，使 P1 处的切线为 0。
+        p0_y = p2_y;
+    }
+    if (it_p2 + 1 == curvePoints.constEnd()) {
+        // 我们在最后一个分段 (P(n-1) -> Pn)。
+        // 强制 P(n+1) = P(n-1)，使 Pn 处的切线为 0。
+        p3_y = p1_y;
+    }
+
+    // 8. 计算 t (key 在 P1 和 P2 之间的归一化位置 0.0-1.0)
     double t = 0.0;
-    if (denom > 1e-9) {
-        t = (key - key1) / denom;
+    double denom = (it_p2.key() - it_p1.key());
+    if (denom > 1e-9) { // 避免除以零
+        t = (key - it_p1.key()) / denom;
     }
 
-    // 返回 double，由调用者钳制
-    return val1 + t * (val2 - val1);
+    // 9. 调用样条插值 (返回 double，由调用者 qBound)
+    return catmullRomInterpolate(p0_y, p1_y, p2_y, p3_y, t);
 }

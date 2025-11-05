@@ -101,7 +101,7 @@ void ImageViewModel::setWindowWidth(double width)
     m_windowWidth = newWidth;
     m_autoWindowing = false; // 手动调整
 
-    applyWindowLevel();
+    applyAdjustment();
     emit windowLevelChanged(m_windowWidth, m_windowLevel);
     emit autoWindowingChanged(false);
 }
@@ -119,7 +119,7 @@ void ImageViewModel::setLevel(double level)
     m_windowLevel = newLevel;
     m_autoWindowing = false; // 手动调整
 
-    applyWindowLevel();
+    applyAdjustment();
     emit windowLevelChanged(m_windowWidth, m_windowLevel);
     emit autoWindowingChanged(false);
 }
@@ -139,7 +139,6 @@ void ImageViewModel::setAutoWindowing(bool enabled)
 
     if (m_originalImageMat.empty()) return;
 
-    // --- 修改：重构逻辑 ---
     if (enabled) {
         // 如果 *开启* 自动窗宽
 
@@ -149,16 +148,10 @@ void ImageViewModel::setAutoWindowing(bool enabled)
         m_windowLevel = m_dataMin + m_windowWidth / 2.0;
 
         // 2. 应用并发出新值
-        applyWindowLevel();
+        applyAdjustment();
         emit windowLevelChanged(m_windowWidth, m_windowLevel);
 
     } else {
-        // 如果 *关闭* 自动窗宽
-        // (例如：用户取消了复选框)
-
-        // 3. [关键]：我们什么也不做。
-        // 当前的 m_windowWidth 和 m_windowLevel 被保留，
-        // 它们现在被视为“手动”值。
     }
 }
 
@@ -255,8 +248,7 @@ void ImageViewModel::setAdjustmentMode(AdjustmentMode mode)
         emit curvePointsChanged(m_curvePoints);
     }
 
-    // (TODO: 在未来，这里应该调用 applyAdjustment() 来更新图像)
-    // applyWindowLevel(); // 暂时保留，直到曲线应用逻辑被添加
+   applyAdjustment();
 }
 
 /**
@@ -271,7 +263,7 @@ void ImageViewModel::addCurvePoint(double key, double value)
     m_curvePoints.insert(key, value);
     emit curvePointsChanged(m_curvePoints);
 
-    // (TODO: 在未来，这里应该调用 applyAdjustment())
+    applyAdjustment();
 }
 
 /**
@@ -299,7 +291,7 @@ void ImageViewModel::moveCurvePoint(double oldKey, double newKey, double newValu
 
     emit curvePointsChanged(m_curvePoints);
 
-    // (TODO: 在未来，这里应该调用 applyAdjustment())
+    applyAdjustment();
 }
 
 /**
@@ -319,7 +311,7 @@ void ImageViewModel::removeCurvePoint(double key)
     m_curvePoints.remove(key);
     emit curvePointsChanged(m_curvePoints);
 
-    // (TODO: 在未来，这里应该调用 applyAdjustment())
+    applyAdjustment();
 }
 
 /**
@@ -332,5 +324,26 @@ void ImageViewModel::resetCurve()
     m_curvePoints.insert(m_trueDataMax, 255.0);
     emit curvePointsChanged(m_curvePoints);
 
-    // (TODO: 在未来，这里应该调用 applyAdjustment())
+    applyAdjustment();
+}
+
+
+/**
+ * @brief  根据当前的调整模式 (W/L 或 曲线) 更新图像
+ */
+void ImageViewModel::applyAdjustment()
+{
+    if (m_originalImageMat.empty()) {
+        emit pixmapChanged(QPixmap());
+        return;
+    }
+
+    if (m_adjustmentMode == ModeWindowLevel) {
+        // 模式 1: 应用窗宽窗位
+        applyWindowLevel();
+    } else {
+        // 模式 2: 应用曲线
+        QImage adjustedImage = ImageProcessor::applyCurveLUT(m_originalImageMat, m_curvePoints);
+        emit pixmapChanged(QPixmap::fromImage(adjustedImage));
+    }
 }

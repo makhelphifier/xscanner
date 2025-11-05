@@ -100,7 +100,7 @@ private:
     // --- 内部逻辑 ---
     void applyWindowLevel();
     void calculateAutoWindowLevel(double &min, double &max);
-
+    void applyAdjustment();
     // --- 数据模型和状态 ---
     static const int HISTOGRAM_BINS = 256;
 

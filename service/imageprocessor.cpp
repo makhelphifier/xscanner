@@ -11,8 +11,32 @@
 #include <opencv2/opencv.hpp>
 #include <limits>
 #include <QMap>
+#include <QtGlobal>
+
 
 ImageProcessor::ImageProcessor() {}
+
+/**
+ * @brief [新] Catmull-Rom 样条插值辅助函数
+ * @param p0 控制点 P0 (t=-1)
+ * @param p1 控制点 P1 (t=0)
+ * @param p2 控制点 P2 (t=1)
+ * @param p3 控制点 P3 (t=2)
+ * @param t 归一化的插值因子 (0.0 到 1.0)，代表在 P1 和 P2 之间的位置
+ * @return 插值后的值
+ */
+static inline double catmullRomInterpolate(double p0, double p1, double p2, double p3, double t)
+{
+    double t2 = t * t;
+    double t3 = t2 * t;
+
+    return 0.5 * (
+               (2.0 * p1) +
+               (-p0 + p2) * t +
+               (2.0 * p0 - 5.0 * p1 + 4.0 * p2 - p3) * t2 +
+               (-p0 + 3.0 * p1 - 3.0 * p2 + p3) * t3
+               );
+}
 
 cv::Mat ImageProcessor::readRawImg_cvMat(const QString imgPath, const int width, const int height, int cvType)
 {
@@ -437,41 +461,76 @@ QImage ImageProcessor::applyWindowLevel(const cv::Mat &originalMat, double windo
  * @param curvePoints 锚点 map
  * @return            插值后的输出值 (已钳制在 0-255)
  */
+/**
+ * @brief [辅助函数] 根据曲线锚点计算单个输入灰度值对应的输出值
+ * @param key         输入的灰度值
+ * @param curvePoints 锚点 map
+ * @return            插值后的输出值 (已钳制在 0-255)
+ */
 static inline uchar interpolateCurve(double key, const QMap<double, double> &curvePoints)
 {
-    // 1. 找到第一个 Key 大于或等于 key 的点
-    auto it_upper = curvePoints.lowerBound(key);
+    // 1. 安全检查
+    if (curvePoints.size() < 2) {
+        return 0;
+    }
 
-    // 2. 处理边界情况 (超出范围)
-    if (it_upper == curvePoints.constEnd()) {
-        // key 大于所有锚点, 返回最后一个锚点的值
+    // 2. 找到 key 所在的分段 (P1 -> P2)
+    auto it_p2 = curvePoints.lowerBound(key);
+
+    // 3. 处理边界情况 (key 超出范围)
+    if (it_p2 == curvePoints.constEnd()) {
+        // 大于最后一个点
         return static_cast<uchar>(qBound(0.0, curvePoints.last(), 255.0));
     }
-    if (it_upper == curvePoints.constBegin()) {
-        // key 小于或等于第一个锚点, 返回第一个锚点的值
-        return static_cast<uchar>(qBound(0.0, it_upper.value(), 255.0));
+    if (it_p2 == curvePoints.constBegin()) {
+        // 小于等于第一个点
+        return static_cast<uchar>(qBound(0.0, it_p2.value(), 255.0));
     }
 
-    // 3. 此时，it_upper 是 key 之后的点，(it_upper - 1) 是 key 之前的点
-    auto it_lower = it_upper - 1;
+    // 4. 找到所有4个控制点 (P0, P1, P2, P3)
+    auto it_p1 = it_p2 - 1;
 
-    // 4. 进行线性插值
-    double key1 = it_lower.key();
-    double val1 = it_lower.value();
-    double key2 = it_upper.key();
-    double val2 = it_upper.value();
+    // 5. 处理曲线端点（创建“幽灵点” P0 和 P3）
+    // 如果 P1 是第一个点，我们就复制 P1 作为 P0
+    auto it_p0 = (it_p1 == curvePoints.constBegin()) ? it_p1 : (it_p1 - 1);
+    // 如果 P2 是最后一个点，我们就复制 P2 作为 P3
+    auto it_p3 = (it_p2 + 1 == curvePoints.constEnd()) ? it_p2 : (it_p2 + 1);
 
-    double denom = (key2 - key1);
+    // 6. 提取 Y 值 (p0_y, p1_y, p2_y, p3_y)
+    double p0_y = it_p0.value();
+    double p1_y = it_p1.value();
+    double p2_y = it_p2.value();
+    double p3_y = it_p3.value();
+
+    // 7. 特殊处理：如果我们在第一个/最后一个真实分段，
+    //    我们需要修改 P0/P3 的Y值来使曲线端点平滑
+    if (it_p1 == curvePoints.constBegin()) {
+        // 我们在第一个分段 (P1 -> P2)。
+        // 控制点为 (P0, P1, P2, P3)。
+        // 强制 P0=P2，使 P1 处的切线为 0。
+        p0_y = p2_y;
+    }
+    if (it_p2 + 1 == curvePoints.constEnd()) {
+        // 我们在最后一个分段 (P(n-1) -> Pn)。
+        // 控制点为 (P(n-2), P(n-1), Pn, P(n+1))。
+        // 强制 P(n+1) = P(n-1)，使 Pn 处的切线为 0。
+        // 在此上下文中: p3_y (P(n+1)) = p1_y (P(n-1))
+        p3_y = p1_y;
+    }
+
+    // 8. 计算 t (key 在 P1 和 P2 之间的归一化位置 0.0-1.0)
     double t = 0.0;
+    double denom = (it_p2.key() - it_p1.key());
     if (denom > 1e-9) { // 避免除以零
-        t = (key - key1) / denom;
+        t = (key - it_p1.key()) / denom;
     }
 
-    double result = val1 + t * (val2 - val1);
+    // 9. 调用样条插值
+    double result = catmullRomInterpolate(p0_y, p1_y, p2_y, p3_y, t);
 
+    // 10. 返回钳制后的 uchar 结果
     return static_cast<uchar>(qBound(0.0, result, 255.0));
 }
-
 
 /**
  * @brief 根据曲线锚点，使用 LUT 将原始 Mat 转换为 8-bit QImage
@@ -485,9 +544,9 @@ QImage ImageProcessor::applyCurveLUT(const cv::Mat &originalMat, const QMap<doub
     int type = originalMat.type();
 
     // --- 快速路径: CV_8U 和 CV_16U 可以使用 cv::LUT ---
-    if (type == CV_8U || type == CV_16U)
+    if (type == CV_8U )
     {
-        int lutSize = (type == CV_8U) ? 256 : 65536;
+        int lutSize = 256 ;
         cv::Mat lut(1, lutSize, CV_8U);
         uchar* lutData = lut.ptr<uchar>(0);
 
@@ -538,6 +597,13 @@ QImage ImageProcessor::applyCurveLUT(const cv::Mat &originalMat, const QMap<doub
         switch(type) {
         case CV_32F: {
             const float* pSrc = originalMat.ptr<float>(y);
+            for (int x = 0; x < width; ++x) {
+                pResult[x] = interpolateCurve(pSrc[x], curvePoints);
+            }
+            break;
+        }
+        case CV_16U: {
+            const quint16* pSrc = originalMat.ptr<quint16>(y);
             for (int x = 0; x < width; ++x) {
                 pResult[x] = interpolateCurve(pSrc[x], curvePoints);
             }
