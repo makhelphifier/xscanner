@@ -65,21 +65,22 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
         // 1. 从 viewer 获取当前工具模式
         ImageViewer::ToolMode tool = viewer->currentToolMode();
 
-        DrawingState* nextState = nullptr; // 准备一个指针
-        bool isTemporary = false;          // 标记是否为临时
+        // DrawingState* nextState = nullptr; // <--- 移除
+        // bool isTemporary = false;          // <--- 移除
 
         // 2. 使用 switch 决定下一个状态
         switch (tool) {
         case ImageViewer::ModeDrawRect:
-            log_("BRANCH: Creating GenericDrawingState<RectROI>");
-            nextState = new GenericDrawingState<RectROI>(machine());
-            isTemporary = true;
-            break;
         case ImageViewer::ModeDrawLine:
-            log_("BRANCH: Creating GenericDrawingState<LineSegmentROI>");
-            nextState = new GenericDrawingState<LineSegmentROI>(machine());
-            isTemporary = true;
+        case ImageViewer::ModeDrawAngledLine:
+        case ImageViewer::ModeDrawEllipse:
+        {
+            // [修改] 调用状态机中的工厂方法来创建并转换到新的 GenericDrawingState
+            if (machine()->startGenericDrawingState(tool, event)) { //
+                return true; // 事件已处理
+            }
             break;
+        }
         case ImageViewer::ModeDrawHLine:
         case ImageViewer::ModeDrawVLine:
         {
@@ -91,11 +92,6 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
             machine()->setState(DrawingStateMachine::Idle);
             return true; // 事件已处理
         }
-        case ImageViewer::ModeDrawAngledLine:
-            log_("BRANCH: Creating GenericDrawingState<AngledLineROI>");
-            nextState = new GenericDrawingState<AngledLineROI>(machine());
-            isTemporary = true;
-            break;
         case ImageViewer::ModeDrawAngle:
         {
             log_("BRANCH: Switching to AngleDrawingState");
@@ -140,11 +136,6 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
             event->accept();
             return true;
         }
-        case ImageViewer::ModeDrawEllipse:
-            log_("BRANCH: Creating GenericDrawingState<EllipseROI>");
-            nextState = new GenericDrawingState<EllipseROI>(machine());
-            isTemporary = true;
-            break;
         case ImageViewer::ModeDrawPoint:
         {
             ImageViewer* viewer = machine()->viewer();
@@ -190,15 +181,15 @@ bool IdleState::handleMousePressEvent(QMouseEvent *event)
             return true;
         }
         }
-        if (nextState) {
-            machine()->setState(nextState, isTemporary);
-            return nextState->handleMousePressEvent(event);
-        }
+        // [移除原有的下一状态转换逻辑]
+        // if (nextState) {
+        //     machine()->setState(nextState, isTemporary);
+        //     return nextState->handleMousePressEvent(event);
+        // }
     }
 
     return false;
 }
-
 
 
 bool IdleState::handleMouseMoveEvent(QMouseEvent *event)

@@ -5,7 +5,7 @@
 #include <QPointer>
 #include <QPointF>
 
-class ImageViewer;
+#include "gui/views/imageviewer.h"
 class DrawingState;
 class IdleState;
 class PanningState;
@@ -64,6 +64,7 @@ public:
     void startDraggingHandle(Handle* handle, const QPointF& scenePos);
     void updateDraggingHandle(const QPointF& scenePos);
     void finishDraggingHandle();
+    bool startGenericDrawingState(ImageViewer::ToolMode tool, QMouseEvent *event); //
 
 signals:
     void stateChanged(StateType newState);

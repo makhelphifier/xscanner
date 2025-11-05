@@ -13,6 +13,12 @@
 #include "angledrawingstate.h"
 #include "polylinedrawingstate.h"
 #include "freehanddrawingstate.h"
+#include "gui/views/imageviewer.h"
+#include "gui/items/rectroi.h"
+#include "gui/items/linesegmentroi.h"
+#include "gui/items/angledlineroi.h"
+#include "gui/items/ellipseroi.h"
+#include "genericdrawingstate.h"
 
 DrawingStateMachine::DrawingStateMachine(ImageViewer* viewer, QObject *parent)
     : QObject(parent),
@@ -186,4 +192,39 @@ bool DrawingStateMachine::handleMouseDoubleClickEvent(QMouseEvent *event)
 {
     if (!m_currentStatePtr) return false;
     return m_currentStatePtr->handleMouseDoubleClickEvent(event);
+}
+
+
+bool DrawingStateMachine::startGenericDrawingState(ImageViewer::ToolMode tool, QMouseEvent *event)
+{
+    DrawingState* nextState = nullptr;
+
+    //
+    switch (tool) {
+    case ImageViewer::ModeDrawRect:
+        qDebug() << "FACTORY: Creating GenericDrawingState<RectROI>";
+        nextState = new GenericDrawingState<RectROI>(this);
+        break;
+    case ImageViewer::ModeDrawLine:
+        qDebug() << "FACTORY: Creating GenericDrawingState<LineSegmentROI>";
+        nextState = new GenericDrawingState<LineSegmentROI>(this);
+        break;
+    case ImageViewer::ModeDrawAngledLine:
+        qDebug() << "FACTORY: Creating GenericDrawingState<AngledLineROI>";
+        nextState = new GenericDrawingState<AngledLineROI>(this);
+        break;
+    case ImageViewer::ModeDrawEllipse:
+        qDebug() << "FACTORY: Creating GenericDrawingState<EllipseROI>";
+        nextState = new GenericDrawingState<EllipseROI>(this);
+        break;
+    default:
+        return false; // 不处理其他模式
+    }
+
+    if (nextState) {
+        //
+        setState(nextState, true); // 标记为临时状态
+        return nextState->handleMousePressEvent(event);
+    }
+    return false;
 }
