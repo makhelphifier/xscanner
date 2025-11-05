@@ -18,7 +18,7 @@ public:
     // --- 属性访问器 ---
     double currentWindowWidth() const;
     double currentWindowLevel() const;
-    int bitDepth() const; // 此函数现在可能返回 32
+    int bitDepth() const;
     QRectF imageBounds() const;
     bool isAutoWindowing() const;
 
@@ -43,12 +43,12 @@ signals:
 
     /**
      * @brief 当图像加载成功或失败时发出，用于更新 UI 范围
-     * [修改] min/max 现在是 double 类型，用于设置 SpinBox
+     * min/max 现在是 double 类型，用于设置 SpinBox
      */
     void imageLoaded(double min, double max, int bits, QRectF imageRect);
 
     /**
-     * @brief 当窗宽窗位值改变时发出 (无论是自动还是手动) (签名修改)
+     * @brief 当窗宽窗位值改变时发出 (无论是自动还是手动)
      */
     void windowLevelChanged(double width, double level);
 
@@ -58,7 +58,7 @@ signals:
     void autoWindowingChanged(bool enabled);
 
     /**
-     * @brief 响应 requestPixelInfo，返回计算后的像素信息 (签名修改)
+     * @brief 响应 requestPixelInfo，返回计算后的像素信息
      */
     void pixelInfoReady(int x, int y, double value);
 
@@ -73,8 +73,10 @@ private:
     int m_bitDepth = 8;         // 仅用于显示 (8, 16, 32)
     double m_windowWidth = 256.0;
     double m_windowLevel = 128.0;
-    double m_dataMin = 0.0;       // 数据的实际最小值
-    double m_dataMax = 255.0;     // 数据的实际最大值
+    double m_dataMin = 0.0;       // 数据的饱和最小值 (自动窗宽窗位范围)
+    double m_dataMax = 255.0;     // 数据的饱和最大值 (自动窗宽窗位范围)
+    double m_trueDataMin = 0.0;   // 数据的真实最小值 (完整范围)
+    double m_trueDataMax = 255.0; // 数据的真实最大值 (完整范围)
     bool m_autoWindowing = false;
     QRectF m_imageBounds;
 };

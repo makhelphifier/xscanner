@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <opencv2/opencv.hpp>
 #include <QtGlobal> // for qBound
+#include <QtMath> // for qFuzzyCompare
 
 ImageViewModel::ImageViewModel(QObject *parent)
     : QObject(parent)
@@ -53,15 +54,19 @@ void ImageViewModel::loadImage(const QString &filePath)
 
     m_imageBounds = QRectF(0, 0, m_originalImageMat.cols, m_originalImageMat.rows);
 
-    // 计算初始范围
-    ImageProcessor::calculateAutoWindowLevel(m_originalImageMat, m_dataMin, m_dataMax, 0.0035); // 使用 0.35% 饱和度
+    // 获取并存储 *真实* 的完整数据范围
+    cv::minMaxLoc(m_originalImageMat, &m_trueDataMin, &m_trueDataMax);
 
-    // 初始化窗宽窗位
+    // 计算并存储 *饱和* 范围 (用于自动窗宽窗位)
+    // m_dataMin/Max 现在存储的是自动窗宽的边界
+    ImageProcessor::calculateAutoWindowLevel(m_originalImageMat, m_dataMin, m_dataMax, 0.0035);
+
+    // 初始化窗宽窗位 (使用自动值)
     m_windowWidth = m_dataMax - m_dataMin;
     m_windowLevel = m_dataMin + m_windowWidth / 2.0;
 
-    // 发出 imageLoaded 信号，通知 UI 更新范围
-    emit imageLoaded(m_dataMin, m_dataMax, m_bitDepth, m_imageBounds);
+    // 发出 imageLoaded 信号，UI 滑块应使用 *真实* 范围
+    emit imageLoaded(m_trueDataMin, m_trueDataMax, m_bitDepth, m_imageBounds);
 
     // 默认启用自动窗宽窗位
     setAutoWindowing(true);
@@ -69,10 +74,10 @@ void ImageViewModel::loadImage(const QString &filePath)
 
 void ImageViewModel::setWindowWidth(double width)
 {
-    // 使用 m_dataMax
-    double newWidth = qBound(0.001, width, (m_dataMax - m_dataMin) + 1.0);
-
-    if (m_windowWidth == newWidth) return;
+    // 使用 *真实* 范围来约束手动输入
+    double newWidth = qBound(0.001, width, (m_trueDataMax - m_trueDataMin) + 1.0);
+    // 使用 qFuzzyCompare 比较浮点数
+    // if (qFuzzyCompare(m_windowWidth, newWidth)) return;
 
     m_windowWidth = newWidth;
     m_autoWindowing = false; // 手动调整
@@ -84,10 +89,11 @@ void ImageViewModel::setWindowWidth(double width)
 
 void ImageViewModel::setLevel(double level)
 {
-    // 使用 m_dataMin/Max
-    double newLevel = qBound(m_dataMin, level, m_dataMax);
+    // 使用 *真实* 范围来约束手动输入
+    double newLevel = qBound(m_trueDataMin, level, m_trueDataMax);
 
-    if (m_windowLevel == newLevel) return;
+    // 使用 qFuzzyCompare 比较浮点数
+    // if (qFuzzyCompare(m_windowLevel, newLevel)) return;
 
     m_windowLevel = newLevel;
     m_autoWindowing = false; // 手动调整
@@ -99,26 +105,36 @@ void ImageViewModel::setLevel(double level)
 
 void ImageViewModel::setAutoWindowing(bool enabled)
 {
-    if (m_autoWindowing == enabled && enabled) return; // 避免重复计算
+    // 状态未改变，直接返回
+    if (m_autoWindowing == enabled) return;
 
     m_autoWindowing = enabled;
     emit autoWindowingChanged(enabled);
 
     if (m_originalImageMat.empty()) return;
 
+    // --- 修改：重构逻辑 ---
     if (enabled) {
-        double min, max;
-        calculateAutoWindowLevel(min, max);
-        m_windowWidth = max - min;
-        m_windowLevel = min + m_windowWidth / 2.0;
-    } else {
-        // 恢复全范围
+        // 如果 *开启* 自动窗宽
+
+        // 1. 重新计算自动(饱和)范围
+        calculateAutoWindowLevel(m_dataMin, m_dataMax);
         m_windowWidth = m_dataMax - m_dataMin;
         m_windowLevel = m_dataMin + m_windowWidth / 2.0;
-    }
 
-    applyWindowLevel();
-    emit windowLevelChanged(m_windowWidth, m_windowLevel);
+        // 2. 应用并发出新值
+        applyWindowLevel();
+        emit windowLevelChanged(m_windowWidth, m_windowLevel);
+
+    } else {
+        // 如果 *关闭* 自动窗宽
+        // (例如：用户取消了复选框)
+
+        // 3. [关键]：我们什么也不做。
+        // 当前的 m_windowWidth 和 m_windowLevel 被保留，
+        // 它们现在被视为“手动”值。
+    }
+    // --- 修改结束 ---
 }
 
 // --- 查询实现 ---
@@ -185,7 +201,7 @@ void ImageViewModel::applyWindowLevel()
 
 void ImageViewModel::calculateAutoWindowLevel(double &min, double &max)
 {
-    ImageProcessor::calculateAutoWindowLevel(m_originalImageMat, min, max);
+    ImageProcessor::calculateAutoWindowLevel(m_originalImageMat, min, max, 0.0035);
     // 将计算出的饱和范围也存起来
     m_dataMin = min;
     m_dataMax = max;

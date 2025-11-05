@@ -307,8 +307,15 @@ void MainWindow::onImageLoaded(double min, double max, int bits, QRectF imageRec
 
     // 更新 infoWidget
     infoWidget->setVisible(true);
-    infoWidget->setWindowRange(min, max); // 修改
-    infoWidget->setLevelRange(min, max);  // 修改
+
+    // 窗宽 (W) 的范围应该是 0 到 (真实最大值 - 真实最小值)
+    // 我们使用 0.001 作为最小值，因为窗宽不能为0
+    double dataSpan = max - min;
+    if (dataSpan <= 0) dataSpan = 1.0; // 防止 max 和 min 相等
+    infoWidget->setWindowRange(0.001, dataSpan);
+
+    // 窗位 (L) 的范围应该是 真实最小值 到 真实最大值
+    infoWidget->setLevelRange(min, max);
 
     // 从 ViewModel 获取当前值
     infoWidget->setWindowValue(m_imageViewModel->currentWindowWidth());
@@ -321,6 +328,7 @@ void MainWindow::onImageLoaded(double min, double max, int bits, QRectF imageRec
 
     infoWidget->setAutoWindowingChecked(m_imageViewModel->isAutoWindowing());
 }
+
 
 void MainWindow::updateScale(qreal scale)
 {

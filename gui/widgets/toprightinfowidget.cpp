@@ -27,17 +27,23 @@ TopRightInfoWidget::TopRightInfoWidget(QWidget *parent) : QWidget(parent)
     windowSpinBox = new QDoubleSpinBox;
     windowSpinBox->setDecimals(2);
     windowSpinBox->setRange(0.0, 65535.0);
-    windowSpinBox->setSingleStep(10.0);
+    windowSpinBox->setSingleStep(100.0);
     windowSpinBox->setButtonSymbols(QAbstractSpinBox::UpDownArrows);
-    connect(windowSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TopRightInfoWidget::windowChanged);
+    connect(windowSpinBox, &QDoubleSpinBox::editingFinished, this, [this]() {
+        // 手动发出我们自己的信号，使用 spinBox 的当前值
+        emit windowChanged(windowSpinBox->value());
+    });
 
     // --- Level SpinBox ---
     levelSpinBox = new QDoubleSpinBox;
     levelSpinBox->setDecimals(2);
     levelSpinBox->setRange(0.0, 65535.0);
-    levelSpinBox->setSingleStep(10.0);
+    levelSpinBox->setSingleStep(100.0);
     levelSpinBox->setButtonSymbols(QAbstractSpinBox::UpDownArrows);
-    connect(levelSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TopRightInfoWidget::levelChanged);
+    connect(levelSpinBox, &QDoubleSpinBox::editingFinished, this, [this]() {
+        // 手动发出我们自己的信号，使用 spinBox 的当前值
+        emit levelChanged(levelSpinBox->value());
+    });
 
     // --- Scale SpinBox ---
     scaleSpinBox = new QDoubleSpinBox;
@@ -130,9 +136,9 @@ void TopRightInfoWidget::setAutoWindowingChecked(bool checked)
     autoWindowingCheckBox->blockSignals(oldSignalsState);
 
     // 如果勾选，立即触发 toggled 信号以应用自动窗位窗宽
-    if (checked) {
-        emit autoWindowingToggled(true);
-    }
+    //     if (checked) {
+    //         emit autoWindowingToggled(true);
+    //     }
 }
 
 void TopRightInfoWidget::checkAutoWindowing()
