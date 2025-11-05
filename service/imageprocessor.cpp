@@ -9,6 +9,7 @@
 #include <QDataStream>
 #include <iostream>
 #include <opencv2/opencv.hpp>
+#include <limits>
 
 ImageProcessor::ImageProcessor() {}
 
@@ -226,6 +227,74 @@ void ImageProcessor::calculateAutoWindowLevel(const cv::Mat &image, double &min,
         min = 0.0;
         max = (image.type() == CV_16U) ? 65535.0 : ((image.type() == CV_32F) ? 1.0 : 255.0);
     }
+}
+
+/**
+ * @brief (新) 计算并返回图像的直方图数据 (阶段 1 实现)
+ */
+QVector<double> ImageProcessor::calculateHistogram(const cv::Mat &image, int numBins, double minRange, double maxRange)
+{
+    if (image.empty() || numBins <= 0) {
+        qWarning() << "calculateHistogram: Image is empty or numBins is invalid.";
+        return QVector<double>();
+    }
+
+    // 确保范围有效
+    if (minRange > maxRange) {
+        qWarning() << "calculateHistogram: minRange > maxRange.";
+        return QVector<double>();
+    }
+
+    // 处理 minRange == maxRange (例如纯色图像)
+    if (qFuzzyCompare(minRange, maxRange)) {
+        qWarning() << "calculateHistogram: minRange == maxRange (solid image?).";
+        QVector<double> histData(numBins, 0.0);
+        // 将所有像素计数放在第一个 bin
+        histData[0] = static_cast<double>(image.total());
+        return histData;
+    }
+
+
+    cv::Mat hist;
+    int histSize = numBins;
+
+    // cv::calcHist 要求 float 类型的范围 [min, max)
+    float range[] = { static_cast<float>(minRange), static_cast<float>(maxRange) };
+
+    int type = image.type();
+    if (type == CV_8U || type == CV_16U || type == CV_16S || type == CV_32S) {
+        // 对于整数类型, [minRange, maxRange] 对应的范围是 [minRange, maxRange + 1.0)
+        range[1] = static_cast<float>(maxRange + 1.0);
+    } else if (type == CV_32F || type == CV_64F) {
+        // 对于浮点类型, [minRange, maxRange] 对应的范围是 [minRange, nextafter(maxRange))
+        // 使用 nextafter 确保 maxRange 值能被包含在最后一个 bin 中
+        range[1] = std::nextafter(static_cast<float>(maxRange), std::numeric_limits<float>::infinity());
+    } else {
+        // 未知类型，假设为整数
+        qWarning() << "calculateHistogram: Unhandled cv::Mat type, assuming integer range.";
+        range[1] = static_cast<float>(maxRange + 1.0);
+    }
+
+    const float* histRange = { range };
+    int channels[] = { 0 };
+
+    try {
+        cv::calcHist(&image, 1, channels, cv::Mat(), // mask
+                     hist, 1, &histSize, &histRange,
+                     true, // uniform
+                     false); // accumulate
+    } catch (const cv::Exception& e) {
+        qWarning() << "cv::calcHist failed:" << e.what();
+        return QVector<double>();
+    }
+
+    // 将 cv::Mat (float 类型) 转换为 QVector<double>
+    QVector<double> histData(numBins);
+    for (int i = 0; i < numBins; ++i) {
+        histData[i] = static_cast<double>(hist.at<float>(i));
+    }
+
+    return histData;
 }
 
 void ImageProcessor::calculateAutoWindowLevel(const QImage &image, int &min, int &max, double saturatedRatio)

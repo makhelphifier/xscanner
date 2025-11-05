@@ -5,7 +5,12 @@
 #include <QImage>
 #include <QPixmap>
 #include <QRectF>
+#include <QVector>
+#include <QVector>
 #include <opencv2/core.hpp>
+#include "qcustomplot.h"
+
+class QCPRange;
 
 class ImageViewModel : public QObject
 {
@@ -62,12 +67,21 @@ signals:
      */
     void pixelInfoReady(int x, int y, double value);
 
+    /**
+     * @brief (新) 当直方图数据计算完成时发出
+     * @param data 包含 HISTOGRAM_BINS 个计数值的 QVector
+     * @param keyRange 数据的 X 轴范围 (m_trueDataMin 到 m_trueDataMax)
+     */
+    void histogramDataReady(const QVector<double> &data, const QCPRange &keyRange);
+
 private:
     // --- 内部逻辑 ---
     void applyWindowLevel();
     void calculateAutoWindowLevel(double &min, double &max);
 
     // --- 数据模型和状态 ---
+    static const int HISTOGRAM_BINS = 256;
+
     cv::Mat m_originalImageMat;
     int m_originalDataType;     // CV_16U, CV_32F etc.
     int m_bitDepth = 8;         // 仅用于显示 (8, 16, 32)
@@ -79,6 +93,10 @@ private:
     double m_trueDataMax = 255.0; // 数据的真实最大值 (完整范围)
     bool m_autoWindowing = false;
     QRectF m_imageBounds;
+
+    // (新) 直方图数据
+    QVector<double> m_histogramData;
+    QCPRange m_histogramKeyRange;
 };
 
 #endif // IMAGEVIEWMODEL_H

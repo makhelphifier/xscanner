@@ -19,6 +19,7 @@
 #include "gui/widgets/toprightinfowidget.h"
 #include "util/logger/logger.h"
 #include "gui/items/rectroi.h"
+#include "gui/widgets/histogramwidget.h"
 #include <QFile>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
@@ -67,12 +68,23 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     logDockWidget->setWidget(m_logWidget);
     addDockWidget(Qt::BottomDockWidgetArea, logDockWidget);
 
+    // ---  添加直方图控件 ---
+    QDockWidget *histogramDockWidget = new QDockWidget("直方图", this);
+    m_histogramWidget = new HistogramWidget(this);
+    histogramDockWidget->setWidget(m_histogramWidget);
+    addDockWidget(Qt::RightDockWidgetArea, histogramDockWidget); // 停靠在右侧
+
     // 将 Appender 的信号连接到 LogWidget 的槽 ---
     connect(QtWidgetAppender::instance(), &QtWidgetAppender::messageAppended,
             m_logWidget, QOverload<const QString &, int>::of(&LogWidget::appendLogMessage),
             Qt::QueuedConnection);
     // 将 LogWidget 的级别更改信号连接到 MainWindow 的槽 ---
     connect(m_logWidget, &LogWidget::logLevelChanged, this, &MainWindow::onLogLevelChanged);
+
+    connect(m_imageViewModel, &ImageViewModel::histogramDataReady,
+            m_histogramWidget, &HistogramWidget::updateHistogram);
+    connect(m_imageViewModel, &ImageViewModel::windowLevelChanged,
+            m_histogramWidget, &HistogramWidget::updateWindowLevelIndicator);
 
     // --- 菜单和工具栏 ---
     QMenu *fileMenu = menuBar()->addMenu("文件");

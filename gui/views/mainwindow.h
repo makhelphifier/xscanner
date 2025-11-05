@@ -13,6 +13,7 @@
 class TopRightInfoWidget;
 class LogWidget;
 class ImageViewModel;
+class HistogramWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -61,6 +62,7 @@ private:
     QLabel *infoLabel;
     TopRightInfoWidget *infoWidget;
     LogWidget *m_logWidget;
+    HistogramWidget *m_histogramWidget;
 };
 
 #endif // MAINWINDOW_H

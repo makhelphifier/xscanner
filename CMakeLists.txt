@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(xscanner)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets SerialPort )
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets SerialPort PrintSupport )
 
 qt_standard_project_setup()
 
@@ -54,6 +54,7 @@ set(SOURCES
     device/motioncontroller.cpp
     device/motionhelper.cpp
     device/motionmanager.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/QCustomPlot/include/qcustomplot.cpp
 )
 
 # 定义头文件
@@ -124,6 +125,7 @@ endif()
 qt_add_executable(${PROJECT_NAME}
     ${SOURCES}
     Img.qrc
+    gui/widgets/histogramwidget.h gui/widgets/histogramwidget.cpp
 )
 
 
@@ -132,6 +134,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/opencv/include
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/Log4Qt/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/QCustomPlot/include
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/device/motor/include
 
 )
@@ -142,7 +145,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt6::Gui
     Qt6::Widgets
     Qt6::SerialPort
-
+    Qt6::PrintSupport
     # 外部库
     "${CMAKE_CURRENT_SOURCE_DIR}/third_party/opencv/lib/opencv_world4120.lib"
     "${CMAKE_CURRENT_SOURCE_DIR}/third_party/Log4Qt/lib/log4qt.lib"

@@ -7,8 +7,11 @@
 #include <QtGlobal> // for qBound
 #include <QtMath> // for qFuzzyCompare
 
+
+
 ImageViewModel::ImageViewModel(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+    m_histogramKeyRange(0, 0)
 {
 }
 
@@ -49,6 +52,12 @@ void ImageViewModel::loadImage(const QString &filePath)
     if (m_originalImageMat.empty()) {
         m_imageBounds = QRectF();
         emit imageLoaded(0.0, 0.0, 0, QRectF()); // 发出空信号
+
+        // --- (新) 发出空直方图 ---
+        m_histogramData.clear();
+        m_histogramKeyRange = QCPRange(0, 0);
+        emit histogramDataReady(m_histogramData, m_histogramKeyRange);
+        // --- 结束 ---
         return;
     }
 
@@ -56,6 +65,12 @@ void ImageViewModel::loadImage(const QString &filePath)
 
     // 获取并存储 *真实* 的完整数据范围
     cv::minMaxLoc(m_originalImageMat, &m_trueDataMin, &m_trueDataMax);
+
+    // --- (新) 计算直方图 ---
+    m_histogramData = ImageProcessor::calculateHistogram(m_originalImageMat, HISTOGRAM_BINS, m_trueDataMin, m_trueDataMax);
+    m_histogramKeyRange = QCPRange(m_trueDataMin, m_trueDataMax);
+    emit histogramDataReady(m_histogramData, m_histogramKeyRange);
+    // --- 结束 ---
 
     // 计算并存储 *饱和* 范围 (用于自动窗宽窗位)
     // m_dataMin/Max 现在存储的是自动窗宽的边界
@@ -134,7 +149,6 @@ void ImageViewModel::setAutoWindowing(bool enabled)
         // 当前的 m_windowWidth 和 m_windowLevel 被保留，
         // 它们现在被视为“手动”值。
     }
-    // --- 修改结束 ---
 }
 
 // --- 查询实现 ---
