@@ -1,3 +1,5 @@
+// service/imageprocessor.cpp
+
 #include "imageprocessor.h"
 #include <QVector>
 #include <QtMath>
@@ -5,11 +7,102 @@
 #include <QDebug>
 #include <QtEndian>
 #include <QDataStream>
-#include <windows.h>
 #include <iostream>
+#include <opencv2/opencv.hpp>
+#include <limits>
+#include <QMap>
+#include <QtGlobal>
+
 
 ImageProcessor::ImageProcessor() {}
 
+/**
+ * @brief [新] Catmull-Rom 样条插值辅助函数
+ * @param p0 控制点 P0 (t=-1)
+ * @param p1 控制点 P1 (t=0)
+ * @param p2 控制点 P2 (t=1)
+ * @param p3 控制点 P3 (t=2)
+ * @param t 归一化的插值因子 (0.0 到 1.0)，代表在 P1 和 P2 之间的位置
+ * @return 插值后的值
+ */
+static inline double catmullRomInterpolate(double p0, double p1, double p2, double p3, double t)
+{
+    double t2 = t * t;
+    double t3 = t2 * t;
+
+    return 0.5 * (
+               (2.0 * p1) +
+               (-p0 + p2) * t +
+               (2.0 * p0 - 5.0 * p1 + 4.0 * p2 - p3) * t2 +
+               (-p0 + 3.0 * p1 - 3.0 * p2 + p3) * t3
+               );
+}
+
+cv::Mat ImageProcessor::readRawImg_cvMat(const QString imgPath, const int width, const int height, int cvType)
+{
+    cv::Mat image(height, width, cvType);
+
+    QFile file(imgPath);
+    if (!file.open(QIODevice::ReadOnly)) {
+        std::cerr << "Error opening file: " << imgPath.toStdString() << std::endl;
+        return cv::Mat();
+    }
+
+    QByteArray data = file.readAll();
+    file.close();
+
+    qint64 expectedSize = static_cast<qint64>(width) * height * image.elemSize();
+    if (data.size() != expectedSize) {
+        std::cerr << "File size mismatch: expected " << expectedSize << ", got " << data.size() << std::endl;
+        return cv::Mat();
+    }
+
+    memcpy(image.data, data.constData(), data.size());
+
+    return image;
+}
+
+QImage ImageProcessor::cvMat2QImage(const cv::Mat& mat)
+{
+    switch(mat.type())
+    {
+    // 8位无符号，单通道
+    case CV_8UC1:
+    {
+        QImage image(mat.data, mat.cols, mat.rows, mat.step, QImage::Format_Grayscale8);
+        return image.copy();
+    }
+    // 8位无符号，3通道
+    case CV_8UC3:
+    {
+        QImage image(mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888);
+        return image.rgbSwapped();
+    }
+    // 8位无符号，4通道
+    case CV_8UC4:
+    {
+        QImage image(mat.data, mat.cols, mat.rows, mat.step, QImage::Format_ARGB32);
+        return image.copy();
+    }
+    // 16位无符号，单通道
+    case CV_16UC1:
+    {
+        QImage image(reinterpret_cast<const uchar*>(mat.data), mat.cols, mat.rows, mat.step, QImage::Format_Grayscale16);
+        return image.copy();
+    }
+    // 32位浮点，单通道（归一化到 8 位灰度）
+    case CV_32FC1:
+    {
+        cv::Mat normalized;
+        cv::normalize(mat, normalized, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+        return cvMat2QImage(normalized);
+    }
+    default:
+        qWarning() << "Unsupported cv::Mat type:" << mat.type();
+        break;
+    }
+    return QImage();
+}
 
 QImage ImageProcessor::readRawImg_qImage(const QString imgPath, const int width, const int height)
 {
@@ -41,42 +134,192 @@ QImage ImageProcessor::readRawImg_qImage(const QString imgPath, const int width,
     return cvMat2QImage(image);
 }
 
-
-QImage ImageProcessor::cvMat2QImage(const cv::Mat& mat)
+cv::Mat ImageProcessor::QImage2cvMat(const QImage &image)
 {
-    switch(mat.type())
+    cv::Mat mat;
+    switch(image.format())
     {
-    // 8位无符号，单通道
-    case CV_8UC1:
-    {
-        QImage image(mat.data, mat.cols, mat.rows, mat.step, QImage::Format_Grayscale8);
-        return image.copy();
-    }
-    break;
-    // 8位无符号，3通道
-    case CV_8UC3:
-    {
-        QImage image(mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888);
-        return image.rgbSwapped();
-    }
-    break;
-    // 8位无符号，4通道
-    case CV_8UC4:
-    {
-        QImage image(mat.data, mat.cols, mat.rows, mat.step, QImage::Format_ARGB32);
-        return image.copy();
-    }
-    break;
-    case CV_16UC1:
-    {
-        QImage image(reinterpret_cast<const uchar*>(mat.data), mat.cols, mat.rows, mat.step, QImage::Format_Grayscale16);
-        return image.copy();
-    }
-    break;
+    case QImage::Format_Grayscale8:
+        // QImage 和 cv::Mat 共享数据 (无复制)
+        mat = cv::Mat(image.height(), image.width(), CV_8UC1, const_cast<uchar*>(image.constBits()), image.bytesPerLine());
+        break;
+    case QImage::Format_Grayscale16:
+        // QImage 和 cv::Mat 共享数据 (无复制)
+        mat = cv::Mat(image.height(), image.width(), CV_16UC1, const_cast<uchar*>(image.constBits()), image.bytesPerLine());
+        break;
+    case QImage::Format_RGB888:
+        mat = cv::Mat(image.height(), image.width(), CV_8UC3, const_cast<uchar*>(image.constBits()), image.bytesPerLine());
+        cv::cvtColor(mat, mat, cv::COLOR_RGB2BGR); // Qt 是 RGB, OpenCV 是 BGR
+        break;
+    case QImage::Format_ARGB32:
+    case QImage::Format_RGB32:
+        mat = cv::Mat(image.height(), image.width(), CV_8UC4, const_cast<uchar*>(image.constBits()), image.bytesPerLine());
+        break;
     default:
+        // 不支持的格式，进行转换
+        QImage temp = image.convertToFormat(QImage::Format_Grayscale8);
+        mat = cv::Mat(temp.height(), temp.width(), CV_8UC1, const_cast<uchar*>(temp.constBits()), temp.bytesPerLine());
         break;
     }
-    return QImage();
+    // 返回一个克隆，确保数据被复制，防止生命周期问题
+    return mat.clone();
+}
+
+void ImageProcessor::calculateAutoWindowLevel(const cv::Mat &image, double &min, double &max, double saturatedRatio)
+{
+    if (image.empty()) {
+        min = 0.0;
+        max = 255.0;
+        return;
+    }
+
+    long long pixelCount = image.total();
+    int saturatedPixels = qRound(static_cast<double>(pixelCount) * saturatedRatio);
+
+    if (image.type() == CV_32F || image.type() == CV_64F) {
+        cv::minMaxLoc(image, &min, &max);
+        if (min >= max) {
+            min = 0.0;
+            max = 1.0;
+            return;
+        }
+
+        int histSize = 256;
+        float range[] = { static_cast<float>(min), static_cast<float>(max) };
+        const float* histRange = { range };
+        cv::Mat hist;
+        cv::calcHist(&image, 1, 0, cv::Mat(), hist, 1, &histSize, &histRange, true, false);
+
+        float binWidth = (max - min) / histSize;
+
+        int cumulativeCount = 0;
+        for (int i = 0; i < histSize; ++i) {
+            cumulativeCount += static_cast<int>(hist.at<float>(i) * pixelCount / hist.total()); // 调整为像素计数
+            if (cumulativeCount >= saturatedPixels) {
+                min = min + i * binWidth;
+                break;
+            }
+        }
+
+        cumulativeCount = 0;
+        for (int i = histSize - 1; i >= 0; --i) {
+            cumulativeCount += static_cast<int>(hist.at<float>(i) * pixelCount / hist.total());
+            if (cumulativeCount >= saturatedPixels) {
+                max = min + i * binWidth;
+                break;
+            }
+        }
+
+    } else {
+        int maxVal;
+        switch (image.type()) {
+        case CV_8U: maxVal = 255; break;
+        case CV_16U: maxVal = 65535; break;
+        case CV_32S: maxVal = 2147483647; break; // 假设正值范围
+        default: maxVal = 255; break;
+        }
+
+        // 对于大范围（如 16U），使用 OpenCV 的直方图以提高效率
+        int histSize = (maxVal > 65535) ? 65536 : (maxVal + 1); // 限制 histSize 以避免内存问题
+        cv::Mat hist;
+        int histType = CV_32F;
+        float range[] = { 0, static_cast<float>(maxVal + 1) };
+        const float* histRanges = { range };
+        cv::calcHist(&image, 1, 0, cv::Mat(), hist, 1, &histSize, &histRanges);
+
+        int cumulativeCount = 0;
+        min = 0.0;
+        for (int i = 0; i < histSize; ++i) {
+            cumulativeCount += static_cast<int>(hist.at<float>(i));
+            if (cumulativeCount >= saturatedPixels) {
+                min = static_cast<double>(i);
+                break;
+            }
+        }
+
+        cumulativeCount = 0;
+        max = static_cast<double>(maxVal);
+        for (int i = histSize - 1; i >= 0; --i) {
+            cumulativeCount += static_cast<int>(hist.at<float>(i));
+            if (cumulativeCount >= saturatedPixels) {
+                max = static_cast<double>(i);
+                break;
+            }
+        }
+    }
+
+    if (min >= max) {
+        min = 0.0;
+        max = (image.type() == CV_16U) ? 65535.0 : ((image.type() == CV_32F) ? 1.0 : 255.0);
+    }
+}
+
+/**
+ * @brief 计算并返回图像的直方图数据 (阶段 1 实现)
+ */
+QVector<double> ImageProcessor::calculateHistogram(const cv::Mat &image, int numBins, double minRange, double maxRange)
+{
+    if (image.empty() || numBins <= 0) {
+        qWarning() << "calculateHistogram: Image is empty or numBins is invalid.";
+        return QVector<double>();
+    }
+
+    // 确保范围有效
+    if (minRange > maxRange) {
+        qWarning() << "calculateHistogram: minRange > maxRange.";
+        return QVector<double>();
+    }
+
+    // 处理 minRange == maxRange (例如纯色图像)
+    if (qFuzzyCompare(minRange, maxRange)) {
+        qWarning() << "calculateHistogram: minRange == maxRange (solid image?).";
+        QVector<double> histData(numBins, 0.0);
+        // 将所有像素计数放在第一个 bin
+        histData[0] = static_cast<double>(image.total());
+        return histData;
+    }
+
+
+    cv::Mat hist;
+    int histSize = numBins;
+
+    // cv::calcHist 要求 float 类型的范围 [min, max)
+    float range[] = { static_cast<float>(minRange), static_cast<float>(maxRange) };
+
+    int type = image.type();
+    if (type == CV_8U || type == CV_16U || type == CV_16S || type == CV_32S) {
+        // 对于整数类型, [minRange, maxRange] 对应的范围是 [minRange, maxRange + 1.0)
+        range[1] = static_cast<float>(maxRange + 1.0);
+    } else if (type == CV_32F || type == CV_64F) {
+        // 对于浮点类型, [minRange, maxRange] 对应的范围是 [minRange, nextafter(maxRange))
+        // 使用 nextafter 确保 maxRange 值能被包含在最后一个 bin 中
+        range[1] = std::nextafter(static_cast<float>(maxRange), std::numeric_limits<float>::infinity());
+    } else {
+        // 未知类型，假设为整数
+        qWarning() << "calculateHistogram: Unhandled cv::Mat type, assuming integer range.";
+        range[1] = static_cast<float>(maxRange + 1.0);
+    }
+
+    const float* histRange = { range };
+    int channels[] = { 0 };
+
+    try {
+        cv::calcHist(&image, 1, channels, cv::Mat(), // mask
+                     hist, 1, &histSize, &histRange,
+                     true, // uniform
+                     false); // accumulate
+    } catch (const cv::Exception& e) {
+        qWarning() << "cv::calcHist failed:" << e.what();
+        return QVector<double>();
+    }
+
+    // 将 cv::Mat (float 类型) 转换为 QVector<double>
+    QVector<double> histData(numBins);
+    for (int i = 0; i < numBins; ++i) {
+        histData[i] = static_cast<double>(hist.at<float>(i));
+    }
+
+    return histData;
 }
 
 void ImageProcessor::calculateAutoWindowLevel(const QImage &image, int &min, int &max, double saturatedRatio)
@@ -190,4 +433,213 @@ QImage ImageProcessor::applyWindowLevel(const QImage &originalImage, int min, in
     }
 
     return adjustedImage;
+}
+
+QImage ImageProcessor::applyWindowLevel(const cv::Mat &originalMat, double windowLevel, double windowWidth)
+{
+    if (originalMat.empty()) {
+        return QImage();
+    }
+
+    double min = windowLevel - windowWidth / 2.0;
+    double max = windowLevel + windowWidth / 2.0;
+
+    if (min >= max) max = min + 0.001;
+
+    double alpha = 255.0 / (max - min);
+    double beta = -min * alpha;
+
+    cv::Mat eightBitMat;
+    originalMat.convertTo(eightBitMat, CV_8U, alpha, beta);
+
+    return cvMat2QImage(eightBitMat);
+}
+
+/**
+ * @brief [辅助函数] 根据曲线锚点计算单个输入灰度值对应的输出值
+ * @param key         输入的灰度值
+ * @param curvePoints 锚点 map
+ * @return            插值后的输出值 (已钳制在 0-255)
+ */
+/**
+ * @brief [辅助函数] 根据曲线锚点计算单个输入灰度值对应的输出值
+ * @param key         输入的灰度值
+ * @param curvePoints 锚点 map
+ * @return            插值后的输出值 (已钳制在 0-255)
+ */
+static inline uchar interpolateCurve(double key, const QMap<double, double> &curvePoints)
+{
+    // 1. 安全检查
+    if (curvePoints.size() < 2) {
+        return 0;
+    }
+
+    // 2. 找到 key 所在的分段 (P1 -> P2)
+    auto it_p2 = curvePoints.lowerBound(key);
+
+    // 3. 处理边界情况 (key 超出范围)
+    if (it_p2 == curvePoints.constEnd()) {
+        // 大于最后一个点
+        return static_cast<uchar>(qBound(0.0, curvePoints.last(), 255.0));
+    }
+    if (it_p2 == curvePoints.constBegin()) {
+        // 小于等于第一个点
+        return static_cast<uchar>(qBound(0.0, it_p2.value(), 255.0));
+    }
+
+    // 4. 找到所有4个控制点 (P0, P1, P2, P3)
+    auto it_p1 = it_p2 - 1;
+
+    // 5. 处理曲线端点（创建“幽灵点” P0 和 P3）
+    // 如果 P1 是第一个点，我们就复制 P1 作为 P0
+    auto it_p0 = (it_p1 == curvePoints.constBegin()) ? it_p1 : (it_p1 - 1);
+    // 如果 P2 是最后一个点，我们就复制 P2 作为 P3
+    auto it_p3 = (it_p2 + 1 == curvePoints.constEnd()) ? it_p2 : (it_p2 + 1);
+
+    // 6. 提取 Y 值 (p0_y, p1_y, p2_y, p3_y)
+    double p0_y = it_p0.value();
+    double p1_y = it_p1.value();
+    double p2_y = it_p2.value();
+    double p3_y = it_p3.value();
+
+    // 7. 特殊处理：如果我们在第一个/最后一个真实分段，
+    //    我们需要修改 P0/P3 的Y值来使曲线端点平滑
+    if (it_p1 == curvePoints.constBegin()) {
+        // 我们在第一个分段 (P1 -> P2)。
+        // 控制点为 (P0, P1, P2, P3)。
+        // 强制 P0=P2，使 P1 处的切线为 0。
+        p0_y = p2_y;
+    }
+    if (it_p2 + 1 == curvePoints.constEnd()) {
+        // 我们在最后一个分段 (P(n-1) -> Pn)。
+        // 控制点为 (P(n-2), P(n-1), Pn, P(n+1))。
+        // 强制 P(n+1) = P(n-1)，使 Pn 处的切线为 0。
+        // 在此上下文中: p3_y (P(n+1)) = p1_y (P(n-1))
+        p3_y = p1_y;
+    }
+
+    // 8. 计算 t (key 在 P1 和 P2 之间的归一化位置 0.0-1.0)
+    double t = 0.0;
+    double denom = (it_p2.key() - it_p1.key());
+    if (denom > 1e-9) { // 避免除以零
+        t = (key - it_p1.key()) / denom;
+    }
+
+    // 9. 调用样条插值
+    double result = catmullRomInterpolate(p0_y, p1_y, p2_y, p3_y, t);
+
+    // 10. 返回钳制后的 uchar 结果
+    return static_cast<uchar>(qBound(0.0, result, 255.0));
+}
+
+/**
+ * @brief 根据曲线锚点，使用 LUT 将原始 Mat 转换为 8-bit QImage
+ */
+QImage ImageProcessor::applyCurveLUT(const cv::Mat &originalMat, const QMap<double, double> &curvePoints)
+{
+    if (originalMat.empty() || curvePoints.size() < 2) {
+        return QImage();
+    }
+
+    int type = originalMat.type();
+
+    // --- 快速路径: CV_8U 和 CV_16U 可以使用 cv::LUT ---
+    if (type == CV_8U )
+    {
+        int lutSize = 256 ;
+        cv::Mat lut(1, lutSize, CV_8U);
+        uchar* lutData = lut.ptr<uchar>(0);
+
+        // 1. 预先计算整个查找表
+        auto it_lower = curvePoints.constBegin();
+        auto it_upper = it_lower + 1;
+
+        for (int i = 0; i < lutSize; ++i)
+        {
+            double key = static_cast<double>(i);
+
+            // 优化：移动迭代器区间
+            while (it_upper != curvePoints.constEnd() && key > it_upper.key()) {
+                ++it_lower;
+                ++it_upper;
+            }
+
+            // 2. 插值或钳位
+            if (it_upper == curvePoints.constEnd()) {
+                lutData[i] = static_cast<uchar>(qBound(0.0, it_lower.value(), 255.0));
+            } else {
+                double key1 = it_lower.key(), val1 = it_lower.value();
+                double key2 = it_upper.key(), val2 = it_upper.value();
+                double denom = (key2 - key1);
+                double t = (denom > 1e-9) ? ((key - key1) / denom) : 0.0;
+                double result = val1 + t * (val2 - val1);
+                lutData[i] = static_cast<uchar>(qBound(0.0, result, 255.0));
+            }
+        }
+
+        // 3. 应用 LUT
+        cv::Mat resultMat;
+        cv::LUT(originalMat, lut, resultMat);
+        return cvMat2QImage(resultMat);
+    }
+
+    // --- 兼容路径: 浮点或有符号类型 (CV_32F, CV_16S 等) ---
+    // 必须手动迭代，因为 cv::LUT 不支持这些类型
+
+    cv::Mat resultMat(originalMat.size(), CV_8U);
+    int width = originalMat.cols;
+    int height = originalMat.rows;
+
+    // 针对不同类型进行优化的逐行迭代
+    for (int y = 0; y < height; ++y) {
+        uchar* pResult = resultMat.ptr<uchar>(y);
+
+        switch(type) {
+        case CV_32F: {
+            const float* pSrc = originalMat.ptr<float>(y);
+            for (int x = 0; x < width; ++x) {
+                pResult[x] = interpolateCurve(pSrc[x], curvePoints);
+            }
+            break;
+        }
+        case CV_16U: {
+            const quint16* pSrc = originalMat.ptr<quint16>(y);
+            for (int x = 0; x < width; ++x) {
+                pResult[x] = interpolateCurve(pSrc[x], curvePoints);
+            }
+            break;
+        }
+        case CV_16S: {
+            const qint16* pSrc = originalMat.ptr<qint16>(y);
+            for (int x = 0; x < width; ++x) {
+                pResult[x] = interpolateCurve(pSrc[x], curvePoints);
+            }
+            break;
+        }
+        case CV_64F: {
+            const double* pSrc = originalMat.ptr<double>(y);
+            for (int x = 0; x < width; ++x) {
+                pResult[x] = interpolateCurve(pSrc[x], curvePoints);
+            }
+            break;
+        }
+        case CV_32S: {
+            const qint32* pSrc = originalMat.ptr<qint32>(y);
+            for (int x = 0; x < width; ++x) {
+                pResult[x] = interpolateCurve(pSrc[x], curvePoints);
+            }
+            break;
+        }
+        default: {
+            qWarning() << "applyCurveLUT: Unhandled optimized type, using slow fallback.";
+            // 极慢的 at() 回退
+            for (int x = 0; x < width; ++x) {
+                pResult[x] = interpolateCurve(originalMat.at<double>(y, x), curvePoints);
+            }
+            break;
+        }
+        }
+    }
+
+    return cvMat2QImage(resultMat);
 }

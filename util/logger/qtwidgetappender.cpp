@@ -5,7 +5,7 @@
 
 static QtWidgetAppender* g_widget_appender_instance = nullptr;
 
-QtWidgetAppender::QtWidgetAppender(QObject *parent) : QObject(parent)
+QtWidgetAppender::QtWidgetAppender(QObject *parent) :Log4Qt::AppenderSkeleton(parent)
 {
 }
 

@@ -1,4 +1,7 @@
+// gui/views/mainwindow.cpp
+
 #include "mainwindow.h"
+#include "gui/viewmodels/imageviewmodel.h"
 #include <QApplication>
 #include <QDir>
 #include <QGraphicsPixmapItem>
@@ -9,8 +12,6 @@
 #include <QFileDialog>
 #include <QMenuBar>
 #include "gui/states/genericdrawingstate.h"
-#include "gui/items/annotationrectitem.h"
-#include "gui/items/annotationellipseitem.h"
 #include "gui/widgets/logwidget.h"
 #include "util/logger/qtwidgetappender.h"
 #include "log4qt/logger.h"
@@ -18,11 +19,19 @@
 #include "gui/widgets/toprightinfowidget.h"
 #include "util/logger/logger.h"
 #include "gui/items/rectroi.h"
+#include <QFile>
+#include "gui/widgets/curveswidget.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     resize(800, 600);
+
+    // 1. 创建 ViewModel
+    m_imageViewModel = new ImageViewModel(this);
+
+    // 2. 创建 View 并注入 ViewModel
     viewer = new ImageViewer(this);
+    viewer->setViewModel(m_imageViewModel);
     setCentralWidget(viewer);
 
     // --- 添加尺寸标签 ---
@@ -59,6 +68,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     logDockWidget->setWidget(m_logWidget);
     addDockWidget(Qt::BottomDockWidgetArea, logDockWidget);
 
+    // ---  添加直方图控件 ---
+    QDockWidget *curvesDockWidget = new QDockWidget("直方图/曲线", this);
+    m_curvesWidget = new CurvesWidget(this);
+    curvesDockWidget->setWidget(m_curvesWidget);
+    addDockWidget(Qt::RightDockWidgetArea, curvesDockWidget);
+
     // 将 Appender 的信号连接到 LogWidget 的槽 ---
     connect(QtWidgetAppender::instance(), &QtWidgetAppender::messageAppended,
             m_logWidget, QOverload<const QString &, int>::of(&LogWidget::appendLogMessage),
@@ -66,7 +81,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // 将 LogWidget 的级别更改信号连接到 MainWindow 的槽 ---
     connect(m_logWidget, &LogWidget::logLevelChanged, this, &MainWindow::onLogLevelChanged);
 
-
+    connect(m_imageViewModel, &ImageViewModel::histogramDataReady,
+            m_curvesWidget, &CurvesWidget::updateHistogram);
+    connect(m_imageViewModel, &ImageViewModel::windowLevelChanged,
+            m_curvesWidget, &CurvesWidget::updateWindowLevelIndicator);
 
     // --- 菜单和工具栏 ---
     QMenu *fileMenu = menuBar()->addMenu("文件");
@@ -89,16 +107,27 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // 窗宽窗位工具
     wlAction = new QAction(QIcon(":/Resources/img/u27.png"), "窗宽窗位", this);
     wlAction->setCheckable(true);
-    // toolBar->addAction(wlAction);
+    toolBar->addAction(wlAction); // <-- 确保添加
     toolGroup->addAction(wlAction);
-    connect(wlAction, &QAction::triggered, [this]() {});
+    connect(wlAction, &QAction::triggered, [this]() {
+        m_imageViewModel->setAdjustmentMode(ImageViewModel::ModeWindowLevel);
+    });
+
+    //  曲线工具
+    m_curvesAction = new QAction(QIcon(":/Resources/img/censor-analysis.png"), "曲线", this);
+    m_curvesAction->setCheckable(true);
+    toolBar->addAction(m_curvesAction);
+    toolGroup->addAction(m_curvesAction);
+    connect(m_curvesAction, &QAction::triggered, [this]() {
+        m_imageViewModel->setAdjustmentMode(ImageViewModel::ModeCurves);
+    });
 
     // 直线工具
     lineAction = new QAction(QIcon(":/Resources/img/line_tool.png"), "直线", this);
     lineAction->setCheckable(true);
-    // toolBar->addAction(lineAction);
+    toolBar->addAction(lineAction);
     toolGroup->addAction(lineAction);
-    connect(lineAction, &QAction::triggered, [this]() { });
+    connect(lineAction, &QAction::triggered, [this]() {  viewer->setToolMode(ImageViewer::ModeDrawLine);});
 
     // 矩形工具
     rectAction = new QAction(QIcon(":/Resources/img/rect_tool.png"), "矩形", this);
@@ -112,32 +141,62 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // 椭圆工具
     ellipseAction = new QAction(QIcon(":/Resources/img/ellipse_tool.png"), "椭圆", this);
     ellipseAction->setCheckable(true);
-    // toolBar->addAction(ellipseAction);
+    toolBar->addAction(ellipseAction);
     toolGroup->addAction(ellipseAction);
     connect(ellipseAction, &QAction::triggered, [this]() {
-        // viewer->setDrawingState(new GenericDrawingState<AnnotationEllipseItem>(viewer));
+        viewer->setToolMode(ImageViewer::ModeDrawEllipse);
     });
 
     // 点测量工具
-    pointAction = new QAction(QIcon(":/Resources/img/masure.png"), "", this);
+    pointAction = new QAction(QIcon(":/Resources/img/masure.png"), "点测量", this);
     pointAction->setCheckable(true);
-    // toolBar->addAction(pointAction);
+    toolBar->addAction(pointAction);
     toolGroup->addAction(pointAction);
-    connect(pointAction, &QAction::triggered, [this]() { });
+    connect(pointAction, &QAction::triggered, [this]() { viewer->setToolMode(ImageViewer::ModeDrawPoint);});
 
     // 水平线工具
-    hLineAction = new QAction(QIcon(":/Resources/img/u26.png"), "", this);
+    hLineAction = new QAction(QIcon(":/Resources/img/u26.png"), "水平线", this);
     hLineAction->setCheckable(true);
-    // toolBar->addAction(hLineAction);
+    toolBar->addAction(hLineAction);
     toolGroup->addAction(hLineAction);
-    connect(hLineAction, &QAction::triggered, [this]() {  });
+    connect(hLineAction, &QAction::triggered, [this]() {  viewer->setToolMode(ImageViewer::ModeDrawHLine);});
 
     // 垂直线工具
-    vLineAction = new QAction(QIcon(":/Resources/img/u25.png"), "", this);
+    vLineAction = new QAction(QIcon(":/Resources/img/u25.png"), "垂直线", this);
     vLineAction->setCheckable(true);
-    // toolBar->addAction(vLineAction);
+    toolBar->addAction(vLineAction);
     toolGroup->addAction(vLineAction);
-    connect(vLineAction, &QAction::triggered, [this]() { });
+    connect(vLineAction, &QAction::triggered, [this]() { viewer->setToolMode(ImageViewer::ModeDrawVLine);});
+
+    angledLineAction = new QAction(QIcon(":/Resources/img/u28.png"), "倾斜直线", this); // u28.png 是一条斜线
+    angledLineAction->setCheckable(true);
+    toolBar->addAction(angledLineAction);
+    toolGroup->addAction(angledLineAction);
+    connect(angledLineAction, &QAction::triggered, [this]() { viewer->setToolMode(ImageViewer::ModeDrawAngledLine);});
+
+    angleAction = new QAction(QIcon(":/Resources/img/masure.png"), "角度测量", this);
+    angleAction->setCheckable(true);
+    toolBar->addAction(angleAction);
+    toolGroup->addAction(angleAction);
+    connect(angleAction, &QAction::triggered, [this]() { viewer->setToolMode(ImageViewer::ModeDrawAngle);});
+
+    polylineAction = new QAction(QIcon(":/Resources/img/pen_tool.png"), "折线", this);
+    polylineAction->setCheckable(true);
+    toolBar->addAction(polylineAction);
+    toolGroup->addAction(polylineAction);
+    connect(polylineAction, &QAction::triggered, [this]() { viewer->setToolMode(ImageViewer::ModeDrawPolyline);});
+
+    freehandAction = new QAction(QIcon(":/Resources/img/color_tool.png"), "自由轨迹", this);
+    freehandAction->setCheckable(true);
+    toolBar->addAction(freehandAction);
+    toolGroup->addAction(freehandAction);
+    connect(freehandAction, &QAction::triggered, [this]() { viewer->setToolMode(ImageViewer::ModeDrawFreehand);});
+
+    textAction = new QAction(QIcon(":/Resources/img/text_tool.png"), "文本", this);
+    textAction->setCheckable(true);
+    toolBar->addAction(textAction);
+    toolGroup->addAction(textAction);
+    connect(textAction, &QAction::triggered, [this]() { viewer->setToolMode(ImageViewer::ModeDrawText);});
 
     // 添加分隔符
     toolBar->addSeparator();
@@ -152,71 +211,60 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     // 默认选择模式（确保 pointAction 未选中）
     selectAction->setChecked(true);
+    m_imageViewModel->setAdjustmentMode(ImageViewModel::ModeWindowLevel);
 
     // --- 连接信号和槽 ---
-    // 缩放相关
+
+    // 缩放相关 (保持不变)
     connect(viewer, &ImageViewer::scaleChanged, this, &MainWindow::updateScale);
-    // connect(viewer, &ImageViewer::scaleChanged, viewer, &ImageViewer::onScaleChanged);
     connect(infoWidget, QOverload<double>::of(&TopRightInfoWidget::scaleEdited), this, &MainWindow::onScaleFromWidget);
 
-    // 像素信息
-    connect(viewer, &ImageViewer::pixelInfoChanged, this, &MainWindow::onPixelInfoChanged);
+    // 像素信息 (VM -> MainWindow)
+    connect(m_imageViewModel, &ImageViewModel::pixelInfoReady, this, &MainWindow::onPixelInfoChanged);
 
-    // 窗宽窗位相关
-    connect(infoWidget, &TopRightInfoWidget::windowChanged, viewer, &ImageViewer::onWindowChanged);
-    connect(infoWidget, &TopRightInfoWidget::levelChanged, viewer, &ImageViewer::onLevelChanged);
-    connect(infoWidget, &TopRightInfoWidget::autoWindowingToggled, viewer, &ImageViewer::setAutoWindowing);
+    // 窗宽窗位相关 (Widget -> VM)
+    connect(infoWidget, &TopRightInfoWidget::windowChanged, m_imageViewModel, &ImageViewModel::setWindowWidth);
+    connect(infoWidget, &TopRightInfoWidget::levelChanged, m_imageViewModel, &ImageViewModel::setLevel);
+    connect(infoWidget, &TopRightInfoWidget::autoWindowingToggled, m_imageViewModel, &ImageViewModel::setAutoWindowing);
 
-    connect(viewer, &ImageViewer::windowLevelChanged, this, &MainWindow::onWindowLevelChanged);
-    connect(viewer, &ImageViewer::autoWindowingToggled, this, &MainWindow::onAutoWindowingToggled);
+    // 窗宽窗位相关 (VM -> MainWindow/Widget)
+    connect(m_imageViewModel, &ImageViewModel::windowLevelChanged, this, &MainWindow::onWindowLevelChanged);
+    connect(m_imageViewModel, &ImageViewModel::autoWindowingChanged, this, &MainWindow::onAutoWindowingToggled);
 
-    // 默认选择模式
-    selectAction->setChecked(true);
+    // 图像加载 (VM -> MainWindow)
+    connect(m_imageViewModel, &ImageViewModel::imageLoaded, this, &MainWindow::onImageLoaded);
 
+    // 1. (View -> VM) CurvesWidget 请求 VM 更改
+    connect(m_curvesWidget, &CurvesWidget::requestAddPoint,
+            m_imageViewModel, &ImageViewModel::addCurvePoint);
+    connect(m_curvesWidget, &CurvesWidget::requestMovePoint,
+            m_imageViewModel, &ImageViewModel::moveCurvePoint);
+    connect(m_curvesWidget, &CurvesWidget::requestRemovePoint,
+            m_imageViewModel, &ImageViewModel::removeCurvePoint);
+
+    // 2. (VM -> View) VM 通知 CurvesWidget 曲线已更改
+    connect(m_imageViewModel, &ImageViewModel::curvePointsChanged,
+            m_curvesWidget, &CurvesWidget::updateCurve);
+
+    // 3. (VM -> View) VM 通知 UI 模式已更改
+    connect(m_imageViewModel, &ImageViewModel::adjustmentModeChanged,
+            this, &MainWindow::onAdjustmentModeChanged);
+    connect(m_imageViewModel, &ImageViewModel::adjustmentModeChanged,
+            m_curvesWidget, [this](ImageViewModel::AdjustmentMode mode){
+                m_curvesWidget->setWindowLevelMode(mode == ImageViewModel::ModeWindowLevel);
+            });
+
+    // 默认加载图像
     QString exeDir = QCoreApplication::applicationDirPath();
-    QString filePath = QDir(exeDir).filePath("Resources/img/000006.raw");
+    // 尝试加载浮点图
+    QString filePath = QDir(exeDir).filePath("Resources/img/image.fraw"); // 假设
+    if (!QFile::exists(filePath)) {
+        filePath = QDir(exeDir).filePath("Resources/img/000006.raw"); // 回退
+    }
     qDebug() << "Attempting to load from filesystem:" << filePath;
-    // 默认加载图像（委托给 viewer）
-    QString defaultPath = ":/Resources/img/000006.raw";
-    viewer->loadImage(filePath);
+    m_imageViewModel->loadImage(filePath); // 调用 ViewModel
 
-
-    // 延迟更新 UI（等待图像加载）
-    QTimer::singleShot(100, this, [this]() {
-        if (!viewer->pixmapItem() || viewer->pixmapItem()->pixmap().isNull()) return;
-
-        // 更新尺寸标签
-        int width = viewer->pixmapItem()->pixmap().width();
-        int height = viewer->pixmapItem()->pixmap().height();
-        sizeLabel->setText(QString("size: %1x%2").arg(width).arg(height));
-        sizeLabel->adjustSize();
-        sizeLabel->setVisible(true);
-
-        // 更新 infoWidget 可见性和范围（从 viewer 查询位深）
-        infoWidget->setVisible(true);
-        int bitDepth = viewer->bitDepth();
-        int maxVal = (bitDepth == 16) ? 65535 : 255;
-        infoWidget->setWindowRange(1, maxVal + 1);
-        infoWidget->setLevelRange(0, maxVal);
-
-        // 初始化 UI 到当前值（从 viewer 查询）
-        infoWidget->setWindowValue(viewer->currentWindowWidth());
-        infoWidget->setLevelValue(viewer->currentWindowLevel());
-        infoWidget->setWindowLevelText(QString("window/level: %1/%2")
-                                           .arg(viewer->currentWindowWidth())
-                                           .arg(viewer->currentWindowLevel()));
-
-        // 启用自动窗宽
-        infoWidget->setAutoWindowingChecked(true);
-        viewer->setAutoWindowing(true);  // 确保 viewer 同步
-        // LogDebug("This is a debug message.");
-        // LogWarn("This is a warning message.");
-        // LogInfo("This is a info message.");
-        // LogError_("This is an error message.");
-        // LogFatal("This is a fatal message.");
-    });
-
-    // 手动调用 resizeEvent
+    // 手动调用 resizeEvent (保持不变)
     QTimer::singleShot(0, this, [this](){ resizeEvent(nullptr); });
 }
 
@@ -224,50 +272,15 @@ MainWindow::~MainWindow() {}
 
 void MainWindow::openImage()
 {
-    QString filePath = QFileDialog::getOpenFileName(this, "打开图片", "", "Raw Binary (*.raw *.bin);;Images (*.png *.jpg *.bmp)");
+    // 添加 .fraw
+    QString filePath = QFileDialog::getOpenFileName(this, "打开图片", "", "Float Raw (*.fraw);;Raw Binary (*.raw *.bin);;Images (*.png *.jpg *.bmp)");
 
     if (filePath.isEmpty()) return;
 
     qDebug() << "Selected file path:" << filePath;
 
-    // 委托加载给 viewer
-    viewer->loadImage(filePath);
-
-    // 延迟更新 UI（等待加载完成）
-    QTimer::singleShot(100, this, [this, filePath]() {
-        if (!viewer->pixmapItem() || viewer->pixmapItem()->pixmap().isNull()) {
-            qDebug() << "Failed to load image:" << filePath;
-            sizeLabel->setVisible(false);
-            infoWidget->setVisible(false);
-            infoLabel->setText("X: N/A, Y: N/A, value: N/A");
-            return;
-        }
-
-        // 更新尺寸
-        int width = viewer->pixmapItem()->pixmap().width();
-        int height = viewer->pixmapItem()->pixmap().height();
-        sizeLabel->setText(QString("size: %1x%2").arg(width).arg(height));
-        sizeLabel->adjustSize();
-        sizeLabel->setVisible(true);
-
-        // 更新 infoWidget
-        infoWidget->setVisible(true);
-        int bitDepth = viewer->bitDepth();
-        int maxVal = (bitDepth == 16) ? 65535 : 255;
-        infoWidget->setWindowRange(1, maxVal + 1);
-        infoWidget->setLevelRange(0, maxVal);
-
-        // 从 viewer 获取当前值（加载后默认为全范围）
-        infoWidget->setWindowValue(viewer->currentWindowWidth());
-        infoWidget->setLevelValue(viewer->currentWindowLevel());
-        infoWidget->setWindowLevelText(QString("window/level: %1/%2")
-                                           .arg(viewer->currentWindowWidth())
-                                           .arg(viewer->currentWindowLevel()));
-
-        // 默认启用自动窗宽
-        infoWidget->setAutoWindowingChecked(true);
-        viewer->setAutoWindowing(true);
-    });
+    // 委托加载给 ViewModel
+    m_imageViewModel->loadImage(filePath);
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
@@ -281,12 +294,13 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     }
 }
 
-
-void MainWindow::onPixelInfoChanged(int x, int y, int value)
+// onPixelInfoChanged 现在由 ViewModel 触发 (double)
+void MainWindow::onPixelInfoChanged(int x, int y, double value)
 {
     QString infoText;
-    if (value != -1) {
-        infoText = QString("X: %1, Y: %2, value: %3").arg(x).arg(y).arg(value);
+    if (value != -1.0) {
+        // 格式化浮点数
+        infoText = QString("X: %1, Y: %2, value: %3").arg(x).arg(y).arg(value, 0, 'f', 2);
     } else {
         infoText = QString("X: %1, Y: %2, value: N/A").arg(x).arg(y);
     }
@@ -294,14 +308,19 @@ void MainWindow::onPixelInfoChanged(int x, int y, int value)
     infoLabel->adjustSize();
 }
 
-void MainWindow::onWindowLevelChanged(int width, int level)
+// onWindowLevelChanged 现在由 ViewModel 触发 (double)
+void MainWindow::onWindowLevelChanged(double width, double level)
 {
     infoWidget->setWindowValue(width);
     infoWidget->setLevelValue(level);
 
-    infoWidget->setWindowLevelText(QString("window/level: %1/%2").arg(width).arg(level));
+    // 格式化浮点数
+    infoWidget->setWindowLevelText(QString("window/level: %1 / %2")
+                                       .arg(width, 0, 'f', 2)
+                                       .arg(level, 0, 'f', 2));
 }
 
+// onAutoWindowingToggled 现在由 ViewModel 触发
 void MainWindow::onAutoWindowingToggled(bool enabled)
 {
     // 更新复选框
@@ -311,6 +330,49 @@ void MainWindow::onAutoWindowingToggled(bool enabled)
         infoWidget->uncheckAutoWindowing();
     }
 }
+
+// onImageLoaded 槽实现 (double)
+void MainWindow::onImageLoaded(double min, double max, int bits, QRectF imageRect)
+{
+    if (imageRect.isNull()) {
+        qDebug() << "Failed to load image.";
+        sizeLabel->setVisible(false);
+        infoWidget->setVisible(false);
+        infoLabel->setText("X: N/A, Y: N/A, value: N/A");
+        return;
+    }
+
+    // 更新尺寸标签
+    int width = imageRect.width();
+    int height = imageRect.height();
+    sizeLabel->setText(QString("size: %1x%2").arg(width).arg(height));
+    sizeLabel->adjustSize();
+    sizeLabel->setVisible(true);
+
+    // 更新 infoWidget
+    infoWidget->setVisible(true);
+
+    // 窗宽 (W) 的范围应该是 0 到 (真实最大值 - 真实最小值)
+    // 我们使用 0.001 作为最小值，因为窗宽不能为0
+    double dataSpan = max - min;
+    if (dataSpan <= 0) dataSpan = 1.0; // 防止 max 和 min 相等
+    infoWidget->setWindowRange(0.001, dataSpan);
+
+    // 窗位 (L) 的范围应该是 真实最小值 到 真实最大值
+    infoWidget->setLevelRange(min, max);
+
+    // 从 ViewModel 获取当前值
+    infoWidget->setWindowValue(m_imageViewModel->currentWindowWidth());
+    infoWidget->setLevelValue(m_imageViewModel->currentWindowLevel());
+
+    // 格式化
+    infoWidget->setWindowLevelText(QString("window/level: %1 / %2")
+                                       .arg(m_imageViewModel->currentWindowWidth(), 0, 'f', 2)
+                                       .arg(m_imageViewModel->currentWindowLevel(), 0, 'f', 2));
+
+    infoWidget->setAutoWindowingChecked(m_imageViewModel->isAutoWindowing());
+}
+
 
 void MainWindow::updateScale(qreal scale)
 {
@@ -330,4 +392,27 @@ void MainWindow::onLogLevelChanged(Log4Qt::Level level)
 {
     Log4Qt::Logger::rootLogger()->setLevel(level);
     // LogInfo(QString("Log level changed to %1").arg(level.toString()));
+}
+
+
+
+void MainWindow::onAdjustmentModeChanged(ImageViewModel::AdjustmentMode mode)
+{
+    if (mode == ImageViewModel::ModeWindowLevel) {
+        // 窗宽窗位模式：
+        // 1. 显示 W/L 手动输入框 (infoWidget)
+        infoWidget->setVisible(true);
+        // 2. 选中 W/L 按钮
+        if (!wlAction->isChecked()) {
+            wlAction->setChecked(true);
+        }
+    } else {
+        // 曲线模式：
+        // 1. 隐藏 W/L 手动输入框 (infoWidget)
+        infoWidget->setVisible(false);
+        // 2. 选中 Curves 按钮
+        if (!m_curvesAction->isChecked()) {
+            m_curvesAction->setChecked(true);
+        }
+    }
 }

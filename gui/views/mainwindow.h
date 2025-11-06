@@ -4,14 +4,18 @@
 #include <QMainWindow>
 #include <QAction>
 #include <QActionGroup>
+#include <QRectF>
 #include "gui/views/imageviewer.h"
 #include "gui/widgets/toprightinfowidget.h"
 #include <QLabel>
 #include "log4qt/level.h"
+#include "gui/viewmodels/imageviewmodel.h"
 
 class TopRightInfoWidget;
 class LogWidget;
-
+class ImageViewModel;
+class HistogramWidget;
+class CurvesWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -25,18 +29,21 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private slots:
-
     void openImage();
 
-    void onPixelInfoChanged(int x, int y, int value);
-    void onWindowLevelChanged(int width, int level);
+    void onPixelInfoChanged(int x, int y, double value);
+    void onWindowLevelChanged(double width, double level);
     void onAutoWindowingToggled(bool enabled);
+
+    void onImageLoaded(double min, double max, int bits, QRectF imageRect);
 
     void updateScale(qreal scale);
     void onScaleFromWidget(double scale);
     void onLogLevelChanged(Log4Qt::Level level);
+    void onAdjustmentModeChanged(ImageViewModel::AdjustmentMode mode);
 
 private:
+    ImageViewModel *m_imageViewModel;
     ImageViewer *viewer;
     QAction *openAction;
     QAction *selectAction;
@@ -47,12 +54,20 @@ private:
     QAction *pointAction;
     QAction *hLineAction;
     QAction *vLineAction;
+    QAction *angledLineAction;
+    QAction *angleAction;
+    QAction *polylineAction;
+    QAction *freehandAction;
+    QAction *textAction;
+    QAction *m_curvesAction;
     QAction *clearAction;
     QActionGroup *toolGroup;
     QLabel *sizeLabel;
     QLabel *infoLabel;
     TopRightInfoWidget *infoWidget;
     LogWidget *m_logWidget;
+    HistogramWidget *m_histogramWidget;
+    CurvesWidget *m_curvesWidget;
 };
 
 #endif // MAINWINDOW_H

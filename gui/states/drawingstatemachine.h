@@ -1,4 +1,3 @@
-// gui/states/drawingstatemachine.h
 #ifndef DRAWINGSTATEMACHINE_H
 #define DRAWINGSTATEMACHINE_H
 
@@ -6,9 +5,8 @@
 #include <QPointer>
 #include <QPointF>
 
-// 前向声明
-class ImageViewer;
-class DrawingState; // 基类
+#include "gui/views/imageviewer.h"
+class DrawingState;
 class IdleState;
 class PanningState;
 class DrawingRectState;
@@ -18,19 +16,23 @@ class QWheelEvent;
 class Handle;
 class ROI;
 class RectROI;
+class AngleDrawingState;
+class PolylineDrawingState;
+class FreehandDrawingState;
 
 class DrawingStateMachine : public QObject
 {
     Q_OBJECT
 
 public:
-    // 可选：保留枚举用于信号或外部查询
     enum StateType {
         Idle,
         Panning,
         Drawing,
-        DraggingHandle
-        // DraggingROI // 如果需要
+        DraggingHandle,
+        AngleDrawing,
+        PolylineDrawing,
+        FreehandDrawing,
     };
     Q_ENUM(StateType)
 
@@ -42,6 +44,7 @@ public:
     bool handleMouseMoveEvent(QMouseEvent *event);
     bool handleMouseReleaseEvent(QMouseEvent *event);
     bool handleWheelEvent(QWheelEvent *event);
+    bool handleMouseDoubleClickEvent(QMouseEvent *event);
 
     void setState(DrawingState* newState, bool temporary = false);
     // 状态转换
@@ -54,15 +57,17 @@ public:
     QPoint lastMousePos() const { return m_lastMousePos; }
     void setStartDragPos(const QPointF& pos) { m_startDragPos = pos; }
     QPointF startDragPos() const { return m_startDragPos; }
-
-
+    AngleDrawingState* angleDrawingState() const;
+    PolylineDrawingState* polylineDrawingState() const;
+    FreehandDrawingState* freehandDrawingState() const;
 
     void startDraggingHandle(Handle* handle, const QPointF& scenePos);
     void updateDraggingHandle(const QPointF& scenePos);
     void finishDraggingHandle();
+    bool startGenericDrawingState(ImageViewer::ToolMode tool, QMouseEvent *event); //
 
 signals:
-    void stateChanged(StateType newState); // 信号可以发送枚举类型
+    void stateChanged(StateType newState);
 
 private:
     QPointer<ImageViewer> m_viewer;
@@ -74,11 +79,13 @@ private:
     DraggingHandleState* m_draggingHandleState;
 
     // 状态相关临时数据 (由状态类通过状态机接口访问/修改)
-    QPoint m_lastMousePos;        // 视图坐标，用于平移计算
-    QPointF m_startDragPos;       // 场景坐标，用于绘制/拖动计算
-    // RectROI* m_currentlyDrawingRoi; // 正在绘制的ROI
-    Handle* m_currentlyDraggingHandle; // 正在拖动的Handle
-    ROI* m_targetRoi;             // 拖动Handle时关联的ROI
+    QPoint m_lastMousePos;
+    QPointF m_startDragPos;
+    Handle* m_currentlyDraggingHandle;
+    ROI* m_targetRoi;
+    AngleDrawingState* m_angleDrawingState;
+    PolylineDrawingState* m_polylineDrawingState;
+    FreehandDrawingState* m_freehandDrawingState;
 };
 
 #endif // DRAWINGSTATEMACHINE_H

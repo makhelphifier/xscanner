@@ -12,9 +12,10 @@
 #include "gui/states/drawingstatemachine.h"
 #include "gui/views/imageviewer.h"
 #include "gui/items/roi.h"
-
+#include "gui/items/angledlineroi.h"
 
 class ImageViewer;
+class AngledLineROI;
 class DrawingStateMachine;
 template <typename T>
 struct has_preview_item_type {
@@ -29,7 +30,6 @@ template<class FinalItem>
 class GenericDrawingState : public DrawingState
 {
 public:
-    // ++ 修改构造函数，接收 DrawingStateMachine* ++
     explicit GenericDrawingState(DrawingStateMachine* machine, QObject *parent = nullptr)
         : DrawingState(machine, parent), m_isDrawing(false), m_previewItem(nullptr)
     {
@@ -40,7 +40,6 @@ public:
         clearPreview();
     }
 
-    // ++ 修改返回类型为 bool，添加 override ++
     bool handleMousePressEvent(QMouseEvent *event) override
     {
         ImageViewer* viewer = machine()->viewer(); // 通过状态机获取 viewer
@@ -116,6 +115,10 @@ public:
                             machine()->viewer(), &ImageViewer::onExtractRegion);
                     qDebug() << "GenericDrawingState: Applied maxBounds to new ROI.";
                 }
+                if (AngledLineROI* angledLine = dynamic_cast<AngledLineROI*>(finalItem)) {
+                    angledLine->setViewer(viewer);
+                    qDebug() << "GenericDrawingState: Linked AngledLineROI to viewer.";
+                }
                 viewer->scene()->addItem(finalItem);
                 qDebug() << "GenericDrawingState: Created FinalItem.";
             } else {
@@ -123,13 +126,10 @@ public:
             }
 
             event->accept();
-            machine()->setState(DrawingStateMachine::Idle); // ++ 返回 Idle 状态 ++
+            machine()->setState(DrawingStateMachine::Idle);
             return true; // 事件已处理
         }
-        // 如果不是左键释放或者之前没有在绘制，则返回 Idle 状态（如果当前不是 Idle 的话）
-        // 这一步通常由状态机的 handleMouseReleaseEvent 统一处理，这里不需要重复
-        // machine()->setState(DrawingStateMachine::Idle);
-        return false; // 未处理
+        return false;
     }
 
     bool handleWheelEvent(QWheelEvent *event) override

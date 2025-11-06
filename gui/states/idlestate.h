@@ -1,4 +1,3 @@
-// gui/states/idlestate.h
 #ifndef IDLESTATE_H
 #define IDLESTATE_H
 

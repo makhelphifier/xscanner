@@ -1,12 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(xscanner)
 
-# 查找Qt6（包括Core、Gui、Widgets 和 SerialPort）
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets SerialPort )
-# find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets )
-# find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Qt6SerialPort)
-# 自动设置 CMAKE_AUTOMOC, CMAKE_AUTORCC, CMAKE_AUTOUIC
-# 并且会设置 CMAKE_CXX_STANDARD 17 (Qt6 默认)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets SerialPort PrintSupport )
+
 qt_standard_project_setup()
 
 # 定义源文件
@@ -16,25 +12,38 @@ set(SOURCES
     gui/items/handle.cpp
     gui/items/rectroi.cpp
     gui/widgets/logwidget.cpp
+    gui/widgets/extractedimageviewer.cpp
     service/imageprocessor.cpp
+    util/logger/logger.cpp
+    util/logger/qtwidgetappender.cpp
+    Img.qrc
     # GUI - Views
     gui/views/imageviewer.cpp
     gui/views/mainwindow.cpp
+    # GUI - ViewModels
+    gui/viewmodels/imageviewmodel.cpp
     # GUI - Widgets
     gui/widgets/toprightinfowidget.cpp
     # GUI - Items
-    gui/items/annotationellipseitem.cpp
-    gui/items/annotationhorizontallineitem.cpp
-    gui/items/annotationlineitem.cpp
-    gui/items/annotationpointitem.cpp
-    gui/items/annotationrectitem.cpp
-    gui/items/annotationverticallineitem.cpp
+    gui/items/linesegmentroi.cpp
+    gui/items/infinitelineitem.cpp
+    gui/items/infinitelinelabel.cpp
+    gui/items/angledlineroi.cpp
+    gui/items/angleroi.cpp
+    gui/items/pointmeasureitem.cpp
+    gui/items/polylineroi.cpp
+    gui/items/freehandroi.cpp
+    gui/items/annotationtextitem.cpp
+    gui/items/ellipseroi.cpp
     # GUI - States
     gui/states/drawingstate.cpp
     gui/states/drawingstatemachine.cpp
     gui/states/idlestate.cpp
     gui/states/panningstate.cpp
     gui/states/dragginghandlestate.cpp
+    gui/states/angledrawingstate.cpp
+    gui/states/polylinedrawingstate.cpp
+    gui/states/freehanddrawingstate.cpp
     # device
     device/gycustomcontrol.cpp
     device/motionwidget.cpp
@@ -45,7 +54,11 @@ set(SOURCES
     device/motioncontroller.cpp
     device/motionhelper.cpp
     device/motionmanager.cpp
+<<<<<<< HEAD
     device/paramsetwidget.cpp
+=======
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/QCustomPlot/include/qcustomplot.cpp
+>>>>>>> e16cb9c491cc4ccd1ca4df9db8863824cda2581e
 )
 
 # 定义头文件
@@ -56,26 +69,36 @@ set(HEADERS
     gui/states/genericdrawingstate.h
     gui/widgets/logwidget.h
     service/imageprocessor.h
+    util/logger/logger.h
+    util/logger/qtwidgetappender.h
     # GUI - Views
     gui/views/imageviewer.h
     gui/views/mainwindow.h
+    # GUI - ViewModels
+    gui/viewmodels/imageviewmodel.h
     # GUI - Widgets
     gui/widgets/toprightinfowidget.h
+    gui/widgets/extractedimageviewer.h
     # GUI - Items
-    gui/items/annotationellipseitem.h
-    gui/items/annotationhorizontallineitem.h
-    gui/items/annotationlineitem.h
-    gui/items/annotationpointitem.h
-    gui/items/annotationrectitem.h
-    gui/items/annotationverticallineitem.h
+    gui/items/linesegmentroi.h
+    gui/items/infinitelineitem.h
+    gui/items/infinitelinelabel.h
+    gui/items/angledlineroi.h
+    gui/items/angleroi.h
+    gui/items/pointmeasureitem.h
+    gui/items/polylineroi.h
+    gui/items/freehandroi.h
+    gui/items/annotationtextitem.h
+    gui/items/ellipseroi.h
     # GUI - States
     gui/states/drawingstate.h
     gui/states/drawingstatemachine.h
     gui/states/idlestate.h
     gui/states/panningstate.h
     gui/states/dragginghandlestate.h
-
-
+    gui/states/angledrawingstate.h
+    gui/states/polylinedrawingstate.h
+    gui/states/freehanddrawingstate.h
     # device
     device/motionwidget.h
     device/gycustomcontrol.h
@@ -91,7 +114,7 @@ set(HEADERS
 )
 
 
-# link_directories(${CMAKE_CURRENT_SOURCE_DIR}/device/thirdparty/lib/LTDMC.lib)
+
 
 if(MSVC)
     # MSVC: /utf-8 选项同时设置源字符集和执行字符集
@@ -107,6 +130,7 @@ endif()
 qt_add_executable(${PROJECT_NAME}
     ${SOURCES}
     Img.qrc
+<<<<<<< HEAD
     util/logger/logger.h util/logger/logger.cpp
     util/logger/qtwidgetappender.h util/logger/qtwidgetappender.cpp
     gui/widgets/extractedimageviewer.h gui/widgets/extractedimageviewer.cpp
@@ -117,6 +141,10 @@ qt_add_executable(${PROJECT_NAME}
     device/detectorcontroller.cpp device/detectorcontroller.h
 
 
+=======
+    gui/widgets/histogramwidget.h gui/widgets/histogramwidget.cpp
+    gui/widgets/curveswidget.h gui/widgets/curveswidget.cpp
+>>>>>>> e16cb9c491cc4ccd1ca4df9db8863824cda2581e
 )
 
 
@@ -125,6 +153,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/opencv/include
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/Log4Qt/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/QCustomPlot/include
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/device/motor/include
 
 )
@@ -135,7 +164,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt6::Gui
     Qt6::Widgets
     Qt6::SerialPort
-
+    Qt6::PrintSupport
     # 外部库
     "${CMAKE_CURRENT_SOURCE_DIR}/third_party/opencv/lib/opencv_world4120.lib"
     "${CMAKE_CURRENT_SOURCE_DIR}/third_party/Log4Qt/lib/log4qt.lib"

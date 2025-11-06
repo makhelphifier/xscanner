@@ -1,6 +1,5 @@
-// gui/states/drawingstatemachine.cpp
 #include "drawingstatemachine.h"
-#include "drawingstate.h" // 基类
+#include "drawingstate.h"
 #include "idlestate.h"
 #include "panningstate.h"
 #include "dragginghandlestate.h"
@@ -11,6 +10,15 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QDebug>
+#include "angledrawingstate.h"
+#include "polylinedrawingstate.h"
+#include "freehanddrawingstate.h"
+#include "gui/views/imageviewer.h"
+#include "gui/items/rectroi.h"
+#include "gui/items/linesegmentroi.h"
+#include "gui/items/angledlineroi.h"
+#include "gui/items/ellipseroi.h"
+#include "genericdrawingstate.h"
 
 DrawingStateMachine::DrawingStateMachine(ImageViewer* viewer, QObject *parent)
     : QObject(parent),
@@ -24,6 +32,9 @@ DrawingStateMachine::DrawingStateMachine(ImageViewer* viewer, QObject *parent)
     m_idleState = new IdleState(this, this);
     m_panningState = new PanningState(this, this);
     m_draggingHandleState = new DraggingHandleState(this, this);
+    m_angleDrawingState = new AngleDrawingState(this, this);
+    m_polylineDrawingState = new PolylineDrawingState(this, this);
+    m_freehandDrawingState = new FreehandDrawingState(this, this);
 
     // 设置初始状态
     setState(Idle);
@@ -39,7 +50,6 @@ DrawingStateMachine::~DrawingStateMachine()
         delete m_currentStatePtr;
         m_currentStatePtr = nullptr;
     }
-    // QObject 会自动管理子对象，状态实例会被删除
 }
 
 void DrawingStateMachine::setState(StateType type)
@@ -48,9 +58,11 @@ void DrawingStateMachine::setState(StateType type)
     switch (type) {
     case Idle:           nextState = m_idleState; break;
     case Panning:        nextState = m_panningState; break;
-    // case DrawingRect:    // <-- 移除
+    case AngleDrawing:   nextState = m_angleDrawingState; break;
+    case PolylineDrawing: nextState = m_polylineDrawingState; break;
+    case FreehandDrawing: nextState = m_freehandDrawingState; break;
     case DraggingHandle: nextState = m_draggingHandleState; break;
-    case Drawing:        // 'Drawing' 状态是临时的，不能用这个函数设置
+    case Drawing:
     default:
         qWarning() << "Attempted to transition to an invalid or temporary state type:" << type;
         return;
@@ -68,10 +80,8 @@ void DrawingStateMachine::setState(DrawingState* nextState, bool temporary)
         return; // 没有变化或状态无效
     }
 
-    // 退出旧状态
     if (m_currentStatePtr) {
         m_currentStatePtr->exit();
-        // 如果旧状态是临时的，立即删除
         if (m_currentStateIsTemporary) {
             qDebug() << "Deleting temporary state.";
             delete m_currentStatePtr;
@@ -84,14 +94,15 @@ void DrawingStateMachine::setState(DrawingState* nextState, bool temporary)
 
     qDebug() << "State transitioned to:" << m_currentStatePtr->metaObject()->className()
              << "(Temporary:" << temporary << ")";
-
-    // emit stateChanged(currentState()); // ++ 更新信号发射 ++
 }
 DrawingStateMachine::StateType DrawingStateMachine::currentState() const
 {
     if (m_currentStatePtr == m_idleState) return Idle;
     if (m_currentStatePtr == m_panningState) return Panning;
     if (m_currentStatePtr == m_draggingHandleState) return DraggingHandle;
+    if (m_currentStatePtr == m_polylineDrawingState) return PolylineDrawing;
+    if (m_currentStatePtr == m_freehandDrawingState) return FreehandDrawing;
+    if (m_currentStatePtr == m_angleDrawingState) return AngleDrawing;
     return Idle; // 默认或错误情况
 }
 
@@ -99,7 +110,18 @@ ImageViewer *DrawingStateMachine::viewer() const
 {
  return m_viewer;
 }
-
+AngleDrawingState* DrawingStateMachine::angleDrawingState() const
+{
+    return m_angleDrawingState;
+}
+PolylineDrawingState* DrawingStateMachine::polylineDrawingState() const
+{
+    return m_polylineDrawingState;
+}
+FreehandDrawingState* DrawingStateMachine::freehandDrawingState() const
+{
+    return m_freehandDrawingState;
+}
 // --- 事件转发 ---
 
 bool DrawingStateMachine::handleMousePressEvent(QMouseEvent *event)
@@ -159,11 +181,50 @@ void DrawingStateMachine::finishDraggingHandle()
 {
     if (!m_currentlyDraggingHandle || !m_targetRoi) return;
     qDebug() << "StateMachine: Finished dragging handle.";
-    // 获取 Handle 当前的最终位置来调用 movePoint(true)
     QPointF finalScenePos = m_currentlyDraggingHandle->scenePos();
     m_targetRoi->movePoint(m_currentlyDraggingHandle, finalScenePos, true);
     m_targetRoi->handleDragFinished(m_currentlyDraggingHandle);
-
     m_currentlyDraggingHandle = nullptr;
     m_targetRoi = nullptr;
+}
+
+bool DrawingStateMachine::handleMouseDoubleClickEvent(QMouseEvent *event)
+{
+    if (!m_currentStatePtr) return false;
+    return m_currentStatePtr->handleMouseDoubleClickEvent(event);
+}
+
+
+bool DrawingStateMachine::startGenericDrawingState(ImageViewer::ToolMode tool, QMouseEvent *event)
+{
+    DrawingState* nextState = nullptr;
+
+    //
+    switch (tool) {
+    case ImageViewer::ModeDrawRect:
+        qDebug() << "FACTORY: Creating GenericDrawingState<RectROI>";
+        nextState = new GenericDrawingState<RectROI>(this);
+        break;
+    case ImageViewer::ModeDrawLine:
+        qDebug() << "FACTORY: Creating GenericDrawingState<LineSegmentROI>";
+        nextState = new GenericDrawingState<LineSegmentROI>(this);
+        break;
+    case ImageViewer::ModeDrawAngledLine:
+        qDebug() << "FACTORY: Creating GenericDrawingState<AngledLineROI>";
+        nextState = new GenericDrawingState<AngledLineROI>(this);
+        break;
+    case ImageViewer::ModeDrawEllipse:
+        qDebug() << "FACTORY: Creating GenericDrawingState<EllipseROI>";
+        nextState = new GenericDrawingState<EllipseROI>(this);
+        break;
+    default:
+        return false; // 不处理其他模式
+    }
+
+    if (nextState) {
+        //
+        setState(nextState, true); // 标记为临时状态
+        return nextState->handleMousePressEvent(event);
+    }
+    return false;
 }

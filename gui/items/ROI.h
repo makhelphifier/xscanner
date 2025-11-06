@@ -122,7 +122,7 @@ public:
     Handle* addScaleHandle(const QPointF& pos, const QPointF& center, const QString& name = QString());
     Handle* addRotateHandle(const QPointF& pos, const QPointF& center, const QString& name = QString());
     Handle* addScaleRotateHandle(const QPointF& pos, const QPointF& center, const QString& name = QString());
-    void removeHandle(Handle* handle);
+    virtual void removeHandle(Handle* handle);
     QList<Handle*> getHandles() const;
 
     QRectF boundingRect() const override;
@@ -200,21 +200,17 @@ protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
 
     // --- 内部方法 (Internal Methods) ---
+    QPen m_currentPen;
 
-    /**
-     * @brief 由句柄（Handle）在被拖动时调用，以更新ROI的状态
-     * @param handle 被移动的句柄
-     * @param scenePos 句柄在场景坐标系中的新位置
-     */
-    // virtual void movePoint(Handle* handle, const QPointF& scenePos, bool finish = true);
+    // 句柄
+    QList<HandleInfo> m_handles;
+    ROIState m_preMoveState;       // 移动前的状态，用于取消操作
+    QVariant m_maxBounds;
+    // 吸附步进值
+    qreal m_translateSnapSize = 1.0;
+    qreal m_scaleSnapSize = 1.0;
+    qreal m_rotateSnapAngle = 15.0; // 默认吸附到15度
 
-    /**
-     * @brief 在状态（位置、大小、角度）改变后调用此函数
-     * @param finish 如果为true，则发射 regionChangeFinished 信号
-     */
-    void stateChanged(bool finish = true);
-
-private:
     /**
      * @brief 将一个值吸附到最近的 'snapSize' 倍数上
      * @param value 原始值
@@ -223,6 +219,20 @@ private:
      */
     qreal snapValue(qreal value, qreal snapSize) const;
 
+    /**
+     * @brief [私有] 获取句柄在m_handles列表中的索引
+     * @param handle 要查找的句柄指针
+     * @return 索引值，如果未找到则返回-1
+     */
+    int indexOfHandle(Handle* handle) const;
+
+    /**
+     * @brief 在状态（位置、大小、角度）改变后调用此函数
+     * @param finish 如果为true，则发射 regionChangeFinished 信号
+     */
+    void stateChanged(bool finish = true);
+
+private:
     /**
      * @brief 检查一个给定的ROI状态是否完全位于maxBounds之内
      * @param state 要检查的状态
@@ -240,33 +250,16 @@ private:
      */
     Handle* addHandle(HandleInfo info);
 
-    /**
-     * @brief 获取句柄在列表中的索引
-     */
-    int indexOfHandle(Handle* handle) const;
-
-
 private:
     // --- 核心数据成员 ---
     ROIState m_state;              // 当前状态
     ROIState m_lastState;   // 上一次发出信号时的状态
-    ROIState m_preMoveState;       // 移动前的状态，用于取消操作
-    QVariant m_maxBounds;
-
-    // 吸附步进值
-    qreal m_translateSnapSize = 1.0;
-    qreal m_scaleSnapSize = 1.0;
-    qreal m_rotateSnapAngle = 15.0; // 默认吸附到15度
 
     // 外观
     QPen m_pen;
     QPen m_hoverPen;
     QPen m_handlePen;
     QPen m_handleHoverPen;
-    QPen m_currentPen;
-
-    // 句柄
-    QList<HandleInfo> m_handles;
 
     // 配置标志
     bool m_movable = true;
