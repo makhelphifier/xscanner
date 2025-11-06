@@ -7,10 +7,9 @@
 #include <QDebug>
 
 AngleROI::AngleROI(const QPointF& pA, const QPointF& pV, const QPointF& pB, QGraphicsItem* parent)
-    : ROI(QPointF(0,0), QSizeF(1,1), parent)// 基类 pos/size 无意义
+    : ROI(QPointF(0,0), QSizeF(1,1), parent)
 {
     // 1. 创建手柄 (FreeHandle 不受 ROI 的 pos/size 影响)
-    // 注意：我们使用 pV 作为 ROI 的基类 pos，但意义不大
     // setPos(pV);
     m_hA = addFreeHandle(pA);
     m_hV = addFreeHandle(pV);
@@ -37,11 +36,6 @@ AngleROI::AngleROI(const QPointF& pA, const QPointF& pV, const QPointF& pB, QGra
 
 void AngleROI::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    // 基类 ROI::paint() 会画一个矩形，我们不希望那样
-    // 所以这个函数重写后保持为空。
-    // 所有的绘制都由子项 m_lineVA, m_lineVB, m_label 完成。
-
-    // (可选) 绘制圆弧
     painter->setRenderHint(QPainter::Antialiasing, true);
     painter->setPen(QPen(Qt::yellow, 1, Qt::DashLine));
     painter->setBrush(Qt::NoBrush);
@@ -134,11 +128,10 @@ void AngleROI::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
     menu.addAction(angleText)->setEnabled(false);
     menu.addSeparator();
 
-    // 添加 "提取" (尽管对角度测量意义不大，但保持一致性)
-    QAction* extractAction = menu.addAction("提取区域 (Extract Region)");
-    connect(extractAction, &QAction::triggered, this, [this]() {
-        emit extractRequested(this);
-    });
+    // QAction* extractAction = menu.addAction("提取区域 (Extract Region)");
+    // connect(extractAction, &QAction::triggered, this, [this]() {
+    //     emit extractRequested(this);
+    // });
 
     menu.exec(event->screenPos());
 }

@@ -103,11 +103,9 @@ void InfiniteLineItem::onViewChanged()
 
 QRectF InfiniteLineItem::boundingRect() const
 {
-    // 如果缓存有效，直接返回
     if (m_cachedBoundingRect.isValid()) {
         return m_cachedBoundingRect;
     }
-    // 否则，重新计算
     m_cachedBoundingRect = calculateBoundingRect();
     return m_cachedBoundingRect;
 }
@@ -147,13 +145,10 @@ void InfiniteLineItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* 
     Q_UNUSED(widget);
 
     painter->setPen(m_currentPen);
-
-    // 我们在 calculateBoundingRect() 中计算的矩形
     QRectF rect = boundingRect();
 
     painter->drawLine(QPointF(rect.left(), 0), QPointF(rect.right(), 0));
 }
-// --- 事件处理 ---
 
 void InfiniteLineItem::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
@@ -197,9 +192,6 @@ void InfiniteLineItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         } else {
             newValue = newPos.y();
         }
-
-        // (此处可以添加 bounds 检查)
-
         setValue(newValue);
 
         emit positionChanged(newValue);

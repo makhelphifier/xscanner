@@ -198,8 +198,6 @@ bool DrawingStateMachine::handleMouseDoubleClickEvent(QMouseEvent *event)
 bool DrawingStateMachine::startGenericDrawingState(ImageViewer::ToolMode tool, QMouseEvent *event)
 {
     DrawingState* nextState = nullptr;
-
-    //
     switch (tool) {
     case ImageViewer::ModeDrawRect:
         qDebug() << "FACTORY: Creating GenericDrawingState<RectROI>";

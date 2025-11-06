@@ -1,6 +1,6 @@
 #include "infinitelinelabel.h"
 #include "infinitelineitem.h"
-#include "gui/views/imageviewer.h" // 需要访问 viewer
+#include "gui/views/imageviewer.h"
 #include <QDebug>
 #include <QGraphicsItem>
 
@@ -26,7 +26,6 @@ InfiniteLineLabel::InfiniteLineLabel(InfiniteLineItem* parent)
     // 设置初始文本
     updateText(m_line->value());
 
-    // --- 关键连接 ---
     // 1. 当线条位置改变时，更新文本
     connect(m_line, &InfiniteLineItem::positionChanged, this, &InfiniteLineLabel::updateText);
 }

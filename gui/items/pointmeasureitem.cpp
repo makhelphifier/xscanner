@@ -1,5 +1,3 @@
-// gui/items/pointmeasureitem.cpp
-
 #include "pointmeasureitem.h"
 #include "gui/views/imageviewer.h"
 #include <QGraphicsSceneMouseEvent>
@@ -25,8 +23,6 @@ PointMeasureItem::PointMeasureItem(const QPointF& pos, ImageViewModel* viewModel
 
     m_textOffset = QPointF(MARKER_SIZE + 2, -MARKER_SIZE);
 
-    // 在构造函数中立即计算初始文本
-    // 这会设置 m_text
     updateTextAndPos(pos);
 }
 

@@ -1,14 +1,8 @@
 #include "rectroi.h"
 #include "handle.h"
-
-#include "util/logger/logger.h"
-
 RectROI::RectROI(const QPointF& pos, const QSizeF& size, bool centered, bool sideScalers, QGraphicsItem* parent)
     : ROI(pos, size, parent)
 {
-    // log_("sss");
-    // QPointF center = centered ? QPointF(0.5, 0.5) : QPointF(0.0, 0.0);
-
     // 添加四个角的 scale handle（对角缩放）
     addScaleHandle({0.0, 0.0}, {1.0, 1.0});
     addScaleHandle({1.0, 0.0}, {0.0, 1.0});  // 右下角, 锚点: 左上角
@@ -21,8 +15,6 @@ RectROI::RectROI(const QPointF& pos, const QSizeF& size, bool centered, bool sid
     addScaleHandle({0.5, 0.0}, {0.5, 1.0}); // 下中, 锚点: 上中
     // 旋转手柄 (旋转中心总是 0.5, 0.5)
     addRotateHandle({0.5, -0.1}, {0.5, 0.5});
-
-
 }
 
 RectROI::RectROI(const QPointF &startPoint, const QPointF &endPoint, QGraphicsItem *parent)

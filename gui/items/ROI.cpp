@@ -1,7 +1,5 @@
-
 #include "roi.h"
 #include "handle.h"
-
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
 #include <QStyleOptionGraphicsItem>
@@ -758,25 +756,20 @@ bool ROI::isStateWithinBounds(const ROIState& state) const
  */
 QImage ROI::getArrayRegion(const QImage& sourceImage, bool useInterpolation) const
 {
-    // 1. 验证输入
     if (sourceImage.isNull() || m_state.size.isEmpty()) {
-        return QImage(); // 返回空图像
+        return QImage();
     }
 
-    // 2. 优化：无旋转的情况 (使用 QImage::copy)
     if (qFuzzyCompare(m_state.angle, 0.0)) {
         QRectF srcRect(m_state.pos, m_state.size);
-        // 确保裁剪区域在源图像范围内
         srcRect = srcRect.intersected(sourceImage.rect());
         return sourceImage.copy(srcRect.toRect());
     }
 
     // 3. 带旋转的情况 (使用 QPainter)
-    // 3a. 创建目标图像，尺寸为ROI的尺寸，格式与源相同
     QImage destImage(m_state.size.toSize(), sourceImage.format());
-    destImage.fill(Qt::black); // 填充背景（0值）
+    destImage.fill(Qt::black);
 
-    // 3b. 创建 QPainter
     QPainter painter(&destImage);
 
     // 3c. 设置插值（高质量）
@@ -837,29 +830,15 @@ void ROI::setRotateSnap(qreal angle)
 
 
 /**
- * @brief [重写] 处理右键菜单事件
+ * @brief  处理右键菜单事件
  */
 void ROI::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
-    // 创建一个菜单
     QMenu menu;
-
-    // 添加 "提取区域" 动作
     QAction* extractAction = menu.addAction("提取区域 (Extract Region)");
-
-    // 连接动作的 triggered() 信号到 lambda 表达式
     connect(extractAction, &QAction::triggered, this, [this]() {
-        // 发射信号，通知外界 (ImageViewer) 来处理
         emit extractRequested(this);
     });
-
-    // (未来可以在此添加 "删除" 动作)
-    // QAction* deleteAction = menu.addAction("删除");
-    // connect(deleteAction, &QAction::triggered, this, [this](){
-    //     emit removeRequested(this);
-    // });
-
-    // 在鼠标光标位置显示菜单
     menu.exec(event->screenPos());
 }
 
@@ -879,21 +858,13 @@ void ROI::removeHandle(Handle* handle)
         return;
     }
 
-    // 1. 从 m_handles 列表中移除
     m_handles.removeAt(index);
-
-    // 2. 通知 Handle 它已与此 ROI 断开连接
     handle->disconnectROI(this); //
-
-    // 3. 检查 Handle 是否已成为“孤儿”（不再被任何ROI拥有）
     if (handle->rois().isEmpty()) { //
-        // 如果是，则安全地删除它
-        // 因为 Handle 的父项是 ROI，删除它会自动将其从场景中移除
         qDebug() << "ROI::removeHandle: Deleting orphaned handle.";
         delete handle;
     }
 }
-
 
 /**
  * @brief 添加一个自由句柄（仅移动，不影响ROI）
@@ -906,19 +877,15 @@ Handle* ROI::addFreeHandle(const QPointF& pos, const QString& name)
     HandleInfo info;
     info.type = HandleType::Free;
     info.pos = pos; // 存储绝对局部坐标
-    // info.name = name; // C++ HandleInfo 结构体中没有 name 成员
     return addHandle(info);
 }
 
-
-
 /**
- * @brief [新增] 设置ROI的默认画笔
+ * @brief  设置ROI的默认画笔
  */
 void ROI::setPen(const QPen& pen)
 {
     m_pen = pen;
-    // m_mouseHovering 是在 hoverEnter/LeaveEvent 中设置的
     if (!m_mouseHovering) {
         m_currentPen = m_pen;
         update();
@@ -926,7 +893,7 @@ void ROI::setPen(const QPen& pen)
 }
 
 /**
- * @brief [新增] 设置ROI的悬停画笔
+ * @brief  设置ROI的悬停画笔
  */
 void ROI::setHoverPen(const QPen& pen)
 {

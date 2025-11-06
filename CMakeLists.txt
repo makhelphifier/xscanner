@@ -54,11 +54,8 @@ set(SOURCES
     device/motioncontroller.cpp
     device/motionhelper.cpp
     device/motionmanager.cpp
-<<<<<<< HEAD
     device/paramsetwidget.cpp
-=======
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/QCustomPlot/include/qcustomplot.cpp
->>>>>>> e16cb9c491cc4ccd1ca4df9db8863824cda2581e
 )
 
 # 定义头文件
@@ -130,21 +127,18 @@ endif()
 qt_add_executable(${PROJECT_NAME}
     ${SOURCES}
     Img.qrc
-<<<<<<< HEAD
-    util/logger/logger.h util/logger/logger.cpp
-    util/logger/qtwidgetappender.h util/logger/qtwidgetappender.cpp
-    gui/widgets/extractedimageviewer.h gui/widgets/extractedimageviewer.cpp
     device/paramsetwidget.h
-    device/detectorcommand.cpp device/detectorcommand.h device/detectormanager.cpp device/detectormanager.h device/ieventreceiver.h device/utility.h device/winevent.cpp device/winevent.h
+    device/detectorcommand.cpp device/detectorcommand.h
+    device/detectormanager.cpp device/detectormanager.h
+    device/ieventreceiver.h device/utility.h
+    device/winevent.cpp device/winevent.h
     device/irayfpdadapter.cpp device/irayfpdadapter.h
     device/drivercontroller.cpp device/drivercontroller.h
     device/detectorcontroller.cpp device/detectorcontroller.h
 
 
-=======
     gui/widgets/histogramwidget.h gui/widgets/histogramwidget.cpp
     gui/widgets/curveswidget.h gui/widgets/curveswidget.cpp
->>>>>>> e16cb9c491cc4ccd1ca4df9db8863824cda2581e
 )
 
 

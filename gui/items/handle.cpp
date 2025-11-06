@@ -1,5 +1,3 @@
-// handle.cpp
-
 #include "handle.h"
 #include "roi.h"
 #include <QPainter>
@@ -13,7 +11,6 @@ static const QMap<HandleType, QPair<int, qreal>> handle_shapes = {
     {HandleType::Scale,       {4, M_PI / 4.0}}, // 方形
     {HandleType::Rotate,      {12, 0}},         // 多边形（近似圆形）
     {HandleType::ScaleRotate, {12, 0}},
-    // 可以添加更多类型
 };
 
 Handle::Handle(HandleType type, QGraphicsItem* parent)
@@ -26,7 +23,7 @@ Handle::Handle(HandleType type, QGraphicsItem* parent)
     m_currentPen = m_pen;          // 初始画笔
     setFlag(QGraphicsItem::ItemIsSelectable);
     buildPath();
-    setZValue(10); // 确保 Handle 在 ROI 之上
+    setZValue(10);
 }
 
 void Handle::connectROI(ROI* roi)
@@ -111,12 +108,9 @@ void Handle::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         event->ignore();
         return;
     }
-    // 获取句柄在场景中的新位置
     QPointF newScenePos = event->scenePos();
 
-    // 通知所有关联的ROI，它们需要根据句柄的新位置进行更新
     for (ROI* roi : qAsConst(m_rois)) {
-        // 调用ROI的movePoint方法，让ROI处理这个移动
         roi->movePoint(this, newScenePos, false);
     }
     event->accept();
@@ -128,7 +122,7 @@ void Handle::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
         m_isMoving = false;
         QPointF finalScenePos = event->scenePos();
         for (ROI* roi : qAsConst(m_rois)) {
-            roi->movePoint(this, finalScenePos, true); // 最后一次更新，并标记为“完成”
+            roi->movePoint(this, finalScenePos, true);
             roi->handleDragFinished(this);
         }
         event->accept();
@@ -159,10 +153,8 @@ void Handle::buildPath()
 
 void Handle::setPosInROI(const QPointF& relativePos, const QSizeF& roiSize)
 {
-    // 计算在 ROI 坐标系中的绝对位置
     QPointF roiCoordPos(relativePos.x() * roiSize.width(),
                         relativePos.y() * roiSize.height());
-    // 调用 QGraphicsItem::setPos 设置相对于父项(ROI)的位置
     setPos(roiCoordPos);
 }
 
@@ -176,20 +168,11 @@ void Handle::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
     QMenu menu;
     QAction* deleteAction = menu.addAction("删除句柄 (Delete Handle)");
-
-    // 连接信号：当点击“删除”时
     connect(deleteAction, &QAction::triggered, this, [this]() {
-        // 重要：我们必须迭代 m_rois 的一个*副本*
-        // 因为在循环中，roi->removeHandle(this) 会修改 m_rois 列表
         QList<ROI*> rois_copy = m_rois;
-
         for (ROI* roi : rois_copy) {
-            // 通知所有关联的 ROI 将此句柄移除
             roi->removeHandle(this);
         }
-
-        // 此时，removeHandle 逻辑（在 ROI.cpp 中实现）
-        // 应该已经安全地删除了这个句柄
     });
 
     menu.exec(event->screenPos());

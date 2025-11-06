@@ -18,14 +18,12 @@ AngleDrawingState::AngleDrawingState(DrawingStateMachine* machine, QObject *pare
 
 AngleDrawingState::~AngleDrawingState()
 {
-    // 确保退出时清理
     clearPreviewItems();
 }
 
 void AngleDrawingState::enter()
 {
     qDebug() << "Entering AngleDrawingState";
-    // 重置点击计数器和预览
     m_clickCount = 0;
     clearPreviewItems();
 }
@@ -33,7 +31,6 @@ void AngleDrawingState::enter()
 void AngleDrawingState::exit()
 {
     qDebug() << "Exiting AngleDrawingState";
-    // 确保在离开状态时（例如切换工具）清理预览
     clearPreviewItems();
 }
 
@@ -41,7 +38,7 @@ bool AngleDrawingState::handleMousePressEvent(QMouseEvent *event)
 {
     ImageViewer* viewer = machine()->viewer();
     if (!viewer || event->button() != Qt::LeftButton) {
-        return false; // 只响应左键
+        return false;
     }
 
     QPointF scenePos = viewer->mapToScene(event->pos());
