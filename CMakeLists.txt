@@ -139,6 +139,16 @@ qt_add_executable(${PROJECT_NAME}
 
     gui/widgets/histogramwidget.h gui/widgets/histogramwidget.cpp
     gui/widgets/curveswidget.h gui/widgets/curveswidget.cpp
+    device_3100A/IMotionController.h
+    device_3100A/C3100AAxisDef.h
+    device_3100A/C3100AControls.h
+    device_3100A/c3100amotionwidget.h device_3100A/c3100amotionwidget.cpp
+
+
+
+
+
+
 )
 
 
