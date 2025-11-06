@@ -17,6 +17,7 @@
 #include <QComboBox>
 #include <QLineEdit>
 #include <QRadioButton>
+#include "paramsetwidget.h"
 
 
 GongYTabWidget::GongYTabWidget(QWidget *parent)
@@ -145,9 +146,21 @@ QWidget *GongYTabWidget::createFirstTab()
 
 QWidget *GongYTabWidget::createSecondTab()
 {
-    QWidget *tab = new QWidget(this);
-    QVBoxLayout *layout = new QVBoxLayout(tab);
+    QWidget *tab = new QWidget();
 
+    QGroupBox* layOut = new QGroupBox(tab);
+    layOut->setGeometry(QRect(10,10,450,400));
+    layOut->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
+
+    QVBoxLayout* layout1 = new QVBoxLayout(layOut);
+    layOut->setLayout(layout1);  // 显式设置布局
+
+    DetectorWidget* pWidget = new DetectorWidget();
+    layout1->addWidget(pWidget);
+    // XrayWidget* pXrayWidget = new XrayWidget();
+    // layout1->addWidget(pXrayWidget);
+    // MotorWidget* pMotorwidget = new MotorWidget();
+    // layout1->addWidget(pMotorwidget);
     // // 添加各种控件，演示网格布局
     // qlabel *label1 = new qlabel(tr("用户名:"), tab);
     // qlineedit *usernameedit = new qlineedit(tab);
@@ -206,7 +219,6 @@ QWidget *GongYTabWidget::createSecondTab()
     // layout->setspacing(15);
     // layout->setcontentsmargins(20, 20, 20, 20);
 
-    tab->setLayout(layout);
     return tab;
 }
 

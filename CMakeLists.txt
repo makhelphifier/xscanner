@@ -45,6 +45,7 @@ set(SOURCES
     device/motioncontroller.cpp
     device/motionhelper.cpp
     device/motionmanager.cpp
+    device/paramsetwidget.cpp
 )
 
 # 定义头文件
@@ -86,6 +87,7 @@ set(HEADERS
     device/motiondef.h
     device/motionhelper.h
     device/motionmanager.h
+
 )
 
 
@@ -108,6 +110,12 @@ qt_add_executable(${PROJECT_NAME}
     util/logger/logger.h util/logger/logger.cpp
     util/logger/qtwidgetappender.h util/logger/qtwidgetappender.cpp
     gui/widgets/extractedimageviewer.h gui/widgets/extractedimageviewer.cpp
+    device/paramsetwidget.h
+    device/detectorcommand.cpp device/detectorcommand.h device/detectormanager.cpp device/detectormanager.h device/ieventreceiver.h device/utility.h device/winevent.cpp device/winevent.h
+    device/irayfpdadapter.cpp device/irayfpdadapter.h
+    device/drivercontroller.cpp device/drivercontroller.h
+    device/detectorcontroller.cpp device/detectorcontroller.h
+
 
 )
 
