@@ -7,6 +7,7 @@
 #include "device_3100A/C3100AControls.h"
 
 class IMotionController;
+class IXrayController;
 class QVBoxLayout;
 class QGridLayout;
 class QGroupBox;
@@ -24,7 +25,7 @@ class C3100AMotionWidget : public QTabWidget
     Q_OBJECT
 
 public:
-    explicit C3100AMotionWidget(IMotionController* controller, QWidget *parent = nullptr);
+    explicit C3100AMotionWidget(IMotionController* motionCtl, IXrayController* xrayCtl, QWidget *parent = nullptr);
     ~C3100AMotionWidget();
 
 public slots:
@@ -45,6 +46,9 @@ private slots:
     void slotVoltageChanged();
     void slotCurrentChanged();
 
+    void slot_xrayStatusUpdated(bool warmup, bool locked, bool on, int kv, int ua);
+    void slot_xrayConnected(bool connected);
+
 private:
     void setupTabs();
     QWidget* createMotionTab();
@@ -53,7 +57,8 @@ private:
     void createAcquireGroup(QVBoxLayout* pGroupLayout);
     void createAxisRow(QGridLayout* layout, int row, int axisId, const QString& name);
 
-    IMotionController* m_controller;
+    IMotionController* m_motionController = nullptr;
+    IXrayController* m_xrayController = nullptr;
     QFont m_font;
 
     QLineEdit* m_pVolCurrentLineEdit = nullptr;

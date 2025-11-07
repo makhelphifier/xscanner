@@ -44,17 +44,7 @@ set(SOURCES
     gui/states/angledrawingstate.cpp
     gui/states/polylinedrawingstate.cpp
     gui/states/freehanddrawingstate.cpp
-    # device
-    device/gycustomcontrol.cpp
-    device/motionwidget.cpp
-    device/serialcomunicator.cpp
-    device/xraysource.cpp
-    device/motioncommand.cpp
-    device/motionconfig.cpp
-    device/motioncontroller.cpp
-    device/motionhelper.cpp
-    device/motionmanager.cpp
-    device/paramsetwidget.cpp
+
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/QCustomPlot/include/qcustomplot.cpp
 )
 
@@ -96,17 +86,7 @@ set(HEADERS
     gui/states/angledrawingstate.h
     gui/states/polylinedrawingstate.h
     gui/states/freehanddrawingstate.h
-    # device
-    device/motionwidget.h
-    device/gycustomcontrol.h
-    device/serialcomunicator.h
-    device/xraysource.h
-    device/motioncommand.h
-    device/motionconfig.h
-    device/motioncontroller.h
-    device/motiondef.h
-    device/motionhelper.h
-    device/motionmanager.h
+
 
 )
 
@@ -127,14 +107,6 @@ endif()
 qt_add_executable(${PROJECT_NAME}
     ${SOURCES}
     Img.qrc
-    device/paramsetwidget.h
-    device/detectorcommand.cpp device/detectorcommand.h
-    device/detectormanager.cpp device/detectormanager.h
-    device/ieventreceiver.h device/utility.h
-    device/winevent.cpp device/winevent.h
-    device/irayfpdadapter.cpp device/irayfpdadapter.h
-    device/drivercontroller.cpp device/drivercontroller.h
-    device/detectorcontroller.cpp device/detectorcontroller.h
 
 
     gui/widgets/histogramwidget.h gui/widgets/histogramwidget.cpp
@@ -143,6 +115,8 @@ qt_add_executable(${PROJECT_NAME}
     device_3100A/C3100AAxisDef.h
     device_3100A/C3100AControls.h
     device_3100A/c3100amotionwidget.h device_3100A/c3100amotionwidget.cpp
+    device_3100A/IXrayController.h
+    device_3100A/c3100axraycontroller.h device_3100A/c3100axraycontroller.cpp
 
 
 

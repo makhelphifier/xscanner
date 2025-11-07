@@ -1,7 +1,7 @@
 #include "gui/views/mainwindow.h"
 #include "util/logger/logger.h"
 #include "gui/widgets/logwidget.h"
-#include "device/motionwidget.h"
+// #include "device/motionwidget.h"
 #include "util/logger/qtwidgetappender.h"
 #include "log4qt/logger.h"
 #include "log4qt/patternlayout.h"
@@ -12,6 +12,8 @@
 #include <QPlainTextEdit>
 #include "device_3100A/IMotionController.h"
 #include "device_3100A/C3100AMotionWidget.h"
+#include "device_3100A/IXrayController.h"
+#include "device_3100A/C3100AXrayController.h"
 
 int main(int argc, char *argv[])
 {
@@ -23,12 +25,14 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-     GongYTabWidget *colleagueWindow = new GongYTabWidget();
-    // colleagueWindow->setWindowTitle("扫描设备控制");
-     colleagueWindow->show();
+    //  GongYTabWidget *colleagueWindow = new GongYTabWidget();
+    // // colleagueWindow->setWindowTitle("扫描设备控制");
+    //  colleagueWindow->show();
 
      IMotionController* pController = nullptr;
-     C3100AMotionWidget *my3100UI = new C3100AMotionWidget(pController);
+     IXrayController* pXrayController = new C3100AXrayController(&a); // 实例化X射线控制器
+     pXrayController->connectDevice("COM1");
+     C3100AMotionWidget *my3100UI = new C3100AMotionWidget(pController, pXrayController);
      my3100UI->setWindowTitle("3100A 扫描设备控制");
      my3100UI->show();
 

@@ -1,5 +1,6 @@
 #include "device_3100A/C3100AMotionWidget.h"
 #include "device_3100A/IMotionController.h"
+#include "device_3100A/IXrayController.h"
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QGroupBox>
@@ -17,9 +18,10 @@ struct MotionCtrlInfoPlaceholder {
     double axEncPos;
 };
 
-C3100AMotionWidget::C3100AMotionWidget(IMotionController* controller, QWidget *parent)
+C3100AMotionWidget::C3100AMotionWidget(IMotionController* motionCtl, IXrayController* xrayCtl, QWidget *parent)
     : QTabWidget(parent),
-    m_controller(controller),
+    m_motionController(motionCtl),
+    m_xrayController(xrayCtl),
     m_font("Microsoft YaHei", 9)
 {
     // 1. 设置Tab风格
@@ -30,10 +32,19 @@ C3100AMotionWidget::C3100AMotionWidget(IMotionController* controller, QWidget *p
     setupTabs();
 
     // 3. 连接来自控制器的信号 (功能实现)
-    if (m_controller)
+    if (m_motionController)
     {
-        // connect(m_controller, &IMotionController::sig_axisDataUpdated,
+        // connect(m_motionController, &IMotionController::sig_axisDataUpdated,
         //         this, &C3100AMotionWidget::slot_DataChanged);
+    }
+
+    // 连接 XRay 控制器信号
+    if (m_xrayController)
+    {
+        connect(m_xrayController, &IXrayController::sig_statusUpdated,
+                this, &C3100AMotionWidget::slot_xrayStatusUpdated);
+        connect(m_xrayController, &IXrayController::sig_connected,
+                this, &C3100AMotionWidget::slot_xrayConnected);
     }
 }
 
@@ -234,7 +245,6 @@ void C3100AMotionWidget::createMotionControlGroup(QVBoxLayout* pGroupLayout)
     createAxisRow(pGridLayout, row++, AXIS_3100A::XRAY_Z,            tr("射线源 Z 轴"));
     createAxisRow(pGridLayout, row++, AXIS_3100A::Detector_R,       tr("探测器 R 轴"));
     createAxisRow(pGridLayout, row++, AXIS_3100A::Detector_W,        tr("探测器Theta轴"));
-    // createAxisRow(pGridLayout, row++, AXIS_3100A::Detector_W,        tr("探测器 W (θ) 轴"));
     createAxisRow(pGridLayout, row++, AXIS_3100A::objectiveTable_X1, tr("载物台 X 轴"));
     createAxisRow(pGridLayout, row++, AXIS_3100A::objectiveTable_Y1, tr("载物台 Y 轴"));
     createAxisRow(pGridLayout, row++, AXIS_3100A::Detector_Z1,       tr("探测器 Z1 轴"));
@@ -334,14 +344,13 @@ void C3100AMotionWidget::slotAxisPosChanged()
     qDebug() << "[UI] slotAxisPosChanged: Axis" << axisId << "target set to" << pos;
 
     // 2. (功能) 调用控制器接口
-    if (m_controller) {
-        // m_controller->ptpMove(axisId, pos);
+    if (m_motionController) {
+        // m_motionController->ptpMove(axisId, pos);
     }
 }
 
 void C3100AMotionWidget::slotAxisSpeedChanged()
 {
-    // <--- 修改：sender() 现在是 C3100ADoubleSpinBox 本身
     auto* spinBox = qobject_cast<C3100ADoubleSpinBox*>(sender());
     if (!spinBox) return;
 
@@ -362,9 +371,9 @@ void C3100AMotionWidget::slotLeftButtonPress()
     qDebug() << "[UI] slotLeftButtonPress: Axis" << axisId << "JOG negative";
 
     // (功能)
-    if (m_controller) {
+    if (m_motionController) {
         // double speed = m_speedWidgets[axisId]->value(); // 获取速度
-        // m_controller->jogMove(axisId, false); // false = 反向
+        // m_motionController->jogMove(axisId, false); // false = 反向
     }
 }
 
@@ -377,9 +386,9 @@ void C3100AMotionWidget::slotRightButtonPress()
     qDebug() << "[UI] slotRightButtonPress: Axis" << axisId << "JOG positive";
 
     // (功能)
-    if (m_controller) {
+    if (m_motionController) {
         // double speed = m_speedWidgets[axisId]->value(); // 获取速度
-        // m_controller->jogMove(axisId, true); // true = 正向
+        // m_motionController->jogMove(axisId, true); // true = 正向
     }
 }
 
@@ -392,8 +401,8 @@ void C3100AMotionWidget::slotButtonRelease()
     qDebug() << "[UI] slotButtonRelease: Axis" << axisId << "JOG stop";
 
     // (功能) JOG 释放 = 停止
-    if (m_controller) {
-        // m_controller->stopAxis(axisId);
+    if (m_motionController) {
+        // m_motionController->stopAxis(axisId);
     }
 }
 
@@ -406,8 +415,8 @@ void C3100AMotionWidget::slotHomeButtonClick()
     qDebug() << "[UI] slotHomeButtonClick: Axis" << axisId << "HOMING";
 
     // (功能)
-    if (m_controller) {
-        // m_controller->homeAxis(axisId);
+    if (m_motionController) {
+        // m_motionController->homeAxis(axisId);
     }
 }
 
@@ -420,8 +429,8 @@ void C3100AMotionWidget::slotStopButtonClick()
     qDebug() << "[UI] slotStopButtonClick: Axis" << axisId << "STOP";
 
     // (功能)
-    if (m_controller) {
-        // m_controller->stopAxis(axisId);
+    if (m_motionController) {
+        // m_motionController->stopAxis(axisId);
     }
 }
 
@@ -430,8 +439,8 @@ void C3100AMotionWidget::slotStopAllBtnClick()
     qDebug() << "[UI] slotStopAllBtnClick: STOP ALL AXES";
 
     // (功能)
-    if (m_controller) {
-        // m_controller->stopAll();
+    if (m_motionController) {
+        // m_motionController->stopAll();
     }
 }
 
@@ -439,8 +448,8 @@ void C3100AMotionWidget::slotXonClick()
 {
     qDebug() << "[UI] XON Clicked";
     // (功能)
-    if (m_controller) {
-        // m_controller->setXrayOn();
+    if (m_xrayController) {
+        m_xrayController->setXrayOn();
     }
 }
 
@@ -448,8 +457,8 @@ void C3100AMotionWidget::slotXoffClick()
 {
     qDebug() << "[UI] XOFF Clicked";
     // (功能)
-    if (m_controller) {
-        // m_controller->setXrayOff();
+    if (m_xrayController) {
+        m_xrayController->setXrayOff();
     }
 }
 
@@ -462,8 +471,8 @@ void C3100AMotionWidget::slotVoltageChanged()
     qDebug() << "[UI] Voltage Target set to:" << kv;
 
     // (功能)
-    if (m_controller) {
-        // m_controller->setVoltage(kv);
+    if (m_xrayController) {
+        m_xrayController->setVoltage(kv);
     }
 }
 
@@ -475,7 +484,41 @@ void C3100AMotionWidget::slotCurrentChanged()
     int ua = spinBox->value();
     qDebug() << "[UI] Current Target set to:" << ua;
 
-    if (m_controller) {
-        // m_controller->setCurrent(ua);
+    if (m_xrayController) {
+        m_xrayController->setCurrent(ua);
+    }
+}
+
+void C3100AMotionWidget::slot_xrayStatusUpdated(bool warmup, bool locked, bool on, int kv, int ua)
+{
+    // 更新UI
+    m_pVolCurrentLineEdit->setText(QString::number(kv));
+    m_pCurrentCurrentLineEdit->setText(QString::number(ua));
+
+    m_pWarmUp->setChecked(warmup);
+    m_pInterLock->setChecked(locked);
+    m_pXray->setChecked(on);
+
+    // 根据互锁和预热状态，控制XON/XOFF按钮的可用性
+    // 只有在 (已连接) 且 (未互锁) 且 (未预热) 时才允许操作
+    bool canOperate = m_pConnect->isChecked() && !locked && !warmup;
+    m_pButtonXon->setEnabled(canOperate && !on);
+    m_pButtonXoff->setEnabled(canOperate && on);
+}
+
+void C3100AMotionWidget::slot_xrayConnected(bool connected)
+{
+    m_pConnect->setChecked(connected);
+
+    // 连接断开时，禁用所有操作按钮
+    if (!connected)
+    {
+        m_pButtonXon->setEnabled(false);
+        m_pButtonXoff->setEnabled(false);
+    }
+    else
+    {
+        // 刚连接上时，按钮状态取决于第一次状态更新
+        // (也可以在这里主动请求一次状态，但C3100AXrayController的定时器会处理)
     }
 }

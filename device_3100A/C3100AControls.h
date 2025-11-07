@@ -2,15 +2,14 @@
 #define C3100ACUSTOMCONTROL_H
 
 #include <QDoubleSpinBox>
-#include <QSpinBox> // <--- 新增
+#include <QSpinBox>
 #include <QPushButton>
 #include <QLineEdit>
 #include <QValidator>
-#include "device_3100A/C3100AAxisDef.h" // 包含我们的轴定义
+#include "device_3100A/C3100AAxisDef.h"
 
 /**
- * @brief 封装了轴ID的 QDoubleSpinBox (3100A专用)
- * 命名为 C3100ADoubleSpinBox 以避免和 3600 项目的 GyDoubleSpinBox 冲突
+ * @brief 封装了轴ID的 QDoubleSpinBox
  */
 class C3100ADoubleSpinBox : public QDoubleSpinBox
 {
@@ -20,15 +19,10 @@ public:
     explicit C3100ADoubleSpinBox(int axisId = -1, QWidget *parent = nullptr)
         : QDoubleSpinBox(parent), m_axisId(axisId)
     {
-        // 模仿老UI (motionctrlwidget.cpp) 和 3600 UI 的风格
         // setButtonSymbols(QAbstractSpinBox::NoButtons);
-        setDecimals(2); // 老UI使用4位小数
-        setRange(-99999.0, 99999.0); // 设置一个合理的默认范围
-
-        // 确保只能输入浮点数
+        setDecimals(4);
+        setRange(-99999.0, 99999.0);
         lineEdit()->setValidator(new QDoubleValidator(-99999.0, 99999.0, 4, this));
-
-        // 设置默认字体（可选，保持风格统一）
         setFont(QFont("Microsoft YaHei", 9));
     }
 
@@ -40,8 +34,7 @@ private:
 };
 
 /**
- * @brief 封装了轴ID的 QPushButton (3100A专用)
- * 命名为 C3100APushButton 以避免和 3600 项目的 GyPushButton 冲突
+ * @brief 封装了轴ID的 QPushButton
  */
 class C3100APushButton : public QPushButton
 {
@@ -63,8 +56,7 @@ private:
 };
 
 /**
- * @brief 3100A专用的 QSpinBox (用于电压/电流)
- * 模仿同事的 GyIntSpinBox
+ * @brief  QSpinBox (用于电压/电流)
  */
 class C3100AIntSpinBox : public QSpinBox
 {
@@ -74,12 +66,11 @@ public:
     explicit C3100AIntSpinBox(QWidget *parent = nullptr)
         : QSpinBox(parent)
     {
-        // 模仿 3600 UI 的风格
         // setButtonSymbols(QAbstractSpinBox::NoButtons);
-        setRange(0, 9999); // 设置一个合理的默认范围
+        setRange(0, 9999);
         setFont(QFont("Microsoft YaHei", 9));
     }
 };
 
 
-#endif // C3100ACUSTOMCONTROL_H
+#endif
