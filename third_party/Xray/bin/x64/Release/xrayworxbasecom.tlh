@@ -1,0 +1,3533 @@
+﻿// Created by Microsoft (R) C/C++ Compiler Version 14.16.27045.0 (c1b592dc).
+//
+// c:\x-ray worx\samples\connectionsamplecom\x64\release\xrayworxbasecom.tlh
+//
+// C++ source equivalent of type library XRAYWorXBaseCOM.tlb
+// compiler-generated file created 01/06/22 at 10:12:11 - DO NOT EDIT!
+
+//
+// Cross-referenced type libraries:
+//
+//  #import "C:\Windows\Microsoft.NET\Framework\v4.0.30319\mscorlib.tlb"
+//
+
+#pragma once
+#pragma pack(push, 8)
+
+#include <comdef.h>
+
+namespace XRAYWorXBaseCOM {
+
+//
+// Forward references and typedefs
+//
+
+struct __declspec(uuid("4f9165af-924c-42c2-8cc2-8fd3436c4456"))
+/* LIBID */ __XRAYWorXBaseCOM;
+struct __declspec(uuid("6f9a1fa7-82c7-40f4-8797-20202db27185"))
+/* dispinterface */ IAccessibleBaseCOM;
+struct __declspec(uuid("fb235634-4303-4590-ba43-cbc7f76edc2f"))
+/* dispinterface */ IAccessibleBaseCOMEvents;
+struct /* coclass */ AccessibleBaseCOM;
+struct __declspec(uuid("8a9c5db7-69f8-4046-971a-1be7c9166ceb"))
+/* dispinterface */ IAutoCommandInfosCOM;
+struct __declspec(uuid("c5e3dc06-468f-4249-9afc-65b729871ece"))
+/* dispinterface */ IAutoCommandInfosCOMEvents;
+struct /* coclass */ AutoCommandInfosCOM;
+struct __declspec(uuid("e0d7222c-7368-4570-85b3-03911e6df95a"))
+/* dispinterface */ ICenterOffsetCOM;
+struct __declspec(uuid("92f71b6a-b4f7-4bfd-9503-7db8ca8bed68"))
+/* dispinterface */ ICenterOffsetCOMEvents;
+struct /* coclass */ CenterOffsetCOM;
+struct __declspec(uuid("49c4c8a3-6b3d-4d17-983d-d19be081313c"))
+/* dispinterface */ ICommandInfoMonitorCOM;
+struct __declspec(uuid("b1cb53bd-6401-4f0a-8e97-c35df4c3837b"))
+/* dispinterface */ ICommandInfoMonitorCOMEvents;
+struct /* coclass */ CommandInfoMonitorCOM;
+struct __declspec(uuid("554f38a3-5f53-4073-9825-7a90adea990a"))
+/* dispinterface */ ICoilDataCOM;
+struct __declspec(uuid("1ab03e80-a94d-4de4-bb45-aab2477ef289"))
+/* dispinterface */ ICoilDataCOMEvents;
+struct /* coclass */ CoilDataCOM;
+struct __declspec(uuid("5e84b3db-e89f-4ea3-a2da-c3948d9548d7"))
+/* dispinterface */ IConditioningCOM;
+struct __declspec(uuid("497e5d64-7597-4394-a567-c832456c194e"))
+/* dispinterface */ IConditioningCOMEvents;
+struct /* coclass */ ConditioningCOM;
+struct /* coclass */ ConditioningSettingsCOM;
+struct __declspec(uuid("f910a0d1-9c58-4621-85e3-d9fdd445e484"))
+/* dispinterface */ IDataModuleCOM;
+struct __declspec(uuid("106d6857-c591-4e8d-b2d9-4f29bad54dda"))
+/* dispinterface */ IDataModuleCOMEvents;
+struct /* coclass */ DataModuleCOM;
+struct __declspec(uuid("c8871221-2701-4c54-aa0b-3b017cf730b0"))
+/* dispinterface */ IDataModuleProviderCOM;
+struct __declspec(uuid("2741709d-2611-4ac8-809b-14240501a2de"))
+/* dispinterface */ IDataModuleProviderCOMEvents;
+struct /* coclass */ DataModuleProviderCOM;
+enum DispIds;
+struct __declspec(uuid("6c1f6429-1c27-4030-a1bc-dacbe244f130"))
+/* dispinterface */ IErrorInfoCOM;
+struct /* coclass */ ErrorInfoCOM;
+struct __declspec(uuid("2fe70bdb-dab6-46fb-87e4-260131924ec0"))
+/* dispinterface */ IFilamentAdjustCOM;
+struct __declspec(uuid("929c3240-145e-4d7c-a43b-a1123ad26ac0"))
+/* dispinterface */ IFilamentAdjustCOMEvents;
+struct /* coclass */ FilamentAdjustCOM;
+struct __declspec(uuid("0549317f-66fb-40d8-b381-eba7b1c79a5f"))
+/* dispinterface */ ICorrectionFactorInfoCOM;
+struct /* coclass */ CorrectionFactorInfoCOM;
+struct __declspec(uuid("f32fa78d-b33c-4eb4-b1a9-d83cc62fca00"))
+/* dispinterface */ IFilamentStatsCOM;
+struct __declspec(uuid("f85dda08-24bf-458c-b3bc-13b0dad545fd"))
+/* dispinterface */ IFilamentStatsCOMEvents;
+struct /* coclass */ FilamentStatsCOM;
+struct __declspec(uuid("a8ea7591-0414-4e78-8218-8459e25a66be"))
+/* dispinterface */ IFlashoverCOM;
+struct __declspec(uuid("0fee245b-4eee-40d2-957e-9f2995bf9b6d"))
+/* dispinterface */ IFlashoverCOMEvents;
+struct /* coclass */ FlashoverCOM;
+struct __declspec(uuid("d6949394-80ca-416f-9c7f-62f906d2a26b"))
+/* dispinterface */ IFloatIntervalCOM;
+struct __declspec(uuid("71b36287-2522-45dc-a1ad-f354c6c47eb2"))
+/* dispinterface */ IFloatIntervalCOMEvents;
+struct /* coclass */ FloatIntervalCOM;
+struct __declspec(uuid("329809a0-8f41-469f-960d-8fe292b814c2"))
+/* dispinterface */ IInitialStartupCOM;
+struct __declspec(uuid("27c97f3f-781d-4177-a771-030d750cc7c7"))
+/* dispinterface */ IInitialStartupCOMEvents;
+struct /* coclass */ InitialStartupCOM;
+struct __declspec(uuid("ed74d648-9291-429c-873c-eb460f33b8b8"))
+/* dispinterface */ IInt32IntervalCOM;
+struct __declspec(uuid("e07b6d08-c3de-4154-804b-1b8d1bc23652"))
+/* dispinterface */ IInt32IntervalCOMEvents;
+struct /* coclass */ Int32IntervalCOM;
+struct __declspec(uuid("0a850822-56ba-4ccc-b56e-0872731ddec4"))
+/* dispinterface */ IIpEntryCOM;
+struct /* coclass */ IpEntryCOM;
+struct __declspec(uuid("3ef44d49-c6ce-44fa-872e-2798e88bb57d"))
+/* dispinterface */ ILeakageCurrentTestCOM;
+struct __declspec(uuid("1d21cc13-d74d-41d3-9212-334edfe3a2c3"))
+/* dispinterface */ ILeakageCurrentTestCOMEvents;
+struct /* coclass */ LeakageCurrentTestCOM;
+struct __declspec(uuid("bcd05870-c724-46e2-bdda-b2c27bd69215"))
+/* dispinterface */ IPrewarningCOM;
+struct __declspec(uuid("08d25262-1b91-474e-bbf5-a3ec3d65c3e0"))
+/* dispinterface */ IPrewarningCOMEvents;
+struct /* coclass */ PrewarningCOM;
+struct __declspec(uuid("3e51cf1c-bc88-427d-8d03-8b355dd7fd12"))
+/* dispinterface */ ILimitableAutoCommandCOM;
+struct __declspec(uuid("fdb0df8b-5a12-41b3-9ef5-dd1f32bd9071"))
+/* dispinterface */ ILimitableAutoCommandCOMEvents;
+struct /* coclass */ LimitableAutoCommandCOM;
+struct __declspec(uuid("62be7cd7-04df-41fd-a4f8-99241ae84d0f"))
+/* dispinterface */ IResultCOM;
+struct __declspec(uuid("fecc30bc-05b4-47db-a19c-8ba677f7c116"))
+/* dispinterface */ IResultFloatCOM;
+struct __declspec(uuid("ef3e1242-ea55-48ed-925a-050da4e5bcdb"))
+/* dispinterface */ IResultObjectCOM;
+struct /* coclass */ ResultCOM;
+struct /* coclass */ ResultObjectCOM;
+struct /* coclass */ ResultFloatCOM;
+struct __declspec(uuid("49a3cb52-561e-457f-9e92-42bb66c0d839"))
+/* dispinterface */ IStandbyCOM;
+struct __declspec(uuid("d9c376c9-dfbe-43c4-b8a2-098c661c6fb1"))
+/* dispinterface */ IStandbyCOMEvents;
+struct /* coclass */ StandbyCOM;
+struct __declspec(uuid("3d726fa3-6350-4cd8-8486-7da8b56f55fe"))
+/* dispinterface */ IStatusWordCOM;
+struct __declspec(uuid("f8cc9480-2319-411a-ac7f-306e09eae6ac"))
+/* dispinterface */ IStatusWordCOMEvents;
+struct /* coclass */ StatusWordCOM;
+struct __declspec(uuid("e6f672e8-f232-4212-b75b-5912883675a8"))
+/* dispinterface */ ITriggerCommandCOM;
+struct __declspec(uuid("68adc55b-f1e5-4278-a76a-80105fea8828"))
+/* dispinterface */ ITriggerCommandCOMEvents;
+struct /* coclass */ TriggerCommandCOM;
+struct __declspec(uuid("3524cb05-d3c8-40d1-9704-9cf2c07b6ff3"))
+/* dispinterface */ ITubeAutoCommandCOM;
+struct __declspec(uuid("5bf71da6-63ff-45f6-862f-d200d65beae3"))
+/* dispinterface */ ITubeAutoCommandCOMEvents;
+struct /* coclass */ TubeAutoCommandCOM;
+struct __declspec(uuid("5ec76a55-cd82-4005-9957-088e69ebb566"))
+/* dispinterface */ ITubeFlagCOM;
+struct __declspec(uuid("5306d72c-d212-4585-a4c0-379d79f4c795"))
+/* dispinterface */ ITubeFlagCOMEvents;
+struct /* coclass */ TubeFlagCOM;
+struct __declspec(uuid("65aef259-859f-4ce6-a814-80c2af3031f6"))
+/* dispinterface */ ITubeInterfaceEvents;
+struct __declspec(uuid("057e419a-5a2b-49bd-b261-9032a632c0f7"))
+/* dispinterface */ ITubeInterface;
+struct /* coclass */ TubeInterfaceCOM;
+struct __declspec(uuid("1d502101-e904-44d6-aef5-1a0a8e638898"))
+/* dispinterface */ ITubeInterfaceEventArgsCOM;
+struct /* coclass */ TubeInterfaceEventArgsCOM;
+struct __declspec(uuid("251b44c0-b4cb-4aee-b1d0-d3f451d54c98"))
+/* dispinterface */ ITubeListCOM;
+struct __declspec(uuid("e81cbe79-18c2-4a49-b0aa-f6c7a4c2f720"))
+/* dispinterface */ ITubeListCOMEvents;
+struct /* coclass */ TubeListCOM;
+struct __declspec(uuid("adf3aa33-1646-4ea9-a837-af9d85826a19"))
+/* dispinterface */ ITubeListMonitorString;
+struct __declspec(uuid("215e9505-32bf-4d5d-aa3b-b927f54d9618"))
+/* dispinterface */ ITubeListMonitorStringEvents;
+struct /* coclass */ TubeListMonitorString;
+struct __declspec(uuid("5230f5f7-bf04-40d9-a666-8d3229bff407"))
+/* dispinterface */ ITubeLoaderCOM;
+struct __declspec(uuid("6567f393-a81d-4326-9f07-199ede9ac833"))
+/* dispinterface */ IDataModuleLoaderCOM;
+struct /* coclass */ TubeLoaderCOM;
+struct __declspec(uuid("4c28d999-5a08-47af-9998-71dd88c4d62f"))
+/* dispinterface */ ITubeMonitorXoc;
+struct __declspec(uuid("10f2e4f4-ac87-4195-95a0-4fb09e08298b"))
+/* dispinterface */ ITubeMonitorXocEvents;
+struct /* coclass */ TubeMonitorXoc;
+struct __declspec(uuid("c262253c-5d58-4af7-8960-8f0c876d2fd1"))
+/* dispinterface */ ITubeCommandXoc;
+struct __declspec(uuid("4e4a30c3-c320-43b5-97a1-36040b0e722a"))
+/* dispinterface */ ITubeCommandXocEvents;
+struct /* coclass */ TubeCommandXoc;
+struct __declspec(uuid("d286fcd5-41b1-494d-b50e-36f6509492a1"))
+/* dispinterface */ ITubeCommandBool;
+struct __declspec(uuid("20ec5ff8-89b3-4541-bd5d-e13a0a5383fd"))
+/* dispinterface */ ITubeCommandBoolEvents;
+struct /* coclass */ TubeCommandBool;
+struct __declspec(uuid("01a2eab2-a34d-404c-a3f7-893c43f4aa48"))
+/* dispinterface */ ITubeMonitorSingle;
+struct __declspec(uuid("58b0cc92-b8f6-457e-a38e-fb360952556f"))
+/* dispinterface */ ITubeMonitorSingleEvents;
+struct /* coclass */ TubeMonitorSingle;
+struct __declspec(uuid("fb18797e-759e-4814-a624-dc8d8f2c4986"))
+/* dispinterface */ ITubeCommandSingle;
+struct __declspec(uuid("e138f00b-93fa-4efb-bb4b-5d6214b31e31"))
+/* dispinterface */ ITubeCommandSingleEvents;
+struct /* coclass */ TubeCommandSingle;
+struct __declspec(uuid("abab3cf8-64a5-4261-bd7d-574c2beb9691"))
+/* dispinterface */ ITubeMonitorBool;
+struct __declspec(uuid("ab2c1031-a704-4d95-8a68-32e98873adaf"))
+/* dispinterface */ ITubeMonitorBoolEvents;
+struct /* coclass */ TubeMonitorBool;
+struct __declspec(uuid("92e09f6b-64f4-47c5-84a3-3c6dbf2943b0"))
+/* dispinterface */ ITubeServiceMonitorCOM;
+struct __declspec(uuid("e7a90dad-2af5-427c-9f0f-dbeaa003db8c"))
+/* dispinterface */ ITubeServiceMonitorCOMEvents;
+struct /* coclass */ TubeServiceMonitorCOM;
+struct __declspec(uuid("e9e8efd6-48a1-40ab-8e2a-5517579f3011"))
+/* dispinterface */ ITubeTimeSpanCOM;
+struct __declspec(uuid("a4983c4d-1ca9-4172-a05a-cdfb482a59d0"))
+/* dispinterface */ ITubeTimeSpanCOMEvents;
+struct /* coclass */ TubeTimeSpanCOM;
+struct __declspec(uuid("258dd57d-fe46-4ab4-90d2-8cb076d20994"))
+/* dispinterface */ ITurbopumpCommandCOM;
+struct __declspec(uuid("62580c9c-94ef-4ceb-bab7-5c3f2ccd44cf"))
+/* dispinterface */ ITurbopumpCommandCOMEvents;
+struct /* coclass */ TurbopumpCommandCOM;
+struct /* coclass */ DebugLog;
+struct __declspec(uuid("6bc338e6-5c89-3f46-869c-63abd4885b6e"))
+/* dual interface */ _DebugLog;
+
+//
+// Smart pointer typedef declarations
+//
+
+_COM_SMARTPTR_TYPEDEF(IAccessibleBaseCOM, __uuidof(IAccessibleBaseCOM));
+_COM_SMARTPTR_TYPEDEF(IAccessibleBaseCOMEvents, __uuidof(IAccessibleBaseCOMEvents));
+_COM_SMARTPTR_TYPEDEF(IAutoCommandInfosCOM, __uuidof(IAutoCommandInfosCOM));
+_COM_SMARTPTR_TYPEDEF(IAutoCommandInfosCOMEvents, __uuidof(IAutoCommandInfosCOMEvents));
+_COM_SMARTPTR_TYPEDEF(ICenterOffsetCOM, __uuidof(ICenterOffsetCOM));
+_COM_SMARTPTR_TYPEDEF(ICenterOffsetCOMEvents, __uuidof(ICenterOffsetCOMEvents));
+_COM_SMARTPTR_TYPEDEF(ICommandInfoMonitorCOM, __uuidof(ICommandInfoMonitorCOM));
+_COM_SMARTPTR_TYPEDEF(ICommandInfoMonitorCOMEvents, __uuidof(ICommandInfoMonitorCOMEvents));
+_COM_SMARTPTR_TYPEDEF(ICoilDataCOM, __uuidof(ICoilDataCOM));
+_COM_SMARTPTR_TYPEDEF(ICoilDataCOMEvents, __uuidof(ICoilDataCOMEvents));
+_COM_SMARTPTR_TYPEDEF(IConditioningCOM, __uuidof(IConditioningCOM));
+_COM_SMARTPTR_TYPEDEF(IConditioningCOMEvents, __uuidof(IConditioningCOMEvents));
+_COM_SMARTPTR_TYPEDEF(IDataModuleCOM, __uuidof(IDataModuleCOM));
+_COM_SMARTPTR_TYPEDEF(IDataModuleCOMEvents, __uuidof(IDataModuleCOMEvents));
+_COM_SMARTPTR_TYPEDEF(IDataModuleProviderCOM, __uuidof(IDataModuleProviderCOM));
+_COM_SMARTPTR_TYPEDEF(IDataModuleProviderCOMEvents, __uuidof(IDataModuleProviderCOMEvents));
+_COM_SMARTPTR_TYPEDEF(IErrorInfoCOM, __uuidof(IErrorInfoCOM));
+_COM_SMARTPTR_TYPEDEF(IFilamentAdjustCOM, __uuidof(IFilamentAdjustCOM));
+_COM_SMARTPTR_TYPEDEF(IFilamentAdjustCOMEvents, __uuidof(IFilamentAdjustCOMEvents));
+_COM_SMARTPTR_TYPEDEF(ICorrectionFactorInfoCOM, __uuidof(ICorrectionFactorInfoCOM));
+_COM_SMARTPTR_TYPEDEF(IFilamentStatsCOM, __uuidof(IFilamentStatsCOM));
+_COM_SMARTPTR_TYPEDEF(IFilamentStatsCOMEvents, __uuidof(IFilamentStatsCOMEvents));
+_COM_SMARTPTR_TYPEDEF(IFlashoverCOM, __uuidof(IFlashoverCOM));
+_COM_SMARTPTR_TYPEDEF(IFlashoverCOMEvents, __uuidof(IFlashoverCOMEvents));
+_COM_SMARTPTR_TYPEDEF(IFloatIntervalCOM, __uuidof(IFloatIntervalCOM));
+_COM_SMARTPTR_TYPEDEF(IFloatIntervalCOMEvents, __uuidof(IFloatIntervalCOMEvents));
+_COM_SMARTPTR_TYPEDEF(IInitialStartupCOM, __uuidof(IInitialStartupCOM));
+_COM_SMARTPTR_TYPEDEF(IInitialStartupCOMEvents, __uuidof(IInitialStartupCOMEvents));
+_COM_SMARTPTR_TYPEDEF(IInt32IntervalCOM, __uuidof(IInt32IntervalCOM));
+_COM_SMARTPTR_TYPEDEF(IInt32IntervalCOMEvents, __uuidof(IInt32IntervalCOMEvents));
+_COM_SMARTPTR_TYPEDEF(IIpEntryCOM, __uuidof(IIpEntryCOM));
+_COM_SMARTPTR_TYPEDEF(ILeakageCurrentTestCOM, __uuidof(ILeakageCurrentTestCOM));
+_COM_SMARTPTR_TYPEDEF(ILeakageCurrentTestCOMEvents, __uuidof(ILeakageCurrentTestCOMEvents));
+_COM_SMARTPTR_TYPEDEF(IPrewarningCOM, __uuidof(IPrewarningCOM));
+_COM_SMARTPTR_TYPEDEF(IPrewarningCOMEvents, __uuidof(IPrewarningCOMEvents));
+_COM_SMARTPTR_TYPEDEF(ILimitableAutoCommandCOM, __uuidof(ILimitableAutoCommandCOM));
+_COM_SMARTPTR_TYPEDEF(ILimitableAutoCommandCOMEvents, __uuidof(ILimitableAutoCommandCOMEvents));
+_COM_SMARTPTR_TYPEDEF(IResultCOM, __uuidof(IResultCOM));
+_COM_SMARTPTR_TYPEDEF(IResultFloatCOM, __uuidof(IResultFloatCOM));
+_COM_SMARTPTR_TYPEDEF(IResultObjectCOM, __uuidof(IResultObjectCOM));
+_COM_SMARTPTR_TYPEDEF(IStandbyCOM, __uuidof(IStandbyCOM));
+_COM_SMARTPTR_TYPEDEF(IStandbyCOMEvents, __uuidof(IStandbyCOMEvents));
+_COM_SMARTPTR_TYPEDEF(IStatusWordCOM, __uuidof(IStatusWordCOM));
+_COM_SMARTPTR_TYPEDEF(IStatusWordCOMEvents, __uuidof(IStatusWordCOMEvents));
+_COM_SMARTPTR_TYPEDEF(ITriggerCommandCOM, __uuidof(ITriggerCommandCOM));
+_COM_SMARTPTR_TYPEDEF(ITriggerCommandCOMEvents, __uuidof(ITriggerCommandCOMEvents));
+_COM_SMARTPTR_TYPEDEF(ITubeAutoCommandCOM, __uuidof(ITubeAutoCommandCOM));
+_COM_SMARTPTR_TYPEDEF(ITubeAutoCommandCOMEvents, __uuidof(ITubeAutoCommandCOMEvents));
+_COM_SMARTPTR_TYPEDEF(ITubeFlagCOM, __uuidof(ITubeFlagCOM));
+_COM_SMARTPTR_TYPEDEF(ITubeFlagCOMEvents, __uuidof(ITubeFlagCOMEvents));
+_COM_SMARTPTR_TYPEDEF(ITubeInterfaceEvents, __uuidof(ITubeInterfaceEvents));
+_COM_SMARTPTR_TYPEDEF(ITubeInterface, __uuidof(ITubeInterface));
+_COM_SMARTPTR_TYPEDEF(ITubeInterfaceEventArgsCOM, __uuidof(ITubeInterfaceEventArgsCOM));
+_COM_SMARTPTR_TYPEDEF(ITubeListCOM, __uuidof(ITubeListCOM));
+_COM_SMARTPTR_TYPEDEF(ITubeListCOMEvents, __uuidof(ITubeListCOMEvents));
+_COM_SMARTPTR_TYPEDEF(ITubeListMonitorString, __uuidof(ITubeListMonitorString));
+_COM_SMARTPTR_TYPEDEF(ITubeListMonitorStringEvents, __uuidof(ITubeListMonitorStringEvents));
+_COM_SMARTPTR_TYPEDEF(ITubeLoaderCOM, __uuidof(ITubeLoaderCOM));
+_COM_SMARTPTR_TYPEDEF(IDataModuleLoaderCOM, __uuidof(IDataModuleLoaderCOM));
+_COM_SMARTPTR_TYPEDEF(ITubeMonitorXoc, __uuidof(ITubeMonitorXoc));
+_COM_SMARTPTR_TYPEDEF(ITubeMonitorXocEvents, __uuidof(ITubeMonitorXocEvents));
+_COM_SMARTPTR_TYPEDEF(ITubeCommandXoc, __uuidof(ITubeCommandXoc));
+_COM_SMARTPTR_TYPEDEF(ITubeCommandXocEvents, __uuidof(ITubeCommandXocEvents));
+_COM_SMARTPTR_TYPEDEF(ITubeCommandBool, __uuidof(ITubeCommandBool));
+_COM_SMARTPTR_TYPEDEF(ITubeCommandBoolEvents, __uuidof(ITubeCommandBoolEvents));
+_COM_SMARTPTR_TYPEDEF(ITubeMonitorSingle, __uuidof(ITubeMonitorSingle));
+_COM_SMARTPTR_TYPEDEF(ITubeMonitorSingleEvents, __uuidof(ITubeMonitorSingleEvents));
+_COM_SMARTPTR_TYPEDEF(ITubeCommandSingle, __uuidof(ITubeCommandSingle));
+_COM_SMARTPTR_TYPEDEF(ITubeCommandSingleEvents, __uuidof(ITubeCommandSingleEvents));
+_COM_SMARTPTR_TYPEDEF(ITubeMonitorBool, __uuidof(ITubeMonitorBool));
+_COM_SMARTPTR_TYPEDEF(ITubeMonitorBoolEvents, __uuidof(ITubeMonitorBoolEvents));
+_COM_SMARTPTR_TYPEDEF(ITubeServiceMonitorCOM, __uuidof(ITubeServiceMonitorCOM));
+_COM_SMARTPTR_TYPEDEF(ITubeServiceMonitorCOMEvents, __uuidof(ITubeServiceMonitorCOMEvents));
+_COM_SMARTPTR_TYPEDEF(ITubeTimeSpanCOM, __uuidof(ITubeTimeSpanCOM));
+_COM_SMARTPTR_TYPEDEF(ITubeTimeSpanCOMEvents, __uuidof(ITubeTimeSpanCOMEvents));
+_COM_SMARTPTR_TYPEDEF(ITurbopumpCommandCOM, __uuidof(ITurbopumpCommandCOM));
+_COM_SMARTPTR_TYPEDEF(ITurbopumpCommandCOMEvents, __uuidof(ITurbopumpCommandCOMEvents));
+_COM_SMARTPTR_TYPEDEF(_DebugLog, __uuidof(_DebugLog));
+
+//
+// Type library items
+//
+
+struct __declspec(uuid("6f9a1fa7-82c7-40f4-8797-20202db27185"))
+IAccessibleBaseCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+};
+
+struct __declspec(uuid("fb235634-4303-4590-ba43-cbc7f76edc2f"))
+IAccessibleBaseCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+};
+
+struct __declspec(uuid("5024ab8a-a77a-4638-83b7-91231820957e"))
+AccessibleBaseCOM;
+    // interface _Object
+    // [ default ] dispinterface IAccessibleBaseCOM
+    // [ default, source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("8a9c5db7-69f8-4046-971a-1be7c9166ceb"))
+IAutoCommandInfosCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetCenterActive))
+    ICommandInfoMonitorCOMPtr CenterActive;
+    __declspec(property(get=GetCenterAll))
+    ICommandInfoMonitorCOMPtr CenterAll;
+    __declspec(property(get=GetFilamentAdjust))
+    ICommandInfoMonitorCOMPtr FilamentAdjust;
+    __declspec(property(get=GetRefresh))
+    ICommandInfoMonitorCOMPtr Refresh;
+    __declspec(property(get=GetStartUp))
+    ICommandInfoMonitorCOMPtr StartUp;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    ICommandInfoMonitorCOMPtr GetCenterActive ( );
+    ICommandInfoMonitorCOMPtr GetCenterAll ( );
+    ICommandInfoMonitorCOMPtr GetFilamentAdjust ( );
+    ICommandInfoMonitorCOMPtr GetRefresh ( );
+    ICommandInfoMonitorCOMPtr GetStartUp ( );
+};
+
+struct __declspec(uuid("c5e3dc06-468f-4249-9afc-65b729871ece"))
+IAutoCommandInfosCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+};
+
+struct __declspec(uuid("dd0a6a82-fd21-4067-91bc-a158f153e190"))
+AutoCommandInfosCOM;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface IAutoCommandInfosCOM
+    // [ default, source ] dispinterface IAutoCommandInfosCOMEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("e0d7222c-7368-4570-85b3-03911e6df95a"))
+ICenterOffsetCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetState))
+    enum XRAYWorXBase::CommandStates State;
+    __declspec(property(get=GetErrorCode))
+    unsigned long ErrorCode;
+    __declspec(property(get=GetDemandLowerLimit))
+    float DemandLowerLimit;
+    __declspec(property(get=GetDemandUpperLimit))
+    float DemandUpperLimit;
+    __declspec(property(get=GetEnabled))
+    VARIANT_BOOL Enabled;
+    __declspec(property(get=GetPcX))
+    float PcX;
+    __declspec(property(get=GetPcY))
+    float PcY;
+    __declspec(property(get=GetPlcX))
+    float PlcX;
+    __declspec(property(get=GetPlcY))
+    float PlcY;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_StateChanged (
+        IUnknown * value );
+    HRESULT remove_StateChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::CommandStates GetState ( );
+    unsigned long GetErrorCode ( );
+    HRESULT add_DemandLowerLimitChanged (
+        IUnknown * value );
+    HRESULT remove_DemandLowerLimitChanged (
+        IUnknown * value );
+    HRESULT add_DemandUpperLimitChanged (
+        IUnknown * value );
+    HRESULT remove_DemandUpperLimitChanged (
+        IUnknown * value );
+    HRESULT add_EnabledChanged (
+        IUnknown * value );
+    HRESULT remove_EnabledChanged (
+        IUnknown * value );
+    HRESULT add_PlcChanged (
+        IUnknown * value );
+    HRESULT remove_PlcChanged (
+        IUnknown * value );
+    HRESULT Set (
+        float x,
+        float y );
+    float GetDemandLowerLimit ( );
+    float GetDemandUpperLimit ( );
+    VARIANT_BOOL GetEnabled ( );
+    float GetPcX ( );
+    float GetPcY ( );
+    float GetPlcX ( );
+    float GetPlcY ( );
+};
+
+struct __declspec(uuid("92f71b6a-b4f7-4bfd-9503-7db8ca8bed68"))
+ICenterOffsetCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT StateChanged ( );
+    HRESULT DemandLowerLimitChanged ( );
+    HRESULT DemandUpperLimitChanged ( );
+    HRESULT EnabledChanged ( );
+    HRESULT PlcChanged ( );
+};
+
+struct __declspec(uuid("0695aa2a-1bd7-4ced-9042-67a9d4f7ab04"))
+CenterOffsetCOM;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface ICenterOffsetCOM
+    // [ default, source ] dispinterface ICenterOffsetCOMEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("49c4c8a3-6b3d-4d17-983d-d19be081313c"))
+ICommandInfoMonitorCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetActionInfo))
+    enum XRAYWorXBase::CommandActionInfo ActionInfo;
+    __declspec(property(get=GetRemainingTimeInSeconds))
+    long RemainingTimeInSeconds;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_ActionInfoChanged (
+        IUnknown * value );
+    HRESULT remove_ActionInfoChanged (
+        IUnknown * value );
+    HRESULT add_RemainingTimeChanged (
+        IUnknown * value );
+    HRESULT remove_RemainingTimeChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::CommandActionInfo GetActionInfo ( );
+    long GetRemainingTimeInSeconds ( );
+};
+
+struct __declspec(uuid("b1cb53bd-6401-4f0a-8e97-c35df4c3837b"))
+ICommandInfoMonitorCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT ActionInfoChanged ( );
+    HRESULT RemainingTimeChanged ( );
+};
+
+struct __declspec(uuid("511faa94-f12f-4ff1-ae31-11e584a743a6"))
+CommandInfoMonitorCOM;
+    // interface _Object
+    // [ default ] dispinterface ICommandInfoMonitorCOM
+    // [ default, source ] dispinterface ICommandInfoMonitorCOMEvents
+
+struct __declspec(uuid("554f38a3-5f53-4073-9825-7a90adea990a"))
+ICoilDataCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetStructureSize))
+    long StructureSize;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    HRESULT add_DataUpdated (
+        IUnknown * value );
+    HRESULT remove_DataUpdated (
+        IUnknown * value );
+    HRESULT add_Updating (
+        IUnknown * value );
+    HRESULT remove_Updating (
+        IUnknown * value );
+    IResultFloatCOMPtr Get (
+        long index );
+    HRESULT UpdateData ( );
+    long GetStructureSize ( );
+};
+
+struct __declspec(uuid("1ab03e80-a94d-4de4-bb45-aab2477ef289"))
+ICoilDataCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT DataUpdated (
+        struct IResultCOM * result );
+    HRESULT Updating ( );
+};
+
+struct __declspec(uuid("b48eb7eb-21bc-4e86-acea-394ffc1c2a5c"))
+CoilDataCOM;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface ICoilDataCOM
+    // [ default, source ] dispinterface ICoilDataCOMEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("5e84b3db-e89f-4ea3-a2da-c3948d9548d7"))
+IConditioningCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetState))
+    enum XRAYWorXBase::CommandStates State;
+    __declspec(property(get=GetErrorCode))
+    unsigned long ErrorCode;
+    __declspec(property(get=GetActiveSubFunction))
+    enum XRAYWorXBase::ConditioningSubFunction ActiveSubFunction;
+    __declspec(property(get=GetDurationLimitsInMinutes))
+    IInt32IntervalCOMPtr DurationLimitsInMinutes;
+    __declspec(property(get=GetEmissionCurrentLimits))
+    IFloatIntervalCOMPtr EmissionCurrentLimits;
+    __declspec(property(get=GetFlashoverCounter))
+    long FlashoverCounter;
+    __declspec(property(get=GetHighVoltageLimits))
+    IFloatIntervalCOMPtr HighVoltageLimits;
+    __declspec(property(get=GetHighVoltageStartLimits))
+    IFloatIntervalCOMPtr HighVoltageStartLimits;
+    __declspec(property(get=GetIsHighVoltageUpdatable))
+    VARIANT_BOOL IsHighVoltageUpdatable;
+    __declspec(property(get=GetIsLocked))
+    VARIANT_BOOL IsLocked;
+    __declspec(property(get=Getresult))
+    enum XRAYWorXBase::ConditioningResultValue result;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_StateChanged (
+        IUnknown * value );
+    HRESULT remove_StateChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::CommandStates GetState ( );
+    unsigned long GetErrorCode ( );
+    HRESULT add_ActiveSubFunctionChanged (
+        IUnknown * value );
+    HRESULT remove_ActiveSubFunctionChanged (
+        IUnknown * value );
+    HRESULT add_FlashoverCounterChanged (
+        IUnknown * value );
+    HRESULT remove_FlashoverCounterChanged (
+        IUnknown * value );
+    HRESULT add_HighVoltageUpdatableChanged (
+        IUnknown * value );
+    HRESULT remove_HighVoltageUpdatableChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::ConditioningSubFunction GetActiveSubFunction ( );
+    IInt32IntervalCOMPtr GetDurationLimitsInMinutes ( );
+    IFloatIntervalCOMPtr GetEmissionCurrentLimits ( );
+    long GetFlashoverCounter ( );
+    IFloatIntervalCOMPtr GetHighVoltageLimits ( );
+    IFloatIntervalCOMPtr GetHighVoltageStartLimits ( );
+    VARIANT_BOOL GetIsHighVoltageUpdatable ( );
+    VARIANT_BOOL GetIsLocked ( );
+    enum XRAYWorXBase::ConditioningResultValue Getresult ( );
+    HRESULT Start (
+        struct _Object * settings );
+    HRESULT Stop ( );
+    HRESULT UpdateEmissionCurrent (
+        float value );
+    HRESULT UpdateHighVoltage (
+        float value );
+};
+
+struct __declspec(uuid("497e5d64-7597-4394-a567-c832456c194e"))
+IConditioningCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT ActiveSubFunctionChanged ( );
+    HRESULT StateChanged ( );
+    HRESULT FlashoverCounterChanged ( );
+    HRESULT HighVoltageUpdatableChanged ( );
+};
+
+struct __declspec(uuid("4f3509d7-261a-4c0b-b130-715b2f3e2d43"))
+ConditioningCOM;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface IConditioningCOM
+    // [ default, source ] dispinterface IConditioningCOMEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("73b90296-6a74-4ca0-ab7f-dc7a4e7cbe52"))
+ConditioningSettingsCOM;
+    // [ default ] interface _Object
+
+struct __declspec(uuid("f910a0d1-9c58-4621-85e3-d9fdd445e484"))
+IDataModuleCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetIsSaving))
+    VARIANT_BOOL IsSaving;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    HRESULT add_DataUpdated (
+        IUnknown * value );
+    HRESULT remove_DataUpdated (
+        IUnknown * value );
+    HRESULT add_Saved (
+        IUnknown * value );
+    HRESULT remove_Saved (
+        IUnknown * value );
+    HRESULT add_Saving (
+        IUnknown * value );
+    HRESULT remove_Saving (
+        IUnknown * value );
+    HRESULT add_Updating (
+        IUnknown * value );
+    HRESULT remove_Updating (
+        IUnknown * value );
+    IResultObjectCOMPtr Get (
+        _bstr_t name );
+    HRESULT Save ( );
+    IResultCOMPtr Set (
+        _bstr_t name,
+        const _variant_t & value );
+    HRESULT UpdateData ( );
+    VARIANT_BOOL GetIsSaving ( );
+};
+
+struct __declspec(uuid("106d6857-c591-4e8d-b2d9-4f29bad54dda"))
+IDataModuleCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT DataUpdated (
+        struct IResultCOM * result );
+    HRESULT Saved (
+        struct IResultCOM * result );
+    HRESULT Saving ( );
+    HRESULT Updating ( );
+};
+
+struct __declspec(uuid("6fa53ef7-aae6-43fc-8ceb-73cc03bd5f52"))
+DataModuleCOM;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface IDataModuleCOM
+    // [ default, source ] dispinterface IDataModuleCOMEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("c8871221-2701-4c54-aa0b-3b017cf730b0"))
+IDataModuleProviderCOM : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    ICoilDataCOMPtr GetFocusTable ( );
+    ICoilDataCOMPtr GetCenteringOneTableX ( );
+    ICoilDataCOMPtr GetCenteringOneTableY ( );
+    ICoilDataCOMPtr GetCenteringTwoTableX ( );
+    ICoilDataCOMPtr GetCenteringTwoTableY ( );
+    ICoilDataCOMPtr GetCondenserTable ( );
+    IDataModuleCOMPtr GetDataModule (
+        enum XRAYWorXBase::DataModuleName name );
+};
+
+struct __declspec(uuid("2741709d-2611-4ac8-809b-14240501a2de"))
+IDataModuleProviderCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT Error (
+        struct ITubeInterfaceEventArgsCOM * e );
+};
+
+struct __declspec(uuid("3c533024-ce70-423c-b797-51836cc65445"))
+DataModuleProviderCOM;
+    // interface _Object
+    // [ default ] dispinterface IDataModuleProviderCOM
+    // [ default, source ] dispinterface IDataModuleProviderCOMEvents
+
+enum __declspec(uuid("bfde9bc5-dce0-4ab3-985f-56b41d2c3905"))
+DispIds
+{
+    DispIds_IsAccessibleChanged = 1,
+    DispIds_MonitorValueChanged = 2,
+    DispIds_DemandLowerLimitChanged = 3,
+    DispIds_DemandUpperLimitChanged = 4,
+    DispIds_StateChanged = 5,
+    DispIds_PlcDemandValueChanged = 6,
+    DispIds_Initialized = 7,
+    DispIds_TubeStateChanged = 8,
+    DispIds_TubeInterfaceError = 9,
+    DispIds_IsActiveChanged = 10,
+    DispIds_ConfigurationChanged = 11,
+    DispIds_ListChanged = 12,
+    DispIds_RemainingTimeChanged = 13,
+    DispIds_ServiceStateChanged = 14,
+    DispIds_ActionInfoChanged = 15,
+    DispIds_StableChanged = 16,
+    DispIds_DataUpdated = 17,
+    DispIds_Updating = 18,
+    DispIds_LimitedKVMinChanged = 19,
+    DispIds_ValidUntilKVChanged = 20,
+    DispIds_IsSwitchedOnChanged = 21,
+    DispIds_IsVentilatedChanged = 22,
+    DispIds_RotationSpeedChanged = 23,
+    DispIds_RefreshLimitableChanged = 24,
+    DispIds_FlagChanged = 25,
+    DispIds_Changed = 26,
+    DispIds_Error = 27,
+    DispIds_Saved = 28,
+    DispIds_Stopped = 29,
+    DispIds_ResetStateChanged = 30,
+    DispIds_TimeChanged = 31,
+    DispIds_Saving = 32,
+    DispIds_LeakageCurrentChanged = 33,
+    DispIds_LeakageCurrentProvidedChanged = 34,
+    DispIds_HighVoltageLowerLimitChanged = 35,
+    DispIds_HighVoltageUpperLimitChanged = 36,
+    DispIds_LimitedKVMaxChanged = 37,
+    DispIds_CountChanged = 38,
+    DispIds_LockingXrayChanged = 39,
+    DispIds_EnabledChanged = 40,
+    DispIds_OnChanged = 41,
+    DispIds_ProgressChanged = 42,
+    DispIds_PlcChanged = 43,
+    DispIds_ActiveSubFunctionChanged = 44,
+    DispIds_FlashoverCounterChanged = 45,
+    DispIds_HighVoltageUpdatableChanged = 46
+};
+
+struct __declspec(uuid("6c1f6429-1c27-4030-a1bc-dacbe244f130"))
+IErrorInfoCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetErrorHelp))
+    _bstr_t ErrorHelp;
+    __declspec(property(get=GetErrorMessage))
+    _bstr_t ErrorMessage;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    _bstr_t GetErrorHelp ( );
+    _bstr_t GetErrorMessage ( );
+};
+
+struct __declspec(uuid("12f0264c-1728-4d9b-8445-3346e64c4565"))
+ErrorInfoCOM;
+    // interface _Object
+    // [ default ] dispinterface IErrorInfoCOM
+
+struct __declspec(uuid("2fe70bdb-dab6-46fb-87e4-260131924ec0"))
+IFilamentAdjustCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetMonitorValue))
+    float MonitorValue;
+    __declspec(property(get=GetStable))
+    VARIANT_BOOL Stable;
+    __declspec(property(get=GetPcDemandValue,put=PutPcDemandValue))
+    VARIANT_BOOL PcDemandValue;
+    __declspec(property(get=GetState))
+    enum XRAYWorXBase::CommandStates State;
+    __declspec(property(get=GetErrorCode))
+    unsigned long ErrorCode;
+    __declspec(property(get=GetIsActive))
+    VARIANT_BOOL IsActive;
+    __declspec(property(get=GetProcessedInStartUp))
+    VARIANT_BOOL ProcessedInStartUp;
+    __declspec(property(get=GetTriggerSource))
+    enum XRAYWorXBase::TriggerSources TriggerSource;
+    __declspec(property(get=GetFilamentValue))
+    float FilamentValue;
+    __declspec(property(get=GetProvidesCorrectionFactors))
+    VARIANT_BOOL ProvidesCorrectionFactors;
+    __declspec(property(get=GetCorrectionFactors))
+    SAFEARRAY * CorrectionFactors;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_MonitorValueChanged (
+        IUnknown * value );
+    HRESULT remove_MonitorValueChanged (
+        IUnknown * value );
+    HRESULT add_StableChanged (
+        IUnknown * value );
+    HRESULT remove_StableChanged (
+        IUnknown * value );
+    float GetMonitorValue ( );
+    VARIANT_BOOL GetStable ( );
+    HRESULT add_StateChanged (
+        IUnknown * value );
+    HRESULT remove_StateChanged (
+        IUnknown * value );
+    HRESULT add_IsActiveChanged (
+        IUnknown * value );
+    HRESULT remove_IsActiveChanged (
+        IUnknown * value );
+    VARIANT_BOOL GetPcDemandValue ( );
+    void PutPcDemandValue (
+        VARIANT_BOOL _arg1 );
+    enum XRAYWorXBase::CommandStates GetState ( );
+    unsigned long GetErrorCode ( );
+    VARIANT_BOOL GetIsActive ( );
+    VARIANT_BOOL GetProcessedInStartUp ( );
+    enum XRAYWorXBase::TriggerSources GetTriggerSource ( );
+    float GetFilamentValue ( );
+    VARIANT_BOOL GetProvidesCorrectionFactors ( );
+    SAFEARRAY * GetCorrectionFactors ( );
+};
+
+struct __declspec(uuid("929c3240-145e-4d7c-a43b-a1123ad26ac0"))
+IFilamentAdjustCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT MonitorValueChanged ( );
+    HRESULT StableChanged ( );
+    HRESULT StateChanged ( );
+    HRESULT IsActiveChanged ( );
+};
+
+struct __declspec(uuid("71145054-d051-4044-bb40-b14512bbc964"))
+FilamentAdjustCOM;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // dispinterface ITubeMonitorSingle
+    // dispinterface ITubeAutoCommandCOM
+    // [ default ] dispinterface IFilamentAdjustCOM
+    // [ default, source ] dispinterface IFilamentAdjustCOMEvents
+    // [ source ] dispinterface ITubeAutoCommandCOMEvents
+    // [ source ] dispinterface ITubeMonitorSingleEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("0549317f-66fb-40d8-b381-eba7b1c79a5f"))
+ICorrectionFactorInfoCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetHighVoltage))
+    float HighVoltage;
+    __declspec(property(get=GetIsDynamic))
+    VARIANT_BOOL IsDynamic;
+    __declspec(property(get=GetLowerCorrectionFactor))
+    float LowerCorrectionFactor;
+    __declspec(property(get=GetLowerEmissionCurrent))
+    float LowerEmissionCurrent;
+    __declspec(property(get=GetUpperCorrectionFactor))
+    float UpperCorrectionFactor;
+    __declspec(property(get=GetUpperEmissionCurrent))
+    float UpperEmissionCurrent;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    float GetHighVoltage ( );
+    VARIANT_BOOL GetIsDynamic ( );
+    float GetLowerCorrectionFactor ( );
+    float GetLowerEmissionCurrent ( );
+    float GetUpperCorrectionFactor ( );
+    float GetUpperEmissionCurrent ( );
+};
+
+struct __declspec(uuid("0aebae47-0977-4306-ae1e-57a220753279"))
+CorrectionFactorInfoCOM;
+    // interface _Object
+    // [ default ] dispinterface ICorrectionFactorInfoCOM
+
+struct __declspec(uuid("f32fa78d-b33c-4eb4-b1a9-d83cc62fca00"))
+IFilamentStatsCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetAverageLifetimeInSeconds))
+    unsigned long AverageLifetimeInSeconds;
+    __declspec(property(get=GetCurrentLifetimeInSeconds))
+    unsigned long CurrentLifetimeInSeconds;
+    __declspec(property(get=GetDateOfInstallation))
+    _bstr_t DateOfInstallation;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_Changed (
+        IUnknown * value );
+    HRESULT remove_Changed (
+        IUnknown * value );
+    unsigned long GetAverageLifetimeInSeconds ( );
+    unsigned long GetCurrentLifetimeInSeconds ( );
+    _bstr_t GetDateOfInstallation ( );
+};
+
+struct __declspec(uuid("f85dda08-24bf-458c-b3bc-13b0dad545fd"))
+IFilamentStatsCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT Changed ( );
+};
+
+struct __declspec(uuid("a49cc59e-c3a7-4ad2-a905-987e60f14028"))
+FilamentStatsCOM;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface IFilamentStatsCOM
+    // [ default, source ] dispinterface IFilamentStatsCOMEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("a8ea7591-0414-4e78-8218-8459e25a66be"))
+IFlashoverCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetCount))
+    unsigned long Count;
+    __declspec(property(get=GetIsLockingXray))
+    VARIANT_BOOL IsLockingXray;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_CountChanged (
+        IUnknown * value );
+    HRESULT remove_CountChanged (
+        IUnknown * value );
+    HRESULT add_LockingXrayChanged (
+        IUnknown * value );
+    HRESULT remove_LockingXrayChanged (
+        IUnknown * value );
+    unsigned long GetCount ( );
+    VARIANT_BOOL GetIsLockingXray ( );
+};
+
+struct __declspec(uuid("0fee245b-4eee-40d2-957e-9f2995bf9b6d"))
+IFlashoverCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT CountChanged ( );
+    HRESULT LockingXrayChanged ( );
+};
+
+struct __declspec(uuid("a4bc74dd-fe05-45ad-9b64-95cb2ccc4cb2"))
+FlashoverCOM;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface IFlashoverCOM
+    // [ default, source ] dispinterface IFlashoverCOMEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("d6949394-80ca-416f-9c7f-62f906d2a26b"))
+IFloatIntervalCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetMaximum))
+    float Maximum;
+    __declspec(property(get=GetMinimum))
+    float Minimum;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_Changed (
+        IUnknown * value );
+    HRESULT remove_Changed (
+        IUnknown * value );
+    float GetMaximum ( );
+    float GetMinimum ( );
+};
+
+struct __declspec(uuid("71b36287-2522-45dc-a1ad-f354c6c47eb2"))
+IFloatIntervalCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT Changed ( );
+};
+
+struct __declspec(uuid("f441d480-f134-454b-8d1e-c9d58fdfca97"))
+FloatIntervalCOM;
+    // interface _Object
+    // [ default ] dispinterface IFloatIntervalCOM
+    // [ default, source ] dispinterface IFloatIntervalCOMEvents
+
+struct __declspec(uuid("329809a0-8f41-469f-960d-8fe292b814c2"))
+IInitialStartupCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetTubeReady))
+    VARIANT_BOOL TubeReady;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_Stopped (
+        IUnknown * value );
+    HRESULT remove_Stopped (
+        IUnknown * value );
+    HRESULT Stop ( );
+    HRESULT Start ( );
+    VARIANT_BOOL GetTubeReady ( );
+};
+
+struct __declspec(uuid("27c97f3f-781d-4177-a771-030d750cc7c7"))
+IInitialStartupCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT Stopped ( );
+};
+
+struct __declspec(uuid("893344f9-62c8-41ed-bb71-314a4f0b7c61"))
+InitialStartupCOM;
+    // interface _Object
+    // [ default ] dispinterface IInitialStartupCOM
+    // [ default, source ] dispinterface IInitialStartupCOMEvents
+
+struct __declspec(uuid("ed74d648-9291-429c-873c-eb460f33b8b8"))
+IInt32IntervalCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetMaximum))
+    long Maximum;
+    __declspec(property(get=GetMinimum))
+    long Minimum;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_Changed (
+        IUnknown * value );
+    HRESULT remove_Changed (
+        IUnknown * value );
+    long GetMaximum ( );
+    long GetMinimum ( );
+};
+
+struct __declspec(uuid("e07b6d08-c3de-4154-804b-1b8d1bc23652"))
+IInt32IntervalCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT Changed ( );
+};
+
+struct __declspec(uuid("22ce621a-6a18-4eff-a83f-28da7c0ba364"))
+Int32IntervalCOM;
+    // interface _Object
+    // [ default ] dispinterface IInt32IntervalCOM
+    // [ default, source ] dispinterface IInt32IntervalCOMEvents
+
+struct __declspec(uuid("0a850822-56ba-4ccc-b56e-0872731ddec4"))
+IIpEntryCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIp))
+    _bstr_t Ip;
+    __declspec(property(get=Getname))
+    _bstr_t name;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    _bstr_t GetIp ( );
+    _bstr_t Getname ( );
+};
+
+struct __declspec(uuid("e42ca596-d374-4460-ab80-1f4c1a89f251"))
+IpEntryCOM;
+    // interface _Object
+    // [ default ] dispinterface IIpEntryCOM
+
+struct __declspec(uuid("3ef44d49-c6ce-44fa-872e-2798e88bb57d"))
+ILeakageCurrentTestCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetErrorCode))
+    unsigned long ErrorCode;
+    __declspec(property(get=GetState))
+    enum XRAYWorXBase::CommandStates State;
+    __declspec(property(get=GetDurationInSeconds,put=PutDurationInSeconds))
+    long DurationInSeconds;
+    __declspec(property(get=GetHighVoltage,put=PutHighVoltage))
+    float HighVoltage;
+    __declspec(property(get=GetHighVoltageLowerLimit))
+    float HighVoltageLowerLimit;
+    __declspec(property(get=GetHighVoltageUpperLimit))
+    float HighVoltageUpperLimit;
+    __declspec(property(get=GetPcDemandValue,put=PutPcDemandValue))
+    VARIANT_BOOL PcDemandValue;
+    __declspec(property(get=GetLeakageCurrent))
+    float LeakageCurrent;
+    __declspec(property(get=GetLeakageCurrentProvided))
+    VARIANT_BOOL LeakageCurrentProvided;
+    __declspec(property(get=GetLeakageCurrentVoltage))
+    float LeakageCurrentVoltage;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_StateChanged (
+        IUnknown * value );
+    HRESULT remove_StateChanged (
+        IUnknown * value );
+    unsigned long GetErrorCode ( );
+    enum XRAYWorXBase::CommandStates GetState ( );
+    HRESULT add_LeakageCurrentChanged (
+        IUnknown * value );
+    HRESULT remove_LeakageCurrentChanged (
+        IUnknown * value );
+    HRESULT add_LeakageCurrentProvidedChanged (
+        IUnknown * value );
+    HRESULT remove_LeakageCurrentProvidedChanged (
+        IUnknown * value );
+    HRESULT add_HighVoltageLowerLimitChanged (
+        IUnknown * value );
+    HRESULT remove_HighVoltageLowerLimitChanged (
+        IUnknown * value );
+    HRESULT add_HighVoltageUpperLimitChanged (
+        IUnknown * value );
+    HRESULT remove_HighVoltageUpperLimitChanged (
+        IUnknown * value );
+    long GetDurationInSeconds ( );
+    void PutDurationInSeconds (
+        long _arg1 );
+    float GetHighVoltage ( );
+    void PutHighVoltage (
+        float _arg1 );
+    float GetHighVoltageLowerLimit ( );
+    float GetHighVoltageUpperLimit ( );
+    VARIANT_BOOL GetPcDemandValue ( );
+    void PutPcDemandValue (
+        VARIANT_BOOL _arg1 );
+    float GetLeakageCurrent ( );
+    VARIANT_BOOL GetLeakageCurrentProvided ( );
+    float GetLeakageCurrentVoltage ( );
+};
+
+struct __declspec(uuid("1d21cc13-d74d-41d3-9212-334edfe3a2c3"))
+ILeakageCurrentTestCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT StateChanged ( );
+    HRESULT LeakageCurrentChanged ( );
+    HRESULT LeakageCurrentProvidedChanged ( );
+    HRESULT HighVoltageLowerLimitChanged ( );
+    HRESULT HighVoltageUpperLimitChanged ( );
+};
+
+struct __declspec(uuid("45cf39bc-7a10-4d4a-b8e9-b6166a443622"))
+LeakageCurrentTestCOM;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface ILeakageCurrentTestCOM
+    // [ default, source ] dispinterface ILimitableAutoCommandCOMEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("bcd05870-c724-46e2-bdda-b2c27bd69215"))
+IPrewarningCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetEnabled))
+    VARIANT_BOOL Enabled;
+    __declspec(property(get=GetOn))
+    VARIANT_BOOL On;
+    __declspec(property(get=GetProgress))
+    unsigned long Progress;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_EnabledChanged (
+        IUnknown * value );
+    HRESULT remove_EnabledChanged (
+        IUnknown * value );
+    HRESULT add_OnChanged (
+        IUnknown * value );
+    HRESULT remove_OnChanged (
+        IUnknown * value );
+    HRESULT add_ProgressChanged (
+        IUnknown * value );
+    HRESULT remove_ProgressChanged (
+        IUnknown * value );
+    VARIANT_BOOL GetEnabled ( );
+    VARIANT_BOOL GetOn ( );
+    unsigned long GetProgress ( );
+};
+
+struct __declspec(uuid("08d25262-1b91-474e-bbf5-a3ec3d65c3e0"))
+IPrewarningCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT EnabledChanged ( );
+    HRESULT OnChanged ( );
+    HRESULT ProgressChanged ( );
+};
+
+struct __declspec(uuid("7f10538b-448d-4cc7-b447-bc753d99f6a7"))
+PrewarningCOM;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface IPrewarningCOM
+    // [ default, source ] dispinterface IPrewarningCOMEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("3e51cf1c-bc88-427d-8d03-8b355dd7fd12"))
+ILimitableAutoCommandCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetMonitorValue))
+    float MonitorValue;
+    __declspec(property(get=GetStable))
+    VARIANT_BOOL Stable;
+    __declspec(property(get=GetPcDemandValue,put=PutPcDemandValue))
+    VARIANT_BOOL PcDemandValue;
+    __declspec(property(get=GetState))
+    enum XRAYWorXBase::CommandStates State;
+    __declspec(property(get=GetErrorCode))
+    unsigned long ErrorCode;
+    __declspec(property(get=GetIsActive))
+    VARIANT_BOOL IsActive;
+    __declspec(property(get=GetProcessedInStartUp))
+    VARIANT_BOOL ProcessedInStartUp;
+    __declspec(property(get=GetTriggerSource))
+    enum XRAYWorXBase::TriggerSources TriggerSource;
+    __declspec(property(get=GetLimitedKV,put=PutLimitedKV))
+    float LimitedKV;
+    __declspec(property(get=GetLimitedKVMin))
+    float LimitedKVMin;
+    __declspec(property(get=GetLimitedKVMax))
+    float LimitedKVMax;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_MonitorValueChanged (
+        IUnknown * value );
+    HRESULT remove_MonitorValueChanged (
+        IUnknown * value );
+    HRESULT add_StableChanged (
+        IUnknown * value );
+    HRESULT remove_StableChanged (
+        IUnknown * value );
+    float GetMonitorValue ( );
+    VARIANT_BOOL GetStable ( );
+    HRESULT add_StateChanged (
+        IUnknown * value );
+    HRESULT remove_StateChanged (
+        IUnknown * value );
+    HRESULT add_IsActiveChanged (
+        IUnknown * value );
+    HRESULT remove_IsActiveChanged (
+        IUnknown * value );
+    VARIANT_BOOL GetPcDemandValue ( );
+    void PutPcDemandValue (
+        VARIANT_BOOL _arg1 );
+    enum XRAYWorXBase::CommandStates GetState ( );
+    unsigned long GetErrorCode ( );
+    VARIANT_BOOL GetIsActive ( );
+    VARIANT_BOOL GetProcessedInStartUp ( );
+    enum XRAYWorXBase::TriggerSources GetTriggerSource ( );
+    HRESULT add_LimitedKVMinChanged (
+        IUnknown * value );
+    HRESULT remove_LimitedKVMinChanged (
+        IUnknown * value );
+    float GetLimitedKV ( );
+    void PutLimitedKV (
+        float _arg1 );
+    float GetLimitedKVMin ( );
+    HRESULT add_LimitedKVMaxChanged (
+        IUnknown * value );
+    HRESULT remove_LimitedKVMaxChanged (
+        IUnknown * value );
+    float GetLimitedKVMax ( );
+};
+
+struct __declspec(uuid("fdb0df8b-5a12-41b3-9ef5-dd1f32bd9071"))
+ILimitableAutoCommandCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT MonitorValueChanged ( );
+    HRESULT StableChanged ( );
+    HRESULT StateChanged ( );
+    HRESULT IsActiveChanged ( );
+    HRESULT LimitedKVMinChanged ( );
+    HRESULT LimitedKVMaxChanged ( );
+};
+
+struct __declspec(uuid("dfddfd6d-63af-4f13-b6e0-d90c39ef66b3"))
+LimitableAutoCommandCOM;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // dispinterface ITubeMonitorSingle
+    // dispinterface ITubeAutoCommandCOM
+    // [ default ] dispinterface ILimitableAutoCommandCOM
+    // [ default, source ] dispinterface ILimitableAutoCommandCOMEvents
+    // [ source ] dispinterface ITubeAutoCommandCOMEvents
+    // [ source ] dispinterface ITubeMonitorSingleEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("62be7cd7-04df-41fd-a4f8-99241ae84d0f"))
+IResultCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetError))
+    _bstr_t Error;
+    __declspec(property(get=GetIsFailure))
+    VARIANT_BOOL IsFailure;
+    __declspec(property(get=GetIsSuccess))
+    VARIANT_BOOL IsSuccess;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    _bstr_t GetError ( );
+    VARIANT_BOOL GetIsFailure ( );
+    VARIANT_BOOL GetIsSuccess ( );
+};
+
+struct __declspec(uuid("fecc30bc-05b4-47db-a19c-8ba677f7c116"))
+IResultFloatCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetError))
+    _bstr_t Error;
+    __declspec(property(get=GetIsFailure))
+    VARIANT_BOOL IsFailure;
+    __declspec(property(get=GetIsSuccess))
+    VARIANT_BOOL IsSuccess;
+    __declspec(property(get=GetFloatValue))
+    float FloatValue;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    _bstr_t GetError ( );
+    VARIANT_BOOL GetIsFailure ( );
+    VARIANT_BOOL GetIsSuccess ( );
+    float GetFloatValue ( );
+};
+
+struct __declspec(uuid("ef3e1242-ea55-48ed-925a-050da4e5bcdb"))
+IResultObjectCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetError))
+    _bstr_t Error;
+    __declspec(property(get=GetIsFailure))
+    VARIANT_BOOL IsFailure;
+    __declspec(property(get=GetIsSuccess))
+    VARIANT_BOOL IsSuccess;
+    __declspec(property(get=GetObjectValue))
+    _variant_t ObjectValue;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    _bstr_t GetError ( );
+    VARIANT_BOOL GetIsFailure ( );
+    VARIANT_BOOL GetIsSuccess ( );
+    _variant_t GetObjectValue ( );
+};
+
+struct __declspec(uuid("774f0f9e-8072-470a-8a29-eb2e6b0c6e71"))
+ResultCOM;
+    // interface _Object
+    // [ default ] dispinterface IResultCOM
+
+struct __declspec(uuid("2c058ac9-99e8-49dc-b68b-0012d6fade2f"))
+ResultObjectCOM;
+    // interface _Object
+    // [ default ] dispinterface IResultObjectCOM
+
+struct __declspec(uuid("e73b222d-666f-4e33-a290-aa826dc113da"))
+ResultFloatCOM;
+    // interface _Object
+    // [ default ] dispinterface IResultFloatCOM
+
+struct __declspec(uuid("49a3cb52-561e-457f-9e92-42bb66c0d839"))
+IStandbyCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetMonitorValue))
+    enum XRAYWorXBase::StandbyState MonitorValue;
+    __declspec(property(get=GetPcDemandValue,put=PutPcDemandValue))
+    VARIANT_BOOL PcDemandValue;
+    __declspec(property(get=GetState))
+    enum XRAYWorXBase::CommandStates State;
+    __declspec(property(get=GetErrorCode))
+    unsigned long ErrorCode;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_MonitorValueChanged (
+        IUnknown * value );
+    HRESULT remove_MonitorValueChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::StandbyState GetMonitorValue ( );
+    HRESULT add_StateChanged (
+        IUnknown * value );
+    HRESULT remove_StateChanged (
+        IUnknown * value );
+    VARIANT_BOOL GetPcDemandValue ( );
+    void PutPcDemandValue (
+        VARIANT_BOOL _arg1 );
+    enum XRAYWorXBase::CommandStates GetState ( );
+    unsigned long GetErrorCode ( );
+    HRESULT Off ( );
+    HRESULT On ( );
+};
+
+struct __declspec(uuid("d9c376c9-dfbe-43c4-b8a2-098c661c6fb1"))
+IStandbyCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT MonitorValueChanged ( );
+    HRESULT StateChanged ( );
+};
+
+struct __declspec(uuid("788308f0-7a77-4edf-b86b-2022201f91f9"))
+StandbyCOM;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface IStandbyCOM
+    // [ default, source ] dispinterface IStandbyCOMEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("3d726fa3-6350-4cd8-8486-7da8b56f55fe"))
+IStatusWordCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetAutoFunctionOn))
+    VARIANT_BOOL AutoFunctionOn;
+    __declspec(property(get=GetCenteringActiveOk))
+    VARIANT_BOOL CenteringActiveOk;
+    __declspec(property(get=GetCenteringAllOk))
+    VARIANT_BOOL CenteringAllOk;
+    __declspec(property(get=GetCooling1Ok))
+    VARIANT_BOOL Cooling1Ok;
+    __declspec(property(get=GetCooling2Ok))
+    VARIANT_BOOL Cooling2Ok;
+    __declspec(property(get=GetCoolingAllOk))
+    VARIANT_BOOL CoolingAllOk;
+    __declspec(property(get=GetDefocussingOn))
+    VARIANT_BOOL DefocussingOn;
+    __declspec(property(get=GetEmissionCurrentOk))
+    VARIANT_BOOL EmissionCurrentOk;
+    __declspec(property(get=GetFilamentAdjustOk))
+    VARIANT_BOOL FilamentAdjustOk;
+    __declspec(property(get=GetFilamentCurrentOk))
+    VARIANT_BOOL FilamentCurrentOk;
+    __declspec(property(get=GetFilamentOk))
+    VARIANT_BOOL FilamentOk;
+    __declspec(property(get=GetFlashoverHandlingOn))
+    VARIANT_BOOL FlashoverHandlingOn;
+    __declspec(property(get=GetGeneratorOk))
+    VARIANT_BOOL GeneratorOk;
+    __declspec(property(get=GetHighVoltageOk))
+    VARIANT_BOOL HighVoltageOk;
+    __declspec(property(get=GetInterlockOk))
+    VARIANT_BOOL InterlockOk;
+    __declspec(property(get=GetLeakageCurrentControlOn))
+    VARIANT_BOOL LeakageCurrentControlOn;
+    __declspec(property(get=GetLicenseOk))
+    VARIANT_BOOL LicenseOk;
+    __declspec(property(get=GetRefreshOk))
+    VARIANT_BOOL RefreshOk;
+    __declspec(property(get=GetStandbyOn))
+    VARIANT_BOOL StandbyOn;
+    __declspec(property(get=GetStartupOk))
+    VARIANT_BOOL StartupOk;
+    __declspec(property(get=GetStatusWord))
+    enum XRAYWorXBase::StatusWordFlags StatusWord;
+    __declspec(property(get=GetTargetCurrentOk))
+    VARIANT_BOOL TargetCurrentOk;
+    __declspec(property(get=GetTubeHeadOk))
+    VARIANT_BOOL TubeHeadOk;
+    __declspec(property(get=GetVacuumOk))
+    VARIANT_BOOL VacuumOk;
+    __declspec(property(get=GetXRayOn))
+    VARIANT_BOOL XRayOn;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_Changed (
+        IUnknown * value );
+    HRESULT remove_Changed (
+        IUnknown * value );
+    VARIANT_BOOL GetAutoFunctionOn ( );
+    VARIANT_BOOL GetCenteringActiveOk ( );
+    VARIANT_BOOL GetCenteringAllOk ( );
+    VARIANT_BOOL GetCooling1Ok ( );
+    VARIANT_BOOL GetCooling2Ok ( );
+    VARIANT_BOOL GetCoolingAllOk ( );
+    VARIANT_BOOL GetDefocussingOn ( );
+    VARIANT_BOOL GetEmissionCurrentOk ( );
+    VARIANT_BOOL GetFilamentAdjustOk ( );
+    VARIANT_BOOL GetFilamentCurrentOk ( );
+    VARIANT_BOOL GetFilamentOk ( );
+    VARIANT_BOOL GetFlashoverHandlingOn ( );
+    VARIANT_BOOL GetGeneratorOk ( );
+    VARIANT_BOOL GetHighVoltageOk ( );
+    VARIANT_BOOL GetInterlockOk ( );
+    VARIANT_BOOL GetLeakageCurrentControlOn ( );
+    VARIANT_BOOL GetLicenseOk ( );
+    VARIANT_BOOL GetRefreshOk ( );
+    VARIANT_BOOL GetStandbyOn ( );
+    VARIANT_BOOL GetStartupOk ( );
+    enum XRAYWorXBase::StatusWordFlags GetStatusWord ( );
+    VARIANT_BOOL GetTargetCurrentOk ( );
+    VARIANT_BOOL GetTubeHeadOk ( );
+    VARIANT_BOOL GetVacuumOk ( );
+    VARIANT_BOOL GetXRayOn ( );
+};
+
+struct __declspec(uuid("f8cc9480-2319-411a-ac7f-306e09eae6ac"))
+IStatusWordCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT Changed ( );
+};
+
+struct __declspec(uuid("3c0affde-1f22-49fd-88db-07de2d826b7a"))
+StatusWordCOM;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface IStatusWordCOM
+    // [ default, source ] dispinterface IStatusWordCOMEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("e6f672e8-f232-4212-b75b-5912883675a8"))
+ITriggerCommandCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetState))
+    enum XRAYWorXBase::CommandStates State;
+    __declspec(property(get=GetErrorCode))
+    unsigned long ErrorCode;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    HRESULT add_StateChanged (
+        IUnknown * value );
+    HRESULT remove_StateChanged (
+        IUnknown * value );
+    HRESULT Execute ( );
+    enum XRAYWorXBase::CommandStates GetState ( );
+    unsigned long GetErrorCode ( );
+};
+
+struct __declspec(uuid("68adc55b-f1e5-4278-a76a-80105fea8828"))
+ITriggerCommandCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT StateChanged ( );
+};
+
+struct __declspec(uuid("4c68f8cc-58b4-4139-b05d-7f7154f0d30f"))
+TriggerCommandCOM;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface ITriggerCommandCOM
+    // [ default, source ] dispinterface ITriggerCommandCOMEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("3524cb05-d3c8-40d1-9704-9cf2c07b6ff3"))
+ITubeAutoCommandCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetMonitorValue))
+    float MonitorValue;
+    __declspec(property(get=GetStable))
+    VARIANT_BOOL Stable;
+    __declspec(property(get=GetPcDemandValue,put=PutPcDemandValue))
+    VARIANT_BOOL PcDemandValue;
+    __declspec(property(get=GetState))
+    enum XRAYWorXBase::CommandStates State;
+    __declspec(property(get=GetErrorCode))
+    unsigned long ErrorCode;
+    __declspec(property(get=GetIsActive))
+    VARIANT_BOOL IsActive;
+    __declspec(property(get=GetProcessedInStartUp))
+    VARIANT_BOOL ProcessedInStartUp;
+    __declspec(property(get=GetTriggerSource))
+    enum XRAYWorXBase::TriggerSources TriggerSource;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_MonitorValueChanged (
+        IUnknown * value );
+    HRESULT remove_MonitorValueChanged (
+        IUnknown * value );
+    HRESULT add_StableChanged (
+        IUnknown * value );
+    HRESULT remove_StableChanged (
+        IUnknown * value );
+    float GetMonitorValue ( );
+    VARIANT_BOOL GetStable ( );
+    HRESULT add_StateChanged (
+        IUnknown * value );
+    HRESULT remove_StateChanged (
+        IUnknown * value );
+    HRESULT add_IsActiveChanged (
+        IUnknown * value );
+    HRESULT remove_IsActiveChanged (
+        IUnknown * value );
+    VARIANT_BOOL GetPcDemandValue ( );
+    void PutPcDemandValue (
+        VARIANT_BOOL _arg1 );
+    enum XRAYWorXBase::CommandStates GetState ( );
+    unsigned long GetErrorCode ( );
+    VARIANT_BOOL GetIsActive ( );
+    VARIANT_BOOL GetProcessedInStartUp ( );
+    enum XRAYWorXBase::TriggerSources GetTriggerSource ( );
+};
+
+struct __declspec(uuid("5bf71da6-63ff-45f6-862f-d200d65beae3"))
+ITubeAutoCommandCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT MonitorValueChanged ( );
+    HRESULT StableChanged ( );
+    HRESULT StateChanged ( );
+    HRESULT IsActiveChanged ( );
+};
+
+struct __declspec(uuid("689971d5-e2bb-443a-9115-8f805845b032"))
+TubeAutoCommandCOM;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // dispinterface ITubeMonitorSingle
+    // [ default ] dispinterface ITubeAutoCommandCOM
+    // [ default, source ] dispinterface ITubeAutoCommandCOMEvents
+    // [ source ] dispinterface ITubeMonitorSingleEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("5ec76a55-cd82-4005-9957-088e69ebb566"))
+ITubeFlagCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetOn,put=PutOn))
+    VARIANT_BOOL On;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_Changed (
+        IUnknown * value );
+    HRESULT remove_Changed (
+        IUnknown * value );
+    VARIANT_BOOL GetOn ( );
+    void PutOn (
+        VARIANT_BOOL _arg1 );
+};
+
+struct __declspec(uuid("5306d72c-d212-4585-a4c0-379d79f4c795"))
+ITubeFlagCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT Changed ( );
+};
+
+struct __declspec(uuid("5f7e8f8e-995f-4eb0-bd27-7038acdee6f4"))
+TubeFlagCOM;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface ITubeFlagCOM
+    // [ default, source ] dispinterface ITubeFlagCOMEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("65aef259-859f-4ce6-a814-80c2af3031f6"))
+ITubeInterfaceEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT Initialized ( );
+    HRESULT TubeStateChanged ( );
+    HRESULT TubeInterfaceError (
+        unsigned long tubeErrorCode );
+    HRESULT ConfigurationChanged ( );
+    HRESULT RefreshLimitableChanged ( );
+};
+
+struct __declspec(uuid("057e419a-5a2b-49bd-b261-9032a632c0f7"))
+ITubeInterface : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsInitialized))
+    VARIANT_BOOL IsInitialized;
+    __declspec(property(get=GetTubeState))
+    enum XRAYWorXBase::TubeStates TubeState;
+    __declspec(property(get=GetXRayOn))
+    ITubeCommandBoolPtr XRayOn;
+    __declspec(property(get=GetXRayOff))
+    ITubeCommandBoolPtr XRayOff;
+    __declspec(property(get=GetHighVoltage))
+    ITubeCommandSinglePtr HighVoltage;
+    __declspec(property(get=GetEmissionCurrent))
+    ITubeCommandSinglePtr EmissionCurrent;
+    __declspec(property(get=GetTargetCurrent))
+    ITubeCommandSinglePtr TargetCurrent;
+    __declspec(property(get=GetTargetPower))
+    ITubeCommandSinglePtr TargetPower;
+    __declspec(property(get=GetXrayOutControl))
+    ITubeCommandXocPtr XrayOutControl;
+    __declspec(property(get=GetStartUp))
+    ILimitableAutoCommandCOMPtr StartUp;
+    __declspec(property(get=GetRefresh))
+    ILimitableAutoCommandCOMPtr Refresh;
+    __declspec(property(get=GetFilamentAdjust))
+    IFilamentAdjustCOMPtr FilamentAdjust;
+    __declspec(property(get=GetCenterAll))
+    ITubeAutoCommandCOMPtr CenterAll;
+    __declspec(property(get=GetCenterActive))
+    ITubeAutoCommandCOMPtr CenterActive;
+    __declspec(property(get=GetTarget))
+    ITubeCommandSinglePtr Target;
+    __declspec(property(get=GetTargetList))
+    ITubeListMonitorStringPtr TargetList;
+    __declspec(property(get=GetMode))
+    ITubeCommandSinglePtr Mode;
+    __declspec(property(get=GetModeList))
+    ITubeListMonitorStringPtr ModeList;
+    __declspec(property(get=GetTubeHead))
+    ITubeMonitorSinglePtr TubeHead;
+    __declspec(property(get=GetTubeHeadList))
+    ITubeListMonitorStringPtr TubeHeadList;
+    __declspec(property(get=GetFocusCurrent))
+    ITubeCommandSinglePtr FocusCurrent;
+    __declspec(property(get=GetDefocused))
+    ITubeMonitorBoolPtr Defocused;
+    __declspec(property(get=GetFocusCenterXCurrent))
+    ITubeCommandSinglePtr FocusCenterXCurrent;
+    __declspec(property(get=GetFocusCenterYCurrent))
+    ITubeCommandSinglePtr FocusCenterYCurrent;
+    __declspec(property(get=GetCondenserCurrent))
+    ITubeCommandSinglePtr CondenserCurrent;
+    __declspec(property(get=GetCondenserCenterXCurrent))
+    ITubeCommandSinglePtr CondenserCenterXCurrent;
+    __declspec(property(get=GetCondenserCenterYCurrent))
+    ITubeCommandSinglePtr CondenserCenterYCurrent;
+    __declspec(property(get=GetFilamentCurrent))
+    ITubeCommandSinglePtr FilamentCurrent;
+    __declspec(property(get=GetApertureCurrent))
+    ITubeMonitorSinglePtr ApertureCurrent;
+    __declspec(property(get=GetInterlock))
+    ITubeMonitorBoolPtr Interlock;
+    __declspec(property(get=GetVacuumOk))
+    ITubeMonitorBoolPtr VacuumOk;
+    __declspec(property(get=GetVacuumValue))
+    ITubeMonitorSinglePtr VacuumValue;
+    __declspec(property(get=GetCoolingButton))
+    ITubeCommandBoolPtr CoolingButton;
+    __declspec(property(get=GetCoolingOk))
+    ITubeMonitorBoolPtr CoolingOk;
+    __declspec(property(get=GetCoolingValue))
+    ITubeMonitorSinglePtr CoolingValue;
+    __declspec(property(get=GetCoolingTwoOk))
+    ITubeMonitorBoolPtr CoolingTwoOk;
+    __declspec(property(get=GetCoolingTwoValue))
+    ITubeMonitorSinglePtr CoolingTwoValue;
+    __declspec(property(get=GetFlashover))
+    IFlashoverCOMPtr Flashover;
+    __declspec(property(get=GetStandBy))
+    ITubeMonitorBoolPtr StandBy;
+    __declspec(property(get=GetXrayReady))
+    ITubeMonitorBoolPtr XrayReady;
+    __declspec(property(get=GetFilamentLifetime))
+    ITubeServiceMonitorCOMPtr FilamentLifetime;
+    __declspec(property(get=GetHighVoltageCable))
+    ITubeServiceMonitorCOMPtr HighVoltageCable;
+    __declspec(property(get=GetTargetLifetime))
+    ITubeServiceMonitorCOMPtr TargetLifetime;
+    __declspec(property(get=GetTargetRotationTime))
+    ITubeServiceMonitorCOMPtr TargetRotationTime;
+    __declspec(property(get=GetAutoCommandInfo))
+    IAutoCommandInfosCOMPtr AutoCommandInfo;
+    __declspec(property(get=GetAutoModeOn))
+    ITubeMonitorBoolPtr AutoModeOn;
+    __declspec(property(get=GetCenteringApertureCurrent))
+    ITubeMonitorSinglePtr CenteringApertureCurrent;
+    __declspec(property(get=GetIpAddress))
+    _bstr_t IpAddress;
+    __declspec(property(get=GetPrewarning))
+    IPrewarningCOMPtr Prewarning;
+    __declspec(property(get=GetTurbopump))
+    ITurbopumpCommandCOMPtr Turbopump;
+    __declspec(property(get=GetMaxValidHighVoltage))
+    ITubeMonitorSinglePtr MaxValidHighVoltage;
+    __declspec(property(get=GetLeakageCurrentCorrection))
+    ITubeMonitorBoolPtr LeakageCurrentCorrection;
+    __declspec(property(get=GetIsRefreshLimitable))
+    VARIANT_BOOL IsRefreshLimitable;
+    __declspec(property(get=GetHighVoltageStableDelay))
+    ITubeFlagCOMPtr HighVoltageStableDelay;
+    __declspec(property(get=GetDefocussingList))
+    ITubeListCOMPtr DefocussingList;
+    __declspec(property(get=GetInitialStartup))
+    IInitialStartupCOMPtr InitialStartup;
+    __declspec(property(get=GetBaseVersion))
+    _bstr_t BaseVersion;
+    __declspec(property(get=GetPlcVersion))
+    _bstr_t PlcVersion;
+    __declspec(property(get=GetSerial))
+    _bstr_t Serial;
+    __declspec(property(get=GetStandbyEx))
+    IStandbyCOMPtr StandbyEx;
+    __declspec(property(get=GetStatusWord))
+    IStatusWordCOMPtr StatusWord;
+    __declspec(property(get=GetFilamentStats))
+    IFilamentStatsCOMPtr FilamentStats;
+    __declspec(property(get=GetRunningTimer))
+    ITubeTimeSpanCOMPtr RunningTimer;
+    __declspec(property(get=GetStandbyTimer))
+    ITubeTimeSpanCOMPtr StandbyTimer;
+    __declspec(property(get=GetXrayOnTimer))
+    ITubeTimeSpanCOMPtr XrayOnTimer;
+    __declspec(property(get=GetFocusTableFactoryReset))
+    ITriggerCommandCOMPtr FocusTableFactoryReset;
+    __declspec(property(get=GetCenterOffset))
+    ICenterOffsetCOMPtr CenterOffset;
+    __declspec(property(get=GetDateOfInstallation))
+    _bstr_t DateOfInstallation;
+    __declspec(property(get=GetDateOfManufacture))
+    _bstr_t DateOfManufacture;
+    __declspec(property(get=GetXrayReadyWithoutAutoFunc))
+    ITubeMonitorBoolPtr XrayReadyWithoutAutoFunc;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_Initialized (
+        IUnknown * value );
+    HRESULT remove_Initialized (
+        IUnknown * value );
+    HRESULT add_TubeStateChanged (
+        IUnknown * value );
+    HRESULT remove_TubeStateChanged (
+        IUnknown * value );
+    HRESULT add_TubeInterfaceError (
+        IUnknown * value );
+    HRESULT remove_TubeInterfaceError (
+        IUnknown * value );
+    HRESULT add_ConfigurationChanged (
+        IUnknown * value );
+    HRESULT remove_ConfigurationChanged (
+        IUnknown * value );
+    HRESULT add_RefreshLimitableChanged (
+        IUnknown * value );
+    HRESULT remove_RefreshLimitableChanged (
+        IUnknown * value );
+    VARIANT_BOOL IsConfiguredAperture ( );
+    VARIANT_BOOL IsConfiguredCenteringAperture ( );
+    VARIANT_BOOL IsConfiguredCenteringUnitOne ( );
+    VARIANT_BOOL IsConfiguredCenteringUnitTwo ( );
+    VARIANT_BOOL IsConfiguredCondenser ( );
+    VARIANT_BOOL IsConfiguredCooling ( );
+    VARIANT_BOOL IsConfiguredCoolingTwo ( );
+    VARIANT_BOOL IsConfiguredFocus ( );
+    VARIANT_BOOL IsConfiguredStandby ( );
+    VARIANT_BOOL IsConfiguredTarget ( );
+    VARIANT_BOOL IsConfiguredVacuum ( );
+    VARIANT_BOOL GetIsInitialized ( );
+    enum XRAYWorXBase::TubeStates GetTubeState ( );
+    ITubeCommandBoolPtr GetXRayOn ( );
+    ITubeCommandBoolPtr GetXRayOff ( );
+    ITubeCommandSinglePtr GetHighVoltage ( );
+    ITubeCommandSinglePtr GetEmissionCurrent ( );
+    ITubeCommandSinglePtr GetTargetCurrent ( );
+    ITubeCommandSinglePtr GetTargetPower ( );
+    ITubeCommandXocPtr GetXrayOutControl ( );
+    ILimitableAutoCommandCOMPtr GetStartUp ( );
+    ILimitableAutoCommandCOMPtr GetRefresh ( );
+    IFilamentAdjustCOMPtr GetFilamentAdjust ( );
+    ITubeAutoCommandCOMPtr GetCenterAll ( );
+    ITubeAutoCommandCOMPtr GetCenterActive ( );
+    ITubeCommandSinglePtr GetTarget ( );
+    ITubeListMonitorStringPtr GetTargetList ( );
+    ITubeCommandSinglePtr GetMode ( );
+    ITubeListMonitorStringPtr GetModeList ( );
+    ITubeMonitorSinglePtr GetTubeHead ( );
+    ITubeListMonitorStringPtr GetTubeHeadList ( );
+    ITubeCommandSinglePtr GetFocusCurrent ( );
+    ITubeMonitorBoolPtr GetDefocused ( );
+    ITubeCommandSinglePtr GetFocusCenterXCurrent ( );
+    ITubeCommandSinglePtr GetFocusCenterYCurrent ( );
+    ITubeCommandSinglePtr GetCondenserCurrent ( );
+    ITubeCommandSinglePtr GetCondenserCenterXCurrent ( );
+    ITubeCommandSinglePtr GetCondenserCenterYCurrent ( );
+    ITubeCommandSinglePtr GetFilamentCurrent ( );
+    ITubeMonitorSinglePtr GetApertureCurrent ( );
+    ITubeMonitorBoolPtr GetInterlock ( );
+    ITubeMonitorBoolPtr GetVacuumOk ( );
+    ITubeMonitorSinglePtr GetVacuumValue ( );
+    ITubeCommandBoolPtr GetCoolingButton ( );
+    ITubeMonitorBoolPtr GetCoolingOk ( );
+    ITubeMonitorSinglePtr GetCoolingValue ( );
+    ITubeMonitorBoolPtr GetCoolingTwoOk ( );
+    ITubeMonitorSinglePtr GetCoolingTwoValue ( );
+    IFlashoverCOMPtr GetFlashover ( );
+    ITubeMonitorBoolPtr GetStandBy ( );
+    ITubeMonitorBoolPtr GetXrayReady ( );
+    ITubeServiceMonitorCOMPtr GetFilamentLifetime ( );
+    ITubeServiceMonitorCOMPtr GetHighVoltageCable ( );
+    ITubeServiceMonitorCOMPtr GetTargetLifetime ( );
+    ITubeServiceMonitorCOMPtr GetTargetRotationTime ( );
+    IAutoCommandInfosCOMPtr GetAutoCommandInfo ( );
+    ITubeMonitorBoolPtr GetAutoModeOn ( );
+    ITubeMonitorSinglePtr GetCenteringApertureCurrent ( );
+    _bstr_t GetIpAddress ( );
+    IPrewarningCOMPtr GetPrewarning ( );
+    ITurbopumpCommandCOMPtr GetTurbopump ( );
+    ITubeMonitorSinglePtr GetMaxValidHighVoltage ( );
+    ITubeMonitorBoolPtr GetLeakageCurrentCorrection ( );
+    VARIANT_BOOL GetIsRefreshLimitable ( );
+    ITubeFlagCOMPtr GetHighVoltageStableDelay ( );
+    ITubeListCOMPtr GetDefocussingList ( );
+    IInitialStartupCOMPtr GetInitialStartup ( );
+    _bstr_t GetBaseVersion ( );
+    _bstr_t GetPlcVersion ( );
+    _bstr_t GetSerial ( );
+    IStandbyCOMPtr GetStandbyEx ( );
+    IStatusWordCOMPtr GetStatusWord ( );
+    IFilamentStatsCOMPtr GetFilamentStats ( );
+    ITubeTimeSpanCOMPtr GetRunningTimer ( );
+    ITubeTimeSpanCOMPtr GetStandbyTimer ( );
+    ITubeTimeSpanCOMPtr GetXrayOnTimer ( );
+    ITriggerCommandCOMPtr GetFocusTableFactoryReset ( );
+    ICenterOffsetCOMPtr GetCenterOffset ( );
+    _bstr_t GetDateOfInstallation ( );
+    _bstr_t GetDateOfManufacture ( );
+    ITubeMonitorBoolPtr GetXrayReadyWithoutAutoFunc ( );
+    VARIANT_BOOL LogOn (
+        _bstr_t password );
+    HRESULT LogOff ( );
+    HRESULT PlcRestart ( );
+};
+
+struct __declspec(uuid("355c4040-38af-42e6-970d-2575b2732277"))
+TubeInterfaceCOM;
+    // interface _Object
+    // [ default ] dispinterface ITubeInterface
+    // [ default, source ] dispinterface ITubeInterfaceEvents
+
+struct __declspec(uuid("1d502101-e904-44d6-aef5-1a0a8e638898"))
+ITubeInterfaceEventArgsCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetToString))
+    _bstr_t ToString;
+    __declspec(property(get=GetCode))
+    unsigned long Code;
+    __declspec(property(get=GetHelp))
+    _bstr_t Help;
+    __declspec(property(get=GetInfo))
+    _bstr_t Info;
+    __declspec(property(get=GetText))
+    _bstr_t Text;
+    __declspec(property(get=GetType))
+    enum XRAYWorXBase::TubeErrorType Type;
+    __declspec(property(get=GetIp))
+    _bstr_t Ip;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    _bstr_t GetToString ( );
+    unsigned long GetCode ( );
+    _bstr_t GetHelp ( );
+    _bstr_t GetInfo ( );
+    _bstr_t GetText ( );
+    enum XRAYWorXBase::TubeErrorType GetType ( );
+    _bstr_t GetIp ( );
+};
+
+struct __declspec(uuid("051a22c4-422e-44ec-8bbd-c699579d43a5"))
+TubeInterfaceEventArgsCOM;
+    // interface _Object
+    // [ default ] dispinterface ITubeInterfaceEventArgsCOM
+
+struct __declspec(uuid("251b44c0-b4cb-4aee-b1d0-d3f451d54c98"))
+ITubeListCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetListIndex))
+    long ListIndex;
+    __declspec(property(get=GetListItem))
+    _bstr_t ListItem;
+    __declspec(property(get=GetList))
+    SAFEARRAY * List;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_Changed (
+        IUnknown * value );
+    HRESULT remove_Changed (
+        IUnknown * value );
+    HRESULT add_ListChanged (
+        IUnknown * value );
+    HRESULT remove_ListChanged (
+        IUnknown * value );
+    HRESULT ChangeIndex (
+        long index );
+    long GetListIndex ( );
+    _bstr_t GetListItem ( );
+    SAFEARRAY * GetList ( );
+};
+
+struct __declspec(uuid("e81cbe79-18c2-4a49-b0aa-f6c7a4c2f720"))
+ITubeListCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT Changed ( );
+    HRESULT ListChanged ( );
+};
+
+struct __declspec(uuid("23d49a1a-904b-4917-8bd5-6c223179d49f"))
+TubeListCOM;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface ITubeListCOM
+    // [ default, source ] dispinterface ITubeListCOMEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("adf3aa33-1646-4ea9-a837-af9d85826a19"))
+ITubeListMonitorString : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetList))
+    SAFEARRAY * List;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_ListChanged (
+        IUnknown * value );
+    HRESULT remove_ListChanged (
+        IUnknown * value );
+    SAFEARRAY * GetList ( );
+};
+
+struct __declspec(uuid("215e9505-32bf-4d5d-aa3b-b927f54d9618"))
+ITubeListMonitorStringEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT ListChanged ( );
+};
+
+struct __declspec(uuid("0effdea1-644a-41a6-98a4-616c9bc87b64"))
+TubeListMonitorString;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface ITubeListMonitorString
+    // [ default, source ] dispinterface ITubeListMonitorStringEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("5230f5f7-bf04-40d9-a666-8d3229bff407"))
+ITubeLoaderCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetDefaultIpAddress))
+    IIpEntryCOMPtr DefaultIpAddress;
+    __declspec(property(get=GetIpAddresses))
+    SAFEARRAY * IpAddresses;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    IErrorInfoCOMPtr GetErrorInfo (
+        unsigned long ErrorCode );
+    ITubeInterfacePtr GetTubeInterface (
+        _bstr_t IpAddress );
+    IIpEntryCOMPtr GetDefaultIpAddress ( );
+    SAFEARRAY * GetIpAddresses ( );
+    HRESULT SetCustomPaths (
+        _bstr_t defaultDataPath,
+        _bstr_t appDataPath,
+        _bstr_t userDataPath );
+    HRESULT SetCustomPathsWithAdditionalDefaultLogging (
+        _bstr_t defaultDataPath,
+        _bstr_t appDataPath,
+        _bstr_t userDataPath );
+};
+
+struct __declspec(uuid("6567f393-a81d-4326-9f07-199ede9ac833"))
+IDataModuleLoaderCOM : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    IDataModuleProviderCOMPtr GetDataModuleProvider (
+        _bstr_t IpAddress );
+};
+
+struct __declspec(uuid("46d84795-d783-4357-93d7-a86590e6dc40"))
+TubeLoaderCOM;
+    // interface _Object
+    // [ default ] dispinterface ITubeLoaderCOM
+    // dispinterface IDataModuleLoaderCOM
+
+struct __declspec(uuid("4c28d999-5a08-47af-9998-71dd88c4d62f"))
+ITubeMonitorXoc : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetMonitorValue))
+    enum XRAYWorXBase::XrayOutControls MonitorValue;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_MonitorValueChanged (
+        IUnknown * value );
+    HRESULT remove_MonitorValueChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::XrayOutControls GetMonitorValue ( );
+};
+
+struct __declspec(uuid("10f2e4f4-ac87-4195-95a0-4fb09e08298b"))
+ITubeMonitorXocEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT MonitorValueChanged ( );
+};
+
+struct __declspec(uuid("22bf30eb-36df-484b-badc-c83575ce8fc4"))
+TubeMonitorXoc;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface ITubeMonitorXoc
+    // [ default, source ] dispinterface ITubeMonitorXocEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("c262253c-5d58-4af7-8960-8f0c876d2fd1"))
+ITubeCommandXoc : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetMonitorValue))
+    enum XRAYWorXBase::XrayOutControls MonitorValue;
+    __declspec(property(get=GetPcDemandValue,put=PutPcDemandValue))
+    enum XRAYWorXBase::XrayOutControls PcDemandValue;
+    __declspec(property(get=GetPlcDemandValue))
+    enum XRAYWorXBase::XrayOutControls PlcDemandValue;
+    __declspec(property(get=GetState))
+    enum XRAYWorXBase::CommandStates State;
+    __declspec(property(get=GetErrorCode))
+    unsigned long ErrorCode;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_MonitorValueChanged (
+        IUnknown * value );
+    HRESULT remove_MonitorValueChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::XrayOutControls GetMonitorValue ( );
+    HRESULT add_PlcDemandValueChanged (
+        IUnknown * value );
+    HRESULT remove_PlcDemandValueChanged (
+        IUnknown * value );
+    HRESULT add_StateChanged (
+        IUnknown * value );
+    HRESULT remove_StateChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::XrayOutControls GetPcDemandValue ( );
+    void PutPcDemandValue (
+        enum XRAYWorXBase::XrayOutControls _arg1 );
+    enum XRAYWorXBase::XrayOutControls GetPlcDemandValue ( );
+    enum XRAYWorXBase::CommandStates GetState ( );
+    unsigned long GetErrorCode ( );
+};
+
+struct __declspec(uuid("4e4a30c3-c320-43b5-97a1-36040b0e722a"))
+ITubeCommandXocEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT MonitorValueChanged ( );
+    HRESULT StateChanged ( );
+    HRESULT PlcDemandValueChanged ( );
+};
+
+struct __declspec(uuid("f1690ba3-8bef-4a00-a73e-bc2073fa970a"))
+TubeCommandXoc;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // dispinterface ITubeMonitorXoc
+    // [ default ] dispinterface ITubeCommandXoc
+    // [ default, source ] dispinterface ITubeCommandXocEvents
+    // [ source ] dispinterface ITubeMonitorXocEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("d286fcd5-41b1-494d-b50e-36f6509492a1"))
+ITubeCommandBool : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetMonitorValue))
+    VARIANT_BOOL MonitorValue;
+    __declspec(property(get=GetPcDemandValue,put=PutPcDemandValue))
+    VARIANT_BOOL PcDemandValue;
+    __declspec(property(get=GetState))
+    enum XRAYWorXBase::CommandStates State;
+    __declspec(property(get=GetErrorCode))
+    unsigned long ErrorCode;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_MonitorValueChanged (
+        IUnknown * value );
+    HRESULT remove_MonitorValueChanged (
+        IUnknown * value );
+    VARIANT_BOOL GetMonitorValue ( );
+    HRESULT add_StateChanged (
+        IUnknown * value );
+    HRESULT remove_StateChanged (
+        IUnknown * value );
+    VARIANT_BOOL GetPcDemandValue ( );
+    void PutPcDemandValue (
+        VARIANT_BOOL _arg1 );
+    enum XRAYWorXBase::CommandStates GetState ( );
+    unsigned long GetErrorCode ( );
+};
+
+struct __declspec(uuid("20ec5ff8-89b3-4541-bd5d-e13a0a5383fd"))
+ITubeCommandBoolEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT MonitorValueChanged ( );
+    HRESULT StateChanged ( );
+};
+
+struct __declspec(uuid("1a38a1d0-fc9c-4121-891b-c6ade44b1025"))
+TubeCommandBool;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // dispinterface ITubeMonitorBool
+    // [ default ] dispinterface ITubeCommandBool
+    // [ default, source ] dispinterface ITubeCommandBoolEvents
+    // [ source ] dispinterface ITubeMonitorBoolEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("01a2eab2-a34d-404c-a3f7-893c43f4aa48"))
+ITubeMonitorSingle : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetMonitorValue))
+    float MonitorValue;
+    __declspec(property(get=GetStable))
+    VARIANT_BOOL Stable;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_MonitorValueChanged (
+        IUnknown * value );
+    HRESULT remove_MonitorValueChanged (
+        IUnknown * value );
+    HRESULT add_StableChanged (
+        IUnknown * value );
+    HRESULT remove_StableChanged (
+        IUnknown * value );
+    float GetMonitorValue ( );
+    VARIANT_BOOL GetStable ( );
+};
+
+struct __declspec(uuid("58b0cc92-b8f6-457e-a38e-fb360952556f"))
+ITubeMonitorSingleEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT MonitorValueChanged ( );
+    HRESULT StableChanged ( );
+};
+
+struct __declspec(uuid("5db38004-86e7-4b25-9609-4866382ad069"))
+TubeMonitorSingle;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface ITubeMonitorSingle
+    // [ default, source ] dispinterface ITubeMonitorSingleEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("fb18797e-759e-4814-a624-dc8d8f2c4986"))
+ITubeCommandSingle : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetMonitorValue))
+    float MonitorValue;
+    __declspec(property(get=GetStable))
+    VARIANT_BOOL Stable;
+    __declspec(property(get=GetPcDemandValue,put=PutPcDemandValue))
+    float PcDemandValue;
+    __declspec(property(get=GetDemandLowerLimit))
+    float DemandLowerLimit;
+    __declspec(property(get=GetDemandUpperLimit))
+    float DemandUpperLimit;
+    __declspec(property(get=GetIsLimited))
+    VARIANT_BOOL IsLimited;
+    __declspec(property(get=GetPlcDemandValue))
+    float PlcDemandValue;
+    __declspec(property(get=GetState))
+    enum XRAYWorXBase::CommandStates State;
+    __declspec(property(get=GetErrorCode))
+    unsigned long ErrorCode;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_MonitorValueChanged (
+        IUnknown * value );
+    HRESULT remove_MonitorValueChanged (
+        IUnknown * value );
+    HRESULT add_StableChanged (
+        IUnknown * value );
+    HRESULT remove_StableChanged (
+        IUnknown * value );
+    float GetMonitorValue ( );
+    VARIANT_BOOL GetStable ( );
+    HRESULT add_DemandLowerLimitChanged (
+        IUnknown * value );
+    HRESULT remove_DemandLowerLimitChanged (
+        IUnknown * value );
+    HRESULT add_DemandUpperLimitChanged (
+        IUnknown * value );
+    HRESULT remove_DemandUpperLimitChanged (
+        IUnknown * value );
+    HRESULT add_PlcDemandValueChanged (
+        IUnknown * value );
+    HRESULT remove_PlcDemandValueChanged (
+        IUnknown * value );
+    HRESULT add_StateChanged (
+        IUnknown * value );
+    HRESULT remove_StateChanged (
+        IUnknown * value );
+    float GetPcDemandValue ( );
+    void PutPcDemandValue (
+        float _arg1 );
+    float GetDemandLowerLimit ( );
+    float GetDemandUpperLimit ( );
+    VARIANT_BOOL GetIsLimited ( );
+    float GetPlcDemandValue ( );
+    enum XRAYWorXBase::CommandStates GetState ( );
+    unsigned long GetErrorCode ( );
+};
+
+struct __declspec(uuid("e138f00b-93fa-4efb-bb4b-5d6214b31e31"))
+ITubeCommandSingleEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT MonitorValueChanged ( );
+    HRESULT StableChanged ( );
+    HRESULT DemandLowerLimitChanged ( );
+    HRESULT DemandUpperLimitChanged ( );
+    HRESULT StateChanged ( );
+    HRESULT PlcDemandValueChanged ( );
+};
+
+struct __declspec(uuid("baff996a-748a-414d-88f9-3c5e106ea473"))
+TubeCommandSingle;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // dispinterface ITubeMonitorSingle
+    // [ default ] dispinterface ITubeCommandSingle
+    // [ default, source ] dispinterface ITubeCommandSingleEvents
+    // [ source ] dispinterface ITubeMonitorSingleEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("abab3cf8-64a5-4261-bd7d-574c2beb9691"))
+ITubeMonitorBool : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetMonitorValue))
+    VARIANT_BOOL MonitorValue;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_MonitorValueChanged (
+        IUnknown * value );
+    HRESULT remove_MonitorValueChanged (
+        IUnknown * value );
+    VARIANT_BOOL GetMonitorValue ( );
+};
+
+struct __declspec(uuid("ab2c1031-a704-4d95-8a68-32e98873adaf"))
+ITubeMonitorBoolEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT MonitorValueChanged ( );
+};
+
+struct __declspec(uuid("0bf637f4-0388-4772-a4a8-70fc3a603d05"))
+TubeMonitorBool;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface ITubeMonitorBool
+    // [ default, source ] dispinterface ITubeMonitorBoolEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("92e09f6b-64f4-47c5-84a3-3c6dbf2943b0"))
+ITubeServiceMonitorCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetRemainingTimeInSeconds))
+    long RemainingTimeInSeconds;
+    __declspec(property(get=GetServiceState))
+    enum XRAYWorXBase::ServiceState ServiceState;
+    __declspec(property(get=GetResetState))
+    enum XRAYWorXBase::CommandStates ResetState;
+    __declspec(property(get=GetResetErrorCode))
+    unsigned long ResetErrorCode;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_RemainingTimeChanged (
+        IUnknown * value );
+    HRESULT remove_RemainingTimeChanged (
+        IUnknown * value );
+    HRESULT add_ServiceStateChanged (
+        IUnknown * value );
+    HRESULT remove_ServiceStateChanged (
+        IUnknown * value );
+    long GetRemainingTimeInSeconds ( );
+    enum XRAYWorXBase::ServiceState GetServiceState ( );
+    HRESULT add_ResetStateChanged (
+        IUnknown * value );
+    HRESULT remove_ResetStateChanged (
+        IUnknown * value );
+    HRESULT Reset ( );
+    enum XRAYWorXBase::CommandStates GetResetState ( );
+    unsigned long GetResetErrorCode ( );
+};
+
+struct __declspec(uuid("e7a90dad-2af5-427c-9f0f-dbeaa003db8c"))
+ITubeServiceMonitorCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT RemainingTimeChanged ( );
+    HRESULT ServiceStateChanged ( );
+    HRESULT ResetStateChanged ( );
+};
+
+struct __declspec(uuid("3b54e179-659d-4e1c-870f-042514c87c06"))
+TubeServiceMonitorCOM;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface ITubeServiceMonitorCOM
+    // [ default, source ] dispinterface ITubeServiceMonitorCOMEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("e9e8efd6-48a1-40ab-8e2a-5517579f3011"))
+ITubeTimeSpanCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetTimeInSeconds))
+    unsigned long TimeInSeconds;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_TimeChanged (
+        IUnknown * value );
+    HRESULT remove_TimeChanged (
+        IUnknown * value );
+    unsigned long GetTimeInSeconds ( );
+};
+
+struct __declspec(uuid("a4983c4d-1ca9-4172-a05a-cdfb482a59d0"))
+ITubeTimeSpanCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT TimeChanged ( );
+};
+
+struct __declspec(uuid("2f8354a4-0d30-4a18-8fab-39f84b729380"))
+TubeTimeSpanCOM;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface ITubeTimeSpanCOM
+    // [ default, source ] dispinterface ITubeTimeSpanCOMEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("258dd57d-fe46-4ab4-90d2-8cb076d20994"))
+ITurbopumpCommandCOM : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsAccessible))
+    enum XRAYWorXBase::AccessStates IsAccessible;
+    __declspec(property(get=GetAutoVentilation,put=PutAutoVentilation))
+    VARIANT_BOOL AutoVentilation;
+    __declspec(property(get=GetErrorCode))
+    unsigned long ErrorCode;
+    __declspec(property(get=GetIsSwitchedOn))
+    VARIANT_BOOL IsSwitchedOn;
+    __declspec(property(get=GetIsVentilated))
+    VARIANT_BOOL IsVentilated;
+    __declspec(property(get=GetRotationSpeed))
+    float RotationSpeed;
+    __declspec(property(get=GetState))
+    enum XRAYWorXBase::CommandStates State;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT add_IsAccessibleChanged (
+        IUnknown * value );
+    HRESULT remove_IsAccessibleChanged (
+        IUnknown * value );
+    enum XRAYWorXBase::AccessStates GetIsAccessible ( );
+    VARIANT_BOOL HasReadAccess ( );
+    VARIANT_BOOL HasReadWriteAccess ( );
+    VARIANT_BOOL IsAccessDenied ( );
+    VARIANT_BOOL IsNotSupported ( );
+    HRESULT add_IsSwitchedOnChanged (
+        IUnknown * value );
+    HRESULT remove_IsSwitchedOnChanged (
+        IUnknown * value );
+    HRESULT add_IsVentilatedChanged (
+        IUnknown * value );
+    HRESULT remove_IsVentilatedChanged (
+        IUnknown * value );
+    HRESULT add_RotationSpeedChanged (
+        IUnknown * value );
+    HRESULT remove_RotationSpeedChanged (
+        IUnknown * value );
+    HRESULT add_StateChanged (
+        IUnknown * value );
+    HRESULT remove_StateChanged (
+        IUnknown * value );
+    HRESULT Start ( );
+    HRESULT Stop ( );
+    VARIANT_BOOL GetAutoVentilation ( );
+    void PutAutoVentilation (
+        VARIANT_BOOL _arg1 );
+    unsigned long GetErrorCode ( );
+    VARIANT_BOOL GetIsSwitchedOn ( );
+    VARIANT_BOOL GetIsVentilated ( );
+    float GetRotationSpeed ( );
+    enum XRAYWorXBase::CommandStates GetState ( );
+};
+
+struct __declspec(uuid("62580c9c-94ef-4ceb-bab7-5c3f2ccd44cf"))
+ITurbopumpCommandCOMEvents : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT IsAccessibleChanged ( );
+    HRESULT IsSwitchedOnChanged ( );
+    HRESULT IsVentilatedChanged ( );
+    HRESULT RotationSpeedChanged ( );
+    HRESULT StateChanged ( );
+};
+
+struct __declspec(uuid("f450df28-5fb8-4fbb-8b03-c98252901235"))
+TurbopumpCommandCOM;
+    // interface _Object
+    // dispinterface IAccessibleBaseCOM
+    // [ default ] dispinterface ITurbopumpCommandCOM
+    // [ default, source ] dispinterface ITurbopumpCommandCOMEvents
+    // [ source ] dispinterface IAccessibleBaseCOMEvents
+
+struct __declspec(uuid("fbf3f545-d86b-3c76-8bbe-1c66d38e30e0"))
+DebugLog;
+    // [ default ] interface _DebugLog
+    // interface _Object
+
+struct __declspec(uuid("6bc338e6-5c89-3f46-869c-63abd4885b6e"))
+_DebugLog : IDispatch
+{};
+
+//
+// Named GUID constants initializations
+//
+
+extern "C" const GUID __declspec(selectany) LIBID_XRAYWorXBaseCOM =
+    {0x4f9165af,0x924c,0x42c2,{0x8c,0xc2,0x8f,0xd3,0x43,0x6c,0x44,0x56}};
+extern "C" const GUID __declspec(selectany) DIID_IAccessibleBaseCOM =
+    {0x6f9a1fa7,0x82c7,0x40f4,{0x87,0x97,0x20,0x20,0x2d,0xb2,0x71,0x85}};
+extern "C" const GUID __declspec(selectany) DIID_IAccessibleBaseCOMEvents =
+    {0xfb235634,0x4303,0x4590,{0xba,0x43,0xcb,0xc7,0xf7,0x6e,0xdc,0x2f}};
+extern "C" const GUID __declspec(selectany) CLSID_AccessibleBaseCOM =
+    {0x5024ab8a,0xa77a,0x4638,{0x83,0xb7,0x91,0x23,0x18,0x20,0x95,0x7e}};
+extern "C" const GUID __declspec(selectany) DIID_IAutoCommandInfosCOM =
+    {0x8a9c5db7,0x69f8,0x4046,{0x97,0x1a,0x1b,0xe7,0xc9,0x16,0x6c,0xeb}};
+extern "C" const GUID __declspec(selectany) DIID_IAutoCommandInfosCOMEvents =
+    {0xc5e3dc06,0x468f,0x4249,{0x9a,0xfc,0x65,0xb7,0x29,0x87,0x1e,0xce}};
+extern "C" const GUID __declspec(selectany) CLSID_AutoCommandInfosCOM =
+    {0xdd0a6a82,0xfd21,0x4067,{0x91,0xbc,0xa1,0x58,0xf1,0x53,0xe1,0x90}};
+extern "C" const GUID __declspec(selectany) DIID_ICenterOffsetCOM =
+    {0xe0d7222c,0x7368,0x4570,{0x85,0xb3,0x03,0x91,0x1e,0x6d,0xf9,0x5a}};
+extern "C" const GUID __declspec(selectany) DIID_ICenterOffsetCOMEvents =
+    {0x92f71b6a,0xb4f7,0x4bfd,{0x95,0x03,0x7d,0xb8,0xca,0x8b,0xed,0x68}};
+extern "C" const GUID __declspec(selectany) CLSID_CenterOffsetCOM =
+    {0x0695aa2a,0x1bd7,0x4ced,{0x90,0x42,0x67,0xa9,0xd4,0xf7,0xab,0x04}};
+extern "C" const GUID __declspec(selectany) DIID_ICommandInfoMonitorCOM =
+    {0x49c4c8a3,0x6b3d,0x4d17,{0x98,0x3d,0xd1,0x9b,0xe0,0x81,0x31,0x3c}};
+extern "C" const GUID __declspec(selectany) DIID_ICommandInfoMonitorCOMEvents =
+    {0xb1cb53bd,0x6401,0x4f0a,{0x8e,0x97,0xc3,0x5d,0xf4,0xc3,0x83,0x7b}};
+extern "C" const GUID __declspec(selectany) CLSID_CommandInfoMonitorCOM =
+    {0x511faa94,0xf12f,0x4ff1,{0xae,0x31,0x11,0xe5,0x84,0xa7,0x43,0xa6}};
+extern "C" const GUID __declspec(selectany) DIID_ICoilDataCOM =
+    {0x554f38a3,0x5f53,0x4073,{0x98,0x25,0x7a,0x90,0xad,0xea,0x99,0x0a}};
+extern "C" const GUID __declspec(selectany) DIID_ICoilDataCOMEvents =
+    {0x1ab03e80,0xa94d,0x4de4,{0xbb,0x45,0xaa,0xb2,0x47,0x7e,0xf2,0x89}};
+extern "C" const GUID __declspec(selectany) CLSID_CoilDataCOM =
+    {0xb48eb7eb,0x21bc,0x4e86,{0xac,0xea,0x39,0x4f,0xfc,0x1c,0x2a,0x5c}};
+extern "C" const GUID __declspec(selectany) DIID_IConditioningCOM =
+    {0x5e84b3db,0xe89f,0x4ea3,{0xa2,0xda,0xc3,0x94,0x8d,0x95,0x48,0xd7}};
+extern "C" const GUID __declspec(selectany) DIID_IConditioningCOMEvents =
+    {0x497e5d64,0x7597,0x4394,{0xa5,0x67,0xc8,0x32,0x45,0x6c,0x19,0x4e}};
+extern "C" const GUID __declspec(selectany) CLSID_ConditioningCOM =
+    {0x4f3509d7,0x261a,0x4c0b,{0xb1,0x30,0x71,0x5b,0x2f,0x3e,0x2d,0x43}};
+extern "C" const GUID __declspec(selectany) CLSID_ConditioningSettingsCOM =
+    {0x73b90296,0x6a74,0x4ca0,{0xab,0x7f,0xdc,0x7a,0x4e,0x7c,0xbe,0x52}};
+extern "C" const GUID __declspec(selectany) DIID_IDataModuleCOM =
+    {0xf910a0d1,0x9c58,0x4621,{0x85,0xe3,0xd9,0xfd,0xd4,0x45,0xe4,0x84}};
+extern "C" const GUID __declspec(selectany) DIID_IDataModuleCOMEvents =
+    {0x106d6857,0xc591,0x4e8d,{0xb2,0xd9,0x4f,0x29,0xba,0xd5,0x4d,0xda}};
+extern "C" const GUID __declspec(selectany) CLSID_DataModuleCOM =
+    {0x6fa53ef7,0xaae6,0x43fc,{0x8c,0xeb,0x73,0xcc,0x03,0xbd,0x5f,0x52}};
+extern "C" const GUID __declspec(selectany) DIID_IDataModuleProviderCOM =
+    {0xc8871221,0x2701,0x4c54,{0xaa,0x0b,0x3b,0x01,0x7c,0xf7,0x30,0xb0}};
+extern "C" const GUID __declspec(selectany) DIID_IDataModuleProviderCOMEvents =
+    {0x2741709d,0x2611,0x4ac8,{0x80,0x9b,0x14,0x24,0x05,0x01,0xa2,0xde}};
+extern "C" const GUID __declspec(selectany) CLSID_DataModuleProviderCOM =
+    {0x3c533024,0xce70,0x423c,{0xb7,0x97,0x51,0x83,0x6c,0xc6,0x54,0x45}};
+extern "C" const GUID __declspec(selectany) DIID_IErrorInfoCOM =
+    {0x6c1f6429,0x1c27,0x4030,{0xa1,0xbc,0xda,0xcb,0xe2,0x44,0xf1,0x30}};
+extern "C" const GUID __declspec(selectany) CLSID_ErrorInfoCOM =
+    {0x12f0264c,0x1728,0x4d9b,{0x84,0x45,0x33,0x46,0xe6,0x4c,0x45,0x65}};
+extern "C" const GUID __declspec(selectany) DIID_IFilamentAdjustCOM =
+    {0x2fe70bdb,0xdab6,0x46fb,{0x87,0xe4,0x26,0x01,0x31,0x92,0x4e,0xc0}};
+extern "C" const GUID __declspec(selectany) DIID_IFilamentAdjustCOMEvents =
+    {0x929c3240,0x145e,0x4d7c,{0xa4,0x3b,0xa1,0x12,0x3a,0xd2,0x6a,0xc0}};
+extern "C" const GUID __declspec(selectany) CLSID_FilamentAdjustCOM =
+    {0x71145054,0xd051,0x4044,{0xbb,0x40,0xb1,0x45,0x12,0xbb,0xc9,0x64}};
+extern "C" const GUID __declspec(selectany) DIID_ICorrectionFactorInfoCOM =
+    {0x0549317f,0x66fb,0x40d8,{0xb3,0x81,0xeb,0xa7,0xb1,0xc7,0x9a,0x5f}};
+extern "C" const GUID __declspec(selectany) CLSID_CorrectionFactorInfoCOM =
+    {0x0aebae47,0x0977,0x4306,{0xae,0x1e,0x57,0xa2,0x20,0x75,0x32,0x79}};
+extern "C" const GUID __declspec(selectany) DIID_IFilamentStatsCOM =
+    {0xf32fa78d,0xb33c,0x4eb4,{0xb1,0xa9,0xd8,0x3c,0xc6,0x2f,0xca,0x00}};
+extern "C" const GUID __declspec(selectany) DIID_IFilamentStatsCOMEvents =
+    {0xf85dda08,0x24bf,0x458c,{0xb3,0xbc,0x13,0xb0,0xda,0xd5,0x45,0xfd}};
+extern "C" const GUID __declspec(selectany) CLSID_FilamentStatsCOM =
+    {0xa49cc59e,0xc3a7,0x4ad2,{0xa9,0x05,0x98,0x7e,0x60,0xf1,0x40,0x28}};
+extern "C" const GUID __declspec(selectany) DIID_IFlashoverCOM =
+    {0xa8ea7591,0x0414,0x4e78,{0x82,0x18,0x84,0x59,0xe2,0x5a,0x66,0xbe}};
+extern "C" const GUID __declspec(selectany) DIID_IFlashoverCOMEvents =
+    {0x0fee245b,0x4eee,0x40d2,{0x95,0x7e,0x9f,0x29,0x95,0xbf,0x9b,0x6d}};
+extern "C" const GUID __declspec(selectany) CLSID_FlashoverCOM =
+    {0xa4bc74dd,0xfe05,0x45ad,{0x9b,0x64,0x95,0xcb,0x2c,0xcc,0x4c,0xb2}};
+extern "C" const GUID __declspec(selectany) DIID_IFloatIntervalCOM =
+    {0xd6949394,0x80ca,0x416f,{0x9c,0x7f,0x62,0xf9,0x06,0xd2,0xa2,0x6b}};
+extern "C" const GUID __declspec(selectany) DIID_IFloatIntervalCOMEvents =
+    {0x71b36287,0x2522,0x45dc,{0xa1,0xad,0xf3,0x54,0xc6,0xc4,0x7e,0xb2}};
+extern "C" const GUID __declspec(selectany) CLSID_FloatIntervalCOM =
+    {0xf441d480,0xf134,0x454b,{0x8d,0x1e,0xc9,0xd5,0x8f,0xdf,0xca,0x97}};
+extern "C" const GUID __declspec(selectany) DIID_IInitialStartupCOM =
+    {0x329809a0,0x8f41,0x469f,{0x96,0x0d,0x8f,0xe2,0x92,0xb8,0x14,0xc2}};
+extern "C" const GUID __declspec(selectany) DIID_IInitialStartupCOMEvents =
+    {0x27c97f3f,0x781d,0x4177,{0xa7,0x71,0x03,0x0d,0x75,0x0c,0xc7,0xc7}};
+extern "C" const GUID __declspec(selectany) CLSID_InitialStartupCOM =
+    {0x893344f9,0x62c8,0x41ed,{0xbb,0x71,0x31,0x4a,0x4f,0x0b,0x7c,0x61}};
+extern "C" const GUID __declspec(selectany) DIID_IInt32IntervalCOM =
+    {0xed74d648,0x9291,0x429c,{0x87,0x3c,0xeb,0x46,0x0f,0x33,0xb8,0xb8}};
+extern "C" const GUID __declspec(selectany) DIID_IInt32IntervalCOMEvents =
+    {0xe07b6d08,0xc3de,0x4154,{0x80,0x4b,0x1b,0x8d,0x1b,0xc2,0x36,0x52}};
+extern "C" const GUID __declspec(selectany) CLSID_Int32IntervalCOM =
+    {0x22ce621a,0x6a18,0x4eff,{0xa8,0x3f,0x28,0xda,0x7c,0x0b,0xa3,0x64}};
+extern "C" const GUID __declspec(selectany) DIID_IIpEntryCOM =
+    {0x0a850822,0x56ba,0x4ccc,{0xb5,0x6e,0x08,0x72,0x73,0x1d,0xde,0xc4}};
+extern "C" const GUID __declspec(selectany) CLSID_IpEntryCOM =
+    {0xe42ca596,0xd374,0x4460,{0xab,0x80,0x1f,0x4c,0x1a,0x89,0xf2,0x51}};
+extern "C" const GUID __declspec(selectany) DIID_ILeakageCurrentTestCOM =
+    {0x3ef44d49,0xc6ce,0x44fa,{0x87,0x2e,0x27,0x98,0xe8,0x8b,0xb5,0x7d}};
+extern "C" const GUID __declspec(selectany) DIID_ILeakageCurrentTestCOMEvents =
+    {0x1d21cc13,0xd74d,0x41d3,{0x92,0x12,0x33,0x4e,0xdf,0xe3,0xa2,0xc3}};
+extern "C" const GUID __declspec(selectany) CLSID_LeakageCurrentTestCOM =
+    {0x45cf39bc,0x7a10,0x4d4a,{0xb8,0xe9,0xb6,0x16,0x6a,0x44,0x36,0x22}};
+extern "C" const GUID __declspec(selectany) DIID_IPrewarningCOM =
+    {0xbcd05870,0xc724,0x46e2,{0xbd,0xda,0xb2,0xc2,0x7b,0xd6,0x92,0x15}};
+extern "C" const GUID __declspec(selectany) DIID_IPrewarningCOMEvents =
+    {0x08d25262,0x1b91,0x474e,{0xbb,0xf5,0xa3,0xec,0x3d,0x65,0xc3,0xe0}};
+extern "C" const GUID __declspec(selectany) CLSID_PrewarningCOM =
+    {0x7f10538b,0x448d,0x4cc7,{0xb4,0x47,0xbc,0x75,0x3d,0x99,0xf6,0xa7}};
+extern "C" const GUID __declspec(selectany) DIID_ILimitableAutoCommandCOM =
+    {0x3e51cf1c,0xbc88,0x427d,{0x8d,0x03,0x8b,0x35,0x5d,0xd7,0xfd,0x12}};
+extern "C" const GUID __declspec(selectany) DIID_ILimitableAutoCommandCOMEvents =
+    {0xfdb0df8b,0x5a12,0x41b3,{0x9e,0xf5,0xdd,0x1f,0x32,0xbd,0x90,0x71}};
+extern "C" const GUID __declspec(selectany) CLSID_LimitableAutoCommandCOM =
+    {0xdfddfd6d,0x63af,0x4f13,{0xb6,0xe0,0xd9,0x0c,0x39,0xef,0x66,0xb3}};
+extern "C" const GUID __declspec(selectany) DIID_IResultCOM =
+    {0x62be7cd7,0x04df,0x41fd,{0xa4,0xf8,0x99,0x24,0x1a,0xe8,0x4d,0x0f}};
+extern "C" const GUID __declspec(selectany) DIID_IResultFloatCOM =
+    {0xfecc30bc,0x05b4,0x47db,{0xa1,0x9c,0x8b,0xa6,0x77,0xf7,0xc1,0x16}};
+extern "C" const GUID __declspec(selectany) DIID_IResultObjectCOM =
+    {0xef3e1242,0xea55,0x48ed,{0x92,0x5a,0x05,0x0d,0xa4,0xe5,0xbc,0xdb}};
+extern "C" const GUID __declspec(selectany) CLSID_ResultCOM =
+    {0x774f0f9e,0x8072,0x470a,{0x8a,0x29,0xeb,0x2e,0x6b,0x0c,0x6e,0x71}};
+extern "C" const GUID __declspec(selectany) CLSID_ResultObjectCOM =
+    {0x2c058ac9,0x99e8,0x49dc,{0xb6,0x8b,0x00,0x12,0xd6,0xfa,0xde,0x2f}};
+extern "C" const GUID __declspec(selectany) CLSID_ResultFloatCOM =
+    {0xe73b222d,0x666f,0x4e33,{0xa2,0x90,0xaa,0x82,0x6d,0xc1,0x13,0xda}};
+extern "C" const GUID __declspec(selectany) DIID_IStandbyCOM =
+    {0x49a3cb52,0x561e,0x457f,{0x9e,0x92,0x42,0xbb,0x66,0xc0,0xd8,0x39}};
+extern "C" const GUID __declspec(selectany) DIID_IStandbyCOMEvents =
+    {0xd9c376c9,0xdfbe,0x43c4,{0xb8,0xa2,0x09,0x8c,0x66,0x1c,0x6f,0xb1}};
+extern "C" const GUID __declspec(selectany) CLSID_StandbyCOM =
+    {0x788308f0,0x7a77,0x4edf,{0xb8,0x6b,0x20,0x22,0x20,0x1f,0x91,0xf9}};
+extern "C" const GUID __declspec(selectany) DIID_IStatusWordCOM =
+    {0x3d726fa3,0x6350,0x4cd8,{0x84,0x86,0x7d,0xa8,0xb5,0x6f,0x55,0xfe}};
+extern "C" const GUID __declspec(selectany) DIID_IStatusWordCOMEvents =
+    {0xf8cc9480,0x2319,0x411a,{0xac,0x7f,0x30,0x6e,0x09,0xea,0xe6,0xac}};
+extern "C" const GUID __declspec(selectany) CLSID_StatusWordCOM =
+    {0x3c0affde,0x1f22,0x49fd,{0x88,0xdb,0x07,0xde,0x2d,0x82,0x6b,0x7a}};
+extern "C" const GUID __declspec(selectany) DIID_ITriggerCommandCOM =
+    {0xe6f672e8,0xf232,0x4212,{0xb7,0x5b,0x59,0x12,0x88,0x36,0x75,0xa8}};
+extern "C" const GUID __declspec(selectany) DIID_ITriggerCommandCOMEvents =
+    {0x68adc55b,0xf1e5,0x4278,{0xa7,0x6a,0x80,0x10,0x5f,0xea,0x88,0x28}};
+extern "C" const GUID __declspec(selectany) CLSID_TriggerCommandCOM =
+    {0x4c68f8cc,0x58b4,0x4139,{0xb0,0x5d,0x7f,0x71,0x54,0xf0,0xd3,0x0f}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeAutoCommandCOM =
+    {0x3524cb05,0xd3c8,0x40d1,{0x97,0x04,0x9c,0xf2,0xc0,0x7b,0x6f,0xf3}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeAutoCommandCOMEvents =
+    {0x5bf71da6,0x63ff,0x45f6,{0x86,0x2f,0xd2,0x00,0xd6,0x5b,0xea,0xe3}};
+extern "C" const GUID __declspec(selectany) CLSID_TubeAutoCommandCOM =
+    {0x689971d5,0xe2bb,0x443a,{0x91,0x15,0x8f,0x80,0x58,0x45,0xb0,0x32}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeFlagCOM =
+    {0x5ec76a55,0xcd82,0x4005,{0x99,0x57,0x08,0x8e,0x69,0xeb,0xb5,0x66}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeFlagCOMEvents =
+    {0x5306d72c,0xd212,0x4585,{0xa4,0xc0,0x37,0x9d,0x79,0xf4,0xc7,0x95}};
+extern "C" const GUID __declspec(selectany) CLSID_TubeFlagCOM =
+    {0x5f7e8f8e,0x995f,0x4eb0,{0xbd,0x27,0x70,0x38,0xac,0xde,0xe6,0xf4}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeInterfaceEvents =
+    {0x65aef259,0x859f,0x4ce6,{0xa8,0x14,0x80,0xc2,0xaf,0x30,0x31,0xf6}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeInterface =
+    {0x057e419a,0x5a2b,0x49bd,{0xb2,0x61,0x90,0x32,0xa6,0x32,0xc0,0xf7}};
+extern "C" const GUID __declspec(selectany) CLSID_TubeInterfaceCOM =
+    {0x355c4040,0x38af,0x42e6,{0x97,0x0d,0x25,0x75,0xb2,0x73,0x22,0x77}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeInterfaceEventArgsCOM =
+    {0x1d502101,0xe904,0x44d6,{0xae,0xf5,0x1a,0x0a,0x8e,0x63,0x88,0x98}};
+extern "C" const GUID __declspec(selectany) CLSID_TubeInterfaceEventArgsCOM =
+    {0x051a22c4,0x422e,0x44ec,{0x8b,0xbd,0xc6,0x99,0x57,0x9d,0x43,0xa5}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeListCOM =
+    {0x251b44c0,0xb4cb,0x4aee,{0xb1,0xd0,0xd3,0xf4,0x51,0xd5,0x4c,0x98}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeListCOMEvents =
+    {0xe81cbe79,0x18c2,0x4a49,{0xb0,0xaa,0xf6,0xc7,0xa4,0xc2,0xf7,0x20}};
+extern "C" const GUID __declspec(selectany) CLSID_TubeListCOM =
+    {0x23d49a1a,0x904b,0x4917,{0x8b,0xd5,0x6c,0x22,0x31,0x79,0xd4,0x9f}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeListMonitorString =
+    {0xadf3aa33,0x1646,0x4ea9,{0xa8,0x37,0xaf,0x9d,0x85,0x82,0x6a,0x19}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeListMonitorStringEvents =
+    {0x215e9505,0x32bf,0x4d5d,{0xaa,0x3b,0xb9,0x27,0xf5,0x4d,0x96,0x18}};
+extern "C" const GUID __declspec(selectany) CLSID_TubeListMonitorString =
+    {0x0effdea1,0x644a,0x41a6,{0x98,0xa4,0x61,0x6c,0x9b,0xc8,0x7b,0x64}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeLoaderCOM =
+    {0x5230f5f7,0xbf04,0x40d9,{0xa6,0x66,0x8d,0x32,0x29,0xbf,0xf4,0x07}};
+extern "C" const GUID __declspec(selectany) DIID_IDataModuleLoaderCOM =
+    {0x6567f393,0xa81d,0x4326,{0x9f,0x07,0x19,0x9e,0xde,0x9a,0xc8,0x33}};
+extern "C" const GUID __declspec(selectany) CLSID_TubeLoaderCOM =
+    {0x46d84795,0xd783,0x4357,{0x93,0xd7,0xa8,0x65,0x90,0xe6,0xdc,0x40}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeMonitorXoc =
+    {0x4c28d999,0x5a08,0x47af,{0x99,0x98,0x71,0xdd,0x88,0xc4,0xd6,0x2f}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeMonitorXocEvents =
+    {0x10f2e4f4,0xac87,0x4195,{0x95,0xa0,0x4f,0xb0,0x9e,0x08,0x29,0x8b}};
+extern "C" const GUID __declspec(selectany) CLSID_TubeMonitorXoc =
+    {0x22bf30eb,0x36df,0x484b,{0xba,0xdc,0xc8,0x35,0x75,0xce,0x8f,0xc4}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeCommandXoc =
+    {0xc262253c,0x5d58,0x4af7,{0x89,0x60,0x8f,0x0c,0x87,0x6d,0x2f,0xd1}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeCommandXocEvents =
+    {0x4e4a30c3,0xc320,0x43b5,{0x97,0xa1,0x36,0x04,0x0b,0x0e,0x72,0x2a}};
+extern "C" const GUID __declspec(selectany) CLSID_TubeCommandXoc =
+    {0xf1690ba3,0x8bef,0x4a00,{0xa7,0x3e,0xbc,0x20,0x73,0xfa,0x97,0x0a}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeCommandBool =
+    {0xd286fcd5,0x41b1,0x494d,{0xb5,0x0e,0x36,0xf6,0x50,0x94,0x92,0xa1}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeCommandBoolEvents =
+    {0x20ec5ff8,0x89b3,0x4541,{0xbd,0x5d,0xe1,0x3a,0x0a,0x53,0x83,0xfd}};
+extern "C" const GUID __declspec(selectany) CLSID_TubeCommandBool =
+    {0x1a38a1d0,0xfc9c,0x4121,{0x89,0x1b,0xc6,0xad,0xe4,0x4b,0x10,0x25}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeMonitorSingle =
+    {0x01a2eab2,0xa34d,0x404c,{0xa3,0xf7,0x89,0x3c,0x43,0xf4,0xaa,0x48}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeMonitorSingleEvents =
+    {0x58b0cc92,0xb8f6,0x457e,{0xa3,0x8e,0xfb,0x36,0x09,0x52,0x55,0x6f}};
+extern "C" const GUID __declspec(selectany) CLSID_TubeMonitorSingle =
+    {0x5db38004,0x86e7,0x4b25,{0x96,0x09,0x48,0x66,0x38,0x2a,0xd0,0x69}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeCommandSingle =
+    {0xfb18797e,0x759e,0x4814,{0xa6,0x24,0xdc,0x8d,0x8f,0x2c,0x49,0x86}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeCommandSingleEvents =
+    {0xe138f00b,0x93fa,0x4efb,{0xbb,0x4b,0x5d,0x62,0x14,0xb3,0x1e,0x31}};
+extern "C" const GUID __declspec(selectany) CLSID_TubeCommandSingle =
+    {0xbaff996a,0x748a,0x414d,{0x88,0xf9,0x3c,0x5e,0x10,0x6e,0xa4,0x73}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeMonitorBool =
+    {0xabab3cf8,0x64a5,0x4261,{0xbd,0x7d,0x57,0x4c,0x2b,0xeb,0x96,0x91}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeMonitorBoolEvents =
+    {0xab2c1031,0xa704,0x4d95,{0x8a,0x68,0x32,0xe9,0x88,0x73,0xad,0xaf}};
+extern "C" const GUID __declspec(selectany) CLSID_TubeMonitorBool =
+    {0x0bf637f4,0x0388,0x4772,{0xa4,0xa8,0x70,0xfc,0x3a,0x60,0x3d,0x05}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeServiceMonitorCOM =
+    {0x92e09f6b,0x64f4,0x47c5,{0x84,0xa3,0x3c,0x6d,0xbf,0x29,0x43,0xb0}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeServiceMonitorCOMEvents =
+    {0xe7a90dad,0x2af5,0x427c,{0x9f,0x0f,0xdb,0xea,0xa0,0x03,0xdb,0x8c}};
+extern "C" const GUID __declspec(selectany) CLSID_TubeServiceMonitorCOM =
+    {0x3b54e179,0x659d,0x4e1c,{0x87,0x0f,0x04,0x25,0x14,0xc8,0x7c,0x06}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeTimeSpanCOM =
+    {0xe9e8efd6,0x48a1,0x40ab,{0x8e,0x2a,0x55,0x17,0x57,0x9f,0x30,0x11}};
+extern "C" const GUID __declspec(selectany) DIID_ITubeTimeSpanCOMEvents =
+    {0xa4983c4d,0x1ca9,0x4172,{0xa0,0x5a,0xcd,0xfb,0x48,0x2a,0x59,0xd0}};
+extern "C" const GUID __declspec(selectany) CLSID_TubeTimeSpanCOM =
+    {0x2f8354a4,0x0d30,0x4a18,{0x8f,0xab,0x39,0xf8,0x4b,0x72,0x93,0x80}};
+extern "C" const GUID __declspec(selectany) DIID_ITurbopumpCommandCOM =
+    {0x258dd57d,0xfe46,0x4ab4,{0x90,0xd2,0x8c,0xb0,0x76,0xd2,0x09,0x94}};
+extern "C" const GUID __declspec(selectany) DIID_ITurbopumpCommandCOMEvents =
+    {0x62580c9c,0x94ef,0x4ceb,{0xba,0xb7,0x5c,0x3f,0x2c,0xcd,0x44,0xcf}};
+extern "C" const GUID __declspec(selectany) CLSID_TurbopumpCommandCOM =
+    {0xf450df28,0x5fb8,0x4fbb,{0x8b,0x03,0xc9,0x82,0x52,0x90,0x12,0x35}};
+extern "C" const GUID __declspec(selectany) CLSID_DebugLog =
+    {0xfbf3f545,0xd86b,0x3c76,{0x8b,0xbe,0x1c,0x66,0xd3,0x8e,0x30,0xe0}};
+extern "C" const GUID __declspec(selectany) IID__DebugLog =
+    {0x6bc338e6,0x5c89,0x3f46,{0x86,0x9c,0x63,0xab,0xd4,0x88,0x5b,0x6e}};
+
+//
+// Wrapper method implementations
+//
+
+#include "c:\x-ray worx\samples\connectionsamplecom\x64\release\xrayworxbasecom.tli"
+
+} // namespace XRAYWorXBaseCOM
+
+#pragma pack(pop)

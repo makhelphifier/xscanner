@@ -1,0 +1,32 @@
+﻿  stdafx.cpp
+  AutoCommandInfoEventSink.cpp
+  CenterOffsetEventSink.cpp
+  CoilDataEventSink.cpp
+  CommandInfoMonitorEventSink.cpp
+  ConnectionSampleCOM.cpp
+  ConnectionSampleCOMDlg.cpp
+  DataModuleEventSink.cpp
+  FilamentStatsEventSink.cpp
+  InitialStartupEventSink.cpp
+  LimitableAutoCommandEventSink.cpp
+  PrewarningEventSink.cpp
+  StandbyEventSink.cpp
+  TubeAutoCmdEventSink.cpp
+  TubeCmdBoolEventSink.cpp
+  TubeCmdSingleEventSink.cpp
+  TubeCmdXocEventSink.cpp
+  TubeFlashoverEventSink.cpp
+  TubeInterfaceEventHandler.cpp
+c:\x-ray worx\samples\connectionsamplecom\tubeinterfaceeventhandler.cpp(33): warning C4101: "ex": Unreferenzierte lokale Variable
+  TubeInterfaceEventSink.cpp
+  TubeListEventSink.cpp
+  Kompilieren...
+  TubeListMonStringEventSink.cpp
+  TubeMonBoolEventSink.cpp
+  TubeServiceMonitorEventSink.cpp
+  TubeTimeSpanEventSink.cpp
+  TurbopumpEventSink.cpp
+  Code wird generiert.
+  All 1095 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Codegenerierung ist abgeschlossen.
+  ConnectionSampleCOM.vcxproj -> C:\X-RAY WorX\Samples\x64\Release\ConnectionSampleCOM.exe

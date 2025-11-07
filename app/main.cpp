@@ -1,7 +1,7 @@
 #include "gui/views/mainwindow.h"
 #include "util/logger/logger.h"
 #include "gui/widgets/logwidget.h"
-#include "device_3100A/c3100amotionwidget.h"
+#include "device_3100A/motion/c3100amotionwidget.h"
 #include "util/logger/qtwidgetappender.h"
 #include "log4qt/logger.h"
 #include "log4qt/patternlayout.h"

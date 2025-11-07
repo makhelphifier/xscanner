@@ -1,0 +1,4552 @@
+﻿// Created by Microsoft (R) C/C++ Compiler Version 14.16.27045.0 (c1b592dc).
+//
+// c:\x-ray worx\samples\connectionsamplecom\x64\release\xrayworxbasecom.tli
+//
+// Wrapper implementations for type library XRAYWorXBaseCOM.tlb
+// compiler-generated file created 01/06/22 at 10:12:11 - DO NOT EDIT!
+
+#pragma once
+
+//
+// dispinterface IAccessibleBaseCOM wrapper method implementations
+//
+
+inline HRESULT IAccessibleBaseCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IAccessibleBaseCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL IAccessibleBaseCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IAccessibleBaseCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IAccessibleBaseCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IAccessibleBaseCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline enum XRAYWorXBase::AccessStates IAccessibleBaseCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface IAccessibleBaseCOMEvents wrapper method implementations
+//
+
+inline HRESULT IAccessibleBaseCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface IAutoCommandInfosCOM wrapper method implementations
+//
+
+inline HRESULT IAutoCommandInfosCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IAutoCommandInfosCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::AccessStates IAutoCommandInfosCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IAutoCommandInfosCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IAutoCommandInfosCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IAutoCommandInfosCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IAutoCommandInfosCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline ICommandInfoMonitorCOMPtr IAutoCommandInfosCOM::GetCenterActive ( ) {
+    struct ICommandInfoMonitorCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020007, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ICommandInfoMonitorCOMPtr(_result, false);
+}
+
+inline ICommandInfoMonitorCOMPtr IAutoCommandInfosCOM::GetCenterAll ( ) {
+    struct ICommandInfoMonitorCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020008, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ICommandInfoMonitorCOMPtr(_result, false);
+}
+
+inline ICommandInfoMonitorCOMPtr IAutoCommandInfosCOM::GetFilamentAdjust ( ) {
+    struct ICommandInfoMonitorCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020009, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ICommandInfoMonitorCOMPtr(_result, false);
+}
+
+inline ICommandInfoMonitorCOMPtr IAutoCommandInfosCOM::GetRefresh ( ) {
+    struct ICommandInfoMonitorCOM * _result = 0;
+    _com_dispatch_method(this, 0x6002000a, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ICommandInfoMonitorCOMPtr(_result, false);
+}
+
+inline ICommandInfoMonitorCOMPtr IAutoCommandInfosCOM::GetStartUp ( ) {
+    struct ICommandInfoMonitorCOM * _result = 0;
+    _com_dispatch_method(this, 0x6002000b, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ICommandInfoMonitorCOMPtr(_result, false);
+}
+
+//
+// dispinterface IAutoCommandInfosCOMEvents wrapper method implementations
+//
+
+inline HRESULT IAutoCommandInfosCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ICenterOffsetCOM wrapper method implementations
+//
+
+inline HRESULT ICenterOffsetCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ICenterOffsetCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::AccessStates ICenterOffsetCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ICenterOffsetCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ICenterOffsetCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ICenterOffsetCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ICenterOffsetCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ICenterOffsetCOM::add_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ICenterOffsetCOM::remove_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::CommandStates ICenterOffsetCOM::GetState ( ) {
+    enum XRAYWorXBase::CommandStates _result;
+    _com_dispatch_method(this, 0x60020009, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline unsigned long ICenterOffsetCOM::GetErrorCode ( ) {
+    unsigned long _result = 0;
+    _com_dispatch_method(this, 0x6002000a, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ICenterOffsetCOM::add_DemandLowerLimitChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000b, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ICenterOffsetCOM::remove_DemandLowerLimitChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000c, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ICenterOffsetCOM::add_DemandUpperLimitChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000d, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ICenterOffsetCOM::remove_DemandUpperLimitChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000e, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ICenterOffsetCOM::add_EnabledChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000f, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ICenterOffsetCOM::remove_EnabledChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020010, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ICenterOffsetCOM::add_PlcChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020011, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ICenterOffsetCOM::remove_PlcChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020012, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ICenterOffsetCOM::Set ( float x, float y ) {
+    return _com_dispatch_method(this, 0x60020013, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x0004\x0004", x, y);
+}
+
+inline float ICenterOffsetCOM::GetDemandLowerLimit ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020014, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline float ICenterOffsetCOM::GetDemandUpperLimit ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020015, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ICenterOffsetCOM::GetEnabled ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020016, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline float ICenterOffsetCOM::GetPcX ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020017, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline float ICenterOffsetCOM::GetPcY ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020018, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline float ICenterOffsetCOM::GetPlcX ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020019, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline float ICenterOffsetCOM::GetPlcY ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x6002001a, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface ICenterOffsetCOMEvents wrapper method implementations
+//
+
+inline HRESULT ICenterOffsetCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ICenterOffsetCOMEvents::StateChanged ( ) {
+    return _com_dispatch_method(this, 0x5, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ICenterOffsetCOMEvents::DemandLowerLimitChanged ( ) {
+    return _com_dispatch_method(this, 0x3, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ICenterOffsetCOMEvents::DemandUpperLimitChanged ( ) {
+    return _com_dispatch_method(this, 0x4, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ICenterOffsetCOMEvents::EnabledChanged ( ) {
+    return _com_dispatch_method(this, 0x28, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ICenterOffsetCOMEvents::PlcChanged ( ) {
+    return _com_dispatch_method(this, 0x2b, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ICommandInfoMonitorCOM wrapper method implementations
+//
+
+inline HRESULT ICommandInfoMonitorCOM::add_ActionInfoChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ICommandInfoMonitorCOM::remove_ActionInfoChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ICommandInfoMonitorCOM::add_RemainingTimeChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ICommandInfoMonitorCOM::remove_RemainingTimeChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::CommandActionInfo ICommandInfoMonitorCOM::GetActionInfo ( ) {
+    enum XRAYWorXBase::CommandActionInfo _result;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline long ICommandInfoMonitorCOM::GetRemainingTimeInSeconds ( ) {
+    long _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface ICommandInfoMonitorCOMEvents wrapper method implementations
+//
+
+inline HRESULT ICommandInfoMonitorCOMEvents::ActionInfoChanged ( ) {
+    return _com_dispatch_method(this, 0xf, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ICommandInfoMonitorCOMEvents::RemainingTimeChanged ( ) {
+    return _com_dispatch_method(this, 0xd, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ICoilDataCOM wrapper method implementations
+//
+
+inline HRESULT ICoilDataCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ICoilDataCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL ICoilDataCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ICoilDataCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ICoilDataCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ICoilDataCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline enum XRAYWorXBase::AccessStates ICoilDataCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ICoilDataCOM::add_DataUpdated ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ICoilDataCOM::remove_DataUpdated ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ICoilDataCOM::add_Updating ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ICoilDataCOM::remove_Updating ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline IResultFloatCOMPtr ICoilDataCOM::Get ( long index ) {
+    struct IResultFloatCOM * _result = 0;
+    _com_dispatch_method(this, 0x6002000b, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, 
+        L"\x0003", index);
+    return IResultFloatCOMPtr(_result, false);
+}
+
+inline HRESULT ICoilDataCOM::UpdateData ( ) {
+    return _com_dispatch_method(this, 0x6002000c, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline long ICoilDataCOM::GetStructureSize ( ) {
+    long _result = 0;
+    _com_dispatch_method(this, 0x6002000d, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface ICoilDataCOMEvents wrapper method implementations
+//
+
+inline HRESULT ICoilDataCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ICoilDataCOMEvents::DataUpdated ( struct IResultCOM * result ) {
+    return _com_dispatch_method(this, 0x11, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x0009", result);
+}
+
+inline HRESULT ICoilDataCOMEvents::Updating ( ) {
+    return _com_dispatch_method(this, 0x12, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface IConditioningCOM wrapper method implementations
+//
+
+inline enum XRAYWorXBase::AccessStates IConditioningCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020000, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT IConditioningCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IConditioningCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL IConditioningCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IConditioningCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IConditioningCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IConditioningCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT IConditioningCOM::add_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IConditioningCOM::remove_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::CommandStates IConditioningCOM::GetState ( ) {
+    enum XRAYWorXBase::CommandStates _result;
+    _com_dispatch_method(this, 0x60020009, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline unsigned long IConditioningCOM::GetErrorCode ( ) {
+    unsigned long _result = 0;
+    _com_dispatch_method(this, 0x6002000a, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT IConditioningCOM::add_ActiveSubFunctionChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000b, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IConditioningCOM::remove_ActiveSubFunctionChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000c, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IConditioningCOM::add_FlashoverCounterChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000d, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IConditioningCOM::remove_FlashoverCounterChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000e, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IConditioningCOM::add_HighVoltageUpdatableChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000f, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IConditioningCOM::remove_HighVoltageUpdatableChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020010, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::ConditioningSubFunction IConditioningCOM::GetActiveSubFunction ( ) {
+    enum XRAYWorXBase::ConditioningSubFunction _result;
+    _com_dispatch_method(this, 0x60020011, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline IInt32IntervalCOMPtr IConditioningCOM::GetDurationLimitsInMinutes ( ) {
+    struct IInt32IntervalCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020012, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return IInt32IntervalCOMPtr(_result, false);
+}
+
+inline IFloatIntervalCOMPtr IConditioningCOM::GetEmissionCurrentLimits ( ) {
+    struct IFloatIntervalCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020013, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return IFloatIntervalCOMPtr(_result, false);
+}
+
+inline long IConditioningCOM::GetFlashoverCounter ( ) {
+    long _result = 0;
+    _com_dispatch_method(this, 0x60020014, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline IFloatIntervalCOMPtr IConditioningCOM::GetHighVoltageLimits ( ) {
+    struct IFloatIntervalCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020015, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return IFloatIntervalCOMPtr(_result, false);
+}
+
+inline IFloatIntervalCOMPtr IConditioningCOM::GetHighVoltageStartLimits ( ) {
+    struct IFloatIntervalCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020016, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return IFloatIntervalCOMPtr(_result, false);
+}
+
+inline VARIANT_BOOL IConditioningCOM::GetIsHighVoltageUpdatable ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020017, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IConditioningCOM::GetIsLocked ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020018, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline enum XRAYWorXBase::ConditioningResultValue IConditioningCOM::Getresult ( ) {
+    enum XRAYWorXBase::ConditioningResultValue _result;
+    _com_dispatch_method(this, 0x60020019, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT IConditioningCOM::Start ( struct _Object * settings ) {
+    return _com_dispatch_method(this, 0x6002001a, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x0009", settings);
+}
+
+inline HRESULT IConditioningCOM::Stop ( ) {
+    return _com_dispatch_method(this, 0x6002001b, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IConditioningCOM::UpdateEmissionCurrent ( float value ) {
+    return _com_dispatch_method(this, 0x6002001c, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x0004", value);
+}
+
+inline HRESULT IConditioningCOM::UpdateHighVoltage ( float value ) {
+    return _com_dispatch_method(this, 0x6002001d, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x0004", value);
+}
+
+//
+// dispinterface IConditioningCOMEvents wrapper method implementations
+//
+
+inline HRESULT IConditioningCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IConditioningCOMEvents::ActiveSubFunctionChanged ( ) {
+    return _com_dispatch_method(this, 0x5, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IConditioningCOMEvents::StateChanged ( ) {
+    return _com_dispatch_method(this, 0x2c, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IConditioningCOMEvents::FlashoverCounterChanged ( ) {
+    return _com_dispatch_method(this, 0x2d, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IConditioningCOMEvents::HighVoltageUpdatableChanged ( ) {
+    return _com_dispatch_method(this, 0x2e, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface IDataModuleCOM wrapper method implementations
+//
+
+inline HRESULT IDataModuleCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IDataModuleCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL IDataModuleCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IDataModuleCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IDataModuleCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IDataModuleCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline enum XRAYWorXBase::AccessStates IDataModuleCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT IDataModuleCOM::add_DataUpdated ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IDataModuleCOM::remove_DataUpdated ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IDataModuleCOM::add_Saved ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IDataModuleCOM::remove_Saved ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IDataModuleCOM::add_Saving ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000b, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IDataModuleCOM::remove_Saving ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000c, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IDataModuleCOM::add_Updating ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000d, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IDataModuleCOM::remove_Updating ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000e, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline IResultObjectCOMPtr IDataModuleCOM::Get ( _bstr_t name ) {
+    struct IResultObjectCOM * _result = 0;
+    _com_dispatch_method(this, 0x6002000f, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, 
+        L"\x0008", (BSTR)name);
+    return IResultObjectCOMPtr(_result, false);
+}
+
+inline HRESULT IDataModuleCOM::Save ( ) {
+    return _com_dispatch_method(this, 0x60020010, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline IResultCOMPtr IDataModuleCOM::Set ( _bstr_t name, const _variant_t & value ) {
+    struct IResultCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020011, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, 
+        L"\x0008\x000c", (BSTR)name, &value);
+    return IResultCOMPtr(_result, false);
+}
+
+inline HRESULT IDataModuleCOM::UpdateData ( ) {
+    return _com_dispatch_method(this, 0x60020012, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline VARIANT_BOOL IDataModuleCOM::GetIsSaving ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020013, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface IDataModuleCOMEvents wrapper method implementations
+//
+
+inline HRESULT IDataModuleCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IDataModuleCOMEvents::DataUpdated ( struct IResultCOM * result ) {
+    return _com_dispatch_method(this, 0x11, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x0009", result);
+}
+
+inline HRESULT IDataModuleCOMEvents::Saved ( struct IResultCOM * result ) {
+    return _com_dispatch_method(this, 0x1c, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x0009", result);
+}
+
+inline HRESULT IDataModuleCOMEvents::Saving ( ) {
+    return _com_dispatch_method(this, 0x20, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IDataModuleCOMEvents::Updating ( ) {
+    return _com_dispatch_method(this, 0x12, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface IDataModuleProviderCOM wrapper method implementations
+//
+
+inline ICoilDataCOMPtr IDataModuleProviderCOM::GetFocusTable ( ) {
+    struct ICoilDataCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, NULL);
+    return ICoilDataCOMPtr(_result, false);
+}
+
+inline ICoilDataCOMPtr IDataModuleProviderCOM::GetCenteringOneTableX ( ) {
+    struct ICoilDataCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, NULL);
+    return ICoilDataCOMPtr(_result, false);
+}
+
+inline ICoilDataCOMPtr IDataModuleProviderCOM::GetCenteringOneTableY ( ) {
+    struct ICoilDataCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, NULL);
+    return ICoilDataCOMPtr(_result, false);
+}
+
+inline ICoilDataCOMPtr IDataModuleProviderCOM::GetCenteringTwoTableX ( ) {
+    struct ICoilDataCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, NULL);
+    return ICoilDataCOMPtr(_result, false);
+}
+
+inline ICoilDataCOMPtr IDataModuleProviderCOM::GetCenteringTwoTableY ( ) {
+    struct ICoilDataCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, NULL);
+    return ICoilDataCOMPtr(_result, false);
+}
+
+inline ICoilDataCOMPtr IDataModuleProviderCOM::GetCondenserTable ( ) {
+    struct ICoilDataCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, NULL);
+    return ICoilDataCOMPtr(_result, false);
+}
+
+inline IDataModuleCOMPtr IDataModuleProviderCOM::GetDataModule ( enum XRAYWorXBase::DataModuleName name ) {
+    struct IDataModuleCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, 
+        L"\x0003", name);
+    return IDataModuleCOMPtr(_result, false);
+}
+
+//
+// dispinterface IDataModuleProviderCOMEvents wrapper method implementations
+//
+
+inline HRESULT IDataModuleProviderCOMEvents::Error ( struct ITubeInterfaceEventArgsCOM * e ) {
+    return _com_dispatch_method(this, 0x1b, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x0009", e);
+}
+
+//
+// dispinterface IErrorInfoCOM wrapper method implementations
+//
+
+inline _bstr_t IErrorInfoCOM::GetErrorHelp ( ) {
+    BSTR _result = 0;
+    _com_dispatch_method(this, 0x60020000, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline _bstr_t IErrorInfoCOM::GetErrorMessage ( ) {
+    BSTR _result = 0;
+    _com_dispatch_method(this, 0x60020001, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+//
+// dispinterface IFilamentAdjustCOM wrapper method implementations
+//
+
+inline enum XRAYWorXBase::AccessStates IFilamentAdjustCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020000, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT IFilamentAdjustCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IFilamentAdjustCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL IFilamentAdjustCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IFilamentAdjustCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IFilamentAdjustCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IFilamentAdjustCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT IFilamentAdjustCOM::add_MonitorValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IFilamentAdjustCOM::remove_MonitorValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IFilamentAdjustCOM::add_StableChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IFilamentAdjustCOM::remove_StableChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline float IFilamentAdjustCOM::GetMonitorValue ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x6002000b, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IFilamentAdjustCOM::GetStable ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000c, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT IFilamentAdjustCOM::add_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000d, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IFilamentAdjustCOM::remove_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000e, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IFilamentAdjustCOM::add_IsActiveChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000f, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IFilamentAdjustCOM::remove_IsActiveChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020010, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL IFilamentAdjustCOM::GetPcDemandValue ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020011, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline void IFilamentAdjustCOM::PutPcDemandValue ( VARIANT_BOOL _arg1 ) {
+    _com_dispatch_method(this, 0x60020011, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, 
+        L"\x000b", _arg1);
+}
+
+inline enum XRAYWorXBase::CommandStates IFilamentAdjustCOM::GetState ( ) {
+    enum XRAYWorXBase::CommandStates _result;
+    _com_dispatch_method(this, 0x60020013, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline unsigned long IFilamentAdjustCOM::GetErrorCode ( ) {
+    unsigned long _result = 0;
+    _com_dispatch_method(this, 0x60020014, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IFilamentAdjustCOM::GetIsActive ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020015, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IFilamentAdjustCOM::GetProcessedInStartUp ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020016, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline enum XRAYWorXBase::TriggerSources IFilamentAdjustCOM::GetTriggerSource ( ) {
+    enum XRAYWorXBase::TriggerSources _result;
+    _com_dispatch_method(this, 0x60020017, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline float IFilamentAdjustCOM::GetFilamentValue ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020018, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IFilamentAdjustCOM::GetProvidesCorrectionFactors ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020019, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline SAFEARRAY * IFilamentAdjustCOM::GetCorrectionFactors ( ) {
+    SAFEARRAY * _result = 0;
+    _com_dispatch_method(this, 0x6002001a, DISPATCH_PROPERTYGET, VT_ARRAY|VT_DISPATCH, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface IFilamentAdjustCOMEvents wrapper method implementations
+//
+
+inline HRESULT IFilamentAdjustCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IFilamentAdjustCOMEvents::MonitorValueChanged ( ) {
+    return _com_dispatch_method(this, 0x2, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IFilamentAdjustCOMEvents::StableChanged ( ) {
+    return _com_dispatch_method(this, 0x10, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IFilamentAdjustCOMEvents::StateChanged ( ) {
+    return _com_dispatch_method(this, 0x5, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IFilamentAdjustCOMEvents::IsActiveChanged ( ) {
+    return _com_dispatch_method(this, 0xa, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ICorrectionFactorInfoCOM wrapper method implementations
+//
+
+inline float ICorrectionFactorInfoCOM::GetHighVoltage ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020000, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ICorrectionFactorInfoCOM::GetIsDynamic ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020001, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline float ICorrectionFactorInfoCOM::GetLowerCorrectionFactor ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline float ICorrectionFactorInfoCOM::GetLowerEmissionCurrent ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline float ICorrectionFactorInfoCOM::GetUpperCorrectionFactor ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline float ICorrectionFactorInfoCOM::GetUpperEmissionCurrent ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface IFilamentStatsCOM wrapper method implementations
+//
+
+inline HRESULT IFilamentStatsCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IFilamentStatsCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::AccessStates IFilamentStatsCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IFilamentStatsCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IFilamentStatsCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IFilamentStatsCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IFilamentStatsCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT IFilamentStatsCOM::add_Changed ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IFilamentStatsCOM::remove_Changed ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline unsigned long IFilamentStatsCOM::GetAverageLifetimeInSeconds ( ) {
+    unsigned long _result = 0;
+    _com_dispatch_method(this, 0x60020009, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline unsigned long IFilamentStatsCOM::GetCurrentLifetimeInSeconds ( ) {
+    unsigned long _result = 0;
+    _com_dispatch_method(this, 0x6002000a, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline _bstr_t IFilamentStatsCOM::GetDateOfInstallation ( ) {
+    BSTR _result = 0;
+    _com_dispatch_method(this, 0x6002000b, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+//
+// dispinterface IFilamentStatsCOMEvents wrapper method implementations
+//
+
+inline HRESULT IFilamentStatsCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IFilamentStatsCOMEvents::Changed ( ) {
+    return _com_dispatch_method(this, 0x1a, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface IFlashoverCOM wrapper method implementations
+//
+
+inline HRESULT IFlashoverCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IFlashoverCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::AccessStates IFlashoverCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IFlashoverCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IFlashoverCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IFlashoverCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IFlashoverCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT IFlashoverCOM::add_CountChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IFlashoverCOM::remove_CountChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IFlashoverCOM::add_LockingXrayChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IFlashoverCOM::remove_LockingXrayChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline unsigned long IFlashoverCOM::GetCount ( ) {
+    unsigned long _result = 0;
+    _com_dispatch_method(this, 0x6002000b, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IFlashoverCOM::GetIsLockingXray ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000c, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface IFlashoverCOMEvents wrapper method implementations
+//
+
+inline HRESULT IFlashoverCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IFlashoverCOMEvents::CountChanged ( ) {
+    return _com_dispatch_method(this, 0x26, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IFlashoverCOMEvents::LockingXrayChanged ( ) {
+    return _com_dispatch_method(this, 0x27, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface IFloatIntervalCOM wrapper method implementations
+//
+
+inline HRESULT IFloatIntervalCOM::add_Changed ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IFloatIntervalCOM::remove_Changed ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline float IFloatIntervalCOM::GetMaximum ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline float IFloatIntervalCOM::GetMinimum ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface IFloatIntervalCOMEvents wrapper method implementations
+//
+
+inline HRESULT IFloatIntervalCOMEvents::Changed ( ) {
+    return _com_dispatch_method(this, 0x1a, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface IInitialStartupCOM wrapper method implementations
+//
+
+inline HRESULT IInitialStartupCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IInitialStartupCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::AccessStates IInitialStartupCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IInitialStartupCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IInitialStartupCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IInitialStartupCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IInitialStartupCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT IInitialStartupCOM::add_Stopped ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IInitialStartupCOM::remove_Stopped ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IInitialStartupCOM::Stop ( ) {
+    return _com_dispatch_method(this, 0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IInitialStartupCOM::Start ( ) {
+    return _com_dispatch_method(this, 0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline VARIANT_BOOL IInitialStartupCOM::GetTubeReady ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000b, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface IInitialStartupCOMEvents wrapper method implementations
+//
+
+inline HRESULT IInitialStartupCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IInitialStartupCOMEvents::Stopped ( ) {
+    return _com_dispatch_method(this, 0x1d, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface IInt32IntervalCOM wrapper method implementations
+//
+
+inline HRESULT IInt32IntervalCOM::add_Changed ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IInt32IntervalCOM::remove_Changed ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline long IInt32IntervalCOM::GetMaximum ( ) {
+    long _result = 0;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline long IInt32IntervalCOM::GetMinimum ( ) {
+    long _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface IInt32IntervalCOMEvents wrapper method implementations
+//
+
+inline HRESULT IInt32IntervalCOMEvents::Changed ( ) {
+    return _com_dispatch_method(this, 0x1a, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface IIpEntryCOM wrapper method implementations
+//
+
+inline _bstr_t IIpEntryCOM::GetIp ( ) {
+    BSTR _result = 0;
+    _com_dispatch_method(this, 0x60020000, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline _bstr_t IIpEntryCOM::Getname ( ) {
+    BSTR _result = 0;
+    _com_dispatch_method(this, 0x60020001, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+//
+// dispinterface ILeakageCurrentTestCOM wrapper method implementations
+//
+
+inline enum XRAYWorXBase::AccessStates ILeakageCurrentTestCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020000, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ILeakageCurrentTestCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ILeakageCurrentTestCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL ILeakageCurrentTestCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ILeakageCurrentTestCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ILeakageCurrentTestCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ILeakageCurrentTestCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ILeakageCurrentTestCOM::add_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ILeakageCurrentTestCOM::remove_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline unsigned long ILeakageCurrentTestCOM::GetErrorCode ( ) {
+    unsigned long _result = 0;
+    _com_dispatch_method(this, 0x60020009, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline enum XRAYWorXBase::CommandStates ILeakageCurrentTestCOM::GetState ( ) {
+    enum XRAYWorXBase::CommandStates _result;
+    _com_dispatch_method(this, 0x6002000a, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ILeakageCurrentTestCOM::add_LeakageCurrentChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000b, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ILeakageCurrentTestCOM::remove_LeakageCurrentChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000c, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ILeakageCurrentTestCOM::add_LeakageCurrentProvidedChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000d, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ILeakageCurrentTestCOM::remove_LeakageCurrentProvidedChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000e, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ILeakageCurrentTestCOM::add_HighVoltageLowerLimitChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000f, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ILeakageCurrentTestCOM::remove_HighVoltageLowerLimitChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020010, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ILeakageCurrentTestCOM::add_HighVoltageUpperLimitChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020011, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ILeakageCurrentTestCOM::remove_HighVoltageUpperLimitChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020012, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline long ILeakageCurrentTestCOM::GetDurationInSeconds ( ) {
+    long _result = 0;
+    _com_dispatch_method(this, 0x60020013, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline void ILeakageCurrentTestCOM::PutDurationInSeconds ( long _arg1 ) {
+    _com_dispatch_method(this, 0x60020013, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, 
+        L"\x0003", _arg1);
+}
+
+inline float ILeakageCurrentTestCOM::GetHighVoltage ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020015, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline void ILeakageCurrentTestCOM::PutHighVoltage ( float _arg1 ) {
+    _com_dispatch_method(this, 0x60020015, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, 
+        L"\x0004", _arg1);
+}
+
+inline float ILeakageCurrentTestCOM::GetHighVoltageLowerLimit ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020017, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline float ILeakageCurrentTestCOM::GetHighVoltageUpperLimit ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020018, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ILeakageCurrentTestCOM::GetPcDemandValue ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020019, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline void ILeakageCurrentTestCOM::PutPcDemandValue ( VARIANT_BOOL _arg1 ) {
+    _com_dispatch_method(this, 0x60020019, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, 
+        L"\x000b", _arg1);
+}
+
+inline float ILeakageCurrentTestCOM::GetLeakageCurrent ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x6002001b, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ILeakageCurrentTestCOM::GetLeakageCurrentProvided ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002001c, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline float ILeakageCurrentTestCOM::GetLeakageCurrentVoltage ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x6002001d, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface ILeakageCurrentTestCOMEvents wrapper method implementations
+//
+
+inline HRESULT ILeakageCurrentTestCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ILeakageCurrentTestCOMEvents::StateChanged ( ) {
+    return _com_dispatch_method(this, 0x5, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ILeakageCurrentTestCOMEvents::LeakageCurrentChanged ( ) {
+    return _com_dispatch_method(this, 0x21, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ILeakageCurrentTestCOMEvents::LeakageCurrentProvidedChanged ( ) {
+    return _com_dispatch_method(this, 0x22, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ILeakageCurrentTestCOMEvents::HighVoltageLowerLimitChanged ( ) {
+    return _com_dispatch_method(this, 0x23, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ILeakageCurrentTestCOMEvents::HighVoltageUpperLimitChanged ( ) {
+    return _com_dispatch_method(this, 0x24, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface IPrewarningCOM wrapper method implementations
+//
+
+inline HRESULT IPrewarningCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IPrewarningCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::AccessStates IPrewarningCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IPrewarningCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IPrewarningCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IPrewarningCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IPrewarningCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT IPrewarningCOM::add_EnabledChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IPrewarningCOM::remove_EnabledChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IPrewarningCOM::add_OnChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IPrewarningCOM::remove_OnChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IPrewarningCOM::add_ProgressChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000b, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IPrewarningCOM::remove_ProgressChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000c, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL IPrewarningCOM::GetEnabled ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000d, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IPrewarningCOM::GetOn ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000e, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline unsigned long IPrewarningCOM::GetProgress ( ) {
+    unsigned long _result = 0;
+    _com_dispatch_method(this, 0x6002000f, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface IPrewarningCOMEvents wrapper method implementations
+//
+
+inline HRESULT IPrewarningCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IPrewarningCOMEvents::EnabledChanged ( ) {
+    return _com_dispatch_method(this, 0x28, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IPrewarningCOMEvents::OnChanged ( ) {
+    return _com_dispatch_method(this, 0x29, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IPrewarningCOMEvents::ProgressChanged ( ) {
+    return _com_dispatch_method(this, 0x2a, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ILimitableAutoCommandCOM wrapper method implementations
+//
+
+inline enum XRAYWorXBase::AccessStates ILimitableAutoCommandCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020000, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ILimitableAutoCommandCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ILimitableAutoCommandCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL ILimitableAutoCommandCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ILimitableAutoCommandCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ILimitableAutoCommandCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ILimitableAutoCommandCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ILimitableAutoCommandCOM::add_MonitorValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ILimitableAutoCommandCOM::remove_MonitorValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ILimitableAutoCommandCOM::add_StableChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ILimitableAutoCommandCOM::remove_StableChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline float ILimitableAutoCommandCOM::GetMonitorValue ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x6002000b, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ILimitableAutoCommandCOM::GetStable ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000c, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ILimitableAutoCommandCOM::add_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000d, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ILimitableAutoCommandCOM::remove_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000e, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ILimitableAutoCommandCOM::add_IsActiveChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000f, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ILimitableAutoCommandCOM::remove_IsActiveChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020010, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL ILimitableAutoCommandCOM::GetPcDemandValue ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020011, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline void ILimitableAutoCommandCOM::PutPcDemandValue ( VARIANT_BOOL _arg1 ) {
+    _com_dispatch_method(this, 0x60020011, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, 
+        L"\x000b", _arg1);
+}
+
+inline enum XRAYWorXBase::CommandStates ILimitableAutoCommandCOM::GetState ( ) {
+    enum XRAYWorXBase::CommandStates _result;
+    _com_dispatch_method(this, 0x60020013, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline unsigned long ILimitableAutoCommandCOM::GetErrorCode ( ) {
+    unsigned long _result = 0;
+    _com_dispatch_method(this, 0x60020014, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ILimitableAutoCommandCOM::GetIsActive ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020015, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ILimitableAutoCommandCOM::GetProcessedInStartUp ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020016, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline enum XRAYWorXBase::TriggerSources ILimitableAutoCommandCOM::GetTriggerSource ( ) {
+    enum XRAYWorXBase::TriggerSources _result;
+    _com_dispatch_method(this, 0x60020017, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ILimitableAutoCommandCOM::add_LimitedKVMinChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020018, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ILimitableAutoCommandCOM::remove_LimitedKVMinChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020019, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline float ILimitableAutoCommandCOM::GetLimitedKV ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x6002001a, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline void ILimitableAutoCommandCOM::PutLimitedKV ( float _arg1 ) {
+    _com_dispatch_method(this, 0x6002001a, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, 
+        L"\x0004", _arg1);
+}
+
+inline float ILimitableAutoCommandCOM::GetLimitedKVMin ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x6002001c, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ILimitableAutoCommandCOM::add_LimitedKVMaxChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002001d, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ILimitableAutoCommandCOM::remove_LimitedKVMaxChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002001e, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline float ILimitableAutoCommandCOM::GetLimitedKVMax ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x6002001f, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface ILimitableAutoCommandCOMEvents wrapper method implementations
+//
+
+inline HRESULT ILimitableAutoCommandCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ILimitableAutoCommandCOMEvents::MonitorValueChanged ( ) {
+    return _com_dispatch_method(this, 0x2, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ILimitableAutoCommandCOMEvents::StableChanged ( ) {
+    return _com_dispatch_method(this, 0x10, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ILimitableAutoCommandCOMEvents::StateChanged ( ) {
+    return _com_dispatch_method(this, 0x5, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ILimitableAutoCommandCOMEvents::IsActiveChanged ( ) {
+    return _com_dispatch_method(this, 0xa, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ILimitableAutoCommandCOMEvents::LimitedKVMinChanged ( ) {
+    return _com_dispatch_method(this, 0x13, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ILimitableAutoCommandCOMEvents::LimitedKVMaxChanged ( ) {
+    return _com_dispatch_method(this, 0x25, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface IResultCOM wrapper method implementations
+//
+
+inline _bstr_t IResultCOM::GetError ( ) {
+    BSTR _result = 0;
+    _com_dispatch_method(this, 0x60020000, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline VARIANT_BOOL IResultCOM::GetIsFailure ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020001, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IResultCOM::GetIsSuccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface IResultFloatCOM wrapper method implementations
+//
+
+inline _bstr_t IResultFloatCOM::GetError ( ) {
+    BSTR _result = 0;
+    _com_dispatch_method(this, 0x60020000, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline VARIANT_BOOL IResultFloatCOM::GetIsFailure ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020001, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IResultFloatCOM::GetIsSuccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline float IResultFloatCOM::GetFloatValue ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface IResultObjectCOM wrapper method implementations
+//
+
+inline _bstr_t IResultObjectCOM::GetError ( ) {
+    BSTR _result = 0;
+    _com_dispatch_method(this, 0x60020000, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline VARIANT_BOOL IResultObjectCOM::GetIsFailure ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020001, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IResultObjectCOM::GetIsSuccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline _variant_t IResultObjectCOM::GetObjectValue ( ) {
+    VARIANT _result;
+    VariantInit(&_result);
+    _com_dispatch_method(this, 0x60020003, DISPATCH_PROPERTYGET, VT_VARIANT, (void*)&_result, NULL);
+    return _variant_t(_result, false);
+}
+
+//
+// dispinterface IStandbyCOM wrapper method implementations
+//
+
+inline enum XRAYWorXBase::AccessStates IStandbyCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020000, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT IStandbyCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IStandbyCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL IStandbyCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStandbyCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStandbyCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStandbyCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT IStandbyCOM::add_MonitorValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IStandbyCOM::remove_MonitorValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::StandbyState IStandbyCOM::GetMonitorValue ( ) {
+    enum XRAYWorXBase::StandbyState _result;
+    _com_dispatch_method(this, 0x60020009, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT IStandbyCOM::add_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IStandbyCOM::remove_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000b, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL IStandbyCOM::GetPcDemandValue ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000c, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline void IStandbyCOM::PutPcDemandValue ( VARIANT_BOOL _arg1 ) {
+    _com_dispatch_method(this, 0x6002000c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, 
+        L"\x000b", _arg1);
+}
+
+inline enum XRAYWorXBase::CommandStates IStandbyCOM::GetState ( ) {
+    enum XRAYWorXBase::CommandStates _result;
+    _com_dispatch_method(this, 0x6002000e, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline unsigned long IStandbyCOM::GetErrorCode ( ) {
+    unsigned long _result = 0;
+    _com_dispatch_method(this, 0x6002000f, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT IStandbyCOM::Off ( ) {
+    return _com_dispatch_method(this, 0x60020010, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IStandbyCOM::On ( ) {
+    return _com_dispatch_method(this, 0x60020011, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface IStandbyCOMEvents wrapper method implementations
+//
+
+inline HRESULT IStandbyCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IStandbyCOMEvents::MonitorValueChanged ( ) {
+    return _com_dispatch_method(this, 0x2, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IStandbyCOMEvents::StateChanged ( ) {
+    return _com_dispatch_method(this, 0x5, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface IStatusWordCOM wrapper method implementations
+//
+
+inline enum XRAYWorXBase::AccessStates IStatusWordCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020000, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT IStatusWordCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IStatusWordCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL IStatusWordCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT IStatusWordCOM::add_Changed ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT IStatusWordCOM::remove_Changed ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetAutoFunctionOn ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020009, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetCenteringActiveOk ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000a, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetCenteringAllOk ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000b, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetCooling1Ok ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000c, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetCooling2Ok ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000d, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetCoolingAllOk ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000e, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetDefocussingOn ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000f, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetEmissionCurrentOk ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020010, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetFilamentAdjustOk ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020011, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetFilamentCurrentOk ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020012, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetFilamentOk ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020013, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetFlashoverHandlingOn ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020014, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetGeneratorOk ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020015, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetHighVoltageOk ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020016, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetInterlockOk ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020017, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetLeakageCurrentControlOn ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020018, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetLicenseOk ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020019, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetRefreshOk ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002001a, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetStandbyOn ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002001b, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetStartupOk ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002001c, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline enum XRAYWorXBase::StatusWordFlags IStatusWordCOM::GetStatusWord ( ) {
+    enum XRAYWorXBase::StatusWordFlags _result;
+    _com_dispatch_method(this, 0x6002001d, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetTargetCurrentOk ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002001e, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetTubeHeadOk ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002001f, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetVacuumOk ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020020, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL IStatusWordCOM::GetXRayOn ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020021, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface IStatusWordCOMEvents wrapper method implementations
+//
+
+inline HRESULT IStatusWordCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IStatusWordCOMEvents::Changed ( ) {
+    return _com_dispatch_method(this, 0x1a, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ITriggerCommandCOM wrapper method implementations
+//
+
+inline HRESULT ITriggerCommandCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITriggerCommandCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL ITriggerCommandCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITriggerCommandCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITriggerCommandCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITriggerCommandCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline enum XRAYWorXBase::AccessStates ITriggerCommandCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITriggerCommandCOM::add_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITriggerCommandCOM::remove_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITriggerCommandCOM::Execute ( ) {
+    return _com_dispatch_method(this, 0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline enum XRAYWorXBase::CommandStates ITriggerCommandCOM::GetState ( ) {
+    enum XRAYWorXBase::CommandStates _result;
+    _com_dispatch_method(this, 0x6002000a, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline unsigned long ITriggerCommandCOM::GetErrorCode ( ) {
+    unsigned long _result = 0;
+    _com_dispatch_method(this, 0x6002000b, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface ITriggerCommandCOMEvents wrapper method implementations
+//
+
+inline HRESULT ITriggerCommandCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITriggerCommandCOMEvents::StateChanged ( ) {
+    return _com_dispatch_method(this, 0x5, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ITubeAutoCommandCOM wrapper method implementations
+//
+
+inline enum XRAYWorXBase::AccessStates ITubeAutoCommandCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020000, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITubeAutoCommandCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeAutoCommandCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL ITubeAutoCommandCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeAutoCommandCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeAutoCommandCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeAutoCommandCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITubeAutoCommandCOM::add_MonitorValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeAutoCommandCOM::remove_MonitorValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeAutoCommandCOM::add_StableChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeAutoCommandCOM::remove_StableChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline float ITubeAutoCommandCOM::GetMonitorValue ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x6002000b, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeAutoCommandCOM::GetStable ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000c, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITubeAutoCommandCOM::add_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000d, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeAutoCommandCOM::remove_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000e, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeAutoCommandCOM::add_IsActiveChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000f, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeAutoCommandCOM::remove_IsActiveChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020010, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL ITubeAutoCommandCOM::GetPcDemandValue ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020011, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline void ITubeAutoCommandCOM::PutPcDemandValue ( VARIANT_BOOL _arg1 ) {
+    _com_dispatch_method(this, 0x60020011, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, 
+        L"\x000b", _arg1);
+}
+
+inline enum XRAYWorXBase::CommandStates ITubeAutoCommandCOM::GetState ( ) {
+    enum XRAYWorXBase::CommandStates _result;
+    _com_dispatch_method(this, 0x60020013, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline unsigned long ITubeAutoCommandCOM::GetErrorCode ( ) {
+    unsigned long _result = 0;
+    _com_dispatch_method(this, 0x60020014, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeAutoCommandCOM::GetIsActive ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020015, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeAutoCommandCOM::GetProcessedInStartUp ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020016, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline enum XRAYWorXBase::TriggerSources ITubeAutoCommandCOM::GetTriggerSource ( ) {
+    enum XRAYWorXBase::TriggerSources _result;
+    _com_dispatch_method(this, 0x60020017, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface ITubeAutoCommandCOMEvents wrapper method implementations
+//
+
+inline HRESULT ITubeAutoCommandCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeAutoCommandCOMEvents::MonitorValueChanged ( ) {
+    return _com_dispatch_method(this, 0x2, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeAutoCommandCOMEvents::StableChanged ( ) {
+    return _com_dispatch_method(this, 0x10, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeAutoCommandCOMEvents::StateChanged ( ) {
+    return _com_dispatch_method(this, 0x5, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeAutoCommandCOMEvents::IsActiveChanged ( ) {
+    return _com_dispatch_method(this, 0xa, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ITubeFlagCOM wrapper method implementations
+//
+
+inline HRESULT ITubeFlagCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeFlagCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::AccessStates ITubeFlagCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeFlagCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeFlagCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeFlagCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeFlagCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITubeFlagCOM::add_Changed ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeFlagCOM::remove_Changed ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL ITubeFlagCOM::GetOn ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020009, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline void ITubeFlagCOM::PutOn ( VARIANT_BOOL _arg1 ) {
+    _com_dispatch_method(this, 0x60020009, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, 
+        L"\x000b", _arg1);
+}
+
+//
+// dispinterface ITubeFlagCOMEvents wrapper method implementations
+//
+
+inline HRESULT ITubeFlagCOMEvents::Changed ( ) {
+    return _com_dispatch_method(this, 0x19, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ITubeInterfaceEvents wrapper method implementations
+//
+
+inline HRESULT ITubeInterfaceEvents::Initialized ( ) {
+    return _com_dispatch_method(this, 0x7, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeInterfaceEvents::TubeStateChanged ( ) {
+    return _com_dispatch_method(this, 0x8, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeInterfaceEvents::TubeInterfaceError ( unsigned long tubeErrorCode ) {
+    return _com_dispatch_method(this, 0x9, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x0003", tubeErrorCode);
+}
+
+inline HRESULT ITubeInterfaceEvents::ConfigurationChanged ( ) {
+    return _com_dispatch_method(this, 0xb, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeInterfaceEvents::RefreshLimitableChanged ( ) {
+    return _com_dispatch_method(this, 0x18, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ITubeInterface wrapper method implementations
+//
+
+inline HRESULT ITubeInterface::add_Initialized ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeInterface::remove_Initialized ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeInterface::add_TubeStateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeInterface::remove_TubeStateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeInterface::add_TubeInterfaceError ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeInterface::remove_TubeInterfaceError ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeInterface::add_ConfigurationChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeInterface::remove_ConfigurationChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeInterface::add_RefreshLimitableChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeInterface::remove_RefreshLimitableChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL ITubeInterface::IsConfiguredAperture ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000a, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeInterface::IsConfiguredCenteringAperture ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000b, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeInterface::IsConfiguredCenteringUnitOne ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000c, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeInterface::IsConfiguredCenteringUnitTwo ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000d, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeInterface::IsConfiguredCondenser ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000e, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeInterface::IsConfiguredCooling ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000f, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeInterface::IsConfiguredCoolingTwo ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020010, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeInterface::IsConfiguredFocus ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020011, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeInterface::IsConfiguredStandby ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020012, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeInterface::IsConfiguredTarget ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020013, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeInterface::IsConfiguredVacuum ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020014, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeInterface::GetIsInitialized ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020015, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline enum XRAYWorXBase::TubeStates ITubeInterface::GetTubeState ( ) {
+    enum XRAYWorXBase::TubeStates _result;
+    _com_dispatch_method(this, 0x60020016, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline ITubeCommandBoolPtr ITubeInterface::GetXRayOn ( ) {
+    struct ITubeCommandBool * _result = 0;
+    _com_dispatch_method(this, 0x60020017, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeCommandBoolPtr(_result, false);
+}
+
+inline ITubeCommandBoolPtr ITubeInterface::GetXRayOff ( ) {
+    struct ITubeCommandBool * _result = 0;
+    _com_dispatch_method(this, 0x60020018, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeCommandBoolPtr(_result, false);
+}
+
+inline ITubeCommandSinglePtr ITubeInterface::GetHighVoltage ( ) {
+    struct ITubeCommandSingle * _result = 0;
+    _com_dispatch_method(this, 0x60020019, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeCommandSinglePtr(_result, false);
+}
+
+inline ITubeCommandSinglePtr ITubeInterface::GetEmissionCurrent ( ) {
+    struct ITubeCommandSingle * _result = 0;
+    _com_dispatch_method(this, 0x6002001a, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeCommandSinglePtr(_result, false);
+}
+
+inline ITubeCommandSinglePtr ITubeInterface::GetTargetCurrent ( ) {
+    struct ITubeCommandSingle * _result = 0;
+    _com_dispatch_method(this, 0x6002001b, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeCommandSinglePtr(_result, false);
+}
+
+inline ITubeCommandSinglePtr ITubeInterface::GetTargetPower ( ) {
+    struct ITubeCommandSingle * _result = 0;
+    _com_dispatch_method(this, 0x6002001c, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeCommandSinglePtr(_result, false);
+}
+
+inline ITubeCommandXocPtr ITubeInterface::GetXrayOutControl ( ) {
+    struct ITubeCommandXoc * _result = 0;
+    _com_dispatch_method(this, 0x6002001d, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeCommandXocPtr(_result, false);
+}
+
+inline ILimitableAutoCommandCOMPtr ITubeInterface::GetStartUp ( ) {
+    struct ILimitableAutoCommandCOM * _result = 0;
+    _com_dispatch_method(this, 0x6002001e, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ILimitableAutoCommandCOMPtr(_result, false);
+}
+
+inline ILimitableAutoCommandCOMPtr ITubeInterface::GetRefresh ( ) {
+    struct ILimitableAutoCommandCOM * _result = 0;
+    _com_dispatch_method(this, 0x6002001f, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ILimitableAutoCommandCOMPtr(_result, false);
+}
+
+inline IFilamentAdjustCOMPtr ITubeInterface::GetFilamentAdjust ( ) {
+    struct IFilamentAdjustCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020020, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return IFilamentAdjustCOMPtr(_result, false);
+}
+
+inline ITubeAutoCommandCOMPtr ITubeInterface::GetCenterAll ( ) {
+    struct ITubeAutoCommandCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020021, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeAutoCommandCOMPtr(_result, false);
+}
+
+inline ITubeAutoCommandCOMPtr ITubeInterface::GetCenterActive ( ) {
+    struct ITubeAutoCommandCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020022, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeAutoCommandCOMPtr(_result, false);
+}
+
+inline ITubeCommandSinglePtr ITubeInterface::GetTarget ( ) {
+    struct ITubeCommandSingle * _result = 0;
+    _com_dispatch_method(this, 0x60020023, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeCommandSinglePtr(_result, false);
+}
+
+inline ITubeListMonitorStringPtr ITubeInterface::GetTargetList ( ) {
+    struct ITubeListMonitorString * _result = 0;
+    _com_dispatch_method(this, 0x60020024, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeListMonitorStringPtr(_result, false);
+}
+
+inline ITubeCommandSinglePtr ITubeInterface::GetMode ( ) {
+    struct ITubeCommandSingle * _result = 0;
+    _com_dispatch_method(this, 0x60020025, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeCommandSinglePtr(_result, false);
+}
+
+inline ITubeListMonitorStringPtr ITubeInterface::GetModeList ( ) {
+    struct ITubeListMonitorString * _result = 0;
+    _com_dispatch_method(this, 0x60020026, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeListMonitorStringPtr(_result, false);
+}
+
+inline ITubeMonitorSinglePtr ITubeInterface::GetTubeHead ( ) {
+    struct ITubeMonitorSingle * _result = 0;
+    _com_dispatch_method(this, 0x60020027, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeMonitorSinglePtr(_result, false);
+}
+
+inline ITubeListMonitorStringPtr ITubeInterface::GetTubeHeadList ( ) {
+    struct ITubeListMonitorString * _result = 0;
+    _com_dispatch_method(this, 0x60020028, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeListMonitorStringPtr(_result, false);
+}
+
+inline ITubeCommandSinglePtr ITubeInterface::GetFocusCurrent ( ) {
+    struct ITubeCommandSingle * _result = 0;
+    _com_dispatch_method(this, 0x60020029, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeCommandSinglePtr(_result, false);
+}
+
+inline ITubeMonitorBoolPtr ITubeInterface::GetDefocused ( ) {
+    struct ITubeMonitorBool * _result = 0;
+    _com_dispatch_method(this, 0x6002002a, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeMonitorBoolPtr(_result, false);
+}
+
+inline ITubeCommandSinglePtr ITubeInterface::GetFocusCenterXCurrent ( ) {
+    struct ITubeCommandSingle * _result = 0;
+    _com_dispatch_method(this, 0x6002002b, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeCommandSinglePtr(_result, false);
+}
+
+inline ITubeCommandSinglePtr ITubeInterface::GetFocusCenterYCurrent ( ) {
+    struct ITubeCommandSingle * _result = 0;
+    _com_dispatch_method(this, 0x6002002c, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeCommandSinglePtr(_result, false);
+}
+
+inline ITubeCommandSinglePtr ITubeInterface::GetCondenserCurrent ( ) {
+    struct ITubeCommandSingle * _result = 0;
+    _com_dispatch_method(this, 0x6002002d, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeCommandSinglePtr(_result, false);
+}
+
+inline ITubeCommandSinglePtr ITubeInterface::GetCondenserCenterXCurrent ( ) {
+    struct ITubeCommandSingle * _result = 0;
+    _com_dispatch_method(this, 0x6002002e, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeCommandSinglePtr(_result, false);
+}
+
+inline ITubeCommandSinglePtr ITubeInterface::GetCondenserCenterYCurrent ( ) {
+    struct ITubeCommandSingle * _result = 0;
+    _com_dispatch_method(this, 0x6002002f, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeCommandSinglePtr(_result, false);
+}
+
+inline ITubeCommandSinglePtr ITubeInterface::GetFilamentCurrent ( ) {
+    struct ITubeCommandSingle * _result = 0;
+    _com_dispatch_method(this, 0x60020030, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeCommandSinglePtr(_result, false);
+}
+
+inline ITubeMonitorSinglePtr ITubeInterface::GetApertureCurrent ( ) {
+    struct ITubeMonitorSingle * _result = 0;
+    _com_dispatch_method(this, 0x60020031, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeMonitorSinglePtr(_result, false);
+}
+
+inline ITubeMonitorBoolPtr ITubeInterface::GetInterlock ( ) {
+    struct ITubeMonitorBool * _result = 0;
+    _com_dispatch_method(this, 0x60020032, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeMonitorBoolPtr(_result, false);
+}
+
+inline ITubeMonitorBoolPtr ITubeInterface::GetVacuumOk ( ) {
+    struct ITubeMonitorBool * _result = 0;
+    _com_dispatch_method(this, 0x60020033, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeMonitorBoolPtr(_result, false);
+}
+
+inline ITubeMonitorSinglePtr ITubeInterface::GetVacuumValue ( ) {
+    struct ITubeMonitorSingle * _result = 0;
+    _com_dispatch_method(this, 0x60020034, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeMonitorSinglePtr(_result, false);
+}
+
+inline ITubeCommandBoolPtr ITubeInterface::GetCoolingButton ( ) {
+    struct ITubeCommandBool * _result = 0;
+    _com_dispatch_method(this, 0x60020035, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeCommandBoolPtr(_result, false);
+}
+
+inline ITubeMonitorBoolPtr ITubeInterface::GetCoolingOk ( ) {
+    struct ITubeMonitorBool * _result = 0;
+    _com_dispatch_method(this, 0x60020036, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeMonitorBoolPtr(_result, false);
+}
+
+inline ITubeMonitorSinglePtr ITubeInterface::GetCoolingValue ( ) {
+    struct ITubeMonitorSingle * _result = 0;
+    _com_dispatch_method(this, 0x60020037, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeMonitorSinglePtr(_result, false);
+}
+
+inline ITubeMonitorBoolPtr ITubeInterface::GetCoolingTwoOk ( ) {
+    struct ITubeMonitorBool * _result = 0;
+    _com_dispatch_method(this, 0x60020038, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeMonitorBoolPtr(_result, false);
+}
+
+inline ITubeMonitorSinglePtr ITubeInterface::GetCoolingTwoValue ( ) {
+    struct ITubeMonitorSingle * _result = 0;
+    _com_dispatch_method(this, 0x60020039, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeMonitorSinglePtr(_result, false);
+}
+
+inline IFlashoverCOMPtr ITubeInterface::GetFlashover ( ) {
+    struct IFlashoverCOM * _result = 0;
+    _com_dispatch_method(this, 0x6002003a, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return IFlashoverCOMPtr(_result, false);
+}
+
+inline ITubeMonitorBoolPtr ITubeInterface::GetStandBy ( ) {
+    struct ITubeMonitorBool * _result = 0;
+    _com_dispatch_method(this, 0x6002003b, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeMonitorBoolPtr(_result, false);
+}
+
+inline ITubeMonitorBoolPtr ITubeInterface::GetXrayReady ( ) {
+    struct ITubeMonitorBool * _result = 0;
+    _com_dispatch_method(this, 0x6002003c, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeMonitorBoolPtr(_result, false);
+}
+
+inline ITubeServiceMonitorCOMPtr ITubeInterface::GetFilamentLifetime ( ) {
+    struct ITubeServiceMonitorCOM * _result = 0;
+    _com_dispatch_method(this, 0x6002003d, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeServiceMonitorCOMPtr(_result, false);
+}
+
+inline ITubeServiceMonitorCOMPtr ITubeInterface::GetHighVoltageCable ( ) {
+    struct ITubeServiceMonitorCOM * _result = 0;
+    _com_dispatch_method(this, 0x6002003e, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeServiceMonitorCOMPtr(_result, false);
+}
+
+inline ITubeServiceMonitorCOMPtr ITubeInterface::GetTargetLifetime ( ) {
+    struct ITubeServiceMonitorCOM * _result = 0;
+    _com_dispatch_method(this, 0x6002003f, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeServiceMonitorCOMPtr(_result, false);
+}
+
+inline ITubeServiceMonitorCOMPtr ITubeInterface::GetTargetRotationTime ( ) {
+    struct ITubeServiceMonitorCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020040, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeServiceMonitorCOMPtr(_result, false);
+}
+
+inline IAutoCommandInfosCOMPtr ITubeInterface::GetAutoCommandInfo ( ) {
+    struct IAutoCommandInfosCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020041, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return IAutoCommandInfosCOMPtr(_result, false);
+}
+
+inline ITubeMonitorBoolPtr ITubeInterface::GetAutoModeOn ( ) {
+    struct ITubeMonitorBool * _result = 0;
+    _com_dispatch_method(this, 0x60020042, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeMonitorBoolPtr(_result, false);
+}
+
+inline ITubeMonitorSinglePtr ITubeInterface::GetCenteringApertureCurrent ( ) {
+    struct ITubeMonitorSingle * _result = 0;
+    _com_dispatch_method(this, 0x60020043, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeMonitorSinglePtr(_result, false);
+}
+
+inline _bstr_t ITubeInterface::GetIpAddress ( ) {
+    BSTR _result = 0;
+    _com_dispatch_method(this, 0x60020044, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline IPrewarningCOMPtr ITubeInterface::GetPrewarning ( ) {
+    struct IPrewarningCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020045, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return IPrewarningCOMPtr(_result, false);
+}
+
+inline ITurbopumpCommandCOMPtr ITubeInterface::GetTurbopump ( ) {
+    struct ITurbopumpCommandCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020046, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITurbopumpCommandCOMPtr(_result, false);
+}
+
+inline ITubeMonitorSinglePtr ITubeInterface::GetMaxValidHighVoltage ( ) {
+    struct ITubeMonitorSingle * _result = 0;
+    _com_dispatch_method(this, 0x60020047, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeMonitorSinglePtr(_result, false);
+}
+
+inline ITubeMonitorBoolPtr ITubeInterface::GetLeakageCurrentCorrection ( ) {
+    struct ITubeMonitorBool * _result = 0;
+    _com_dispatch_method(this, 0x60020048, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeMonitorBoolPtr(_result, false);
+}
+
+inline VARIANT_BOOL ITubeInterface::GetIsRefreshLimitable ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020049, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline ITubeFlagCOMPtr ITubeInterface::GetHighVoltageStableDelay ( ) {
+    struct ITubeFlagCOM * _result = 0;
+    _com_dispatch_method(this, 0x6002004a, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeFlagCOMPtr(_result, false);
+}
+
+inline ITubeListCOMPtr ITubeInterface::GetDefocussingList ( ) {
+    struct ITubeListCOM * _result = 0;
+    _com_dispatch_method(this, 0x6002004b, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeListCOMPtr(_result, false);
+}
+
+inline IInitialStartupCOMPtr ITubeInterface::GetInitialStartup ( ) {
+    struct IInitialStartupCOM * _result = 0;
+    _com_dispatch_method(this, 0x6002004c, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return IInitialStartupCOMPtr(_result, false);
+}
+
+inline _bstr_t ITubeInterface::GetBaseVersion ( ) {
+    BSTR _result = 0;
+    _com_dispatch_method(this, 0x6002004d, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline _bstr_t ITubeInterface::GetPlcVersion ( ) {
+    BSTR _result = 0;
+    _com_dispatch_method(this, 0x6002004e, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline _bstr_t ITubeInterface::GetSerial ( ) {
+    BSTR _result = 0;
+    _com_dispatch_method(this, 0x6002004f, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline IStandbyCOMPtr ITubeInterface::GetStandbyEx ( ) {
+    struct IStandbyCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020050, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return IStandbyCOMPtr(_result, false);
+}
+
+inline IStatusWordCOMPtr ITubeInterface::GetStatusWord ( ) {
+    struct IStatusWordCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020051, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return IStatusWordCOMPtr(_result, false);
+}
+
+inline IFilamentStatsCOMPtr ITubeInterface::GetFilamentStats ( ) {
+    struct IFilamentStatsCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020052, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return IFilamentStatsCOMPtr(_result, false);
+}
+
+inline ITubeTimeSpanCOMPtr ITubeInterface::GetRunningTimer ( ) {
+    struct ITubeTimeSpanCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020053, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeTimeSpanCOMPtr(_result, false);
+}
+
+inline ITubeTimeSpanCOMPtr ITubeInterface::GetStandbyTimer ( ) {
+    struct ITubeTimeSpanCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020054, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeTimeSpanCOMPtr(_result, false);
+}
+
+inline ITubeTimeSpanCOMPtr ITubeInterface::GetXrayOnTimer ( ) {
+    struct ITubeTimeSpanCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020055, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeTimeSpanCOMPtr(_result, false);
+}
+
+inline ITriggerCommandCOMPtr ITubeInterface::GetFocusTableFactoryReset ( ) {
+    struct ITriggerCommandCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020056, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITriggerCommandCOMPtr(_result, false);
+}
+
+inline ICenterOffsetCOMPtr ITubeInterface::GetCenterOffset ( ) {
+    struct ICenterOffsetCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020057, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ICenterOffsetCOMPtr(_result, false);
+}
+
+inline _bstr_t ITubeInterface::GetDateOfInstallation ( ) {
+    BSTR _result = 0;
+    _com_dispatch_method(this, 0x60020058, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline _bstr_t ITubeInterface::GetDateOfManufacture ( ) {
+    BSTR _result = 0;
+    _com_dispatch_method(this, 0x60020059, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline ITubeMonitorBoolPtr ITubeInterface::GetXrayReadyWithoutAutoFunc ( ) {
+    struct ITubeMonitorBool * _result = 0;
+    _com_dispatch_method(this, 0x6002005a, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return ITubeMonitorBoolPtr(_result, false);
+}
+
+inline VARIANT_BOOL ITubeInterface::LogOn ( _bstr_t password ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002005b, DISPATCH_METHOD, VT_BOOL, (void*)&_result, 
+        L"\x0008", (BSTR)password);
+    return _result;
+}
+
+inline HRESULT ITubeInterface::LogOff ( ) {
+    return _com_dispatch_method(this, 0x6002005c, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeInterface::PlcRestart ( ) {
+    return _com_dispatch_method(this, 0x6002005d, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ITubeInterfaceEventArgsCOM wrapper method implementations
+//
+
+inline _bstr_t ITubeInterfaceEventArgsCOM::GetToString ( ) {
+    BSTR _result = 0;
+    _com_dispatch_method(this, 0x0, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline unsigned long ITubeInterfaceEventArgsCOM::GetCode ( ) {
+    unsigned long _result = 0;
+    _com_dispatch_method(this, 0x60020001, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline _bstr_t ITubeInterfaceEventArgsCOM::GetHelp ( ) {
+    BSTR _result = 0;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline _bstr_t ITubeInterfaceEventArgsCOM::GetInfo ( ) {
+    BSTR _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline _bstr_t ITubeInterfaceEventArgsCOM::GetText ( ) {
+    BSTR _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline enum XRAYWorXBase::TubeErrorType ITubeInterfaceEventArgsCOM::GetType ( ) {
+    enum XRAYWorXBase::TubeErrorType _result;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline _bstr_t ITubeInterfaceEventArgsCOM::GetIp ( ) {
+    BSTR _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+//
+// dispinterface ITubeListCOM wrapper method implementations
+//
+
+inline HRESULT ITubeListCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeListCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::AccessStates ITubeListCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeListCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeListCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeListCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeListCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITubeListCOM::add_Changed ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeListCOM::remove_Changed ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeListCOM::add_ListChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeListCOM::remove_ListChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeListCOM::ChangeIndex ( long index ) {
+    return _com_dispatch_method(this, 0x6002000b, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x0003", index);
+}
+
+inline long ITubeListCOM::GetListIndex ( ) {
+    long _result = 0;
+    _com_dispatch_method(this, 0x6002000c, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline _bstr_t ITubeListCOM::GetListItem ( ) {
+    BSTR _result = 0;
+    _com_dispatch_method(this, 0x6002000d, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline SAFEARRAY * ITubeListCOM::GetList ( ) {
+    SAFEARRAY * _result = 0;
+    _com_dispatch_method(this, 0x6002000e, DISPATCH_PROPERTYGET, VT_ARRAY|VT_BSTR, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface ITubeListCOMEvents wrapper method implementations
+//
+
+inline HRESULT ITubeListCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeListCOMEvents::Changed ( ) {
+    return _com_dispatch_method(this, 0x1a, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeListCOMEvents::ListChanged ( ) {
+    return _com_dispatch_method(this, 0xc, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ITubeListMonitorString wrapper method implementations
+//
+
+inline HRESULT ITubeListMonitorString::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeListMonitorString::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::AccessStates ITubeListMonitorString::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeListMonitorString::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeListMonitorString::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeListMonitorString::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeListMonitorString::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITubeListMonitorString::add_ListChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeListMonitorString::remove_ListChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline SAFEARRAY * ITubeListMonitorString::GetList ( ) {
+    SAFEARRAY * _result = 0;
+    _com_dispatch_method(this, 0x60020009, DISPATCH_PROPERTYGET, VT_ARRAY|VT_BSTR, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface ITubeListMonitorStringEvents wrapper method implementations
+//
+
+inline HRESULT ITubeListMonitorStringEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeListMonitorStringEvents::ListChanged ( ) {
+    return _com_dispatch_method(this, 0xc, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ITubeLoaderCOM wrapper method implementations
+//
+
+inline IErrorInfoCOMPtr ITubeLoaderCOM::GetErrorInfo ( unsigned long ErrorCode ) {
+    struct IErrorInfoCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, 
+        L"\x0003", ErrorCode);
+    return IErrorInfoCOMPtr(_result, false);
+}
+
+inline ITubeInterfacePtr ITubeLoaderCOM::GetTubeInterface ( _bstr_t IpAddress ) {
+    struct ITubeInterface * _result = 0;
+    _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, 
+        L"\x0008", (BSTR)IpAddress);
+    return ITubeInterfacePtr(_result, false);
+}
+
+inline IIpEntryCOMPtr ITubeLoaderCOM::GetDefaultIpAddress ( ) {
+    struct IIpEntryCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&_result, NULL);
+    return IIpEntryCOMPtr(_result, false);
+}
+
+inline SAFEARRAY * ITubeLoaderCOM::GetIpAddresses ( ) {
+    SAFEARRAY * _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_PROPERTYGET, VT_ARRAY|VT_DISPATCH, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITubeLoaderCOM::SetCustomPaths ( _bstr_t defaultDataPath, _bstr_t appDataPath, _bstr_t userDataPath ) {
+    return _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x0008\x0008\x0008", (BSTR)defaultDataPath, (BSTR)appDataPath, (BSTR)userDataPath);
+}
+
+inline HRESULT ITubeLoaderCOM::SetCustomPathsWithAdditionalDefaultLogging ( _bstr_t defaultDataPath, _bstr_t appDataPath, _bstr_t userDataPath ) {
+    return _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x0008\x0008\x0008", (BSTR)defaultDataPath, (BSTR)appDataPath, (BSTR)userDataPath);
+}
+
+//
+// dispinterface IDataModuleLoaderCOM wrapper method implementations
+//
+
+inline IDataModuleProviderCOMPtr IDataModuleLoaderCOM::GetDataModuleProvider ( _bstr_t IpAddress ) {
+    struct IDataModuleProviderCOM * _result = 0;
+    _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, 
+        L"\x0008", (BSTR)IpAddress);
+    return IDataModuleProviderCOMPtr(_result, false);
+}
+
+//
+// dispinterface ITubeMonitorXoc wrapper method implementations
+//
+
+inline HRESULT ITubeMonitorXoc::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeMonitorXoc::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::AccessStates ITubeMonitorXoc::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeMonitorXoc::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeMonitorXoc::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeMonitorXoc::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeMonitorXoc::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITubeMonitorXoc::add_MonitorValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeMonitorXoc::remove_MonitorValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::XrayOutControls ITubeMonitorXoc::GetMonitorValue ( ) {
+    enum XRAYWorXBase::XrayOutControls _result;
+    _com_dispatch_method(this, 0x60020009, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface ITubeMonitorXocEvents wrapper method implementations
+//
+
+inline HRESULT ITubeMonitorXocEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeMonitorXocEvents::MonitorValueChanged ( ) {
+    return _com_dispatch_method(this, 0x2, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ITubeCommandXoc wrapper method implementations
+//
+
+inline HRESULT ITubeCommandXoc::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeCommandXoc::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::AccessStates ITubeCommandXoc::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeCommandXoc::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeCommandXoc::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeCommandXoc::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeCommandXoc::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITubeCommandXoc::add_MonitorValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeCommandXoc::remove_MonitorValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::XrayOutControls ITubeCommandXoc::GetMonitorValue ( ) {
+    enum XRAYWorXBase::XrayOutControls _result;
+    _com_dispatch_method(this, 0x60020009, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITubeCommandXoc::add_PlcDemandValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeCommandXoc::remove_PlcDemandValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000b, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeCommandXoc::add_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000c, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeCommandXoc::remove_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000d, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::XrayOutControls ITubeCommandXoc::GetPcDemandValue ( ) {
+    enum XRAYWorXBase::XrayOutControls _result;
+    _com_dispatch_method(this, 0x6002000e, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline void ITubeCommandXoc::PutPcDemandValue ( enum XRAYWorXBase::XrayOutControls _arg1 ) {
+    _com_dispatch_method(this, 0x6002000e, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, 
+        L"\x0003", _arg1);
+}
+
+inline enum XRAYWorXBase::XrayOutControls ITubeCommandXoc::GetPlcDemandValue ( ) {
+    enum XRAYWorXBase::XrayOutControls _result;
+    _com_dispatch_method(this, 0x60020010, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline enum XRAYWorXBase::CommandStates ITubeCommandXoc::GetState ( ) {
+    enum XRAYWorXBase::CommandStates _result;
+    _com_dispatch_method(this, 0x60020011, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline unsigned long ITubeCommandXoc::GetErrorCode ( ) {
+    unsigned long _result = 0;
+    _com_dispatch_method(this, 0x60020012, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface ITubeCommandXocEvents wrapper method implementations
+//
+
+inline HRESULT ITubeCommandXocEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeCommandXocEvents::MonitorValueChanged ( ) {
+    return _com_dispatch_method(this, 0x2, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeCommandXocEvents::StateChanged ( ) {
+    return _com_dispatch_method(this, 0x5, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeCommandXocEvents::PlcDemandValueChanged ( ) {
+    return _com_dispatch_method(this, 0x6, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ITubeCommandBool wrapper method implementations
+//
+
+inline HRESULT ITubeCommandBool::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeCommandBool::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::AccessStates ITubeCommandBool::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeCommandBool::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeCommandBool::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeCommandBool::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeCommandBool::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITubeCommandBool::add_MonitorValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeCommandBool::remove_MonitorValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL ITubeCommandBool::GetMonitorValue ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020009, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITubeCommandBool::add_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeCommandBool::remove_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000b, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL ITubeCommandBool::GetPcDemandValue ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000c, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline void ITubeCommandBool::PutPcDemandValue ( VARIANT_BOOL _arg1 ) {
+    _com_dispatch_method(this, 0x6002000c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, 
+        L"\x000b", _arg1);
+}
+
+inline enum XRAYWorXBase::CommandStates ITubeCommandBool::GetState ( ) {
+    enum XRAYWorXBase::CommandStates _result;
+    _com_dispatch_method(this, 0x6002000e, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline unsigned long ITubeCommandBool::GetErrorCode ( ) {
+    unsigned long _result = 0;
+    _com_dispatch_method(this, 0x6002000f, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface ITubeCommandBoolEvents wrapper method implementations
+//
+
+inline HRESULT ITubeCommandBoolEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeCommandBoolEvents::MonitorValueChanged ( ) {
+    return _com_dispatch_method(this, 0x2, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeCommandBoolEvents::StateChanged ( ) {
+    return _com_dispatch_method(this, 0x5, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ITubeMonitorSingle wrapper method implementations
+//
+
+inline HRESULT ITubeMonitorSingle::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeMonitorSingle::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::AccessStates ITubeMonitorSingle::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeMonitorSingle::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeMonitorSingle::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeMonitorSingle::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeMonitorSingle::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITubeMonitorSingle::add_MonitorValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeMonitorSingle::remove_MonitorValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeMonitorSingle::add_StableChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeMonitorSingle::remove_StableChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline float ITubeMonitorSingle::GetMonitorValue ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x6002000b, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeMonitorSingle::GetStable ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000c, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface ITubeMonitorSingleEvents wrapper method implementations
+//
+
+inline HRESULT ITubeMonitorSingleEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeMonitorSingleEvents::MonitorValueChanged ( ) {
+    return _com_dispatch_method(this, 0x2, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeMonitorSingleEvents::StableChanged ( ) {
+    return _com_dispatch_method(this, 0x10, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ITubeCommandSingle wrapper method implementations
+//
+
+inline HRESULT ITubeCommandSingle::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeCommandSingle::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::AccessStates ITubeCommandSingle::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeCommandSingle::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeCommandSingle::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeCommandSingle::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeCommandSingle::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITubeCommandSingle::add_MonitorValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeCommandSingle::remove_MonitorValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeCommandSingle::add_StableChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeCommandSingle::remove_StableChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline float ITubeCommandSingle::GetMonitorValue ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x6002000b, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeCommandSingle::GetStable ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x6002000c, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITubeCommandSingle::add_DemandLowerLimitChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000d, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeCommandSingle::remove_DemandLowerLimitChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000e, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeCommandSingle::add_DemandUpperLimitChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000f, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeCommandSingle::remove_DemandUpperLimitChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020010, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeCommandSingle::add_PlcDemandValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020011, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeCommandSingle::remove_PlcDemandValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020012, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeCommandSingle::add_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020013, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeCommandSingle::remove_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020014, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline float ITubeCommandSingle::GetPcDemandValue ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020015, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline void ITubeCommandSingle::PutPcDemandValue ( float _arg1 ) {
+    _com_dispatch_method(this, 0x60020015, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, 
+        L"\x0004", _arg1);
+}
+
+inline float ITubeCommandSingle::GetDemandLowerLimit ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020017, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline float ITubeCommandSingle::GetDemandUpperLimit ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020018, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeCommandSingle::GetIsLimited ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020019, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline float ITubeCommandSingle::GetPlcDemandValue ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x6002001a, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline enum XRAYWorXBase::CommandStates ITubeCommandSingle::GetState ( ) {
+    enum XRAYWorXBase::CommandStates _result;
+    _com_dispatch_method(this, 0x6002001b, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline unsigned long ITubeCommandSingle::GetErrorCode ( ) {
+    unsigned long _result = 0;
+    _com_dispatch_method(this, 0x6002001c, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface ITubeCommandSingleEvents wrapper method implementations
+//
+
+inline HRESULT ITubeCommandSingleEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeCommandSingleEvents::MonitorValueChanged ( ) {
+    return _com_dispatch_method(this, 0x2, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeCommandSingleEvents::StableChanged ( ) {
+    return _com_dispatch_method(this, 0x10, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeCommandSingleEvents::DemandLowerLimitChanged ( ) {
+    return _com_dispatch_method(this, 0x3, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeCommandSingleEvents::DemandUpperLimitChanged ( ) {
+    return _com_dispatch_method(this, 0x4, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeCommandSingleEvents::StateChanged ( ) {
+    return _com_dispatch_method(this, 0x5, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeCommandSingleEvents::PlcDemandValueChanged ( ) {
+    return _com_dispatch_method(this, 0x6, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ITubeMonitorBool wrapper method implementations
+//
+
+inline HRESULT ITubeMonitorBool::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeMonitorBool::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::AccessStates ITubeMonitorBool::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeMonitorBool::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeMonitorBool::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeMonitorBool::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeMonitorBool::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITubeMonitorBool::add_MonitorValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeMonitorBool::remove_MonitorValueChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline VARIANT_BOOL ITubeMonitorBool::GetMonitorValue ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020009, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface ITubeMonitorBoolEvents wrapper method implementations
+//
+
+inline HRESULT ITubeMonitorBoolEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeMonitorBoolEvents::MonitorValueChanged ( ) {
+    return _com_dispatch_method(this, 0x2, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ITubeServiceMonitorCOM wrapper method implementations
+//
+
+inline HRESULT ITubeServiceMonitorCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeServiceMonitorCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::AccessStates ITubeServiceMonitorCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeServiceMonitorCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeServiceMonitorCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeServiceMonitorCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeServiceMonitorCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITubeServiceMonitorCOM::add_RemainingTimeChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeServiceMonitorCOM::remove_RemainingTimeChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeServiceMonitorCOM::add_ServiceStateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeServiceMonitorCOM::remove_ServiceStateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline long ITubeServiceMonitorCOM::GetRemainingTimeInSeconds ( ) {
+    long _result = 0;
+    _com_dispatch_method(this, 0x6002000b, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline enum XRAYWorXBase::ServiceState ITubeServiceMonitorCOM::GetServiceState ( ) {
+    enum XRAYWorXBase::ServiceState _result;
+    _com_dispatch_method(this, 0x6002000c, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITubeServiceMonitorCOM::add_ResetStateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000d, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeServiceMonitorCOM::remove_ResetStateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000e, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeServiceMonitorCOM::Reset ( ) {
+    return _com_dispatch_method(this, 0x6002000f, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline enum XRAYWorXBase::CommandStates ITubeServiceMonitorCOM::GetResetState ( ) {
+    enum XRAYWorXBase::CommandStates _result;
+    _com_dispatch_method(this, 0x60020010, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline unsigned long ITubeServiceMonitorCOM::GetResetErrorCode ( ) {
+    unsigned long _result = 0;
+    _com_dispatch_method(this, 0x60020011, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface ITubeServiceMonitorCOMEvents wrapper method implementations
+//
+
+inline HRESULT ITubeServiceMonitorCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeServiceMonitorCOMEvents::RemainingTimeChanged ( ) {
+    return _com_dispatch_method(this, 0xd, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeServiceMonitorCOMEvents::ServiceStateChanged ( ) {
+    return _com_dispatch_method(this, 0xe, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeServiceMonitorCOMEvents::ResetStateChanged ( ) {
+    return _com_dispatch_method(this, 0x1e, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ITubeTimeSpanCOM wrapper method implementations
+//
+
+inline HRESULT ITubeTimeSpanCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeTimeSpanCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::AccessStates ITubeTimeSpanCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeTimeSpanCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeTimeSpanCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeTimeSpanCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITubeTimeSpanCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITubeTimeSpanCOM::add_TimeChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITubeTimeSpanCOM::remove_TimeChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline unsigned long ITubeTimeSpanCOM::GetTimeInSeconds ( ) {
+    unsigned long _result = 0;
+    _com_dispatch_method(this, 0x60020009, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface ITubeTimeSpanCOMEvents wrapper method implementations
+//
+
+inline HRESULT ITubeTimeSpanCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITubeTimeSpanCOMEvents::TimeChanged ( ) {
+    return _com_dispatch_method(this, 0x1f, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+//
+// dispinterface ITurbopumpCommandCOM wrapper method implementations
+//
+
+inline HRESULT ITurbopumpCommandCOM::add_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITurbopumpCommandCOM::remove_IsAccessibleChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline enum XRAYWorXBase::AccessStates ITurbopumpCommandCOM::GetIsAccessible ( ) {
+    enum XRAYWorXBase::AccessStates _result;
+    _com_dispatch_method(this, 0x60020002, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITurbopumpCommandCOM::HasReadAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020003, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITurbopumpCommandCOM::HasReadWriteAccess ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020004, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITurbopumpCommandCOM::IsAccessDenied ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020005, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITurbopumpCommandCOM::IsNotSupported ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020006, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT ITurbopumpCommandCOM::add_IsSwitchedOnChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITurbopumpCommandCOM::remove_IsSwitchedOnChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITurbopumpCommandCOM::add_IsVentilatedChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITurbopumpCommandCOM::remove_IsVentilatedChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITurbopumpCommandCOM::add_RotationSpeedChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000b, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITurbopumpCommandCOM::remove_RotationSpeedChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000c, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITurbopumpCommandCOM::add_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000d, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITurbopumpCommandCOM::remove_StateChanged ( IUnknown * value ) {
+    return _com_dispatch_method(this, 0x6002000e, DISPATCH_METHOD, VT_EMPTY, NULL, 
+        L"\x000d", value);
+}
+
+inline HRESULT ITurbopumpCommandCOM::Start ( ) {
+    return _com_dispatch_method(this, 0x6002000f, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITurbopumpCommandCOM::Stop ( ) {
+    return _com_dispatch_method(this, 0x60020010, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline VARIANT_BOOL ITurbopumpCommandCOM::GetAutoVentilation ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020011, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline void ITurbopumpCommandCOM::PutAutoVentilation ( VARIANT_BOOL _arg1 ) {
+    _com_dispatch_method(this, 0x60020011, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, 
+        L"\x000b", _arg1);
+}
+
+inline unsigned long ITurbopumpCommandCOM::GetErrorCode ( ) {
+    unsigned long _result = 0;
+    _com_dispatch_method(this, 0x60020013, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITurbopumpCommandCOM::GetIsSwitchedOn ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020014, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline VARIANT_BOOL ITurbopumpCommandCOM::GetIsVentilated ( ) {
+    VARIANT_BOOL _result = 0;
+    _com_dispatch_method(this, 0x60020015, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline float ITurbopumpCommandCOM::GetRotationSpeed ( ) {
+    float _result = 0;
+    _com_dispatch_method(this, 0x60020016, DISPATCH_PROPERTYGET, VT_R4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline enum XRAYWorXBase::CommandStates ITurbopumpCommandCOM::GetState ( ) {
+    enum XRAYWorXBase::CommandStates _result;
+    _com_dispatch_method(this, 0x60020017, DISPATCH_PROPERTYGET, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+//
+// dispinterface ITurbopumpCommandCOMEvents wrapper method implementations
+//
+
+inline HRESULT ITurbopumpCommandCOMEvents::IsAccessibleChanged ( ) {
+    return _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITurbopumpCommandCOMEvents::IsSwitchedOnChanged ( ) {
+    return _com_dispatch_method(this, 0x15, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITurbopumpCommandCOMEvents::IsVentilatedChanged ( ) {
+    return _com_dispatch_method(this, 0x16, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITurbopumpCommandCOMEvents::RotationSpeedChanged ( ) {
+    return _com_dispatch_method(this, 0x17, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT ITurbopumpCommandCOMEvents::StateChanged ( ) {
+    return _com_dispatch_method(this, 0x5, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}

@@ -1,0 +1,211 @@
+﻿// Created by Microsoft (R) C/C++ Compiler Version 14.16.27045.0 (b5a435d7).
+//
+// c:\x-ray worx\samples\connectionsamplecom\x64\release\xrayworxbase.tlh
+//
+// C++ source equivalent of type library XRAYWorXBase.tlb
+// compiler-generated file created 01/06/22 at 10:12:28 - DO NOT EDIT!
+
+#pragma once
+#pragma pack(push, 8)
+
+#include <comdef.h>
+
+namespace XRAYWorXBase {
+
+//
+// Forward references and typedefs
+//
+
+struct __declspec(uuid("e2fd5c66-5034-4d2e-b6f5-9e7883525cde"))
+/* LIBID */ __XRAYWorXBase;
+enum AccessStates;
+enum ConditioningResultValue;
+enum ConditioningSubFunction;
+enum CommandActionInfo;
+enum DataModuleName;
+enum StandbyState;
+enum StatusWordFlags;
+enum ServiceState;
+enum TubeErrorType;
+enum CommandStates;
+enum TriggerSources;
+enum TubeStates;
+enum XrayOutControls;
+
+//
+// Type library items
+//
+
+enum __declspec(uuid("063977bd-295a-4713-9f3b-c4e96e4df1e5"))
+AccessStates
+{
+    AccessStates_NotSupported = 0,
+    AccessStates_Denied = 1,
+    AccessStates_ReadOnly = 2,
+    AccessStates_ReadWrite = 3
+};
+
+enum __declspec(uuid("142794ef-266b-4953-86cd-734e4f509d93"))
+ConditioningResultValue
+{
+    ConditioningResultValue_None = 0,
+    ConditioningResultValue_AbortedDueToWarningError = 1,
+    ConditioningResultValue_AbortedDueToUserAbort = 2,
+    ConditioningResultValue_AbortedDueToMaxFlashoversExeeded = 3,
+    ConditioningResultValue_AbortedDueToTimeout = 4,
+    ConditioningResultValue_Successful = 5
+};
+
+enum __declspec(uuid("1f61ff11-4455-4603-9aca-69071394a512"))
+ConditioningSubFunction
+{
+    ConditioningSubFunction_None = 0,
+    ConditioningSubFunction_Conditioning = 1,
+    ConditioningSubFunction_FilamentAdjust = 2,
+    ConditioningSubFunction_LeakageCurrentTest = 3,
+    ConditioningSubFunction_ConditioningLowerLimit = 4,
+    ConditioningSubFunction_ConditioningUpperLimit = 5
+};
+
+enum __declspec(uuid("bd5026c8-22cf-4480-8aea-320596f8a65d"))
+CommandActionInfo
+{
+    CommandActionInfo_Ok = 0,
+    CommandActionInfo_Recommended = 1,
+    CommandActionInfo_Required = 2
+};
+
+enum __declspec(uuid("b112c97c-02ef-4575-a2f1-0cc73c34f989"))
+DataModuleName
+{
+    DataModuleName_Aperture = 0,
+    DataModuleName_Aperture0 = 1,
+    DataModuleName_AutoFunction = 2,
+    DataModuleName_CenteringDM1 = 3,
+    DataModuleName_CenteringDM2 = 4,
+    DataModuleName_CenteringTable1 = 5,
+    DataModuleName_CenteringTable2 = 6,
+    DataModuleName_CondenserDM1 = 7,
+    DataModuleName_CondenserTable1 = 8,
+    DataModuleName_Cooling = 9,
+    DataModuleName_FocusDM1 = 10,
+    DataModuleName_FocusTable1 = 11,
+    DataModuleName_HighTensionGenerator = 12,
+    DataModuleName_Maintenance = 13,
+    DataModuleName_ModeInUse = 14,
+    DataModuleName_System = 15,
+    DataModuleName_TargetInUse = 16,
+    DataModuleName_Tube = 17,
+    DataModuleName_Vacuum = 18
+};
+
+enum __declspec(uuid("8630329a-896d-46f8-bd44-6ec848d4744b"))
+StandbyState
+{
+    StandbyState_Off = 0,
+    StandbyState_Cold = 1,
+    StandbyState_ColdLocked = 2,
+    StandbyState_Active = 3,
+    StandbyState_ActiveLocked = 4
+};
+
+enum __declspec(uuid("253a919f-8257-4f25-afa2-7640eec062aa"))
+StatusWordFlags
+{
+    StatusWordFlags_License = 1,
+    StatusWordFlags_Interlock = 2,
+    StatusWordFlags_Vacuum = 4,
+    StatusWordFlags_Filament = 8,
+    StatusWordFlags_Generator = 16,
+    StatusWordFlags_Cooling1 = 32,
+    StatusWordFlags_Cooling2 = 64,
+    StatusWordFlags_TubeHead = 128,
+    StatusWordFlags_Standby = 256,
+    StatusWordFlags_Startup = 512,
+    StatusWordFlags_Refresh = 1024,
+    StatusWordFlags_FilamentAdjust = 2048,
+    StatusWordFlags_CenteringAll = 4096,
+    StatusWordFlags_CenteringActive = 8192,
+    StatusWordFlags_AutoFunction = 16384,
+    StatusWordFlags_Xray = 32768,
+    StatusWordFlags_HighVoltage = 65536,
+    StatusWordFlags_EmissionCurrent = 131072,
+    StatusWordFlags_FilamentCurrent = 262144,
+    StatusWordFlags_TargetCurrent = 524288,
+    StatusWordFlags_FlashoverHandling = 1048576,
+    StatusWordFlags_Defocussing = 2097152,
+    StatusWordFlags_LeakageCurrentControl = 4194304,
+    StatusWordFlags_TargetControlOn = 8388608,
+    StatusWordFlags_XrayReady = 16777216,
+    StatusWordFlags_AutoModeOn = 33554432
+};
+
+enum __declspec(uuid("22eb957f-a9cb-44ff-93b2-86d75102bde4"))
+ServiceState
+{
+    ServiceState_Good = 0,
+    ServiceState_Warning = 1,
+    ServiceState_Bad = 2
+};
+
+enum __declspec(uuid("daebb7e7-9a1c-4dee-a28d-85f4196f81b6"))
+TubeErrorType
+{
+    TubeErrorType_Error = 0,
+    TubeErrorType_Warning = 1
+};
+
+enum __declspec(uuid("151d9d27-a871-4ffd-82e6-b9716874c9bf"))
+CommandStates
+{
+    CommandStates_OK = 0,
+    CommandStates_Acknowledged = 1,
+    CommandStates_Busy = 2,
+    CommandStates_Warning = 3,
+    CommandStates_Error = 65535
+};
+
+enum __declspec(uuid("4a937554-c3b6-41c0-a2e1-175bf59e59ee"))
+TriggerSources
+{
+    TriggerSources_Invalid = 0,
+    TriggerSources_PlcAutoFunc = 1,
+    TriggerSources_StartUp = 2,
+    TriggerSources_User = 3
+};
+
+enum __declspec(uuid("f77ec6df-7ed2-4f5a-9174-fb6cbaca2316"))
+TubeStates
+{
+    TubeStates_NotConnected = -1,
+    TubeStates_Init = 0,
+    TubeStates_WaitingForHardware = 1,
+    TubeStates_PreOperational = 2,
+    TubeStates_Operational = 3,
+    TubeStates_ProcessingAutoFunc = 4,
+    TubeStates_LimitedOpNoFilAdj = 5,
+    TubeStates_LimitedOpFilAdj = 6,
+    TubeStates_WaitingForCentering = 7,
+    TubeStates_WaitingForStartUp = 8,
+    TubeStates_Error = 65535
+};
+
+enum __declspec(uuid("5d1d70de-cbce-4c82-80bb-0199375804db"))
+XrayOutControls
+{
+    XrayOutControls_EmissionCurrentControl = 0,
+    XrayOutControls_TargetCurrentControl = 1,
+    XrayOutControls_TargetPowerControl = 2,
+    XrayOutControls_None = 3
+};
+
+//
+// Named GUID constants initializations
+//
+
+extern "C" const GUID __declspec(selectany) LIBID_XRAYWorXBase =
+    {0xe2fd5c66,0x5034,0x4d2e,{0xb6,0xf5,0x9e,0x78,0x83,0x52,0x5c,0xde}};
+
+} // namespace XRAYWorXBase
+
+#pragma pack(pop)

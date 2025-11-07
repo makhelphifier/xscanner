@@ -1,0 +1,3919 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>XRAYWorXBase</name>
+    </assembly>
+    <members>
+        <member name="T:XRAYWorXBase.WobbleType">
+            <summary>
+            Wobble type
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.WobbleType.N">
+            <summary>
+            N-Wobble
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.WobbleType.Z">
+            <summary>
+            Z-Wobble
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.WobbleCommand">
+            <summary>
+            Wobble command
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.Accessible">
+            <summary>
+            Base type for accessible plc types.
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.Accessible.HasReadAccess">
+            <summary>
+            Shows whether this object has read-access.
+            </summary>
+            <returns><c>true</c>, if object data can be read,<br/>
+            <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.Accessible.HasReadWriteAccess">
+            <summary>
+            Shows whether this object has read/write-access.
+            </summary>
+            <returns><c>true</c>, if object data can be read or written,<br/>
+            <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.Accessible.IsAccessDenied">
+            <summary>
+            Shows whether access to this object is denied.
+            </summary>
+            <returns><c>true</c>, if access is denied,<br/>
+            <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.Accessible.IsNotSupported">
+            <summary>
+            Shows whether access to this object is not supported.
+            </summary>
+            <returns><c>true</c>, if access is not supported,<br/>
+            <c>false</c> if access is supported.</returns>
+        </member>
+        <member name="E:XRAYWorXBase.Accessible.IsAccessibleChanged">
+            <summary>
+            Fires when the <c><see cref="P:XRAYWorXBase.Accessible.IsAccessible"/></c> property has changed.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Accessible.IsAccessible">
+            <summary>
+            Shows the accessible state of the object.
+            </summary>
+            <remarks>For further information see <c><see cref="T:XRAYWorXBase.AccessStates"/></c>.<br/>
+            For easier handling see <c><see cref="T:XRAYWorXBase.AccessStatesExtension"/></c> helper methods.</remarks>
+        </member>
+        <member name="M:XRAYWorXBase.WobbleCommand.Start(XRAYWorXBase.WobbleType,System.Single,System.TimeSpan)">
+            <summary>
+            Start
+            </summary>
+            <param name="type"></param>
+            <param name="deltaFocus"></param>
+            <param name="wobbleTime"></param>
+        </member>
+        <member name="M:XRAYWorXBase.WobbleCommand.Stop">
+            <summary>
+            Stop
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.WobbleCommand.StateChanged">
+            <summary>
+            State changed
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.WobbleCommand.DeltaFocusMaxChanged">
+            <summary>
+            DeltaFocusMax changed
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.WobbleCommand.DeltaFocusMinChanged">
+            <summary>
+            DeltaFocusMin changed
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.WobbleCommand.DeltaFocus">
+            <summary>
+            DeltaFocus
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.WobbleCommand.DeltaFocusMax">
+            <summary>
+            DeltaFocusMax
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.WobbleCommand.DeltaFocusMin">
+            <summary>
+            DeltaFocusMin
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.WobbleCommand.ErrorCode">
+            <summary>
+            ErrorCode
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.WobbleCommand.State">
+            <summary>
+            State
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.WobbleCommand.WobbleTime">
+            <summary>
+            WobbleTime
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.TubeListMonitor`1">
+            <summary>
+            Interface for a list/array of values on the plc.
+            </summary>
+            <typeparam name="MonitorType">Data type of the monitored values in the list.</typeparam>
+        </member>
+        <member name="E:XRAYWorXBase.TubeListMonitor`1.ListChanged">
+            <summary>
+            Fires when <c><see cref="P:XRAYWorXBase.TubeListMonitor`1.List"/></c> has changed.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeListMonitor`1.List">
+            <summary>
+            Returns a list of values of the monitored type on the plc.
+            </summary>
+            <exception cref="T:XRAYWorXBase.NotSupportedException">Thrown whenever trying to access
+            this object if it is not configured or not properly connected to the plc.</exception>
+        </member>
+        <member name="T:XRAYWorXBase.TubeInterfaceInfoEventArgs">
+            <summary>
+            Object which supports event data for a <c>EventHandler&lt;TubeInterfaceInfoEventArgs&gt;</c>.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterfaceInfoEventArgs.Info">
+            <summary>
+            Returns the information provided for the receiver of this event.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterfaceInfoEventArgs.Ip">
+            <summary>
+            Returns the IpAddress of the corresponding tube.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.InterfaceItems.IDataModuleProvider">
+            <summary>
+            DataModuleProvider
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.InterfaceItems.IDataModuleProvider.Get(XRAYWorXBase.InterfaceItems.DataModuleName)">
+            <summary>
+            Returns the data module or table for the requested name.
+            </summary>
+            <param name="name">Member of DataModuleName that indicates
+            which data module shall be returned.</param>
+            <returns>DataCollectionConnection representing the requested
+            data module.</returns>
+            <exception cref="T:XRAYWorXBase.XRAYWorXBaseException">Throws an exception
+            if the given DataModuleName is not valid.</exception>
+        </member>
+        <member name="P:XRAYWorXBase.InterfaceItems.IDataModuleProvider.IsDisposed">
+            <summary>
+            IsDisposed
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.TubeFlag">
+            <summary>
+            Interface for tube flags.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TubeFlag.Changed">
+            <summary>
+            Fires when the flag changes.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeFlag.On">
+            <summary>
+            Displays the flag state.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.ServiceState">
+            <summary>
+            Enumeration with possible service states.
+            </summary>
+            <remarks>See <c>ServiceStateExtension</c> for helper functions.</remarks>
+        </member>
+        <member name="F:XRAYWorXBase.ServiceState.Good">
+            <summary>
+            No maintenance necessary.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ServiceState.Warning">
+            <summary>
+            Maintenance interval is nearly expired.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ServiceState.Bad">
+            <summary>
+            Maintenance interval is expired. It's strongly recommended to execute the suggested maintenance actions.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.ErrorCodes.ErrorCodesException">
+            <summary>
+            ErrorCodesException
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.BurInterface.Extensions.PlcVariableExtensions">
+            <summary>
+            Setup methods for PlcVariable(s).
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.BurInterface.Extensions.PlcVariableExtensions.SetupReading(XRAYWorXBase.PlcVariable,System.EventHandler)">
+            <summary>
+            Links valueChangedHandler to ValueChanged event and calls SetupReading() on PlcVariable.
+            </summary>
+            <param name="variable"></param>
+            <param name="valueChangedHandler"></param>
+        </member>
+        <member name="M:XRAYWorXBase.BurInterface.Extensions.PlcVariableExtensions.SetupReading(XRAYWorXBase.PlcVariable,System.EventHandler,System.EventHandler)">
+            <summary>
+            Links valueChangedHandler to ValueChanged event and connectedHandler to
+            Connected event and calls SetupReading() on PlcVariable.
+            </summary>
+            <param name="variable"></param>
+            <param name="connectedHandler"></param>
+            <param name="valueChangedHandler"></param>
+        </member>
+        <member name="M:XRAYWorXBase.BurInterface.Extensions.PlcVariableExtensions.SetupWriting(XRAYWorXBase.PlcVariable,System.EventHandler)">
+            <summary>
+            Links valueWrittenHandler to ValueWritten event and calls SetupWriting() on
+            PlcVariable.
+            </summary>
+            <param name="variable"></param>
+            <param name="valueWrittenHandler"></param>
+        </member>
+        <member name="M:XRAYWorXBase.BurInterface.Extensions.PlcVariableExtensions.SetupWriting(XRAYWorXBase.PlcVariable,System.EventHandler,System.EventHandler)">
+            <summary>
+            Links valueWrittenHandler to ValueWritten event and connectedHandler to Connected
+            event and calls SetupWriting() on PlcVariable.
+            </summary>
+            <param name="variable"></param>
+            <param name="connectedHandler"></param>
+            <param name="valueWrittenHandler"></param>
+        </member>
+        <member name="T:XRAYWorXBase.TubeMonitor`1">
+            <summary>
+            TubeMonitor gathers information for monitoring a value on the tube.
+            </summary>
+            <typeparam name="MonitorType">Data type of the monitored value.</typeparam>
+        </member>
+        <member name="E:XRAYWorXBase.TubeMonitor`1.MonitorValueChanged">
+            <summary>
+            Fires when <c><see cref="P:XRAYWorXBase.TubeMonitor`1.MonitorValue"/></c> has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TubeMonitor`1.StableChanged">
+            <summary>
+            Fires when <c><see cref="P:XRAYWorXBase.TubeMonitor`1.Stable"/></c> has changed.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeMonitor`1.MonitorValue">
+            <summary>
+            Actual measured value from plc.
+            </summary>
+            <exception cref="T:XRAYWorXBase.NotSupportedException">Thrown whenever trying to access
+            this object if it is not configured or not properly connected to the plc.</exception>
+        </member>
+        <member name="P:XRAYWorXBase.TubeMonitor`1.Stable">
+            <summary>
+            Displays whether the demand value is adjusted.
+            </summary>
+            <remarks>Stable flag is not in use for bool values.</remarks>
+        </member>
+        <member name="T:XRAYWorXBase.TubeCommand`2">
+            <summary>
+            Base type for simple commands.
+            </summary>
+            <typeparam name="DemandType">Specifies the type of the value that is to be changed.</typeparam>
+            <typeparam name="MonitorType">Specifies the type of the monitored value generally this type equals
+            the DemandType.</typeparam>
+        </member>
+        <member name="E:XRAYWorXBase.TubeCommand`2.DemandLowerLimitChanged">
+            <summary>
+            Fires when <c><see cref="P:XRAYWorXBase.TubeCommand`2.DemandLowerLimit"/></c> has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TubeCommand`2.DemandUpperLimitChanged">
+            <summary>
+            Fires when <c><see cref="P:XRAYWorXBase.TubeCommand`2.DemandUpperLimit"/></c> has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TubeCommand`2.StateChanged">
+            <summary>
+            Fires when <c><see cref="P:XRAYWorXBase.TubeCommand`2.State"/></c> has changed on the plc.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TubeCommand`2.PlcDemandValueChanged">
+            <summary>
+            Fires when <c><see cref="P:XRAYWorXBase.TubeCommand`2.PlcDemandValue"/></c> has changed.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeCommand`2.PcDemandValue">
+            <summary>
+            Demand value from PC to PLC.
+            </summary>
+            <remarks>When ever the <c>PcDemandValue</c> changes, the new value will be transferred to plc,
+            if it differs from <c><see cref="P:XRAYWorXBase.TubeCommand`2.PlcDemandValue"/></c>.<br/>
+            <c>PcDemandValue</c> only is accessible, if <c><see cref="P:XRAYWorXBase.Accessible.IsAccessible"/></c> equals <c>ReadWrite</c> from
+            <c><see cref="T:XRAYWorXBase.AccessStates"/></c>.</remarks>
+            <exception cref="T:XRAYWorXBase.NotSupportedException">Thrown whenever trying to access
+            this object if it is not configured or not properly connected to the plc.</exception>
+        </member>
+        <member name="P:XRAYWorXBase.TubeCommand`2.DemandLowerLimit">
+            <summary>
+            Lower limit for <c><see cref="P:XRAYWorXBase.TubeCommand`2.PcDemandValue"/></c>.
+            </summary>
+            <remarks><c>DemandLowerLimit</c> only is accessible , if <c><see cref="P:XRAYWorXBase.Accessible.IsAccessible"/></c> equals <c>ReadWrite</c>
+            from <c><see cref="T:XRAYWorXBase.AccessStates"/></c>.</remarks>
+            <exception cref="T:XRAYWorXBase.NotSupportedException">Thrown whenever trying to access
+            this object if it is not configured or not properly connected to the plc.</exception>
+        </member>
+        <member name="P:XRAYWorXBase.TubeCommand`2.DemandUpperLimit">
+            <summary>
+            Upper limit for <c><see cref="P:XRAYWorXBase.TubeCommand`2.PcDemandValue"/></c>.
+            </summary>
+            <remarks><c>DemandUpperLimit</c> only is accessible , if <c><see cref="P:XRAYWorXBase.Accessible.IsAccessible"/></c> equals <c>ReadWrite</c>
+            from <c><see cref="T:XRAYWorXBase.AccessStates"/></c>.</remarks>
+            <exception cref="T:XRAYWorXBase.NotSupportedException">Thrown whenever trying to access
+            this object if it is not configured or not properly connected to the plc.</exception>
+        </member>
+        <member name="P:XRAYWorXBase.TubeCommand`2.State">
+            <summary>
+            Displays the command progress on the plc.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeCommand`2.ErrorCode">
+            <summary>
+            Error Code with error information related to this command.
+            </summary>
+            <remarks>Contains valid values only when <c><see cref="P:XRAYWorXBase.TubeCommand`2.State"/></c> is <c>Warning</c> or <c>Error</c> from
+            <c><see cref="T:XRAYWorXBase.CommandStates"/></c>.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.TubeCommand`2.PlcDemandValue">
+            <summary>
+            Displays demand value current active on the plc.
+            </summary>
+            <remarks><c><see cref="P:XRAYWorXBase.TubeCommand`2.PcDemandValue"/></c> might be updated when <c>PlcDemandValue</c> contains a differing value.
+            </remarks>
+            <exception cref="T:XRAYWorXBase.NotSupportedException">Thrown whenever trying to access
+            this object if it is not configured or not properly connected to the plc.</exception>
+        </member>
+        <member name="T:XRAYWorXBase.TubeAutoCommand">
+            <summary>
+            Supports easy access to auto commands like <c>ITubeInterface.StartUp</c>,
+            <c>ITubeInterface.Refresh</c> and others.
+            </summary>
+            Usage example for StartUp:
+            @snippet Form1.cs StartUp example
+        </member>
+        <member name="E:XRAYWorXBase.TubeAutoCommand.IsActiveChanged">
+            <summary>
+            Fires, when the <c><see cref="P:XRAYWorXBase.TubeAutoCommand.IsActive"/></c> flag has changed.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeAutoCommand.IsActive">
+            <summary>
+            Shows whether the command is active (<c>true</c>).
+            </summary>
+            <exception cref="T:XRAYWorXBase.NotSupportedException">Thrown whenever trying to access
+            this object if it is not configured or not properly connected to the plc.</exception>
+        </member>
+        <member name="P:XRAYWorXBase.TubeAutoCommand.TriggerSource">
+            <summary>
+            Information about the trigger source for the command. Only valid when command is active, else 'Invalid'.
+            </summary>
+            <exception cref="T:XRAYWorXBase.NotSupportedException">Thrown whenever trying to access
+            this object if it is not configured or not properly connected to the plc.</exception>
+        </member>
+        <member name="P:XRAYWorXBase.TubeAutoCommand.ProcessedInStartUp">
+            <summary>
+            Shows, whether this command has been processed during a Start-Up procedure (<c>ITubeInterface.StartUp</c>).
+            </summary>
+            <remarks>Will be resetted, whenever a Start-Up procedure starts/ends or while this command is active.</remarks>
+            <exception cref="T:XRAYWorXBase.NotSupportedException">Throws this exception whenever trying to access
+            this object if it is not configured or not properly connected to the plc.</exception>
+        </member>
+        <member name="T:XRAYWorXBase.LimitableAutoCommand">
+            <summary>
+            Interface for StartUp or Refresh command with extended functionallity.
+            </summary>
+            <remarks>Requires at least Plc V1.15 or higher.</remarks>
+        </member>
+        <member name="E:XRAYWorXBase.LimitableAutoCommand.LimitedKVMinChanged">
+            <summary>
+            Fires, whenever <c><see cref="P:XRAYWorXBase.LimitableAutoCommand.LimitedKVMin"/></c> changed.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.LimitableAutoCommand.LimitedKV">
+            <summary>
+            Set this value to limit the StartUp or Refresh command.
+            </summary>
+            <remarks>If this value is set, the command is limited and will be executed only until
+            the given high voltage value.<br/>
+            The value has to be in range of <c>[LimitedKVMin .. MaxKV]</c></remarks>
+        </member>
+        <member name="P:XRAYWorXBase.LimitableAutoCommand.LimitedKVMin">
+            <summary>
+            Returns the minimum value for <c><see cref="P:XRAYWorXBase.LimitableAutoCommand.LimitedKV"/></c>.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.TubeAutoCommandWithCounter">
+            <summary>
+            <c>TubeAutoCommand</c> object with additional <c>TubeCounter</c> properties.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.TubeCounter">
+            <summary>
+            Counter object with changed event.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TubeCounter.CountChanged">
+            <summary>
+            Fires when <c><see cref="P:XRAYWorXBase.TubeCounter.Count"/></c> has changed.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeCounter.Count">
+            <summary>
+            Returns the current value of Count.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.AutoCommandInfos">
+            <summary>
+            Provides access to further information about the TubeAutoCommands.
+            </summary>
+            <remarks>
+            A detailed example how to use the single <c>CommandInfoMonitor</c> objects for each <c>TubeAutoCommand</c>
+            is shown here:
+            @snippet MaintenanceView.cs filamentAdjustInfo
+            </remarks>
+        </member>
+        <member name="P:XRAYWorXBase.AutoCommandInfos.CenterActive">
+            <summary>
+            Displays the command info of the <c>ITubeInterface.CenterActive</c> command.
+            </summary>
+            <remarks>Currently not used on tube's plc.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.AutoCommandInfos.CenterAll">
+            <summary>
+            Displays the command info of the <c>ITubeInterface.CenterAll</c> command.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.AutoCommandInfos.FilamentAdjust">
+            <summary>
+            Displays the command info of the <c>ITubeInterface.FilamentAdjust</c> command.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.AutoCommandInfos.Refresh">
+            <summary>
+            Displays the command info of the <c>ITubeInterface.Refresh</c> command.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.AutoCommandInfos.Startup">
+            <summary>
+            Displays the command info of the <c>ITubeInterface.StartUp</c> command.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.CommandInfoMonitor">
+            <summary>
+            Object that gives access to the <c><see cref="P:XRAYWorXBase.CommandInfoMonitor.ActionInfo"/></c> (see <c><see cref="T:XRAYWorXBase.CommandActionInfo"/></c>)
+            and the <c><see cref="P:XRAYWorXBase.CommandInfoMonitor.RemainingTime"/></c> of a <c>TubeAutoCommand</c>.
+            </summary>
+            <remarks>
+            For a more detailed example on how to use <c>CommandInfoMonitor</c> objects see the folling code snippet:
+            @snippet MaintenanceView.cs filamentAdjustInfo
+            </remarks>
+        </member>
+        <member name="E:XRAYWorXBase.CommandInfoMonitor.ActionInfoChanged">
+            <summary>
+            Fires, when the <c><see cref="P:XRAYWorXBase.CommandInfoMonitor.ActionInfo"/></c> has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.CommandInfoMonitor.RemainingTimeChanged">
+            <summary>
+            Fires when the <c><see cref="P:XRAYWorXBase.CommandInfoMonitor.RemainingTime"/></c> has changed.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.CommandInfoMonitor.ActionInfo">
+            <summary>
+            Shows the current <c>ActionInfo</c> (see <c><see cref="T:XRAYWorXBase.CommandActionInfo"/></c>)
+            of the corresponding <c>TubeAutoCommand</c>.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.CommandInfoMonitor.RemainingTime">
+            <summary>
+            Returns the <c>RemainingTime</c> till the corresponding <c>TubeAutoCommand</c>
+            shall be executed (either <c>Recommended</c> or <c>Required</c> from <c><see cref="T:XRAYWorXBase.CommandActionInfo"/></c>)
+            the next time. 
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.TubeServiceMonitor">
+            <summary>
+            An object that monitors a tube's service item (e.g. the intervall for checking the
+            <c>ITubeInterface.HighVoltageCable</c>).
+            </summary>
+            <remarks>
+            A more detailed use of a <c>TubeServiceMonitor</c> is shown below using the example of
+            <c>ITubeInterface.HighVoltageCable</c>.
+            @snippet MaintenanceView.cs highVoltageCable1
+            @snippet MaintenanceView.cs highVoltageCable2
+            </remarks>
+        </member>
+        <member name="T:XRAYWorXBase.Resettable">
+            <summary>
+            Interface for a re-settable object.
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.Resettable.Reset">
+            <summary>
+            Call this function to start resetting the current object.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.Resettable.ResetStateChanged">
+            <summary>
+            Fires when the <c><see cref="P:XRAYWorXBase.Resettable.ResetState"/></c> has changed.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Resettable.ResetErrorCode">
+            <summary>
+            If an error occurs while resetting, it will returned by this property. If no error occurred OK (0) is returned.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Resettable.ResetState">
+            <summary>
+            Shows the current state of the reset command (see <c><see cref="T:XRAYWorXBase.CommandStates"/></c>).
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TubeServiceMonitor.RemainingTimeChanged">
+            <summary>
+            Fires when the <c><see cref="P:XRAYWorXBase.TubeServiceMonitor.RemainingTime"/></c> has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TubeServiceMonitor.ServiceStateChanged">
+            <summary>
+            Fires when the <c><see cref="P:XRAYWorXBase.TubeServiceMonitor.ServiceState"/></c> has changed.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeServiceMonitor.RemainingTime">
+            <summary>
+            Time left until the next maintenance interval.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeServiceMonitor.ServiceState">
+            <summary>
+            Shows the current <c><see cref="P:XRAYWorXBase.TubeServiceMonitor.ServiceState"/></c> of the tube's service item.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.DataCollectionConnection">
+            <summary>
+            DataCollectionConnection
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.DataCollectionConnection.Get``1(System.String)">
+            <summary>
+            Returns the indexed data module entry.
+            </summary>
+            <typeparam name="T">Type of the data module entry.</typeparam>
+            <param name="index">Index of the data module entry.</param>
+            <returns>The indexed data module entry.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.DataCollectionConnection.Save">
+            <summary>
+            Saves all pending changes to the data module.
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.DataCollectionConnection.Set``1(System.String,``0)">
+            <summary>
+            Sets the indexed data module entry to the given value.
+            </summary>
+            <typeparam name="T">Type of the data module entry.</typeparam>
+            <param name="index">Index of the data module entry.</param>
+            <param name="value">Value that shall be set.</param>
+        </member>
+        <member name="M:XRAYWorXBase.DataCollectionConnection.UpdateData">
+            <summary>
+            Updates the data module entries.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.DataCollectionConnection.DataUpdated">
+            <summary>
+            DataUpdated
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.DataCollectionConnection.Error">
+            <summary>
+            Error
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.DataCollectionConnection.Saved">
+            <summary>
+            Saved
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.DataCollectionConnection.Updating">
+            <summary>
+            Updating
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.DataCollectionConnection.IsSaving">
+            <summary>
+            IsSaving
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.DataCollectionConnection.StructureSize">
+            <summary>
+            StructureSize
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.TubeErrorType">
+            <summary>
+            Error level specifications.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.TubeErrorType.Error">
+            <summary>
+            Error.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.TubeErrorType.Warning">
+            <summary>
+            Warning.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.IDataModuleLoader">
+            <summary>
+            DataModuleLoader
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.IDataModuleLoader.GetDataModuleProvider(System.String)">
+            <summary>
+            GetDataModuleProvider
+            </summary>
+            <param name="ip"></param>
+            <returns></returns>
+        </member>
+        <member name="T:XRAYWorXBase.BurInterface.BurCommandSetterData">
+            <summary>
+            Base class for CommandSetterData classes.
+            <br/>
+            internal class SetDemandValueData : BurCommandSetterData<br/>
+            {<br/>
+               internal SetDemandValueData(string structName, string taskName)<br/>
+                   : base(structName, taskName)<br/>
+               {<br/>
+                   Add(TubeCommandNames.PcDemandValue);<br/>
+               }<br/>
+            <br/>
+               internal Value PcDemandValue<br/>
+               {<br/>
+                   set { base[TubeCommandNames.PcDemandValue] = value; }<br/>
+               }<br/>
+            }<br/>
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.LeakageCurrentTest">
+            <summary>
+            LeakageCurrentTest
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.LeakageCurrentTest.LeakageCurrentProvidedChanged">
+            <summary>
+            Fires when the provided flag for LeakageCurrent value has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.LeakageCurrentTest.HighVoltageLowerLimitChanged">
+            <summary>
+            Fires when the upper limit of the high voltage demand value has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.LeakageCurrentTest.HighVoltageUpperLimitChanged">
+            <summary>
+            Fires when the lower limit of the high voltage demand value has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.LeakageCurrentTest.StateChanged">
+            <summary>
+            Fires when State has changed on the Plc.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.LeakageCurrentTest.ErrorCode">
+            <summary>
+            Error Code with error information related to this command.
+            </summary>
+            <remarks>Contains valid values only when State is Warning or Error.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.LeakageCurrentTest.Duration">
+            <summary>
+            Duration
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.LeakageCurrentTest.HighVoltage">
+            <summary>
+            Get or sets the HighVoltage value at which the leakage current test shall be executed.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.LeakageCurrentTest.HighVoltageLowerLimit">
+            <summary>
+            HighVoltageLowerLimit
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.LeakageCurrentTest.HighVoltageUpperLimit">
+            <summary>
+            HighVoltageUpperLimit
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.LeakageCurrentTest.PcDemandValue">
+            <summary>
+            Demand value from PC to PLC.
+            </summary>
+            <remarks>When ever the PcDemandValue is set, the new value will be transferred to plc.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.LeakageCurrentTest.LeakageCurrent">
+            <summary>
+            Resulting leakage current.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.LeakageCurrentTest.LeakageCurrentProvided">
+            <summary>
+            Shows whether the LeakageCurrent property is provided (true) by the current plc version.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.LeakageCurrentTest.State">
+            <summary>
+            Displays the command progress on the PLC.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.IFilamentAdjust">
+            <summary>
+            <c>TubeAutoCommand</c> for <c>ITubeInterface.FilamentAdjust</c>.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.IFilamentAdjust.FilamentValue">
+            <summary>
+            Displays the current value of the filament.
+            </summary>
+            <remarks>Requires at least Plc V1.14.</remarks>
+        </member>
+        <member name="T:XRAYWorXBase.BurInterface.BurCommandSetter">
+            <summary>
+            Handles the settings of command values. The NewCommand-flag will be set automatically. For correct
+            initialization of a CommandSetter and execution of Set-Method, a CommandSetterData-object is passed
+            as parameter. The CommandSetterData-object describes the corresponding command data.
+            </summary>
+            <example>
+            internal class SetDemandValueData : CommandSetterData { }
+            CommandSetter setter = new CommandSetter(new SetDemandValueData(..));
+            </example>
+        </member>
+        <member name="T:XRAYWorXBase.Logger.ServiceStateExtension">
+            <summary>
+            Helper class for <c><see cref="T:XRAYWorXBase.ServiceState"/></c> objects.
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.Logger.ServiceStateExtension.ToCommandActionInfo(XRAYWorXBase.ServiceState)">
+            <summary>
+            Translates a <c><see cref="T:XRAYWorXBase.ServiceState"/></c> into a <c><see cref="T:XRAYWorXBase.CommandActionInfo"/></c>.
+            </summary>
+            <param name="serviceState">Service state on which the method is called.</param>
+            <returns><c>CommandActionInfo</c> object displaying the current service state.</returns>
+            <remarks>
+            <list type="table">
+            <listheader><term><c>ServiceState</c></term><description><c>CommandActionInfo</c></description></listheader>
+            <item><term><c>Bad</c></term><description><c>Required</c></description></item>
+            <item><term><c>Good</c></term><description><c>Ok</c></description></item>
+            <item><term><c>Warning</c></term><description><c>Recommended</c></description></item>
+            </list></remarks>
+        </member>
+        <member name="T:XRAYWorXBase.ConditioningSubFunction">
+            <summary>
+            Enumeration of sub-function, which can be active during conditioning.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ConditioningSubFunction.None">
+            <summary>
+            None
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ConditioningSubFunction.Conditioning">
+            <summary>
+            Conditioning
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ConditioningSubFunction.FilamentAdjust">
+            <summary>
+            Filament adjust
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ConditioningSubFunction.LeakageCurrentTest">
+            <summary>
+            Leakage current test
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ConditioningSubFunction.ConditioningLowerLimit">
+            <summary>
+            Conditioning lower limit
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ConditioningSubFunction.ConditioningUpperLimit">
+            <summary>
+            Conditioning upper limit
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.ConditioningResultValue">
+            <summary>
+            Collection of values, shown as result after the execution of a conditioning command.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ConditioningResultValue.None">
+            <summary>
+            No result available. The command was not executed or is currently running.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ConditioningResultValue.AbortedDueToWarningError">
+            <summary>
+            Aborted due to warning or error
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ConditioningResultValue.AbortedDueToUserAbort">
+            <summary>
+            Aborted due to user abort
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ConditioningResultValue.AbortedDueToMaxFlashoversExeeded">
+            <summary>
+            Aborted due to maximum flashover exeeded
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ConditioningResultValue.AbortedDueToTimeout">
+            <summary>
+            Aborted due to timeout
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ConditioningResultValue.Successful">
+            <summary>
+            Successful
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.TubeStates">
+            <summary>
+            Displays an enumeration with the main tube states.
+            </summary>
+            <remarks>For additional helper methods see <c>TubeStatesExtension</c>.</remarks>
+        </member>
+        <member name="F:XRAYWorXBase.TubeStates.NotConnected">
+            <summary>
+            Actually there is no connection established to the plc.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.TubeStates.Init">
+            <summary>
+            Tube is initializing. Parameters will be read. While the tube is initializing it is not
+            allowed to send any commands to the tube.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.TubeStates.WaitingForHardware">
+            <summary>
+            Parameters are read. Hardware infos will be gathered. It is allowed to read parameter data.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.TubeStates.PreOperational">
+            <summary>
+            Hardware informations are ok. Tube is ready to be started. <c>ITubeInterface.StartUp</c> and
+            <c>ITubeInterface.Refresh</c> are now allowed.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.TubeStates.Operational">
+            <summary>
+            Tube is operational. All commands are available.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.TubeStates.ProcessingAutoFunc">
+            <summary>
+            An auto-function (<c>ITubeInterface.StartUp</c>, <c>ITubeInterface.Refresh</c>, <c>ITubeInterface.FilamentAdjust</c>,
+            <c>ITubeInterface.ChangingTarget</c>, ...) is active.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.TubeStates.LimitedOpNoFilAdj">
+            <summary>
+            Tube is not fully operational. There is no <c>ITubeInterface.FilamentAdjust</c> command executable. Maximum
+            highVoltage is limited.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.TubeStates.LimitedOpFilAdj">
+            <summary>
+            Tube is not fully operational. <c>ITubeInterface.FilamentAdjust</c> command is executable. Maximum high voltage is limited.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.TubeStates.WaitingForCentering">
+            <summary>
+            <c>ITubeInterface.Centering</c> expired. New centering required.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.TubeStates.WaitingForStartUp">
+            <summary>
+            <c>ITubeInterface.StartUp</c> expired. New Start-Up required.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.TubeStates.Error">
+            <summary>
+            Tube is in an error state. Read the error information carefully. A restart of the plc is requested.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.TubeStatesExtension">
+            <summary>
+            Additional helper functions for <c><see cref="T:XRAYWorXBase.TubeStates"/></c>.
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.TubeStatesExtension.IsOneOfOperationalsAndPreOp(XRAYWorXBase.TubeStates)">
+            <summary>
+            Determines whether <c>tubeState</c> is one of the operational states or pre-operational.
+            </summary>
+            <param name="tubeState">Tube state on which the function is called.</param>
+            <returns><c>true</c> if <c>tubeState</c> equals <c>PreOperational</c> or 
+            <c>tubeStates.IsOneOfOperationals()</c> returns <c>true</c><br/>
+            false elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.TubeStatesExtension.IsOneOfOperationals(XRAYWorXBase.TubeStates)">
+            <summary>
+            Determines whether <c>tubeState</c> is one of the operational states.
+            </summary>
+            <param name="tubeState">Tube state on which the function is called.</param>
+            <returns><c>true</c> if <c>tubeState</c> equals one of the operational states (<c>LimitedOpNoFilAdj,
+            LimitedOpFilAdj, Operational, WaitingForCentering, WaitingForStartUp</c>),<br/>
+            false elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.TubeStatesExtension.IsInitNotConnectedProcAutoFunc(XRAYWorXBase.TubeStates)">
+            <summary>
+            Determines whether <c>tubeState</c> is init or not connected or an auto function is active.
+            </summary>
+            <param name="tubeState">Tube state on which the function is called.</param>
+            <returns><c>true</c> if <c>tubeState</c> is <c>ProcessingAutoFunc</c> or if <c>tubeState.IsInitNotConnected()</c>
+            returns <c>true</c>,<br/>
+            false elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.TubeStatesExtension.IsInitNotConnectedWaitingForHardware(XRAYWorXBase.TubeStates)">
+            <summary>
+            Determines whether <c>tubeState</c> is init or not connected or waiting for hardware.
+            </summary>
+            <param name="tubeState">Tube state on which the function is called.</param>
+            <returns><c>true</c> if <c>tubeState</c> is <c>WaitingForHardware</c> or if <c>tubeState.IsInitNotConnected()</c>
+            returns <c>true</c>,<br/>
+            <c>false elsewise.</c></returns>
+        </member>
+        <member name="M:XRAYWorXBase.TubeStatesExtension.IsInitNotConnected(XRAYWorXBase.TubeStates)">
+            <summary>
+            Determines whether <c>tubeState</c> is init or not connected.
+            </summary>
+            <param name="tubeState">Tube state on which the function is called.</param>
+            <returns><c>true</c> if <c>tubeState</c> equals <c>Init</c> or <c>NotConnected</c>,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.TubeStatesExtension.IsWaitingForHardware_PreOp(XRAYWorXBase.TubeStates)">
+            <summary>
+            Determines whether <c>tubeState</c> is waiting for hardware of pre-operational.
+            </summary>
+            <param name="tubeState">Tube state on which the function is called.</param>
+            <returns><c>true</c> if <c>tubeState</c> equals <c>WaitingForHardware</c> or <c>PreOperational</c>,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="T:XRAYWorXBase.TriggerSources">
+            <summary>
+            An enumeration of different trigger sources of an <c>TubeAutoCommand</c>.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.TriggerSources.Invalid">
+            <summary>
+            No trigger source detected. Default-setting, as long as a command is not active.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.TriggerSources.PlcAutoFunc">
+            <summary>
+            Triggered by the plc. This may happen during maintenance.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.TriggerSources.StartUp">
+            <summary>
+            This function has been triggered during a Start-Up procedure.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.TriggerSources.User">
+            <summary>
+            The function has been triggered directly by the user.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.BurInterface.PlcVariableHelper`1">
+            <summary>
+            Helper for PlcVariable objects.
+            </summary>
+            <typeparam name="T">Specifies the return type of <c>GetValueFrom</c>.</typeparam>
+        </member>
+        <member name="M:XRAYWorXBase.BurInterface.PlcVariableHelper`1.GetValueFrom(System.Object)">
+            <summary>
+            Gets value from PlcVariable object with preset type.
+            </summary>
+            <param name="plcVariable">PlcVariable from which the value shall be gotten.</param>
+            <returns>Returns value from plcVariable.</returns>
+        </member>
+        <member name="T:XRAYWorXBase.TubeInterface">
+            <summary>
+            Interface to tube functions, commands and values.
+            </summary>
+            <remarks>Generally the access to the tube (values and commands) is managed via this interface. For each
+            command (e.g. Start-Up) and for each value which might be monitored or set there is a corresponding object
+            provided.
+            
+            <c>ITubeInterface</c> is provided by <c>ITubeLoader</c>:
+            @snippet Form1.cs Get Default TubeInterface
+            </remarks>
+        </member>
+        <member name="T:XRAYWorXBase.ITubeInterface">
+            <summary>
+            Interface to tube functions, commands and values.
+            </summary>
+            <remarks>Generally the access to the tube (values and commands) is managed via this interface. For each
+            command (e.g. Start-Up) and for each value which might be monitored or set there is a corresponding object
+            provided.
+            
+            <c>ITubeInterface</c> is provided by <c>ITubeLoader</c>:
+            @snippet Form1.cs Get Default TubeInterface
+            </remarks>
+        </member>
+        <member name="M:XRAYWorXBase.ITubeInterface.ClearErrorList">
+            <summary>
+            ClearErrorList
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.ITubeInterface.ConnectPlc">
+            <summary>
+            Starts a connection to the PLC. A response is passed via
+            <c><see cref="E:XRAYWorXBase.ITubeInterface.PlcConnected"/></c> event.
+            </summary>
+            <remarks>Obsolete. The plc will be connected automatically
+            on creating a new tube interface.</remarks>
+        </member>
+        <member name="M:XRAYWorXBase.ITubeInterface.IsConfiguredAperture">
+            <summary>
+            Shows whether an aperture is configured.
+            </summary>
+            <remarks>Only valid when <see cref="P:XRAYWorXBase.ITubeInterface.IsInitialized"/> is <c>true</c>.</remarks>
+            <returns><c>true</c> if an aperture is configured,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.ITubeInterface.IsConfiguredCenteringAperture">
+            <summary>
+            Shows whether Centering Aperture is configured.
+            </summary>
+            <remarks>Only valid when <see cref="P:XRAYWorXBase.ITubeInterface.IsInitialized"/> is <c>true</c>.</remarks>
+            <returns><c>true</c> if Centering Aperture is configured,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.ITubeInterface.IsConfiguredCenteringUnitOne">
+            <summary>
+            Shows whether centering unit one is configured.
+            </summary>
+            <remarks>Only valid when <see cref="P:XRAYWorXBase.ITubeInterface.IsInitialized"/> is <c>true</c>.</remarks>
+            <returns><c>true</c> if centering unit one is configured,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.ITubeInterface.IsConfiguredCenteringUnitTwo">
+            <summary>
+            Shows whether centering unit two is configured.
+            </summary>
+            <remarks>Only valid when <see cref="P:XRAYWorXBase.ITubeInterface.IsInitialized"/> is <c>true</c>.</remarks>
+            <returns><c>true</c> if centering unit two is configured,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.ITubeInterface.IsConfiguredCondenser">
+            <summary>
+            Shows whether condenser is configured.
+            </summary>
+            <remarks>Only valid when <see cref="P:XRAYWorXBase.ITubeInterface.IsInitialized"/> is <c>true</c>.</remarks>
+            <returns><c>true</c> if condenser is configured,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.ITubeInterface.IsConfiguredCooling">
+            <summary>
+            Shows whether the first cooling is configured.
+            </summary>
+            <remarks>Only valid when <see cref="P:XRAYWorXBase.ITubeInterface.IsInitialized"/> is <c>true</c>.</remarks>
+            <returns><c>true</c> if first cooling is configured,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.ITubeInterface.IsConfiguredCoolingTwo">
+            <summary>
+            Shows whether a second cooling is configured.
+            </summary>
+            <remarks>Only valid when <see cref="P:XRAYWorXBase.ITubeInterface.IsInitialized"/> is <c>true</c>.</remarks>
+            <returns><c>true</c> if second cooling is configured,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.ITubeInterface.IsConfiguredFocus">
+            <summary>
+            Shows whether focus is configured.
+            </summary>
+            <remarks>Only valid when <see cref="P:XRAYWorXBase.ITubeInterface.IsInitialized"/> is <c>true</c>.</remarks>
+            <returns><c>true</c> if focus is configured,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.ITubeInterface.IsConfiguredTarget">
+            <summary>
+            Shows whether target is configured.
+            </summary>
+            <remarks>Only valid when <see cref="P:XRAYWorXBase.ITubeInterface.IsInitialized"/> is <c>true</c>.</remarks>
+            <returns><c>true</c> if target is configured,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.ITubeInterface.IsConfiguredVacuum">
+            <summary>
+            Shows whether vacuum is configured.
+            </summary>
+            <remarks>Only valid when <see cref="P:XRAYWorXBase.ITubeInterface.IsInitialized"/> is <c>true</c>.</remarks>
+            <returns><c>true</c> if vacuum is configured,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.ITubeInterface.LogOff">
+            <summary>
+            LogOff
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.ITubeInterface.LogOn(System.String)">
+            <summary>
+            LogOn
+            </summary>
+            <param name="password"></param>
+            <returns></returns>
+        </member>
+        <member name="M:XRAYWorXBase.ITubeInterface.PlcRestart">
+            <summary>
+            PlcRestart
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.ITubeInterface.ConfigurationChanged">
+            <summary>
+            Fires when the configuration is read or has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.ITubeInterface.Initialized">
+            <summary>
+            Fires an event, when the <c>ITubeInterface</c> is initialized. Once the
+            value is <c>true</c>, the monitor and command objects can be used.
+            </summary>
+            @snippet Form1.cs tubeInterface_Initialized
+        </member>
+        <member name="E:XRAYWorXBase.ITubeInterface.PlcConnected">
+            <summary>
+            Fires an event when the plc is connected.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.ITubeInterface.PlcDisconnected">
+            <summary>
+            Fires an event, when the plc is disconnected.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.ITubeInterface.PlcRestarted">
+            <summary>
+            Fires an event, when the plc is restarted.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.ITubeInterface.PwdValidChanged">
+            <summary>
+            PwdValidChanged
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.ITubeInterface.RefreshLimitableChanged">
+            <summary>
+            Fires when <c><see cref="P:XRAYWorXBase.ITubeInterface.IsRefreshLimitable"/></c> changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.ITubeInterface.TubeInterfaceError">
+            <summary>
+            Fires an event, when an error occured in the tube interface.
+            </summary>
+            @snippet Form1.cs Link TubeInterfaceError
+            @snippet Form1.cs tubeInterface_TubeInterfaceError
+        </member>
+        <member name="E:XRAYWorXBase.ITubeInterface.TubeInterfaceInfo">
+            <summary>
+            Fires an event, when some additional info is provided.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.ITubeInterface.TubeStateChanged">
+            <summary>
+            Fires an event, when the <c><see cref="P:XRAYWorXBase.ITubeInterface.TubeState"/></c> has changed.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.ApertureCurrent">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object for the Aperture Current.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.AutoCommandInfo">
+            <summary>
+            General info for tube auto commands.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.AutoModeOn">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object that shows whether auto mode adjust is active (<c>true</c>)
+            or not.
+            </summary>
+            <remarks>Auto mode adjust is active (if configured) whenever <c>TargetCurrentControl</c> or <c>TargetPowerControl</c>
+            from <c><see cref="T:XRAYWorXBase.XrayOutControls"/></c> is active.
+            </remarks>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.CenterActive">
+            <summary>
+            Automatically proceeds centering for actual <c><see cref="P:XRAYWorXBase.ITubeInterface.HighVoltage"/></c> settings.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.CenterAll">
+            <summary>
+            Automatically proceeds centering for the whole high voltage range.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.CenteringApertureCurrent">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object for the Centering Aperture Current.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.CoilsTestModeOn">
+            <summary>
+            De-/Activates the test mode for focus, condenser and centering coils.
+            </summary>
+            <remarks>The test mode is activated if set to <c>true</c> and deactivated if set to <c>false</c>.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.CondenserCenterXCurrent">
+            <summary>
+            Returns the <c>TubeCommand&lt;DemandType, MonitorType&gt;</c> object for Condensor Center (X) Current.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.CondenserCenterYCurrent">
+            <summary>
+            Returns the <c>TubeCommand&lt;DemandType, MonitorType&gt;</c> object for Condensor Center (Y) Current.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.CondenserCurrent">
+            <summary>
+            Returns the <c>TubeCommand&lt;DemandType, MonitorType&gt;</c> object for Condensor Current.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.Conditioning">
+            <summary>
+            Returns the command object for conditioning.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.CoolingButton">
+            <summary>
+            Returns a <c>TubeCommand&lt;DemandType, MonitorType&gt;</c> object to get access to the cooling button.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.CoolingOk">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object for the CoolingOk-value.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.CoolingTwoOk">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object for the CoolingTwoOk-value.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.CoolingTwoValue">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object for the CoolingTwoValue.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.CoolingValue">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object for the CoolingValue.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.Defocused">
+            <summary>
+            Displays whether the focus is defocused or not.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.DefocussingList">
+            <summary>
+            Adjustable list for controlling the active defocussing table.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.EmissionCurrent">
+            <summary>
+            Command (<c>TubeCommand&lt;DemandType, MonitorType&gt;</c>) for controlling emission current of the tube.
+            </summary>
+            <remarks>For using emission current the <c><see cref="P:XRAYWorXBase.ITubeInterface.XrayOutControl"/></c> has to be set to <c>EmissionCurrentControl</c> (default).</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.EmissionCurrentRaw">
+            <summary>
+            Returns the <c>TubeMonitor&lt;MonitorType&gt;</c> object for raw emission current. This emission current value is
+            provided without an internal offset value, so the leakage current is visible.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.ExpireInfo">
+            <summary>
+            ExpireInfo
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.FilamentAdjust">
+            <summary>
+            Automatically proceeds filament adjust.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.FilamentCurrent">
+            <summary>
+            Returns a <c>TubeCommand&lt;DemandType, MonitorType&gt;</c> object for the Filament Current.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.FilamentLifetime">
+            <summary>
+            Returns the <c>TubeServiceMonitor</c> object for monitoring the lifetime of the filament.
+            </summary>
+            <remarks>For further information how to change the filament consult the manual.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.Flashover">
+            <summary>
+            Returns a <c>Flashover</c> object displaying detailed information on the tube's flashovers.
+            </summary>
+            <remarks>Continuously updated.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.FlashOverCounter">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object representing the occurred number
+            of flash overs during a conditioning.
+            </summary>
+            <remarks>Only updated when a conditioning is active.<br/>
+            For continuous monitoring of flashovers (conditioning and refresh included) use
+            <c><see cref="P:XRAYWorXBase.ITubeInterface.Flashover"/></c>.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.FocusCenterXCurrent">
+            <summary>
+            Returns the <c>TubeCommand&lt;DemandType, MonitorType&gt;</c> for Focus Center (X) Current.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.FocusCenterYCurrent">
+            <summary>
+            Returns the <c>TubeCommand&lt;DemandType, MonitorType&gt;</c> for Focus Center (Y) Current.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.FocusCurrent">
+            <summary>
+            Returns the <c>TubeCommand&lt;DemandType, MonitorType&gt;</c> for Focus Current.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.HighVoltage">
+            <summary>
+            Command (<c>TubeCommand&lt;DemandType, MonitorType&gt;</c>) to control the high voltage of the tube.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.HighVoltageCable">
+            <summary>
+            Returns the <c>TubeServiceMonitor</c> object for monitoring the high voltage cable maintenance state.
+            </summary>
+            <remarks>If this timer expires the high voltage cable should be checked and - if necessary - be greased.<br/>
+            For further information consult the manual.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.HighVoltageStableDelay">
+            <summary>
+            Returns a <c>TubeFlag</c> object for re-/setting a delay for the <c>HighVoltage.Stable</c> property.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.Interlock">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object for the interlock.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.InvalidObjectsInformationNames">
+            <summary>
+            InvalidObjectsInformationNames
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.IpAddress">
+            <summary>
+            Shows the ip address of the tube to which the tube interface
+            shall be connected.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.IsDisposed">
+            <summary>
+            Shows whether the tube interface is disposed (<c>true</c>).
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.IsInitialized">
+            <summary>
+            Shows whether the tube interface is initialized (<c>true</c>).
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.IsPlcConnected">
+            <summary>
+            Shows whether the PLC is connected.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.IsRefreshLimitable">
+            <summary>
+            Shows whether the Refresh either directly or in StartUp is limitable.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.KeyCommand">
+            <summary>
+            KeyCommand
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.LeakageCurrentCorrection">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object showing whether correction of leakage
+            current is active or not.
+            </summary>
+            <remarks>Requires at least Plc V1.15 or higher.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.LeakageCurrentTest">
+            <summary>
+            LeakageCurrentTest
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.MaxValidHighVoltage">
+            <summary>
+            Returns the high voltage value up to that high voltage demand value are accepted
+            without the need of executing (smart-)refresh.
+            </summary>
+            <remarks>If refresh is checked in auto function data module, this value will be
+            decreased automatically.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.Mode">
+            <summary>
+            Returns a <c>TubeCommand&lt;DemandType, MonitorType&gt;</c> object for setting and getting the mode used on the plc.
+            The <c>Mode.MonitorValue</c> and the <c>Mode.PcDemandValue</c> display an index from the
+            <c><see cref="P:XRAYWorXBase.ITubeInterface.ModeList"/></c>.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.ModeList">
+            <summary>
+            Returns a <c>TubeListMonitor&lt;MonitorType&gt;</c> object for the list of modes on the plc.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.Prewarning">
+            <summary>
+            Returns an object representing the current prewarning state.
+            </summary>
+            <remarks>This value can be ignored, if no prewarning is configured.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.PwdValid">
+            <summary>
+            PwdValid
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.Refresh">
+            <summary>
+            Automatically proceeds Refresh.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.StandBy">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object representing the current stand-by state of
+            the tube.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.StartUp">
+            <summary>
+            Automatically proceeds first <c><see cref="P:XRAYWorXBase.ITubeInterface.Refresh"/></c>, second <c><see cref="P:XRAYWorXBase.ITubeInterface.FilamentAdjust"/></c> and
+            third <c><see cref="P:XRAYWorXBase.ITubeInterface.CenterAll"/></c>.
+            </summary>
+            @snippet Form1.cs StartUp example
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.Target">
+            <summary>
+            Returns a <c>TubeCommand&lt;DemandType, MonitorType&gt;</c> object for setting and getting the mode used on the plc.
+            The <c>Target.MonitorValue</c> and the <c>Target.PcDemandValue</c> display an index from the
+            <c><see cref="P:XRAYWorXBase.ITubeInterface.TargetList"/></c>.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.TargetCurrent">
+            <summary>
+            Command (<c>TubeCommand&lt;DemandType, MonitorType&gt;</c>) to control the tube's target current.
+            </summary>
+            <remarks>For using target current the <c><see cref="P:XRAYWorXBase.ITubeInterface.XrayOutControl"/></c> has to be set to 
+            <c>TargetCurrentControl</c>.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.TargetLifetime">
+            <summary>
+            Returns the <c>TubeServiceMonitor</c> object for monitoring the lifetime of the target.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.TargetList">
+            <summary>
+            Returns a <c>TubeListMonitor&lt;MonitorType&gt;</c> object for the list of targets on the plc.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.TargetPower">
+            <summary>
+            Command (<c>TubeCommand&lt;DemandType, MonitorType&gt;</c>) to control the tube's target power.
+            </summary>
+            <remarks>For using target power the <c><see cref="P:XRAYWorXBase.ITubeInterface.XrayOutControl"/></c> has to be set to
+            <c>TargetPowerControl</c>.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.TargetRotationTime">
+            <summary>
+            Returns the <c>TubeServiceMonitor</c> object for monitoring the remaining time till next target rotation.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.TubeHead">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object that shows the actual TubeHead.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.TubeHeadList">
+            <summary>
+            Returns a <c>TubeListMonitor&lt;MonitorType&gt;</c> object which shows the available tube heads.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.TubeState">
+            <summary>
+            Shows the active tube state.
+            </summary>
+            <remarks>For more information see <c><see cref="T:XRAYWorXBase.TubeStates"/></c>.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.Turbopump">
+            <summary>
+            Returns an object providing access to the x-ray tube's turbopump.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.VacuumOk">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object for the VacuumOk-value.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.VacuumValue">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object for the VacuumValue (pressure).
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.WobbleCommand">
+            <summary>
+            Returns the <c>WobbleCommand</c> object. The <c>WobbleCommand</c> provides functionality for wobbling the
+            preset <c><see cref="P:XRAYWorXBase.ITubeInterface.FocusCurrent"/></c>.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.XRayOff">
+            <summary>
+            Set <c>XRayOff.PcDemandValue</c> to true to turn off x-ray. To monitor whether x-ray
+            is off, use <c>XRayOff.MonitorValue</c>.
+            </summary>
+            <remarks>Returns an object of type <c>TubeCommand&lt;DemandType, MonitorType&gt;</c>.<br/>
+            <c>XRayOff.MonitorValue</c> is <c>true</c>, if x-ray is off, <c>false</c> elsewise.</remarks>
+            @snippet Form1.cs tubeInterface_XRayOff
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.XRayOn">
+            <summary>
+            Set <c>XRayOn.PcDemandValue</c> to true to turn on x-ray. The plc has to be in
+            Operational-State for turning on x-ray on demand. To monitor whether x-ray is on, use
+            <c>XRayOn.MonitorValue</c>.
+            </summary>
+            <remarks>Returns an object of type <c>TubeCommand&lt;DemandType, MonitorType&gt;</c>.<br/>
+            <c>XRayOn.MonitorValue</c> is <c>true</c>, if x-ray is on, <c>false</c> elsewise.</remarks>
+            @snippet Form1.cs tubeInterface_XRayOn
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.XrayOutControl">
+            <summary>
+            Set this command to specify whether the tube is controlled via <c><see cref="P:XRAYWorXBase.ITubeInterface.TargetCurrent"/></c>,
+            <c><see cref="P:XRAYWorXBase.ITubeInterface.TargetPower"/></c> or <c><see cref="P:XRAYWorXBase.ITubeInterface.EmissionCurrent"/></c> (default).
+            </summary>
+            <remarks>Returns a <c>TubeCommand&lt;DemandType, MonitorType&gt;</c>.<br/>
+            For further information see <c><see cref="T:XRAYWorXBase.XrayOutControls"/></c>.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeInterface.XrayReady">
+            <summary>
+            Indicates whether the given values are properly set on the tube and normal operation is possible.
+            </summary>
+            <remarks>X-ray has to be switched on to get the tube ready signal.</remarks>
+            @snippet Form1.cs XrayReady link IsAccessibleChanged
+            @snippet Form1.cs XrayReady link MonitorValueChanged
+            @snippet Form1.cs XrayReady usage
+        </member>
+        <member name="M:XRAYWorXBase.TubeInterface.Init">
+            <summary>
+            Init
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.TubeInterface.IsConfiguredAperture">
+            <summary>
+            Shows whether an aperture is configured.
+            </summary>
+            <remarks>Only valid when <c><see cref="P:XRAYWorXBase.TubeInterface.IsInitialized"/></c> is <c>true</c>.</remarks>
+            <returns><c>true</c> if an aperture is configured,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.TubeInterface.IsConfiguredCenteringAperture">
+            <summary>
+            Shows whether Centering Aperture is configured.
+            </summary>
+            <remarks>Only valid when <c><see cref="P:XRAYWorXBase.TubeInterface.IsInitialized"/></c> is <c>true</c>.</remarks>
+            <returns><c>true</c> if Centering Aperture is configured,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.TubeInterface.IsConfiguredCenteringUnitOne">
+            <summary>
+            Shows whether centering unit one is configured.
+            </summary>
+            <remarks>Only valid when <c><see cref="P:XRAYWorXBase.TubeInterface.IsInitialized"/></c> is <c>true</c>.</remarks>
+            <returns><c>true</c> if centering unit one is configured,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.TubeInterface.IsConfiguredCenteringUnitTwo">
+            <summary>
+            Shows whether centering unit two is configured.
+            </summary>
+            <remarks>Only valid when <c><see cref="P:XRAYWorXBase.TubeInterface.IsInitialized"/></c> is <c>true</c>.</remarks>
+            <returns><c>true</c> if centering unit two is configured,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.TubeInterface.IsConfiguredCondenser">
+            <summary>
+            Shows whether condenser is configured.
+            </summary>
+            <remarks>Only valid when <c><see cref="P:XRAYWorXBase.TubeInterface.IsInitialized"/></c> is <c>true</c>.</remarks>
+            <returns><c>true</c> if condenser is configured,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.TubeInterface.IsConfiguredCooling">
+            <summary>
+            Shows whether the first cooling is configured.
+            </summary>
+            <remarks>Only valid when <c><see cref="P:XRAYWorXBase.TubeInterface.IsInitialized"/></c> is <c>true</c>.</remarks>
+            <returns><c>true</c> if first cooling is configured,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.TubeInterface.IsConfiguredCoolingTwo">
+            <summary>
+            Shows whether a second cooling is configured.
+            </summary>
+            <remarks>Only valid when <c><see cref="P:XRAYWorXBase.TubeInterface.IsInitialized"/></c> is <c>true</c>.</remarks>
+            <returns><c>true</c> if second cooling is configured,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.TubeInterface.IsConfiguredFocus">
+            <summary>
+            Shows whether focus is configured.
+            </summary>
+            <remarks>Only valid when <c><see cref="P:XRAYWorXBase.TubeInterface.IsInitialized"/></c> is <c>true</c>.</remarks>
+            <returns><c>true</c> if focus is configured,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.TubeInterface.IsConfiguredTarget">
+            <summary>
+            Shows whether target is configured.
+            </summary>
+            <remarks>Only valid when <c><see cref="P:XRAYWorXBase.TubeInterface.IsInitialized"/></c> is <c>true</c>.</remarks>
+            <returns><c>true</c> if target is configured,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.TubeInterface.IsConfiguredVacuum">
+            <summary>
+            Shows whether vacuum is configured.
+            </summary>
+            <remarks>Only valid when <c><see cref="P:XRAYWorXBase.TubeInterface.IsInitialized"/></c> is <c>true</c>.</remarks>
+            <returns><c>true</c> if vacuum is configured,<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.TubeInterface.ConnectPlc">
+            <summary>
+            Starts a connection to the PLC. A response is passed via
+            <c><see cref="E:XRAYWorXBase.TubeInterface.PlcConnected"/></c> event.
+            </summary>
+            <remarks>Obsolete. The plc will be connected automatically
+            on creating a new tube interface.</remarks>
+        </member>
+        <member name="M:XRAYWorXBase.TubeInterface.PlcRestart">
+            <summary>
+            PlcRestart
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.TubeInterface.ClearErrorList">
+            <summary>
+            ClearErrorList
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.TubeInterface.LogOn(System.String)">
+            <summary>
+            LogOn
+            </summary>
+            <param name="password"></param>
+            <returns></returns>
+        </member>
+        <member name="M:XRAYWorXBase.TubeInterface.LogOff">
+            <summary>
+            LogOff
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.TubeInterface.Dispose">
+            <summary>
+            Dispose
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.TubeInterface.Finalize">
+            <summary>
+            Finalize
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.Instance">
+            <summary>
+            Returns an instance of the TubeInterface.
+            </summary>
+            <returns>Instance of TubeInterface.</returns>
+            @snippet Form1.cs Get Default TubeInterface
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.InvalidObjectsInformationNames">
+            <summary>
+            InvalidObjectsInformationNames
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.IsDisposed">
+            <summary>
+            Shows whether the tube interface is disposed (<c>true</c>).
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.IsInitialized">
+            <summary>
+            Shows whether the tube interface is initialized (<c>true</c>).
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.TubeState">
+            <summary>
+            Shows the active tube state.
+            </summary>
+            <remarks>For more information see <c><see cref="T:XRAYWorXBase.TubeStates"/></c>.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.IpAddress">
+            <summary>
+            Shows the ip address of the tube to which the tube interface
+            shall be connected.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TubeInterface.TubeInterfaceError">
+            <summary>
+            Fires an event, when an error occured in the tube interface.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TubeInterface.Initialized">
+            <summary>
+            Fires an event, when the <c>ITubeInterface</c> is initialized. Once the
+            value is true, the monitor and command objects can be used.
+            </summary>
+            @snippet Form1.cs tubeInterface_Initialized
+        </member>
+        <member name="E:XRAYWorXBase.TubeInterface.TubeStateChanged">
+            <summary>
+            Fires an event, when the <c><see cref="P:XRAYWorXBase.TubeInterface.TubeState"/></c> has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TubeInterface.PlcConnected">
+            <summary>
+            Fires an event when the plc is connected.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TubeInterface.PlcDisconnected">
+            <summary>
+            Fires an event, when the plc is disconnected.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TubeInterface.PlcRestarted">
+            <summary>
+            Fires an event, when the plc is restarted.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TubeInterface.ConfigurationChanged">
+            <summary>
+            Fires when the configuration is read or has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TubeInterface.TubeInterfaceInfo">
+            <summary>
+            Fires an event, when some additional info is provided.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.IsPlcConnected">
+            <summary>
+            Shows whether the PLC is connected.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.PwdValid">
+            <summary>
+            For service pourpouse only.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TubeInterface.PwdValidChanged">
+            <summary>
+            PwdValidChanged
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.XRayOn">
+            <summary>
+            Set <c>XRayOn.PcDemandValue</c> to true to turn on x-ray. The plc has to be in
+            Operational-State for turning on x-ray on demand. To monitor whether x-ray is on, use
+            <c>XRayOn.MonitorValue</c>.
+            </summary>
+            <remarks>Returns an object of type <c>TubeCommand&lt;DemandType, MonitorType&gt;</c>.<br/>
+            <c>XRayOn.MonitorValue</c> is <c>true</c>, if x-ray is on, <c>false</c> elsewise.</remarks>
+            @snippet Form1.cs tubeInterface_XRayOn
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.XRayOff">
+            <summary>
+            Set <c>XRayOff.PcDemandValue</c> to true to turn off x-ray. To monitor whether x-ray
+            is off, use <c>XRayOff.MonitorValue</c>.
+            </summary>
+            <remarks>Returns an object of type <c>TubeCommand&lt;DemandType, MonitorType&gt;</c>.<br/>
+            <c>XRayOff.MonitorValue</c> is <c>true</c>, if x-ray is off, <c>false</c> elsewise.</remarks>
+            @snippet Form1.cs tubeInterface_XRayOff
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.EmissionCurrent">
+            <summary>
+            Command (<c>TubeCommand&lt;DemandType, MonitorType&gt;</c>) for controlling emission current of the tube.
+            </summary>
+            <remarks>For using emission current the <c><see cref="P:XRAYWorXBase.TubeInterface.XrayOutControl"/></c> has to be set to
+            <c>EmissionCurrentControl</c> (default).</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.HighVoltage">
+            <summary>
+            Command (<c>TubeCommand&lt;DemandType, MonitorType&gt;</c>) to control the high voltage of the tube.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.HighVoltageStableDelay">
+            <summary>
+            Returns a <c>TubeFlag</c> object for re-/setting a delay for the <c>HighVoltage.Stable</c> property.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.TargetCurrent">
+            <summary>
+            Command (<c>TubeCommand&lt;DemandType, MonitorType&gt;</c>) to control the tube's target current.
+            </summary>
+            <remarks>For using target current the <c><see cref="P:XRAYWorXBase.TubeInterface.XrayOutControl"/></c> has to be set to
+            <c>TargetCurrentControl</c>.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.TargetPower">
+            <summary>
+            Command (<c>TubeCommand&lt;DemandType, MonitorType&gt;</c>) to control the tube's target power.
+            </summary>
+            <remarks>For using target power the <c><see cref="P:XRAYWorXBase.TubeInterface.XrayOutControl"/></c> has to be set to
+            <c>TargetPowerControl</c>.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.XrayOutControl">
+            <summary>
+            Set this command to specify whether the tube is controlled via <c><see cref="P:XRAYWorXBase.TubeInterface.TargetCurrent"/></c>,
+            <c><see cref="P:XRAYWorXBase.TubeInterface.TargetPower"/></c> or <c><see cref="P:XRAYWorXBase.TubeInterface.EmissionCurrent"/></c> (default).
+            </summary>
+            <remarks>Returns a <c>TubeCommand&lt;DemandType, MonitorType&gt;</c>.<br/>
+            For further information see <c><see cref="T:XRAYWorXBase.XrayOutControls"/></c>.</remarks>
+        </member>
+        <member name="E:XRAYWorXBase.TubeInterface.RefreshLimitableChanged">
+            <summary>
+            Fires when <c><see cref="P:XRAYWorXBase.TubeInterface.IsRefreshLimitable"/></c> changed.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.StartUp">
+            <summary>
+            Automatically proceeds first <c><see cref="P:XRAYWorXBase.TubeInterface.Refresh"/></c>, second <c><see cref="P:XRAYWorXBase.TubeInterface.FilamentAdjust"/></c> and
+            third <c><see cref="P:XRAYWorXBase.TubeInterface.CenterAll"/></c>.
+            </summary>
+            @snippet Form1.cs StartUp example
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.Refresh">
+            <summary>
+            Automatically proceeds Refresh.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.FilamentAdjust">
+            <summary>
+            Automatically proceeds filament adjust.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.CenterAll">
+            <summary>
+            Automatically proceeds centering for the whole high voltage range.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.CenterActive">
+            <summary>
+            Automatically proceeds centering for actual <c><see cref="P:XRAYWorXBase.TubeInterface.HighVoltage"/></c> settings.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.AutoCommandInfo">
+            <summary>
+            General info for tube auto commands.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.Target">
+            <summary>
+            Returns a <c>TubeCommand&lt;DemandType, MonitorType&gt;</c> object for setting and getting the mode used on the plc.
+            The <c>Target.MonitorValue</c> and the <c>Target.PcDemandValue</c> display an index from the
+            <c><see cref="P:XRAYWorXBase.TubeInterface.TargetList"/></c>.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.TargetList">
+            <summary>
+            Returns a <c>TubeListMonitor&lt;MonitorType&gt;</c> object for the list of targets on the plc.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.Mode">
+            <summary>
+            Returns a <c>TubeCommand&lt;DemandType, MonitorType&gt;</c> object for setting and getting the mode used on the plc.
+            The <c>Mode.MonitorValue</c> and the <c>Mode.PcDemandValue</c> display an index from the
+            <c><see cref="P:XRAYWorXBase.TubeInterface.ModeList"/></c>.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.ModeList">
+            <summary>
+            Returns a <c>TubeListMonitor&lt;MonitorType&gt;</c> object for the list of modes on the plc.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.TubeHead">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object that shows the actual TubeHead.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.TubeHeadList">
+            <summary>
+            Returns a <c>TubeListMonitor&lt;MonitorType&gt;</c> object which shows the available tube heads.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.AutoModeOn">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object that shows whether auto mode adjust is active (true) or not.
+            </summary>
+            <remarks>Auto mode adjust is active (if configured) whenever <c>TargetCurrentControl</c> or <c>TargetPowerControl</c> from <c><see cref="T:XRAYWorXBase.XrayOutControls"/></c> is active.
+            </remarks>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.IsRefreshLimitable">
+            <summary>
+            Shows whether the Refresh either directly or in StartUp is limitable.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.MaxValidHighVoltage">
+            <summary>
+            Returns the high voltage value up to that high voltage demand values are accepted
+            without the need of executing (smart-)refresh.
+            </summary>
+            <remarks>If refresh is checked in auto function data module, this value will be
+            decreased automatically.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.DefocussingList">
+            <summary>
+            Adjustable list for controlling the active defocussing table.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.FocusCurrent">
+            <summary>
+            Returns the <c>TubeCommand&lt;DemandType, MonitorType&gt;</c> for Focus Current.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.Defocused">
+            <summary>
+            Displays whether the focus is defocused or not.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.FocusCenterXCurrent">
+            <summary>
+            Returns the <c>TubeCommand&lt;DemandType, MonitorType&gt;</c> for Focus Center (X) Current.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.FocusCenterYCurrent">
+            <summary>
+            Returns the <c>TubeCommand&lt;DemandType, MonitorType&gt;</c> for Focus Center (Y) Current.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.CondenserCurrent">
+            <summary>
+            Returns the <c>TubeCommand&lt;DemandType, MonitorType&gt;</c> object for Condensor Current.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.CondenserCenterXCurrent">
+            <summary>
+            Returns the <c>TubeCommand&lt;DemandType, MonitorType&gt;</c> object for Condensor Center (X) Current.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.CondenserCenterYCurrent">
+            <summary>
+            Returns the <c>TubeCommand&lt;DemandType, MonitorType&gt;</c> object for Condensor Center (Y) Current.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.CoilsTestModeOn">
+            <summary>
+            De-/Activates the test mode for focus, condenser and centering coils.
+            </summary>
+            <remarks>The test mode is activated if set to <c>true</c> and deactivated if set to <c>false</c>.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.FilamentCurrent">
+            <summary>
+            Returns a <c>TubeCommand&lt;DemandType, MonitorType&gt;</c> object for the Filament Current.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.ApertureCurrent">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object for the Aperture Current.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.CenteringApertureCurrent">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object for the Centering Aperture Current.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.Interlock">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object for the Interlock.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.VacuumOk">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object for the VacuumOk-value.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.VacuumValue">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object for the VacuumValue (pressure).
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.CoolingButton">
+            <summary>
+            Returns a <c>TubeCommand&lt;DemandType, MonitorType&gt;</c> object to get access to the CoolingButton.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.CoolingOk">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object for the CoolingOk-value.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.CoolingTwoOk">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object for the CoolingTwoOk-value.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.CoolingTwoValue">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object for the CoolingTwoValue.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.CoolingValue">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object for the CoolingValue.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.Flashover">
+            <summary>
+            Returns a <c>Flashover</c> object displaying detailed information on the tube's flashovers.
+            </summary>
+            <remarks>Continuously updated.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.FlashOverCounter">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object representing the occurred number
+            of flash overs during a conditioning.
+            </summary>
+            <remarks>Only updated when a conditioning is active.<br/>
+            For continuous monitoring of flashovers (conditioning and refresh included) use @c #Flashover.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.LeakageCurrentCorrection">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object showing whether correction of leakage
+            current is active or not.
+            </summary>
+            <remarks>Requires at least Plc V1.15 or higher.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.Prewarning">
+            <summary>
+            Returns an object representing the current prewarning state.
+            </summary>
+            <remarks>This value can be ignored, if no prewarning is configured.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.StandBy">
+            <summary>
+            Returns a <c>TubeMonitor&lt;MonitorType&gt;</c> object representing the current stand-by state of
+            the tube.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.Turbopump">
+            <summary>
+            Returns an object providing access to the x-ray tube's turbopump.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.XrayReady">
+            <summary>
+            Indicates whether the given values are properly set on the tube and normal operation is possible.
+            </summary>
+            <remarks>X-ray has to be switched on to get the tube ready signal.</remarks>
+            @snippet Form1.cs XrayReady link IsAccessibleChanged
+            @snippet Form1.cs XrayReady link MonitorValueChanged
+            @snippet Form1.cs XrayReady usage
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.KeyCommand">
+            <summary>
+            KeyCommand
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.ExpireInfo">
+            <summary>
+            ExpireInfo
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.Conditioning">
+            <summary>
+            Returns the command object for conditioning.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.EmissionCurrentRaw">
+            <summary>
+            Returns the <c>TubeMonitor&lt;MonitorType&gt;</c> object for raw emission current. This emission current value is
+            provided without an internal offset value, so the leakage current is visible.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.FilamentLifetime">
+            <summary>
+            Returns the <c>TubeMonitorService</c> object for monitoring the lifetime of the filament.
+            </summary>
+            <remarks>For further information how to change the filament consult the manual.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.HighVoltageCable">
+            <summary>
+            Returns the <c>TubeServiceMonitor</c> object for monitoring the high voltage cable maintenance state.
+            </summary>
+            <remarks>If this timer expires the high voltage cable should be checked and - if necessary - be greased.<br/>
+            For further information consult the manual.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.LeakageCurrentTest">
+            <summary>
+            LeakageCurrentTest
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.TargetLifetime">
+            <summary>
+            Returns the <c>TubeServiceMonitor</c> object for monitoring the lifetime of the target.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.TargetRotationTime">
+            <summary>
+            Returns the <c>TubeServiceMonitor</c> object for monitoring the remaining time till next target rotation.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterface.WobbleCommand">
+            <summary>
+            Returns the <c>WobbleCommand</c> object. The <c>WobbleCommand</c> provides functionality for wobbling the
+            preset <c><see cref="P:XRAYWorXBase.TubeInterface.FocusCurrent"/></c>.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.ConditioningCommand">
+            <summary>
+            ConditioningCommand
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.ConditioningCommand.HighVoltageUpperLimitChanged">
+            <summary>
+            Fires when the upper limit of the high voltage demand value has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.ConditioningCommand.HighVoltageLowerLimitChanged">
+            <summary>
+            Fires when the lower limit of the high voltage demand value has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.ConditioningCommand.HighVoltageStartLowerLimitChanged">
+            <summary>
+            Fires when the lower limit of the high voltage start value has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.ConditioningCommand.HighVoltageStartUpperLimitChanged">
+            <summary>
+            Fires when the upper limit of the high voltage start value has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.ConditioningCommand.EmissionCurrentUpperLimitChanged">
+            <summary>
+            Fires when the upper limit of the emission current demand value has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.ConditioningCommand.EmissionCurrentLowerLimitChanged">
+            <summary>
+            Fires when the lower limit of the emission current demand value has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.ConditioningCommand.StateChanged">
+            <summary>
+            Fires when State has changed on the Plc.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningCommand.PcDemandValue">
+            <summary>
+            Demand value from PC to PLC.
+            </summary>
+            <remarks>When ever the PcDemandValue is set, the new value will be transferred to plc.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningCommand.HighVoltage">
+            <summary>
+            HighVoltage
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningCommand.HighVoltageUpperLimit">
+            <summary>
+            HighVoltageUpperLimit
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningCommand.HighVoltageLowerLimit">
+            <summary>
+            HighVoltageLowerLimit
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningCommand.EmissionCurrent">
+            <summary>
+            EmissionCurrent
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningCommand.EmissionCurrentUpperLimit">
+            <summary>
+            EmissionCurrentUpperLimit
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningCommand.EmissionCurrentLowerLimit">
+            <summary>
+            EmissionCurrentLowerLimit
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningCommand.UpdateEmissionCurrent">
+            <summary>
+            UpdateEmissionCurrent
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningCommand.HighVoltageStart">
+            <summary>
+            HighVoltageStart
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningCommand.HighVoltageStartLowerLimit">
+            <summary>
+            HighVoltageStartLowerLimit
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningCommand.HighVoltageStartUpperLimit">
+            <summary>
+            HighVoltageStartUpperLimit
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningCommand.HighVoltageStepWidth">
+            <summary>
+            HighVoltageStepWidth
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningCommand.HighVoltageStepDelay">
+            <summary>
+            HighVoltageStepDelay
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningCommand.State">
+            <summary>
+            Displays the command progress on the PLC.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningCommand.ErrorCode">
+            <summary>
+            Error Code with error information related to this command.
+            </summary>
+            <remarks>Contains valid values only when State is Warning or Error.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningCommand.Duration">
+            <summary>
+            Duration of conditioning.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.Config.ConfigurationBase">
+            <summary>
+            ConfigurationBase
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.Config.IpEntry">
+            <summary>
+            Detailed IP information.
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.Config.IpEntry.ToString">
+            <summary>
+            ToString
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:XRAYWorXBase.Config.IpEntry.Ip">
+            <summary>
+            IP Address.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Config.IpEntry.Name">
+            <summary>
+            Optional name, that gives additional connection info
+            for the IP address.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.ITubeLoader">
+            <summary>
+            Interface for providing tube interfaces (see <c>ITubeInterface</c>) and other basic information as
+            given ip addresses or error info.
+            
+            Getting default tube interface:
+            @snippet Form1.cs Get Default TubeInterface
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.ITubeLoader.GetErrorInfo(System.UInt32)">
+            <summary>
+            Returns the <c>ErrorInfo</c> for a given error code.
+            </summary>
+            <param name="errorCode">Specifies the <c>ErrorInfo</c> that shall be returned.</param>
+            <returns>Specified <c>ErrorInfo</c>.<br/>
+            If no matching <c>ErrorInfo</c> could be found, a default <c>ErrorInfo</c> is returned.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.ITubeLoader.GetTubeInterface(System.String)">
+            <summary>
+            Returns an interface to the tube.
+            </summary>
+            <param name="ipAddress">Specifies the <c>ITubeInterface</c> which shall be returned.<br/>
+            Use <c><see cref="P:XRAYWorXBase.ITubeLoader.DefaultIpAddress"/></c> to get the default tube interface.</param>
+            <returns>Returns an interface to the specified tube.</returns>
+            <exception cref="T:System.ArgumentException">Thrown if ipAddress is invalid.</exception>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeLoader.DefaultIpAddress">
+            <summary>
+            Represents the ip address of the default <c>ITubeInterface</c>.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeLoader.DefaultMessenger">
+            <summary>
+            DefaultMessenger
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ITubeLoader.IpAddresses">
+            <summary>
+            Returns a list of all configured ip addresses.
+            </summary>
+            <remarks>Use these ip addresses to get corresponding tube interfaces 
+            via the <c>GetTubeInterface(string ipAddress)</c> method.<br/>
+            By default the first element of <c>IpAddresses</c> is the <c><see cref="P:XRAYWorXBase.ITubeLoader.DefaultIpAddress"/></c>.</remarks>
+        </member>
+        <member name="T:XRAYWorXBase.UserDefinedItem">
+            <summary>
+            UserDefinedItem
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.UserDefinedItem.Changed">
+            <summary>
+            Changed
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.UserDefinedItem.Written">
+            <summary>
+            Written
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.UserDefinedItem.Index">
+            <summary>
+            Index
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.UserDefinedItem.UserDefined">
+            <summary>
+            UserDefined
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.CurrentItem">
+            <summary>
+            CurrentItem
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.CurrentItem.Current">
+            <summary>
+            Current
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.CenterCurrentItem">
+            <summary>
+            CenterCurrentItem
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.CenterCurrentItem.CurrentX">
+            <summary>
+            Current X
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.CenterCurrentItem.CurrentY">
+            <summary>
+            Current Y
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.CommandStates">
+            <summary>
+            Command-States
+            </summary>
+            <remarks>For additional helper methods see <c>CommandStatesExtension</c>.</remarks>
+        </member>
+        <member name="F:XRAYWorXBase.CommandStates.OK">
+            <summary>
+            Command successfull. Value has been relayed to extern components.
+            </summary>
+            <remarks>Example: Setting new High Voltage in <c>ITubeInterface.HighVoltage</c> is completed with OK, when
+            the corresponding High Voltage value is sent to the generator.</remarks>
+        </member>
+        <member name="F:XRAYWorXBase.CommandStates.Acknowledged">
+            <summary>
+            Command accepted, but not in process.
+            </summary>
+            <remarks>Might be set very shortly, depending on the requested command.</remarks>
+        </member>
+        <member name="F:XRAYWorXBase.CommandStates.Busy">
+            <summary>
+            Command in process.
+            </summary>
+            <remarks>Might be set very shortly, depending on the requested command.</remarks>
+        </member>
+        <member name="F:XRAYWorXBase.CommandStates.Warning">
+            <summary>
+            Warning.
+            </summary>
+            <remarks>For additional information see ErrorCode.</remarks>
+        </member>
+        <member name="F:XRAYWorXBase.CommandStates.Error">
+            <summary>
+            Error.
+            </summary>
+            <remarks>For additional information see ErrorCode.</remarks>
+        </member>
+        <member name="T:XRAYWorXBase.CommandStatesExtension">
+            <summary>
+            Helper methods for <c><see cref="T:XRAYWorXBase.CommandStates"/></c> enumeration.
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.CommandStatesExtension.IsWarningOrError(XRAYWorXBase.CommandStates)">
+            <summary>
+            Determines whether <c>commandState</c> is a <c>Warning</c> or an <c>Error</c>.
+            </summary>
+            <param name="commandState">Command state on which the method is called.</param>
+            <returns><c>true</c> if <c>commandState</c> is <c>Warning</c> or <c>Error</c><br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.CommandStatesExtension.IsAcknowledgedOrBusy(XRAYWorXBase.CommandStates)">
+            <summary>
+            Determines whether <c>commandState</c> is <c>Acknowledged</c> or <c>Busy</c>.
+            </summary>
+            <param name="commandState">Command state on which the method is called.</param>
+            <returns><c>true</c> if <c>commandState</c> is <c>Acknowledged</c> or <c>Busy</c><br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="T:XRAYWorXBase.IMessenger">
+            <summary>
+            IMessenger
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.IMessenger.StoreError(XRAYWorXBase.ExcptCodes,System.String)">
+            <summary>
+            StoreError
+            </summary>
+            <param name="exceptionCode"></param>
+            <param name="message"></param>
+        </member>
+        <member name="M:XRAYWorXBase.IMessenger.StoreNote(System.String)">
+            <summary>
+            StoreNote
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="E:XRAYWorXBase.IMessenger.NewTubeException">
+            <summary>
+            NewTubeException
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.IMessenger.NewTubeInfo">
+            <summary>
+            NewTubeInfo
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.IMessenger.IpAddress">
+            <summary>
+            IpAddress
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.IMessenger.LogIpAddress">
+            <summary>
+            LogIpAddress
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.ExpireInfo">
+            <summary>
+            ExpireInfo
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.ExpireInfo.ExpireInfoChanged">
+            <summary>
+            ExpireInfoChanged
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ExpireInfo.Unlimited">
+            <summary>
+            Unlimited
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ExpireInfo.Expired">
+            <summary>
+            Expired
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ExpireInfo.DaysLeft">
+            <summary>
+            DaysLeft
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.CommandActionInfo">
+            <summary>
+            A collection of possible info states for a command.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.CommandActionInfo.Ok">
+            <summary>
+            The command has been executed and is up to date.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.CommandActionInfo.Recommended">
+            <summary>
+            The command has either been executed some time ago or not been executed once. Now it is recommended
+            to executed the command.<br/>
+            Working is possible without executing the command.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.CommandActionInfo.Required">
+            <summary>
+            The command has either been executed some time ago or not been executed once. Now it is required
+            to executed the command.<br/>
+            Working is not possible without executing the command.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.TubeTimeSpan">
+            <summary>
+            TimeSpan object with a changed event.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TubeTimeSpan.TimeChanged">
+            <summary>
+            Fires when the Time has changed.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeTimeSpan.Time">
+            <summary>
+            Displays the corresponding time.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.ResettableTubeTimeSpan">
+            <summary>
+            Re-settable TimeSpan object with changed event.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.ResettableTubeCounter">
+            <summary>
+            Re-settable counter object with changed event.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.ExcptCodes">
+            <summary>
+            Enumeration with given exception codes.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.NoError">
+            <summary>
+            No error
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.FilamentAdjustExpired">
+            <summary>
+            Filament adjust expired
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.CenteringExpired">
+            <summary>
+            Centering expired
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.LeakageCurrentExceedsLimits">
+            <summary>
+            Leakage current exceeds limits
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.PCErrorsStart">
+            <summary>
+            Starting range of PC errors
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidExcptNumber">
+            <summary>
+            Invalid exception number
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.ExcptNoWithoutID">
+            <summary>
+            Exception number without id
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidExcptNoFormat">
+            <summary>
+            Invalid exception number format
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidNoOfValuesInCsv">
+            <summary>
+            Invalid number of values in csv-file
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidDateTimeInCsv">
+            <summary>
+            Invalid DateTime in csv-file
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidConnStrngPviVariable">
+            <summary>
+            Invalid connection string in Pvi variable
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.PviError">
+            <summary>
+            Pvi error
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidStringInIndex">
+            <summary>
+            Invalid string in index
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.PviServiceError">
+            <summary>
+            Pvi service error
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.PviCpuError">
+            <summary>
+            Pvi cpu error
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.PviTaskError">
+            <summary>
+            Pvi task error
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.PviVariablesError">
+            <summary>
+            Pvi variables error
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.PviItemNotConnected">
+            <summary>
+            Pvi item not connected
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.SavingDataToPlc">
+            <summary>
+            Saving data to plc
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.TryParseMsgBoxEntryType">
+            <summary>
+            Try parse message box entry type
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.TryParseExceptionId">
+            <summary>
+            Try parse exception id
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.TryParseExceptionNumber">
+            <summary>
+            Try parse exception number
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.PviRequiredDllNotFound">
+            <summary>
+            Dll required by Pvi not found
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.PlcRestartWithoutPwdValid">
+            <summary>
+            Plc restart without pwd valid
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.ClearErrListWithoutPwdValid">
+            <summary>
+            Clear error list without pwd valid
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidConfigFileFormat">
+            <summary>
+            Invalid config file format
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidBaseConfigFileFormat">
+            <summary>
+            Invalid base config file format
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidTargetIndex">
+            <summary>
+            Invalid target index
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidModeIndex">
+            <summary>
+            Invalid mode index
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidLeakageCurDuration">
+            <summary>
+            Invalid leakage current duration
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidLeakageCurInterval">
+            <summary>
+            Invalid leakage current interval
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidFilAdjInterval">
+            <summary>
+            Invalid filament adjust interval
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.ConditioningAbortedByUser">
+            <summary>
+            Conditioning aborted by user
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.ValueAccessDenied">
+            <summary>
+            Value access is denied
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.ValueAccessNotSupported">
+            <summary>
+            Value access is not supported
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.ValueAccessReadOnly">
+            <summary>
+            Value access is read only
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidTubeHeadIndex">
+            <summary>
+            Invalid tube head index
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.ArgumentOutOfRange">
+            <summary>
+            Argument is out of range
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidDemandValue">
+            <summary>
+            Invalid demand value
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.HighVoltLowerLimitViolation">
+            <summary>
+            High voltage lower limit violation
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.HighVoltUpperLimitViolation">
+            <summary>
+            High voltage upper limit violation
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.EmissCurLowerLimitViolation">
+            <summary>
+            Emission current lower limit violation
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.EmissCurUpperLimitViolation">
+            <summary>
+            Emission current upper limit violation
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.NoTimePreset">
+            <summary>
+            No time preset
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidArrayLength">
+            <summary>
+            Invalid array length
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.FileError">
+            <summary>
+            File error
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidListItemIndexed">
+            <summary>
+            Invalid list item indexed
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.HighVoltStartLowerLimitViolation">
+            <summary>
+            High voltage start lower limit violation
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.HighVoltStartUpperLimitViolation">
+            <summary>
+            High voltage start upper limit violation
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.ConflictingFunctionsEnabled">
+            <summary>
+            Conflicting functions enabled
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.LowerHoldTimeTooHigh">
+            <summary>
+            Lower hold time too high
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.NotHasReadWriteAccess">
+            <summary>
+            Not has read write access
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.PlcVariableAlreadyAdded">
+            <summary>
+            Plc variable already added
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidValueInAutoFuncDM">
+            <summary>
+            Invalid value in AutoFunc data module
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidDataInCommandSetter">
+            <summary>
+            Invalid data in BurCommandSetter. Data is either null or empty.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.LimitedKVMinViolation">
+            <summary>
+            Violation of LimitedKVMin.
+            </summary>
+            <remarks>Make sure, the value set to LimitedKV is greater or equal
+            to LimitedKVMin.</remarks>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.UnknownServiceStateReceived">
+            <summary>
+            Starting number of tube service monitors. Unknown service state received
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidDataContract">
+            <summary>
+            Starting number of config. Invalid data contract
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidConfigFilePath">
+            <summary>
+            Invalid config file path
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidSourceInstance">
+            <summary>
+            Invalid source instance
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.MaximumSerializableObjectsExceeded">
+            <summary>
+            Maximum serializable objects exeeded
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.DirectoryNotFound">
+            <summary>
+            Starting number of general io's. Directory not found
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.UnauthorizedAccess">
+            <summary>
+            Unauthorized access
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.FileNotFound">
+            <summary>
+            File not found
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidPathFormat">
+            <summary>
+            Invalid path format
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.PathIsWriteProtected">
+            <summary>
+            Path is write protected
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.ErrorCreatingMutex">
+            <summary>
+            Error creating mutex
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.ErrorWritingMaintenanceLog">
+            <summary>
+            Starting number of logging. Error writing maintenance log
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.UnhandledException">
+            <summary>
+            Starting number of general errors. Unhandled exception
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidCastException">
+            <summary>
+            Invalid cast exception
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.InvalidDataModuleName">
+            <summary>
+            Invalid data module name
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.ExcptCodes.ReadOnlyEntry">
+            <summary>
+            Data module entry is read only
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.BurInterface.Api.BurPlcErrors.NoError">
+            <summary>0</summary>
+        </member>
+        <member name="F:XRAYWorXBase.BurInterface.Api.BurPlcErrors.InvalidObjectInfo">
+            <summary>4806</summary>
+        </member>
+        <member name="F:XRAYWorXBase.BurInterface.Api.BurPlcErrors.NoConnectionAvailableToPlc">
+            <summary>4808</summary>
+        </member>
+        <member name="F:XRAYWorXBase.BurInterface.Api.BurPlcErrors.IdentificationError">
+            <summary>4813</summary>
+        </member>
+        <member name="F:XRAYWorXBase.BurInterface.Api.BurPlcErrors.UndefinedObjectHandle">
+            <summary>12004</summary>
+        </member>
+        <member name="F:XRAYWorXBase.BurInterface.Api.BurPlcErrors.NetworkConfigErrorSAParam">
+            <summary>13034</summary>
+        </member>
+        <member name="T:XRAYWorXBase.ConditioningSettings">
+            <summary>
+            Conditioning settings
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningSettings.Duration">
+            <summary>
+            Duration
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningSettings.HighVoltage">
+            <summary>
+            HighVoltage
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningSettings.EmissionCurrent">
+            <summary>
+            EmissionCurrent
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningSettings.FilamentAdjustEnabled">
+            <summary>
+            FilamentAdjustEnabled
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningSettings.FilamentAdjustInterval">
+            <summary>
+            FilamentAdjustInterval
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningSettings.LeakageCurrentTestEnabled">
+            <summary>
+            LeakageCurrentTestEnabled
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningSettings.LeakageCurrentInterval">
+            <summary>
+            LeakageCurrentInterval
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningSettings.LeakageCurrentDuration">
+            <summary>
+            LeakageCurrentDuration
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningSettings.MaxFlashOvers">
+            <summary>
+            MaxFlashovers
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningSettings.TimeBetwFlashOvers">
+            <summary>
+            TimeBetwFlashovers
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningSettings.HighVoltageStart">
+            <summary>
+            HighVoltageStart
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningSettings.HighVoltageStepWidth">
+            <summary>
+            HighVoltageStepWidth
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningSettings.HighVoltageStepDelay">
+            <summary>
+            HighVoltageStepDelay
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningSettings.AlternatingConditioningEnabled">
+            <summary>
+            AlternatingConditioningEnabled
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningSettings.LowerPowerHoldTime">
+            <summary>
+            LowerPowerHoldTime
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningSettings.UpperPowerHoldTime">
+            <summary>
+            UpperPowerHoldTime
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningSettings.LowerHighVoltage">
+            <summary>
+            LowerHighVoltage
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ConditioningSettings.LowerEmissionCurrent">
+            <summary>
+            LowerEmissionCurrent
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.Flashover">
+            <summary>
+            Displays detailed information on the tube's flashovers (see <c>ITubeInterface.Flashover</c>).
+            </summary>
+            <remarks>Requires at least plc version V1.12.8.8.<br/>
+            Simple usage of flashover on a sample form:<br/>
+            @snippet FlashoverView.cs Flashover example
+            </remarks>
+        </member>
+        <member name="E:XRAYWorXBase.Flashover.CountChanged">
+            <summary>
+            Fires when <c><see cref="P:XRAYWorXBase.Flashover.Count"/></c> has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.Flashover.LockingXrayChanged">
+            <summary>
+            Fires when <c><see cref="P:XRAYWorXBase.Flashover.IsLockingXray"/></c> has changed.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Flashover.Count">
+            <summary>
+            Displays the amount of flashovers occurred since switching on the tube's plc.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Flashover.IsLockingXray">
+            <summary>
+            Displays whether x-ray is locked during active flashover handling on tube's plc.
+            <br/><c>true</c> - x-ray is locked, <c>false</c> elsewise.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.AccessStates">
+            <summary>
+            Enumeration of access states (<c>Accessible.IsAccessible</c>).
+            </summary>
+            <remarks>For easier handling see <c>AccessStatesExtension</c> helper methods.</remarks>
+        </member>
+        <member name="F:XRAYWorXBase.AccessStates.NotSupported">
+            <summary>
+            Access to this object is not supported in this configuration or not connected.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.AccessStates.Denied">
+            <summary>
+            Object is currently not accessible.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.AccessStates.ReadOnly">
+            <summary>
+            Access to this object is currently limited to read access.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.AccessStates.ReadWrite">
+            <summary>
+            This object is currently fully accessible.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.AccessStatesExtension">
+            <summary>
+            Collection of helper methods for <c><see cref="T:XRAYWorXBase.AccessStates"/></c> enumeration
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.AccessStatesExtension.IsAccessDenied(XRAYWorXBase.AccessStates)">
+            <summary>
+            Determines whether @c accessState equals @c Denied.
+            </summary>
+            <param name="accessState">Access state on which the method is called.</param>
+            <returns><c>true</c>, if <c>accessState</c> is <c>Denied</c><br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.AccessStatesExtension.HasReadAccess(XRAYWorXBase.AccessStates)">
+            <summary>
+            Determines whether <c>accessState</c> indicates that read access is possible.
+            </summary>
+            <param name="accessState">Access state on which the method is called.</param>
+            <returns><c>true</c>, if <c>accessState</c> is <c>ReadOnly</c> or <c>ReadWrite</c><br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.AccessStatesExtension.HasReadWriteAccess(XRAYWorXBase.AccessStates)">
+            <summary>
+            Determines whether <c>accessState</c> equals <c>ReadWrite</c>.
+            </summary>
+            <param name="accessState">Access state on which the method is called.</param>
+            <returns><c>true</c>, if <c>accessState</c> is <c>ReadWrite</c>.<br/>
+            <c>false</c> elsewise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.AccessStatesExtension.IsNotSupported(XRAYWorXBase.AccessStates)">
+            <summary>
+            Determines whether <c>accessState</c> equals <c>NotSupported</c>.
+            </summary>
+            <param name="accessState">Access state on which the method is called.</param>
+            <returns><c>true</c>, if <c>accessState</c> is <c>NotSupported</c><br/>
+            <c>false</c> elsewise</returns>
+            <remarks>See <c>IsSupported()</c></remarks>
+        </member>
+        <member name="M:XRAYWorXBase.AccessStatesExtension.IsSupported(XRAYWorXBase.AccessStates)">
+            <summary>
+            Determines whether <c>accessState</c> not equals <c>NotSupported</c>.
+            </summary>
+            <param name="accessState">Access state on which the method is called.</param>
+            <returns><c>true</c>, if <c>accessState</c> not is <c>NotSupported</c><br/>
+            <c>false</c> elsewise.</returns>
+            <remarks>See <c>IsNotSupported()</c></remarks>
+        </member>
+        <member name="M:XRAYWorXBase.AccessStatesExtension.MergeWith(XRAYWorXBase.AccessStates,XRAYWorXBase.AccessStates)">
+            <summary>
+            Merges two <c><see cref="T:XRAYWorXBase.AccessStates"/></c>.
+            </summary>
+            <param name="left">First access state on which the method is called.</param>
+            <param name="right">Second access state that shall be merged with the first.</param>
+            <returns>Merged access state. If the access states are different, the less accessible
+            <c>accessState</c> is returned.</returns>
+        </member>
+        <member name="T:XRAYWorXBase.XrayOutControls">
+            <summary>
+            Enumeration for XrayOutControl (see <c>ITubeInterface.XrayOutControl</c>).
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.XrayOutControls.EmissionCurrentControl">
+            <summary>
+            X-ray output is controlled via emission current.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.XrayOutControls.TargetCurrentControl">
+            <summary>
+            X-ray output is controlled via target current.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.XrayOutControls.TargetPowerControl">
+            <summary>
+            X-ray output is controlled via target power.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.XrayOutControls.None">
+            <summary>
+            No kind of x-ray output control active. Switch to one of the following control types
+            to determine the x-ray output control.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.TurbopumpCommand">
+            <summary>
+            Provides access to the tube's turbopump (<c>ITubeInterface</c>.Turbopump).
+            </summary>
+            <remarks>
+            For a detailed example on how to access the turbopump see the following snippet.
+            @snippet TurbopumpView.cs turbopumpView
+            </remarks>
+        </member>
+        <member name="M:XRAYWorXBase.TurbopumpCommand.Start">
+            <summary>
+            Starts the turbopump.
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.TurbopumpCommand.Stop">
+            <summary>
+            Switches the turbopump off.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TurbopumpCommand.IsSwitchedOnChanged">
+            <summary>
+            Fires when <c><see cref="P:XRAYWorXBase.TurbopumpCommand.IsSwitchedOn"/></c> has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TurbopumpCommand.IsVentilatedChanged">
+            <summary>
+            Fires when <c><see cref="P:XRAYWorXBase.TurbopumpCommand.IsVentilated"/></c> changed on the plc.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TurbopumpCommand.RotationSpeedChanged">
+            <summary>
+            Fires when the <c><see cref="P:XRAYWorXBase.TurbopumpCommand.RotationSpeed"/></c> of the turbopump has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.TurbopumpCommand.StateChanged">
+            <summary>
+            Fires when <c><see cref="P:XRAYWorXBase.TurbopumpCommand.State"/></c> has changed on the plc.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TurbopumpCommand.AutoVentilation">
+            <summary>
+            Provides access to the tube's turbopump.
+            </summary>
+            <remarks>If <c>AutoVentilation</c> is set to <c>true</c>, a ventilation of the tube is automatically
+            initiated after the turbopump is switched off.<br/>
+            If <c>AutoVentilation</c> is set to <c>false</c>, no ventilation will be initiated after switching off
+            the turbopump.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.TurbopumpCommand.ErrorCode">
+            <summary>
+            Error Code with error information related to this command.
+            </summary>
+            <remarks>Contains valid values only when <c><see cref="P:XRAYWorXBase.TurbopumpCommand.State"/></c> is <c>Warning</c> or <c>Error</c> of the <c><see cref="T:XRAYWorXBase.CommandStates"/></c>.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.TurbopumpCommand.IsSwitchedOn">
+            <summary>
+            Indicates whether the turbopump is currently switched on.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TurbopumpCommand.IsVentilated">
+            <summary>
+            Indicates whether the system is currently ventilated.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TurbopumpCommand.RotationSpeed">
+            <summary>
+            Shows the current rotation speed of the turbopump.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TurbopumpCommand.State">
+            <summary>
+            Displays the command progress on the plc.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.TubeMonitorsList`1">
+            <summary>
+            TubeMonitorsList
+            </summary>
+            <typeparam name="MonitorType"></typeparam>
+        </member>
+        <member name="E:XRAYWorXBase.TubeMonitorsList`1.CountChanged">
+            <summary>
+            CountChanged
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeMonitorsList`1.Item(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="P:XRAYWorXBase.TubeMonitorsList`1.Count">
+            <summary>
+            Count
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.InterfaceItems.DataModuleName">
+            <summary>
+            Specifies data modules that are provided by <c>IDataModuleProvider.Get</c>.
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.InterfaceItems.DataModuleName.Aperture">
+            <summary>
+            Aperture data module
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.InterfaceItems.DataModuleName.Aperture0">
+            <summary>
+            Aperture0 data module
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.InterfaceItems.DataModuleName.AutoFunction">
+            <summary>
+            AutoFunction data module
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.InterfaceItems.DataModuleName.CenteringDM1">
+            <summary>
+            Centering1 data module
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.InterfaceItems.DataModuleName.CenteringDM2">
+            <summary>
+            Centering2 data module
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.InterfaceItems.DataModuleName.CenteringTable1">
+            <summary>
+            Centering1 table
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.InterfaceItems.DataModuleName.CenteringTable2">
+            <summary>
+            Centering2 table
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.InterfaceItems.DataModuleName.CondenserDM1">
+            <summary>
+            Condenser data module
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.InterfaceItems.DataModuleName.CondenserTable1">
+            <summary>
+            Condenser table
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.InterfaceItems.DataModuleName.Cooling">
+            <summary>
+            Cooling data module
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.InterfaceItems.DataModuleName.FocusDM1">
+            <summary>
+            Focus data module
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.InterfaceItems.DataModuleName.FocusTable1">
+            <summary>
+            Focus table
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.InterfaceItems.DataModuleName.HighTensionGenerator">
+            <summary>
+            High tension generator data module
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.InterfaceItems.DataModuleName.Maintenance">
+            <summary>
+            Maintenance data module
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.InterfaceItems.DataModuleName.ModeInUse">
+            <summary>
+            Mode in use data module
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.InterfaceItems.DataModuleName.System">
+            <summary>
+            System data module
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.InterfaceItems.DataModuleName.TargetInUse">
+            <summary>
+            Target in use data module
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.InterfaceItems.DataModuleName.Tube">
+            <summary>
+            Tube data module
+            </summary>
+        </member>
+        <member name="F:XRAYWorXBase.InterfaceItems.DataModuleName.Vacuum">
+            <summary>
+            Vacuum data module
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.AccessValidateHandler">
+            <summary>
+            AccessValidateHandler
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:XRAYWorXBase.NotSupportedException">
+            <summary>
+            Exception, that will be thrown, whenever a value shall be accessed and it's access state is invalid 
+            (<c>IsAccessible == NotSupported</c>).
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.Conditioning">
+            <summary>
+            This class provides easy access to conditioning functionality.
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.Conditioning.Start(XRAYWorXBase.ConditioningSettings)">
+            <summary>
+            Start
+            </summary>
+            <param name="settings"></param>
+        </member>
+        <member name="M:XRAYWorXBase.Conditioning.Stop">
+            <summary>
+            Stop
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.Conditioning.HasReadAccess">
+            <summary>
+            Has read access
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:XRAYWorXBase.Conditioning.HasReadWriteAccess">
+            <summary>
+            Has write access
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:XRAYWorXBase.Conditioning.IsAccessDenied">
+            <summary>
+            Is access denied
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:XRAYWorXBase.Conditioning.IsNotSupported">
+            <summary>
+            Is not supported
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:XRAYWorXBase.Conditioning.Dispose">
+            <summary>
+            Dispose
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.Conditioning.ActiveSubFunctionChanged">
+            <summary>
+            Active sub function changed
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.Conditioning.StateChanged">
+            <summary>
+            State changed
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.Conditioning.EmissionCurrentLowerLimitChanged">
+            <summary>
+            Emission current lower limit changed
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.Conditioning.EmissionCurrentUpperLimitChanged">
+            <summary>
+            Emission current upper limit changed
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.Conditioning.HighVoltageLowerLimitChanged">
+            <summary>
+            High voltage lower limit changed
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.Conditioning.HighVoltageUpperLimitChanged">
+            <summary>
+            High voltage upper limit changed
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.Conditioning.HighVoltageStartLowerLimitChanged">
+            <summary>
+            High voltage start lower limit changed
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.Conditioning.HighVoltageStartUpperLimitChanged">
+            <summary>
+            High voltage start upper limit changed
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.Conditioning.FlashoverCounterChanged">
+            <summary>
+            Flashover counter changed
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Conditioning.IsLocked">
+            <summary>
+            Is locked
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Conditioning.ActiveSubFunction">
+            <summary>
+            Active sub function
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Conditioning.Result">
+            <summary>
+            Result
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Conditioning.Settings">
+            <summary>
+            Settings
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Conditioning.EmissionCurrent">
+            <summary>
+            Emission current
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Conditioning.State">
+            <summary>
+            State
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Conditioning.ErrorCode">
+            <summary>
+            Error Code with error information related to this command.
+            </summary>
+            <remarks>Contains valid values only when State is Warning or Error.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.Conditioning.EmissionCurrentLowerLimit">
+            <summary>
+            Emission current lower limit
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Conditioning.EmissionCurrentUpperLimit">
+            <summary>
+            Emission current upper limit
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Conditioning.HighVoltageLowerLimit">
+            <summary>
+            High voltage lower limit
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Conditioning.HighVoltageUpperLimit">
+            <summary>
+            High voltage upper limit
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Conditioning.HighVoltageStartLowerLimit">
+            <summary>
+            High voltage start lower limit
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Conditioning.HighVoltageStartUpperLimit">
+            <summary>
+            High voltage start upper limit
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Conditioning.FlashoverCounter">
+            <summary>
+            Flashover counter
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.Conditioning.IsAccessibleChanged">
+            <summary>
+            IsAccessibleChanged
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Conditioning.IsAccessible">
+            <summary>
+            IsAccessible
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.Prewarning">
+            <summary>
+            Displays detailed information about prewarning.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.Prewarning.EnabledChanged">
+            <summary>
+            Fires when the prewarning <c><see cref="P:XRAYWorXBase.Prewarning.Enabled"/></c> / configuration has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.Prewarning.OnChanged">
+            <summary>
+            Fires when the prewarning <c><see cref="P:XRAYWorXBase.Prewarning.On"/></c> state has changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.Prewarning.ProgressChanged">
+            <summary>
+            Fires when the prewarning <c><see cref="P:XRAYWorXBase.Prewarning.Progress"/></c> has changed.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Prewarning.Enabled">
+            <summary>
+            Displays whether prewarning is enabled / configured (<c>true</c>).
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Prewarning.On">
+            <summary>
+            Displays whether prewarning is on (<c>true</c>) or off (<c>false</c>).
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Prewarning.Progress">
+            <summary>
+            Displays the prewarning progress in percent.
+            </summary>
+            <remarks>Requires at least plc version V1.12.8.21.</remarks>
+        </member>
+        <member name="T:XRAYWorXBase.Helper.TubeList">
+            <summary>
+            Helper class for handling of TubeMonitor&lt;float&gt;-indices and TubeListMonitor&lt;string&gt;-lists.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.Helper.ITubeList">
+            <summary>
+            Helper class for handling of TubeMonitor&lt;float&gt;-indices and TubeListMonitor&lt;string&gt;-lists.
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.Helper.ITubeList.ChangeIndex(System.Int32)">
+            <summary>
+            For changing the active item of the list, change the index to the
+            new item's position by calling this function with the desired index.
+            </summary>
+            <param name="index">Index that should be set.</param>
+        </member>
+        <member name="E:XRAYWorXBase.Helper.ITubeList.Changed">
+            <summary>
+            Fires whenever the index/item property changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.Helper.ITubeList.ListChanged">
+            <summary>
+            Fires whenever the list itself changed.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Helper.ITubeList.Index">
+            <summary>
+            Current index of the list. If no index is selected, -1 is returned.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Helper.ITubeList.Item">
+            <summary>
+            Current item that is indexed. If no item is selected or the current
+            item is empty, an empty string is returned.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Helper.ITubeList.List">
+            <summary>
+            Array containing the list items.
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.Helper.TubeList.#ctor(XRAYWorXBase.TubeMonitor{System.Single},XRAYWorXBase.TubeListMonitor{System.String})">
+            <summary>
+            </summary>
+            <param name="index">Indexing object</param>
+            <param name="list">List object</param>
+        </member>
+        <member name="M:XRAYWorXBase.Helper.TubeList.ChangeIndex(System.Int32)">
+            <summary>
+            For changing the active item of the list, change the index to the
+            new item's position by calling this function with the desired index.
+            </summary>
+            <param name="newIndex">Index that should be set.</param>
+        </member>
+        <member name="M:XRAYWorXBase.Helper.TubeList.HasReadAccess">
+            <summary>
+            Shows whether this object has read-access.
+            </summary>
+            <returns><c>true</c>, if object data can be read,<br/>
+            <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.Helper.TubeList.HasReadWriteAccess">
+            <summary>
+            Shows whether this object has read/write-access.
+            </summary>
+            <returns><c>true</c>, if object data can be read or written,<br/>
+            <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.Helper.TubeList.IsAccessDenied">
+            <summary>
+            Shows whether access to this object is denied.
+            </summary>
+            <returns><c>true</c>, if access is denied,<br/>
+            <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.Helper.TubeList.IsNotSupported">
+            <summary>
+            Shows whether access to this object is not supported.
+            </summary>
+            <returns><c>true</c>, if access is not supported,<br/>
+            <c>false</c> if access is supported.</returns>
+        </member>
+        <member name="M:XRAYWorXBase.Helper.TubeList.Dispose">
+            <summary>
+            Disposes this object.
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.Helper.TubeList.Finalize">
+            <summary>
+            Disposes this object.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.Helper.TubeList.Changed">
+            <summary>
+            Fires whenever the index/item property changed.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.Helper.TubeList.ListChanged">
+            <summary>
+            Fires whenever the list itself changed.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Helper.TubeList.Index">
+            <summary>
+            Current index of the list. If no index is selected, -1 is returned.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Helper.TubeList.Item">
+            <summary>
+            Current item that is indexed. If no item is selected or the current
+            item is empty, an empty string is returned.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Helper.TubeList.List">
+            <summary>
+            Array containing the list items.
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.Helper.TubeList.IsAccessibleChanged">
+            <summary>
+            Fires when the <c><see cref="P:XRAYWorXBase.Helper.TubeList.IsAccessible"/></c> property has changed.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.Helper.TubeList.IsAccessible">
+            <summary>
+            Shows the accessible state of the object.
+            </summary>
+            <remarks>For further information see <c><see cref="T:XRAYWorXBase.AccessStates"/></c>.<br/>
+            For easier handling see <c><see cref="T:XRAYWorXBase.AccessStatesExtension"/></c> helper methods.</remarks>
+        </member>
+        <member name="T:XRAYWorXBase.ErrorCodes.ErrorInfo">
+            <summary>
+            Additional information on error codes.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ErrorCodes.ErrorInfo.ErrorHelp">
+            <summary>
+            The error help is optional and gives some hints, how to
+            avoid the occurrence of corresponding error code.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.ErrorCodes.ErrorInfo.ErrorMessage">
+            <summary>
+            More detailed description of the corresponding error code.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.Config.IConfigSerializer">
+            <summary>
+            ConfigSerializer
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.Config.IConfigSerializer.GetConfigurationFromFile``1(System.String,System.String)">
+            <summary>
+            GetConfigurationFromFile
+            </summary>
+            <typeparam name="TConfig"></typeparam>
+            <param name="defaultPath"></param>
+            <param name="alternativePath"></param>
+            <returns></returns>
+        </member>
+        <member name="M:XRAYWorXBase.Config.IConfigSerializer.Save(XRAYWorXBase.Config.ConfigurationBase,System.String)">
+            <summary>
+            Save
+            </summary>
+            <param name="config"></param>
+            <param name="path"></param>
+        </member>
+        <member name="T:XRAYWorXBase.Config.ConfigXmlSerializer">
+            <summary>
+            ConfigXmlSerializer
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.Config.ConfigXmlSerializer.#ctor(XRAYWorXBase.IMessenger)">
+            <summary>
+            ConfigXmlSerializer
+            </summary>
+            <param name="messenger"></param>
+        </member>
+        <member name="M:XRAYWorXBase.Config.ConfigXmlSerializer.GetConfigurationFromFile``1(System.String,System.String)">
+            <summary>
+            GetConfigurationFromFile
+            </summary>
+            <typeparam name="TConfig"></typeparam>
+            <param name="defaultPath"></param>
+            <param name="alternativePath"></param>
+            <returns></returns>
+        </member>
+        <member name="M:XRAYWorXBase.Config.ConfigXmlSerializer.Save(XRAYWorXBase.Config.ConfigurationBase,System.String)">
+            <summary>
+            Save
+            </summary>
+            <param name="config"></param>
+            <param name="path"></param>
+        </member>
+        <member name="T:XRAYWorXBase.XRAYWorXBaseException">
+            <summary>
+            XRAYWorXBaseException
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.AccessibleValidateHandlerNotImplementedException">
+            <summary>
+            AccessibleValidateHandlerNotImplementedException
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.TubeInterfaceEventArgs">
+            <summary>
+            Class which supports event data for a <c>EventHandler&lt;TubeInterfaceEventArgs&gt;</c>.
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.TubeInterfaceEventArgs.ToString">
+            <summary>
+            Returns a System.String as representation of the current System.Object.
+            </summary>
+            <returns>A System.String representing the current System.Object.</returns>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterfaceEventArgs.ErrorCode">
+            <summary>
+            Error code of the current error.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterfaceEventArgs.ErrorHelp">
+            <summary>
+            Recommended help on the current error.
+            </summary>
+            <remarks>There is not an error help provided for each possible error. If there
+            is no help provided this property returns <c>string.Empty</c>.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterfaceEventArgs.ErrorInfo">
+            <summary>
+            String that contains additional information on the error.
+            </summary>
+            <remarks>If there is no additional information provided, <c>string.Empty</c> is returned.</remarks>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterfaceEventArgs.ErrorText">
+            <summary>
+            String that contains information on the error.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterfaceEventArgs.ErrorType">
+            <summary>
+            Returns the type of error.
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.TubeInterfaceEventArgs.Ip">
+            <summary>
+            Returns the ip address of the plc to which the interface is connected.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.TubeLoader">
+            <summary>
+            Loader to get a static instance of a <c>ITubeLoader</c> interface.
+            </summary>
+            <code>ITubeLoader loader = TubeLoader.Instance;</code>
+        </member>
+        <member name="P:XRAYWorXBase.TubeLoader.Instance">
+            <summary>
+            Returns an instance to <c>ITubeLoader</c>.
+            </summary>
+            <exception cref="T:XRAYWorXBase.TubeLoaderException">Thrown if an exception occurres while getting the instance of
+            <c>ITubeLoader</c>.</exception>
+        </member>
+        <member name="T:XRAYWorXBase.TubeLoaderException">
+            <summary>
+            Thrown if an exception occurres while getting the instance of <c>ITubeLoader</c>.
+            </summary>
+        </member>
+        <member name="T:XRAYWorXBase.Logger.DebugLog">
+            <summary>
+            DebugLog
+            </summary>
+        </member>
+        <member name="M:XRAYWorXBase.Logger.DebugLog.WriteLine(System.String)">
+            <summary>
+            WriteLine
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="T:XRAYWorXBase.KeyCommand">
+            <summary>
+            KeyCommand
+            </summary>
+        </member>
+        <member name="E:XRAYWorXBase.KeyCommand.StateChanged">
+            <summary>
+            StateChanged
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.KeyCommand.Key">
+            <summary>
+            Key
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.KeyCommand.State">
+            <summary>
+            State
+            </summary>
+        </member>
+        <member name="P:XRAYWorXBase.KeyCommand.ErrorCode">
+            <summary>
+            ErrorCode
+            </summary>
+        </member>
+    </members>
+</doc>
