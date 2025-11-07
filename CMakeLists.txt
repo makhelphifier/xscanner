@@ -85,8 +85,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/Release)
 set(CONFIG_FILE "${CMAKE_CURRENT_SOURCE_DIR}/config/log4qt.properties")
 set(LOG4QT_DLL_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/third_party/Log4Qt/bin/log4qt.dll")
 set(LTDMC_DLL "${CMAKE_CURRENT_SOURCE_DIR}/third_party/device/motor/bin/LTDMC.dll")
-set (MOTION_CTRL_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/third_party/device/motor/MotionCtrlConfig.ini")
-set (ADAPTOR_INI "${CMAKE_CURRENT_SOURCE_DIR}/third_party/device/motor/adaptor.ini")
+# set (MOTION_CTRL_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/third_party/device/motor/MotionCtrlConfig.ini")
+# set (ADAPTOR_INI "${CMAKE_CURRENT_SOURCE_DIR}/third_party/device/motor/adaptor.ini")
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -101,13 +101,13 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
             "${LTDMC_DLL}"
             "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
 
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${MOTION_CTRL_CONFIG}"
-            "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+    # COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    #         "${MOTION_CTRL_CONFIG}"
+    #         "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
 
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${ADAPTOR_INI}"
-            "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+    # COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    #         "${ADAPTOR_INI}"
+    #         "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
     COMMENT "Copying config and DLLs to output directory"
 )
 # 复制整个 Resources 文件夹到可执行文件 (.exe) 旁边

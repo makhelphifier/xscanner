@@ -181,8 +181,9 @@ void MotionCtrlViewModel::onBtn_ClearAxisErrcode()
 
 void MotionCtrlViewModel::onBtn_axisLeftPressed(int axis)
 {
+    log_(QString("ACTION: Jog Left Pressed for axis %1").arg(axis)); // <-- 新增日志
     if(!connected) return;
-
+    log_(QString("ACTION: Jog Left Pressed for axis %1").arg(axis)); // <-- 新增日志
     QMap<int, QPair<bool, bool> >  pos_limits = mcManger->getCtrlCommand()->getInstance()->getPosLimit();
 
     // if(pos_limits[axis].first||pos_limits[axis].second)

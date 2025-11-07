@@ -10,14 +10,23 @@
 #include <QCheckBox>
 #include <QPushButton>
 #include <QDebug>  // 如果需要调试，可保留
+#include "util/logger/logger.h"
 
 C3100AMotionWidget::C3100AMotionWidget(QWidget *parent)
     : QTabWidget(parent)
 {
+    m_pViewModel = new MotionCtrlViewModel(this); // 初始化 ViewModel
+    m_appConfig.readConfig(); // 读取 AppConfig 配置文件
+
     setupTabs();
     // 设置默认 Tab
     setCurrentIndex(0);
     // 其他初始化（如 opacity）可在后续添加
+    updateSpinBoxValue(); // 加载配置到 UI
+    if (m_pViewModel && m_pViewModel->getMotionManager()) {
+        connect(m_pViewModel->getMotionManager(), &MotionCtrlManager::sig_dataChanged, this, &C3100AMotionWidget::onAxisDataChanged);
+    }
+
 }
 
 C3100AMotionWidget::~C3100AMotionWidget()
@@ -179,7 +188,16 @@ void C3100AMotionWidget::createDetectorGroup(QVBoxLayout* layout)
     QLabel* pSpeedLabel = new QLabel(tr("速度"));
     pSpeedLabel->setAlignment(Qt::AlignCenter);
     QPushButton* pStopAllBtn = new QPushButton(tr("Stop all"));
-    // connect(pStopAllBtn, &QPushButton::clicked, this, &C3100AMotionWidget::slotStopAllBtnClick);  // 移除槽
+    // --- “全部停止” 按钮连接 ---
+    connect(pStopAllBtn, &QPushButton::clicked, this, [=](){
+        for(int axis : {AXIS::XRAY_Z, AXIS::Detector_Z1, AXIS::Detector_R,
+                         AXIS::Detector_W, AXIS::objectiveTable_X1, AXIS::objectiveTable_Y1})
+        {
+            if (m_pViewModel) {
+                m_pViewModel->onBtn_axisStopClicked(axis);
+            }
+        }
+    });
     pGridLayout->addWidget(pCurrentLabel, 0, 1, Qt::AlignCenter);
     pGridLayout->addWidget(pTargetLabel, 0, 2, Qt::AlignCenter);
     pGridLayout->addWidget(pSpeedLabel, 0, 3, Qt::AlignCenter);
@@ -192,18 +210,18 @@ void C3100AMotionWidget::createDetectorGroup(QVBoxLayout* layout)
     m_pXrayZCurrentPos->setEnabled(false);  // 当前值通常只读
     m_pXrayZTargetPos = new C3100ADoubleSpinBox();
     m_pXrayZTargetPos->setRange(-100, 1000);
-    // connect(m_pXrayZTargetPos->LineEdit(), &QLineEdit::returnPressed, this, &C3100AMotionWidget::slotAxisPosChanged);  // 移除
     m_pXrayZSpeed = new C3100ADoubleSpinBox();
     m_pXrayZSpeed->setRange(0, 100);  // 示例速度范围
-    // connect(m_pXrayZSpeed->LineEdit(), &QLineEdit::returnPressed, this, &C3100AMotionWidget::slotAxisSpeedChanged);  // 移除
     QPushButton* pXrayZLeftBtn = new QPushButton(tr("向左"));
-    // connect(pXrayZLeftBtn, &QPushButton::pressed, this, &C3100AMotionWidget::slotLeftButtonPress);  // 移除
     QPushButton* pXrayZRightBtn = new QPushButton(tr("向右"));
-    // connect(pXrayZRightBtn, &QPushButton::pressed, this, &C3100AMotionWidget::slotRightButtonPress);  // 移除
     QPushButton* pXrayZHomeBtn = new QPushButton(tr("回零"));
-    // connect(pXrayZHomeBtn, &QPushButton::clicked, this, &C3100AMotionWidget::slotHomeButtonClick);  // 移除
     QPushButton* pXrayZStopBtn = new QPushButton(tr("停止"));
-    // connect(pXrayZStopBtn, &QPushButton::clicked, this, &C3100AMotionWidget::slotEndButtonClick);  // 移除
+
+    // --- 修改：调用新函数 ---
+    connectAxisControls(AXIS::XRAY_Z, m_pXrayZTargetPos, m_pXrayZSpeed,
+                        pXrayZLeftBtn, pXrayZRightBtn, pXrayZHomeBtn, pXrayZStopBtn);
+    // -----------------------
+
     pGridLayout->addWidget(pXrayZLabel, 1, 0, Qt::AlignCenter);
     pGridLayout->addWidget(m_pXrayZCurrentPos, 1, 1, Qt::AlignCenter);
     pGridLayout->addWidget(m_pXrayZTargetPos, 1, 2, Qt::AlignCenter);
@@ -226,6 +244,11 @@ void C3100AMotionWidget::createDetectorGroup(QVBoxLayout* layout)
     QPushButton* pDetectorZ1RightBtn = new QPushButton(tr("向右"));
     QPushButton* pDetectorZ1HomeBtn = new QPushButton(tr("回零"));
     QPushButton* pDetectorZ1StopBtn = new QPushButton(tr("停止"));
+
+    // --- 修改：调用新函数 ---
+    connectAxisControls(AXIS::Detector_Z1, m_pDetectorZ1TargetPos, m_pDetectorZ1Speed,
+                        pDetectorZ1LeftBtn, pDetectorZ1RightBtn, pDetectorZ1HomeBtn, pDetectorZ1StopBtn);
+    // -----------------------
     pGridLayout->addWidget(pDetectorZ1Label, 2, 0, Qt::AlignCenter);
     pGridLayout->addWidget(m_pDetectorZ1CurrentPos, 2, 1, Qt::AlignCenter);
     pGridLayout->addWidget(m_pDetectorZ1TargetPos, 2, 2, Qt::AlignCenter);
@@ -248,6 +271,11 @@ void C3100AMotionWidget::createDetectorGroup(QVBoxLayout* layout)
     QPushButton* pDetectorRRightBtn = new QPushButton(tr("向右"));
     QPushButton* pDetectorRHomeBtn = new QPushButton(tr("回零"));
     QPushButton* pDetectorRStopBtn = new QPushButton(tr("停止"));
+
+    // --- 修改：调用新函数 ---
+    connectAxisControls(AXIS::Detector_R, m_pDetectorRTargetPos, m_pDetectorRSpeed,
+                        pDetectorRLeftBtn, pDetectorRRightBtn, pDetectorRHomeBtn, pDetectorRStopBtn);
+    // -----------------------
     pGridLayout->addWidget(pDetectorRLabel, 3, 0, Qt::AlignCenter);
     pGridLayout->addWidget(m_pDetectorRCurrentPos, 3, 1, Qt::AlignCenter);
     pGridLayout->addWidget(m_pDetectorRTargetPos, 3, 2, Qt::AlignCenter);
@@ -257,7 +285,7 @@ void C3100AMotionWidget::createDetectorGroup(QVBoxLayout* layout)
     pGridLayout->addWidget(pDetectorRHomeBtn, 3, 6, Qt::AlignCenter);
     pGridLayout->addWidget(pDetectorRStopBtn, 3, 7, Qt::AlignCenter);
 
-    // 探测器 theta 轴 (AXIS::Detector_Theta) - 行 4
+    // 探测器 theta 轴 (AXIS::Detector_W) - 行 4
     QLabel* pDetectorThetaLabel = new QLabel(tr("探测器 theta轴 (°))"));
     pDetectorThetaLabel->setAlignment(Qt::AlignCenter);
     m_pDetectorThetaCurrentPos = new C3100ADoubleSpinBox();
@@ -270,6 +298,11 @@ void C3100AMotionWidget::createDetectorGroup(QVBoxLayout* layout)
     QPushButton* pDetectorThetaRightBtn = new QPushButton(tr("向右"));
     QPushButton* pDetectorThetaHomeBtn = new QPushButton(tr("回零"));
     QPushButton* pDetectorThetaStopBtn = new QPushButton(tr("停止"));
+
+    // --- 修改：调用新函数 ---
+    connectAxisControls(AXIS::Detector_W, m_pDetectorThetaTargetPos, m_pDetectorThetaSpeed,
+                        pDetectorThetaLeftBtn, pDetectorThetaRightBtn, pDetectorThetaHomeBtn, pDetectorThetaStopBtn);
+    // -----------------------
     pGridLayout->addWidget(pDetectorThetaLabel, 4, 0, Qt::AlignCenter);
     pGridLayout->addWidget(m_pDetectorThetaCurrentPos, 4, 1, Qt::AlignCenter);
     pGridLayout->addWidget(m_pDetectorThetaTargetPos, 4, 2, Qt::AlignCenter);
@@ -279,7 +312,7 @@ void C3100AMotionWidget::createDetectorGroup(QVBoxLayout* layout)
     pGridLayout->addWidget(pDetectorThetaHomeBtn, 4, 6, Qt::AlignCenter);
     pGridLayout->addWidget(pDetectorThetaStopBtn, 4, 7, Qt::AlignCenter);
 
-    // 载物台 X 轴 (AXIS::ObjectiveTable_X) - 行 5
+    // 载物台 X 轴 (AXIS::objectiveTable_X1) - 行 5
     QLabel* pObjectiveTableXLabel = new QLabel(tr("载物台 X轴 (mm)"));
     pObjectiveTableXLabel->setAlignment(Qt::AlignCenter);
     m_pObjectiveTableXCurrentPos = new C3100ADoubleSpinBox();
@@ -292,6 +325,11 @@ void C3100AMotionWidget::createDetectorGroup(QVBoxLayout* layout)
     QPushButton* pObjectiveTableXRightBtn = new QPushButton(tr("向右"));
     QPushButton* pObjectiveTableXHomeBtn = new QPushButton(tr("回零"));
     QPushButton* pObjectiveTableXStopBtn = new QPushButton(tr("停止"));
+
+    // --- 修改：调用新函数 ---
+    connectAxisControls(AXIS::objectiveTable_X1, m_pObjectiveTableXTargetPos, m_pObjectiveTableXSpeed,
+                        pObjectiveTableXLeftBtn, pObjectiveTableXRightBtn, pObjectiveTableXHomeBtn, pObjectiveTableXStopBtn);
+    // -----------------------
     pGridLayout->addWidget(pObjectiveTableXLabel, 5, 0, Qt::AlignCenter);
     pGridLayout->addWidget(m_pObjectiveTableXCurrentPos, 5, 1, Qt::AlignCenter);
     pGridLayout->addWidget(m_pObjectiveTableXTargetPos, 5, 2, Qt::AlignCenter);
@@ -301,7 +339,7 @@ void C3100AMotionWidget::createDetectorGroup(QVBoxLayout* layout)
     pGridLayout->addWidget(pObjectiveTableXHomeBtn, 5, 6, Qt::AlignCenter);
     pGridLayout->addWidget(pObjectiveTableXStopBtn, 5, 7, Qt::AlignCenter);
 
-    // 载物台 Y 轴 (AXIS::ObjectiveTable_Y) - 行 6
+    // 载物台 Y 轴 (AXIS::objectiveTable_Y1) - 行 6
     QLabel* pObjectiveTableYLabel = new QLabel(tr("载物台 Y轴 (mm)"));
     pObjectiveTableYLabel->setAlignment(Qt::AlignCenter);
     m_pObjectiveTableYCurrentPos = new C3100ADoubleSpinBox();
@@ -314,6 +352,11 @@ void C3100AMotionWidget::createDetectorGroup(QVBoxLayout* layout)
     QPushButton* pObjectiveTableYRightBtn = new QPushButton(tr("向右"));
     QPushButton* pObjectiveTableYHomeBtn = new QPushButton(tr("回零"));
     QPushButton* pObjectiveTableYStopBtn = new QPushButton(tr("停止"));
+
+    // --- 修改：调用新函数 ---
+    connectAxisControls(AXIS::objectiveTable_Y1, m_pObjectiveTableYTargetPos, m_pObjectiveTableYSpeed,
+                        pObjectiveTableYLeftBtn, pObjectiveTableYRightBtn, pObjectiveTableYHomeBtn, pObjectiveTableYStopBtn);
+    // -----------------------
     pGridLayout->addWidget(pObjectiveTableYLabel, 6, 0, Qt::AlignCenter);
     pGridLayout->addWidget(m_pObjectiveTableYCurrentPos, 6, 1, Qt::AlignCenter);
     pGridLayout->addWidget(m_pObjectiveTableYTargetPos, 6, 2, Qt::AlignCenter);
@@ -327,4 +370,127 @@ void C3100AMotionWidget::createDetectorGroup(QVBoxLayout* layout)
     pGridLayout->setSpacing(5);
     pMotionCtrlGroup->setLayout(pGridLayout);
     layout->addWidget(pMotionCtrlGroup);
+}
+
+
+void C3100AMotionWidget::updateSpinBoxValue()
+{
+    // 确保 ViewModel 存在
+    if (!m_pViewModel) {
+        qWarning("C3100AMotionWidget::updateSpinBoxValue() - m_pViewModel is null!");
+        return;
+    }
+
+    // AppConfig 已在构造函数中读取，此处无需重复 readConfig()
+
+    // --- 射线源 Z 轴 (AXIS::XRAY_Z = 1) ---
+    m_pXrayZTargetPos->setValue(m_appConfig.getAxisPos(AXIS::XRAY_Z));
+    m_pXrayZSpeed->setValue(m_pViewModel->loadAbsSpeed(AXIS::XRAY_Z).toDouble());
+
+    // --- 探测器 Z1 轴 (AXIS::Detector_Z1 = 3) ---
+    m_pDetectorZ1TargetPos->setValue(m_appConfig.getAxisPos(AXIS::Detector_Z1));
+    m_pDetectorZ1Speed->setValue(m_pViewModel->loadAbsSpeed(AXIS::Detector_Z1).toDouble());
+
+    // --- 探测器 R 轴 (AXIS::Detector_R = 0) ---
+    m_pDetectorRTargetPos->setValue(m_appConfig.getAxisPos(AXIS::Detector_R));
+    m_pDetectorRSpeed->setValue(m_pViewModel->loadAbsSpeed(AXIS::Detector_R).toDouble());
+
+    // --- 探测器 theta 轴 (AXIS::Detector_W = 7) ---
+    m_pDetectorThetaTargetPos->setValue(m_appConfig.getAxisPos(AXIS::Detector_W));
+    m_pDetectorThetaSpeed->setValue(m_pViewModel->loadAbsSpeed(AXIS::Detector_W).toDouble());
+
+    // --- 载物台 X 轴 (AXIS::objectiveTable_X1 = 2) ---
+    m_pObjectiveTableXTargetPos->setValue(m_appConfig.getAxisPos(AXIS::objectiveTable_X1));
+    m_pObjectiveTableXSpeed->setValue(m_pViewModel->loadAbsSpeed(AXIS::objectiveTable_X1).toDouble());
+
+    // --- 载物台 Y 轴 (AXIS::objectiveTable_Y1 = 4) ---
+    m_pObjectiveTableYTargetPos->setValue(m_appConfig.getAxisPos(AXIS::objectiveTable_Y1));
+    m_pObjectiveTableYSpeed->setValue(m_pViewModel->loadAbsSpeed(AXIS::objectiveTable_Y1).toDouble());
+
+    // 注意：此处不应调用 m_appConfig.writeConfig()，
+    // 因为这会用 UI 的默认值（可能为0）覆盖刚加载的配置。
+}
+
+void C3100AMotionWidget::onAxisDataChanged(const QVariant &var)
+{
+    // --- 日志：确认槽函数被触发 ---
+    // log_("UI_RECV: C3100AMotionWidget::onAxisDataChanged slot triggered.");
+
+    QVector<MotionCtrlData::MotionCtrlInfo> mcVec = var.value<QVector<MotionCtrlData::MotionCtrlInfo>>();
+
+    if(mcVec.size() < 9) {
+        // log_("UI_RECV_WARN: Received data vector size < 9. Aborting UI update.");
+        return;
+    }
+
+    // --- 日志：打印关键轴数据 (保持不变) ---
+    // log_(QString("UI_RECV_DATA: Axis %1 (X) Pos: %2, Busy: %3")
+    //          .arg(AXIS::objectiveTable_X1)
+    //          .arg(mcVec[AXIS::objectiveTable_X1].axEncPos)
+    //          .arg(mcVec[AXIS::objectiveTable_X1].busy));
+
+    // log_(QString("UI_RECV_DATA: Axis %1 (Theta) Pos: %2, Busy: %3")
+    //          .arg(AXIS::Detector_W)
+    //          .arg(mcVec[AXIS::Detector_W].axEncPos)
+    //          .arg(mcVec[AXIS::Detector_W].busy));
+
+    // --- 修改：移除所有 "if (!busy)" 判断，直接设置值 ---
+
+    // UI: 射线源 Z轴 (mm) -> AXIS::XRAY_Z (轴 6)
+    m_pXrayZCurrentPos->setValue(mcVec[AXIS::XRAY_Z].axEncPos);
+
+    // UI: 探测器 Z1轴 (mm) -> AXIS::Detector_Z1 (轴 4)
+    m_pDetectorZ1CurrentPos->setValue(mcVec[AXIS::Detector_Z1].axEncPos);
+
+    // UI: 探测器 R轴 (mm) -> AXIS::Detector_R (轴 7)
+    m_pDetectorRCurrentPos->setValue(mcVec[AXIS::Detector_R].axEncPos);
+
+    // UI: 探测器 theta轴 (°) -> AXIS::Detector_W (轴 8)
+    m_pDetectorThetaCurrentPos->setValue(mcVec[AXIS::Detector_W].axEncPos);
+
+    // UI: 载物台 X轴 (mm) -> AXIS::objectiveTable_X1 (轴 0)
+    m_pObjectiveTableXCurrentPos->setValue(mcVec[AXIS::objectiveTable_X1].axEncPos);
+
+    // UI: 载物台 Y轴 (mm) -> AXIS::objectiveTable_Y1 (轴 2)
+    m_pObjectiveTableYCurrentPos->setValue(mcVec[AXIS::objectiveTable_Y1].axEncPos);
+}
+
+
+// --- 新增函数实现 ---
+void C3100AMotionWidget::connectAxisControls(
+    int axisId,
+    C3100ADoubleSpinBox* targetPosSpin,
+    C3100ADoubleSpinBox* speedSpin,
+    QPushButton* leftBtn,
+    QPushButton* rightBtn,
+    QPushButton* homeBtn,
+    QPushButton* stopBtn)
+{
+    if (!m_pViewModel) {
+        qWarning("C3100AMotionWidget::connectAxisControls - m_pViewModel is null!");
+        return;
+    }
+
+    // 目标值回车 (注意：连接 spinbox 内部的 lineEdit)
+    connect(targetPosSpin, &C3100ADoubleSpinBox::editingFinished, this, [=](){
+        m_pViewModel->onBtn_axisStartClicked(axisId, targetPosSpin->text());
+    });
+
+    // Jog 左 (点按)
+    connect(leftBtn, &QPushButton::pressed, this, [=](){ m_pViewModel->onBtn_axisLeftPressed(axisId); });
+    connect(leftBtn, &QPushButton::released, this, [=](){ m_pViewModel->onBtn_axisStopClicked(axisId); });
+
+    // Jog 右 (点按)
+    connect(rightBtn, &QPushButton::pressed, this, [=](){ m_pViewModel->onBtn_axisRightPressed(axisId); });
+    connect(rightBtn, &QPushButton::released, this, [=](){ m_pViewModel->onBtn_axisStopClicked(axisId); });
+
+    // 回零 (点击)
+    connect(homeBtn, &QPushButton::clicked, this, [=](){ m_pViewModel->onBtn_axisResetPosClicked(axisId); });
+
+    // 停止 (点击)
+    connect(stopBtn, &QPushButton::clicked, this, [=](){ m_pViewModel->onBtn_axisStopClicked(axisId); });
+
+    // (注意：速度(speedSpin)的保存逻辑目前在 ParaSettingsDialog 中，
+    //  所以此处我们只连接运动命令，不连接速度保存)
+    Q_UNUSED(speedSpin); // 显式标记 speedSpin 暂时未使用
 }

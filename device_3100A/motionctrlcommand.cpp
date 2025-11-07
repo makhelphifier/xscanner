@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <QtConcurrent>
 #include "LTDMC.h"
+#include "util/logger/logger.h"
 QMutex MotionCtrlCommand::m_Mutex{};
 
 MotionCtrlCommand::MotionCtrlCommand(QObject *parent)
@@ -1118,7 +1119,10 @@ void MotionCtrlCommand::readData()
         // }else
         // {
             dmc_get_position_unit(CurrCardNo,axisNo,&current_pos);//读取位置
-
+        // // --- 新增日志：打印从硬件读取的原始值 ---
+        // if (i == AXIS::objectiveTable_X1 || i == AXIS::objectiveTable_Y1 || i == AXIS::Detector_W) {
+        //     log_(QString("DATA_READ: Axis %1 hardware position = %2").arg(axisNo).arg(current_pos));
+        // }
         // }
         if(axisNo == axisNo1)
         {
@@ -1145,6 +1149,8 @@ void MotionCtrlCommand::readData()
 
     QVariant var;
     var.setValue(mcInfoVec);
+    // --- 新增日志：确认信号发射 ---
+    // log_("DATA_EMIT: Emitting sig_dataChanged from MotionCtrlCommand.");
     emit sig_dataChanged(var);
 
 }
@@ -1214,7 +1220,7 @@ bool MotionCtrlCommand::init()
 {
     //使能所有轴
     // bool status = axEnable(255);
-    for(int i=0;i < 10;i++)
+    for(int i=0;i < 9;i++)
     {
         bool status = axEnable(i);
         if(!status) {

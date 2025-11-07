@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QMap>
 #include "motionctrlmanager.h"
+#include "util/logger/logger.h"
 
 class MotionCtrlViewModel : public QObject
 {
@@ -19,6 +20,7 @@ public:
     QString loadAbsSpeed(int index);
     void saveSpeed(int index, QString ddSpeed, QString absSpeed);
     ~MotionCtrlViewModel();
+    MotionCtrlManager* getMotionManager() const { return mcManger; }
 public slots:
     void onDataChanged(const QVariant &var);
 

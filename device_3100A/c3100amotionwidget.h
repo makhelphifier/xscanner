@@ -6,7 +6,10 @@
 #include <QLineEdit>
 #include "C3100AControls.h"  // 自定义控件头文件，包含 C3100AIntSpinBox 和 C3100ADoubleSpinBox
 #include <QObject>  // 添加：支持 Q_OBJECT 和 tr()
-
+#include "appconfig.h"
+#include "motionctrlviewmodel.h"
+#include <QVariant>
+#include "motionctrlcommand.h" // <-- 在这里添加
 // 前向声明
 class QVBoxLayout;
 class QLabel;
@@ -35,6 +38,9 @@ public:
 
     void setSlashMark(bool slashMark);
 
+private slots:
+    void onAxisDataChanged(const QVariant &var);
+
 private:
     // UI 构建辅助方法（添加这些以匹配 .cpp 中的实现）
     void setupTabs();
@@ -42,7 +48,16 @@ private:
     QWidget* createSecondTab();
     void createXrayGroup(QVBoxLayout* layout);  // 参数为 layout，与 .cpp 匹配
     void createDetectorGroup(QVBoxLayout* layout);  // 参数为 layout，与 .cpp 匹配
-
+    void updateSpinBoxValue();
+    void connectAxisControls(
+        int axisId,
+        C3100ADoubleSpinBox* targetPosSpin,
+        C3100ADoubleSpinBox* speedSpin,
+        QPushButton* leftBtn,
+        QPushButton* rightBtn,
+        QPushButton* homeBtn,
+        QPushButton* stopBtn
+        );
     // 射线源相关的 UI 控件（电压/电流/开关，非轴相关）
     QLineEdit* m_pVolCurrentLineEdit = nullptr;
     C3100AIntSpinBox* m_pVolTargetSpinbox = nullptr;
@@ -54,6 +69,8 @@ private:
     QCheckBox* m_pConnect = nullptr;
     QPushButton* m_pButtonXon = nullptr;
     QPushButton* m_pButtonXoff = nullptr;
+    AppConfig m_appConfig;
+    MotionCtrlViewModel* m_pViewModel;
 
     // 运动控制，射线源 Z 轴 (AXIS::XRAY_Z)
     C3100ADoubleSpinBox* m_pXrayZCurrentPos = nullptr;
