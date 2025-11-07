@@ -5,89 +5,24 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets SerialPort PrintSupport )
 
 qt_standard_project_setup()
 
-# 定义源文件
-set(SOURCES
-    app/main.cpp
-    gui/items/ROI.cpp
-    gui/items/handle.cpp
-    gui/items/rectroi.cpp
-    gui/widgets/logwidget.cpp
-    gui/widgets/extractedimageviewer.cpp
-    service/imageprocessor.cpp
-    util/logger/logger.cpp
-    util/logger/qtwidgetappender.cpp
-    Img.qrc
-    # GUI - Views
-    gui/views/imageviewer.cpp
-    gui/views/mainwindow.cpp
-    # GUI - ViewModels
-    gui/viewmodels/imageviewmodel.cpp
-    # GUI - Widgets
-    gui/widgets/toprightinfowidget.cpp
-    # GUI - Items
-    gui/items/linesegmentroi.cpp
-    gui/items/infinitelineitem.cpp
-    gui/items/infinitelinelabel.cpp
-    gui/items/angledlineroi.cpp
-    gui/items/angleroi.cpp
-    gui/items/pointmeasureitem.cpp
-    gui/items/polylineroi.cpp
-    gui/items/freehandroi.cpp
-    gui/items/annotationtextitem.cpp
-    gui/items/ellipseroi.cpp
-    # GUI - States
-    gui/states/drawingstate.cpp
-    gui/states/drawingstatemachine.cpp
-    gui/states/idlestate.cpp
-    gui/states/panningstate.cpp
-    gui/states/dragginghandlestate.cpp
-    gui/states/angledrawingstate.cpp
-    gui/states/polylinedrawingstate.cpp
-    gui/states/freehanddrawingstate.cpp
-
-    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/QCustomPlot/include/qcustomplot.cpp
+file(GLOB_RECURSE ALL_SOURCES
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    "app/*.cpp"
+    "gui/*.cpp"
+    "service/*.cpp"
+    "util/logger/*.cpp"
+    "device_3100A/*.cpp"
 )
-
-# 定义头文件
-set(HEADERS
-    gui/items/ROI.h
-    gui/items/handle.h
-    gui/items/rectroi.h
-    gui/states/genericdrawingstate.h
-    gui/widgets/logwidget.h
-    service/imageprocessor.h
-    util/logger/logger.h
-    util/logger/qtwidgetappender.h
-    # GUI - Views
-    gui/views/imageviewer.h
-    gui/views/mainwindow.h
-    # GUI - ViewModels
-    gui/viewmodels/imageviewmodel.h
-    # GUI - Widgets
-    gui/widgets/toprightinfowidget.h
-    gui/widgets/extractedimageviewer.h
-    # GUI - Items
-    gui/items/linesegmentroi.h
-    gui/items/infinitelineitem.h
-    gui/items/infinitelinelabel.h
-    gui/items/angledlineroi.h
-    gui/items/angleroi.h
-    gui/items/pointmeasureitem.h
-    gui/items/polylineroi.h
-    gui/items/freehandroi.h
-    gui/items/annotationtextitem.h
-    gui/items/ellipseroi.h
-    # GUI - States
-    gui/states/drawingstate.h
-    gui/states/drawingstatemachine.h
-    gui/states/idlestate.h
-    gui/states/panningstate.h
-    gui/states/dragginghandlestate.h
-    gui/states/angledrawingstate.h
-    gui/states/polylinedrawingstate.h
-    gui/states/freehanddrawingstate.h
-
-
+list(APPEND ALL_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/third_party/QCustomPlot/include/qcustomplot.cpp"
+)
+file(GLOB_RECURSE ALL_HEADERS
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    "app/*.h"
+    "gui/*.h"
+    "service/*.h"
+    "util/logger/*.h"
+    "device_3100A/*.h"
 )
 
 
@@ -105,26 +40,10 @@ endif()
 
 # 添加可执行文件目标
 qt_add_executable(${PROJECT_NAME}
-    ${SOURCES}
+    ${ALL_SOURCES}
+    ${ALL_HEADERS}
     Img.qrc
-
-
-    gui/widgets/histogramwidget.h gui/widgets/histogramwidget.cpp
-    gui/widgets/curveswidget.h gui/widgets/curveswidget.cpp
-    device_3100A/IMotionController.h
-    device_3100A/C3100AAxisDef.h
-    device_3100A/C3100AControls.h
-    device_3100A/c3100amotionwidget.h device_3100A/c3100amotionwidget.cpp
-    device_3100A/IXrayController.h
-    device_3100A/c3100axraycontroller.h device_3100A/c3100axraycontroller.cpp
-
-
-
-
-
-
 )
-
 
 # 添加包含目录
 target_include_directories(${PROJECT_NAME} PRIVATE
