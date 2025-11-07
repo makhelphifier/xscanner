@@ -324,8 +324,8 @@ bool MotionCtrlCommand::axHomingMove(ushort axisNo)
     hMode = getValueFromAdaptorIni(QString("ParaAxis%1/HOMEMODE").arg(axisNo)).toInt();
 
 
-    double lowVel = getValueFromAdaptorIni(QString("ParaAxis%1/HOMELOWSPEED").arg(axisNo+1)).toDouble();
-    double highVel = getValueFromAdaptorIni(QString("ParaAxis%1/HOMEHIGHSPEED").arg(axisNo+1)).toDouble();
+    double lowVel = getValueFromAdaptorIni(QString("ParaAxis%1/HOMELOWSPEED").arg(axisNo)).toDouble();
+    double highVel = getValueFromAdaptorIni(QString("ParaAxis%1/HOMEHIGHSPEED").arg(axisNo)).toDouble();
     double Tacc = getValueFromAdaptorIni(QString("ParaAxis%1/HOMEACC").arg(axisNo)).toDouble();
     double Tdec = getValueFromAdaptorIni(QString("ParaAxis%1/HOMEDEC").arg(axisNo)).toDouble();
 

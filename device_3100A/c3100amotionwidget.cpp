@@ -471,9 +471,17 @@ void C3100AMotionWidget::connectAxisControls(
         return;
     }
 
-    // 目标值回车 (注意：连接 spinbox 内部的 lineEdit)
     connect(targetPosSpin, &C3100ADoubleSpinBox::editingFinished, this, [=](){
+        double newPos = targetPosSpin->value();
+        m_appConfig.setAxisPos(axisId, newPos);
         m_pViewModel->onBtn_axisStartClicked(axisId, targetPosSpin->text());
+    });
+
+    connect(speedSpin, &C3100ADoubleSpinBox::editingFinished, this, [=](){
+        QString currentDdSpeed = m_pViewModel->loadAbsSpeed(axisId);
+        QString newAbsSpeed = speedSpin->text();
+        m_pViewModel->saveSpeed(axisId, currentDdSpeed, newAbsSpeed);
+
     });
 
     // Jog 左 (点按)
