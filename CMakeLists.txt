@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(xscanner)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets SerialPort PrintSupport Core5Compat Concurrent)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets SerialPort PrintSupport Core5Compat Concurrent AxContainer)
 
 qt_standard_project_setup()
 
@@ -68,6 +68,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt6::PrintSupport
     Qt6::Core5Compat
     Qt6::Concurrent
+    Qt6::AxContainer
     # 外部库
     "${CMAKE_CURRENT_SOURCE_DIR}/third_party/opencv/lib/opencv_world4120.lib"
     "${CMAKE_CURRENT_SOURCE_DIR}/third_party/Log4Qt/lib/log4qt.lib"

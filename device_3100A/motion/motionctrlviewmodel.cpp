@@ -1,5 +1,7 @@
 ﻿#include "motionctrlviewmodel.h"
 #include "LTDMC.h"
+#include "device_3100A/xray/xraycontroller.h"
+#include <QThread>
 using namespace std;
 
 MotionCtrlViewModel::MotionCtrlViewModel(QObject *parent)
@@ -28,8 +30,22 @@ MotionCtrlViewModel::MotionCtrlViewModel(QObject *parent)
     //     }
     //     dmc_write_outbit(0,i,1);//对输出口i 置高电平    1：高电平
     // }
+    m_pXrayController = new XrayController;
+    m_pXrayThread = new QThread(this);
+    m_pXrayController->moveToThread(m_pXrayThread);
+    connect(m_pXrayThread, &QThread::finished, m_pXrayController, &QObject::deleteLater);
+    // 2. ViewModel -> Controller 信号槽 (跨线程)
+    //    (连接 ViewModel 发出的信号到 Controller 的槽)
+    connect(this, &MotionCtrlViewModel::doInitializeXrayCom,
+            m_pXrayController, &XrayController::initialize);
+    connect(this, &MotionCtrlViewModel::doTurnXrayOn,
+            m_pXrayController, &XrayController::turnXrayOn);
 
+    // 3. 启动线程
+    m_pXrayThread->start();
 
+    // 4. 发送信号，让 Controller 在其新线程中开始初始化 COM
+    emit doInitializeXrayCom();
 }
 
 QString MotionCtrlViewModel::loadDdSpeed(int index)
@@ -79,8 +95,14 @@ MotionCtrlViewModel::~MotionCtrlViewModel()
     {
         dmc_write_outbit(0,i,1);
     }
+    m_pXrayThread->quit();
+    m_pXrayThread->wait();
 }
-
+void MotionCtrlViewModel::onButtonXonClicked()
+{
+    // 发送信号给在 QThread 中运行的 XrayController
+    emit doTurnXrayOn();
+}
 void MotionCtrlViewModel::onDataChanged(const QVariant &var)
 {
 

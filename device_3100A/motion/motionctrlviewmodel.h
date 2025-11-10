@@ -7,7 +7,8 @@
 #include <QMap>
 #include "motionctrlmanager.h"
 #include "util/logger/logger.h"
-
+class XrayController;
+class QThread;
 class MotionCtrlViewModel : public QObject
 {
     Q_OBJECT
@@ -44,7 +45,7 @@ public slots:
     void onBtn_axisEnableClicked(int axis,bool status);//使能
 
     void onBtn_axisStartXYClicked( );//绝对位置 开始运动
-
+    void onButtonXonClicked();
 signals:
     void sig_resetTime(int value);
 
@@ -53,6 +54,10 @@ signals:
     void sig_beamContinuousScanning(double speed,double angleRange);
 
     void sig_posLimit();
+    // 信号：通知 XrayController 线程执行初始化
+    void doInitializeXrayCom();
+    // 信号：通知 XrayController 线程打开 X 射线
+    void doTurnXrayOn();
 private:
 
     void init();
@@ -82,6 +87,8 @@ private:
     QMap<QString,int> IoPortMap;
 
     QPushButton *doorStatusBtn;
+    XrayController* m_pXrayController;
+    QThread* m_pXrayThread;
 };
 
 #endif // MOTIONCTRLVIEWMODEL_H

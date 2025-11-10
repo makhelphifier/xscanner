@@ -4,12 +4,13 @@
 #include <QWidget>
 #include <QTabWidget>
 #include <QLineEdit>
-#include "C3100AControls.h"  // 自定义控件头文件，包含 C3100AIntSpinBox 和 C3100ADoubleSpinBox
-#include <QObject>  // 添加：支持 Q_OBJECT 和 tr()
+#include "C3100AControls.h"
+#include <QObject>
 #include "appconfig.h"
 #include "motionctrlviewmodel.h"
 #include <QVariant>
-#include "motionctrlcommand.h" // <-- 在这里添加
+#include "motionctrlcommand.h"
+
 // 前向声明
 class QVBoxLayout;
 class QLabel;
@@ -23,10 +24,10 @@ class QGroupBox;
 class QLabel;
 class QCheckBox;
 class QPushButton;
-
+class QAxObject;
 class C3100AMotionWidget : public QTabWidget
 {
-    Q_OBJECT  // 必须保留，支持 tr() 和信号槽
+    Q_OBJECT
     Q_PROPERTY(float opacity READ opacity WRITE setOpacity)
 
 public:
@@ -40,7 +41,8 @@ public:
 
 private slots:
     void onAxisDataChanged(const QVariant &var);
-
+    void slotXonClick();
+    void onComInitialized(); // 用于在 COM 准备好后启用按钮
 private:
     // UI 构建辅助方法（添加这些以匹配 .cpp 中的实现）
     void setupTabs();
@@ -101,6 +103,8 @@ private:
     C3100ADoubleSpinBox* m_pObjectiveTableYCurrentPos = nullptr;
     C3100ADoubleSpinBox* m_pObjectiveTableYTargetPos = nullptr;
     C3100ADoubleSpinBox* m_pObjectiveTableYSpeed = nullptr;
+
+    QAxObject* m_pTubeInterface; // 用于持有 COM 接口
 };
 
 #endif // C31__AMOTIONWIDGET_H
