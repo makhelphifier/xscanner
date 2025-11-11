@@ -2,17 +2,17 @@
 #define GENERICDRAWINGSTATE_H
 
 #include "drawingstate.h"
-#include "gui/items/rectroi.h"
+#include "items/rectroi.h"
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QGraphicsScene>
 #include <QPointF>
 #include <QDebug>
 #include <QGraphicsItem>
-#include "gui/states/drawingstatemachine.h"
-#include "gui/views/imageviewer.h"
-#include "gui/items/roi.h"
-#include "gui/items/angledlineroi.h"
+#include "states/drawingstatemachine.h"
+#include "views/imageviewer.h"
+#include "items/roi.h"
+#include "items/angledlineroi.h"
 
 class ImageViewer;
 class AngledLineROI;

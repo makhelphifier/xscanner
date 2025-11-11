@@ -1,5 +1,5 @@
 #include "infinitelineitem.h"
-#include "gui/views/imageviewer.h"
+#include "views/imageviewer.h"
 #include <QPainter>
 #include <QGraphicsScene>
 #include <QGraphicsView>

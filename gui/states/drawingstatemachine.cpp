@@ -3,21 +3,21 @@
 #include "idlestate.h"
 #include "panningstate.h"
 #include "dragginghandlestate.h"
-#include "gui/views/imageviewer.h"
-#include "gui/items/rectroi.h"
-#include "gui/items/handle.h"
-#include "gui/items/roi.h"
+#include "views/imageviewer.h"
+#include "items/rectroi.h"
+#include "items/handle.h"
+#include "items/roi.h"
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QDebug>
 #include "angledrawingstate.h"
 #include "polylinedrawingstate.h"
 #include "freehanddrawingstate.h"
-#include "gui/views/imageviewer.h"
-#include "gui/items/rectroi.h"
-#include "gui/items/linesegmentroi.h"
-#include "gui/items/angledlineroi.h"
-#include "gui/items/ellipseroi.h"
+#include "views/imageviewer.h"
+#include "items/rectroi.h"
+#include "items/linesegmentroi.h"
+#include "items/angledlineroi.h"
+#include "items/ellipseroi.h"
 #include "genericdrawingstate.h"
 
 DrawingStateMachine::DrawingStateMachine(ImageViewer* viewer, QObject *parent)

@@ -1,7 +1,7 @@
 #include "polylinedrawingstate.h"
 #include "drawingstatemachine.h"
-#include "gui/views/imageviewer.h"
-#include "gui/items/polylineroi.h" // 包含我们刚创建的 ROI
+#include "views/imageviewer.h"
+#include "items/polylineroi.h"
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QGraphicsPathItem>

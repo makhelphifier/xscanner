@@ -1,26 +1,26 @@
 #include "idlestate.h"
 #include "drawingstatemachine.h"
-#include "gui/views/imageviewer.h"
-#include "gui/items/handle.h"
-#include "gui/items/roi.h"
+#include "views/imageviewer.h"
+#include "items/handle.h"
+#include "items/roi.h"
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QGraphicsItem>
 #include <QDebug>
 #include <QGraphicsLineItem>
-#include "util/logger/logger.h"
-#include "gui/states/genericdrawingstate.h"
-#include "gui/items/infinitelineitem.h"
+#include "logger.h"
+#include "states/genericdrawingstate.h"
+#include "items/infinitelineitem.h"
 #include <QGraphicsScene>
-#include "gui/items/angledlineroi.h"
+#include "items/angledlineroi.h"
 #include "angledrawingstate.h"
-#include "gui/items/pointmeasureitem.h"
+#include "items/pointmeasureitem.h"
 #include "polylinedrawingstate.h"
 #include <QTimer>
 #include <QTextCursor>
 #include "freehanddrawingstate.h"
-#include "gui/items/annotationtextitem.h"
-#include "gui/viewmodels/imageviewmodel.h"
+#include "items/annotationtextitem.h"
+#include "viewmodels/imageviewmodel.h"
 
 IdleState::IdleState(DrawingStateMachine* machine, QObject *parent)
     : DrawingState(machine, parent) {}

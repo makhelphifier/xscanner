@@ -1,6 +1,6 @@
 #include "dragginghandlestate.h"
 #include "drawingstatemachine.h"
-#include "gui/views/imageviewer.h"
+#include "views/imageviewer.h"
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QDebug>

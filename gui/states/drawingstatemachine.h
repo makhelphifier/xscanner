@@ -5,7 +5,7 @@
 #include <QPointer>
 #include <QPointF>
 
-#include "gui/views/imageviewer.h"
+#include "views/imageviewer.h"
 class DrawingState;
 class IdleState;
 class PanningState;

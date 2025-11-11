@@ -1,7 +1,7 @@
 #include "freehanddrawingstate.h"
 #include "drawingstatemachine.h"
-#include "gui/views/imageviewer.h"
-#include "gui/items/freehandroi.h"
+#include "views/imageviewer.h"
+#include "items/freehandroi.h"
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QGraphicsPathItem>

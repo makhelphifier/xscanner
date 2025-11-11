@@ -11,7 +11,7 @@
 #include <QTransform>
 #include <QVariant>
 #include <QDebug>
-#include "util/logger/logger.h"
+#include "logger.h"
 #include <QPainter>
 #include <QMenu>
 #include <QPainterPathStroker>

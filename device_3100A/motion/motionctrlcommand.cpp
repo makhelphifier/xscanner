@@ -2,7 +2,7 @@
 #include <Windows.h>
 #include <QtConcurrent>
 #include "LTDMC.h"
-#include "util/logger/logger.h"
+#include "logger.h"
 QMutex MotionCtrlCommand::m_Mutex{};
 
 MotionCtrlCommand::MotionCtrlCommand(QObject *parent)

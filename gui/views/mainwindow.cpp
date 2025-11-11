@@ -1,7 +1,7 @@
-// gui/views/mainwindow.cpp
+// views/mainwindow.cpp
 
 #include "mainwindow.h"
-#include "gui/viewmodels/imageviewmodel.h"
+#include "viewmodels/imageviewmodel.h"
 #include <QApplication>
 #include <QDir>
 #include <QGraphicsPixmapItem>
@@ -11,16 +11,16 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QMenuBar>
-#include "gui/states/genericdrawingstate.h"
-#include "gui/widgets/logwidget.h"
-#include "util/logger/qtwidgetappender.h"
+#include "states/genericdrawingstate.h"
+#include "widgets/logwidget.h"
+#include "qtwidgetappender.h"
 #include "log4qt/logger.h"
 #include <QDockWidget>
-#include "gui/widgets/toprightinfowidget.h"
-#include "util/logger/logger.h"
-#include "gui/items/rectroi.h"
+#include "widgets/toprightinfowidget.h"
+#include "logger.h"
+#include "items/rectroi.h"
 #include <QFile>
-#include "gui/widgets/curveswidget.h"
+#include "widgets/curveswidget.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {

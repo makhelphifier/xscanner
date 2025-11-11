@@ -5,11 +5,11 @@
 #include <QAction>
 #include <QActionGroup>
 #include <QRectF>
-#include "gui/views/imageviewer.h"
-#include "gui/widgets/toprightinfowidget.h"
+#include "views/imageviewer.h"
+#include "widgets/toprightinfowidget.h"
 #include <QLabel>
 #include "log4qt/level.h"
-#include "gui/viewmodels/imageviewmodel.h"
+#include "viewmodels/imageviewmodel.h"
 
 class TopRightInfoWidget;
 class LogWidget;

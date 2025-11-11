@@ -6,7 +6,7 @@
 #include <QPushButton>
 #include <QMap>
 #include "motionctrlmanager.h"
-#include "util/logger/logger.h"
+#include "logger.h"
 class XrayController;
 class QThread;
 class MotionCtrlViewModel : public QObject

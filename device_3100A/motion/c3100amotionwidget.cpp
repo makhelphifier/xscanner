@@ -10,10 +10,10 @@
 #include <QCheckBox>
 #include <QPushButton>
 #include <QDebug>
-#include "util/logger/logger.h"
+#include "logger.h"
 #include <QAxObject>
 #include <QVariant>
-#include "xcom_api.h"
+// #include "xcom_api.h"
 C3100AMotionWidget::C3100AMotionWidget(QWidget *parent)
     : QTabWidget(parent),
     m_pTubeInterface(nullptr)

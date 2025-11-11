@@ -7,7 +7,7 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QPainterPathStroker>
-#include "gui/views/imageviewer.h" // 需要访问 viewer
+#include "views/imageviewer.h" // 需要访问 viewer
 
 class ImageViewer; // 前向声明
 

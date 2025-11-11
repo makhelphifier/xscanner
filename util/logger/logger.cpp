@@ -12,16 +12,9 @@
 
 LoggerWorker::LoggerWorker(QObject *parent) : QObject(parent)
 {
-    m_rootLogger = nullptr;
-}
-
-void LoggerWorker::initLogger(const QString& confPath)
-{
     m_rootLogger = Log4Qt::LogManager::rootLogger();
-    Log4Qt::PropertyConfigurator::configure(confPath);
-
-    LogInfo("Logger system initialized successfully.");
 }
+
 
 void LoggerWorker::processLogRequest(const QString &file, int line, const QString &function, const QString &level, const QString &message)
 {
@@ -68,7 +61,7 @@ Logger::Logger(QObject *parent)
     m_worker->moveToThread(&m_workerThread);
 
     connect(this, &Logger::logRequested, m_worker, &LoggerWorker::processLogRequest);
-    connect(this, &Logger::initRequested, m_worker, &LoggerWorker::initLogger);
+    // connect(this, &Logger::initRequested, m_worker, &LoggerWorker::initLogger);
 
     connect(&m_workerThread, &QThread::finished, m_worker, &QObject::deleteLater);
 
@@ -90,10 +83,6 @@ Logger* Logger::instance()
     return g_logger_instance;
 }
 
-void Logger::init(const QString& confPath)
-{
-    emit instance()->initRequested(confPath);
-}
 
 void Logger::log(const char* file, int line, const char* function, const QString& level, const QString& message)
 {

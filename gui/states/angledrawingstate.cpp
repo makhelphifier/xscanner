@@ -1,7 +1,7 @@
 #include "angledrawingstate.h"
 #include "drawingstatemachine.h"
-#include "gui/views/imageviewer.h"
-#include "gui/items/angleroi.h"
+#include "views/imageviewer.h"
+#include "items/angleroi.h"
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QGraphicsLineItem>

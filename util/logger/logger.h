@@ -16,7 +16,7 @@ public:
     ~LoggerWorker() override = default;
 
 public slots:
-    void initLogger(const QString& confPath);
+    // void ini/*t*/Logger(const QString& confPath);
     void processLogRequest(const QString &file, int line, const QString &function, const QString &level, const QString &message);
 };
 
@@ -35,7 +35,7 @@ private:
 
 public:
     static Logger* instance();
-    static void init(const QString& confPath);
+    // static void init(const QString& confPath);
 
     void log(const char* file, int line, const char* function, const QString& level, const QString& message);
 
@@ -44,7 +44,7 @@ private:
 
 signals:
     void logRequested(const QString &file, int line, const QString &function, const QString &level, const QString &message);
-    void initRequested(const QString& confPath);
+    // void initRequested(const QString& confPath);
 };
 
 #if defined(_MSC_VER)

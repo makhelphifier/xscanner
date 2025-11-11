@@ -1,11 +1,11 @@
-// gui/states/panningstate.cpp
+// states/panningstate.cpp
 #include "panningstate.h"
 #include "drawingstatemachine.h"
-#include "gui/views/imageviewer.h"
+#include "views/imageviewer.h"
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QDebug>
-#include "util/logger/logger.h"
+#include "logger.h"
 
 PanningState::PanningState(DrawingStateMachine* machine, QObject *parent)
     : DrawingState(machine, parent) {}

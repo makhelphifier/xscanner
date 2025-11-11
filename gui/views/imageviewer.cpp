@@ -1,17 +1,17 @@
-#include "gui/views/imageviewer.h"
-#include "gui/viewmodels/imageviewmodel.h"
+#include "views/imageviewer.h"
+#include "viewmodels/imageviewmodel.h"
 #include <QPainter>
 #include <QScrollBar>
 #include <QTimer>
 #include <cmath>
 #include <QDebug>
 #include <QImage>
-#include "service/imageprocessor.h"
+#include "imageprocessor.h"
 #include <QList>
-#include "util/logger/logger.h"
-#include "gui/states/drawingstatemachine.h"
-#include "gui/items/roi.h"
-#include "gui/widgets/extractedimageviewer.h"
+#include "logger.h"
+#include "states/drawingstatemachine.h"
+#include "items/roi.h"
+#include "widgets/extractedimageviewer.h"
 
 ImageViewer::ImageViewer(QWidget *parent)
     : QGraphicsView(parent), m_initialScale(1.0), m_pixmapItem(nullptr), m_borderItem(nullptr), m_drawingEnabled(true)

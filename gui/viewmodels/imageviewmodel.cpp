@@ -1,7 +1,7 @@
 // gui/viewmodels/imageviewmodel.cpp
 
 #include "imageviewmodel.h"
-#include "service/imageprocessor.h"
+#include "imageprocessor.h"
 #include <QDebug>
 #include <opencv2/opencv.hpp>
 #include <QtGlobal> // for qBound

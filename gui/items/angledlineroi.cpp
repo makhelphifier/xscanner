@@ -1,4 +1,4 @@
-#include "gui/items/angledlineroi.h"
+#include "items/angledlineroi.h"
 #include "handle.h"
 #include <QApplication>
 #include <QTransform>

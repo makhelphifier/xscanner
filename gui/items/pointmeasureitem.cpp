@@ -1,12 +1,12 @@
 #include "pointmeasureitem.h"
-#include "gui/views/imageviewer.h"
+#include "views/imageviewer.h"
 #include <QGraphicsSceneMouseEvent>
 #include <QPen>
 #include <QFont>
 #include <QDebug>
 #include <QVariant>
 #include <QGraphicsScene>
-#include "gui/viewmodels/imageviewmodel.h"
+#include "viewmodels/imageviewmodel.h"
 
 PointMeasureItem::PointMeasureItem(const QPointF& pos, ImageViewModel* viewModel, QGraphicsItem* parent)
     : QGraphicsObject(parent), m_viewModel(viewModel)

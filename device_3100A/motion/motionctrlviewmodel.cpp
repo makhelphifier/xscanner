@@ -1,6 +1,6 @@
 ﻿#include "motionctrlviewmodel.h"
 #include "LTDMC.h"
-#include "device_3100A/xray/xraycontroller.h"
+#include "xray/xraycontroller.h"
 #include <QThread>
 using namespace std;
 
